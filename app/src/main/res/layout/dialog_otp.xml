@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="0dp"
+    android:soundEffectsEnabled="true"
+    android:backgroundTint="@android:color/transparent"
+    android:clipToPadding="false"
+    android:clipChildren="false">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="@drawable/dialog_background_less_transparent">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email Verification"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:padding="16dp"/>
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter the 6-digit OTP sent to your email."
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:paddingBottom="20dp"/>
+
+        <!-- Hidden input to capture numeric OTP -->
+        <EditText
+            android:id="@+id/dialog_et_hidden_otp"
+            android:layout_width="1px"
+            android:layout_height="1px"
+            android:inputType="number"
+            android:digits="0123456789"
+            android:maxLength="6"
+            android:singleLine="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:cursorVisible="false"
+            android:importantForAutofill="no"
+            android:alpha="0"
+            android:visibility="visible"/>
+
+        <!-- OTP Circles Container -->
+        <LinearLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginVertical="8dp"
+            android:backgroundTint="@android:color/transparent" android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/otp_circles_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:padding="16dp"
+                android:background="@drawable/rounded_container">
+
+                <TextView android:id="@+id/otp_c1" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
+                <Space android:layout_width="10dp" android:layout_height="0dp"/>
+                <TextView android:id="@+id/otp_c2" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
+                <Space android:layout_width="10dp" android:layout_height="0dp"/>
+                <TextView android:id="@+id/otp_c3" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
+                <Space android:layout_width="10dp" android:layout_height="0dp"/>
+                <TextView android:id="@+id/otp_c4" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
+                <Space android:layout_width="10dp" android:layout_height="0dp"/>
+                <TextView android:id="@+id/otp_c5" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
+                <Space android:layout_width="10dp" android:layout_height="0dp"/>
+                <TextView android:id="@+id/otp_c6" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Error Message -->
+        <TextView
+            android:id="@+id/dialog_tv_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="12sp"
+            android:textColor="#FF6B6B"
+            android:visibility="gone"
+            android:gravity="center"
+            android:paddingTop="8dp"/>
+
+        <!-- Timer -->
+        <LinearLayout android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@android:color/transparent" android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:background="@drawable/rounded_container">
+
+                <TextView
+                    android:id="@+id/dialog_tv_timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:text="01:00" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Resend Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btn_resend_otp"
+                style="@style/AppPrimaryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Resend OTP"
+                android:textAllCaps="false"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/dialog_background_less_transparent"
+    android:gravity="center"
+    android:minWidth="100dp"
+    android:minHeight="100dp">
+
+    <!-- Recording Indicator with Pulse Animation - Centered -->
+    <RelativeLayout
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_recording_indicator"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerInParent="true"
+            android:src="@drawable/recording_indicator"
+            android:contentDescription="Recording" />
+
+        <!-- Pulsing rings around indicator -->
+        <View
+            android:id="@+id/v_pulse_ring_1"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/recording_indicator"
+            android:alpha="0.5" />
+
+        <View
+            android:id="@+id/v_pulse_ring_2"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_centerInParent="true"
+            android:background="@drawable/recording_indicator"
+            android:alpha="0.3" />
+
+    </RelativeLayout>
+
+    <!-- Timer Display -->
+    <TextView
+        android:id="@+id/tv_recording_timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp" />
+
+</LinearLayout>
+
