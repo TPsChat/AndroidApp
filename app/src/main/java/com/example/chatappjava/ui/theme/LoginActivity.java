@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.example.chatappjava.R;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.DatabaseManager;
@@ -21,13 +22,23 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
-    
+    public static final String EXTRA_OPEN_SIGN_UP = "open_sign_up";
+    private static final long TAB_ANIMATION_DURATION_MS = 220L;
+
     private EditText etEmail, etPassword;
     private Button btnLogin;
-    private TextView tvRegister, tvForgotPassword;
+    private TextView tvRegister, tvForgotPassword, tvSignInTab;
     private TextView tvLoginError;
+    private EditText etUsername, etRegisterEmail, etRegisterPassword, etConfirmPassword;
+    private Button btnRegister;
+    private TextView tvRegisterError;
+    private TextView tvAuthTitle, tvAuthSubtitle;
+    private View authSwitchContainer, authTabIndicator, loginPanel, registerPanel, authFormStage, authTopCluster, loginTitleTop;
     private ApiClient apiClient;
     private DatabaseManager databaseManager;
+    private android.os.CountDownTimer registerCountDownTimer;
+    private android.app.AlertDialog registerOtpDialog;
+    private boolean isSignUpMode;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,42 +52,44 @@ public class LoginActivity extends AppCompatActivity {
         // Check if the user is already logged in
         if (databaseManager.isLoggedIn()) {
             navigateToMainActivity();
+            return;
         }
+
+        setAuthMode(getIntent().getBooleanExtra(EXTRA_OPEN_SIGN_UP, false), false);
     }
     
     private void initializeViews() {
+        tvAuthTitle = findViewById(R.id.tv_auth_title);
+        tvAuthSubtitle = findViewById(R.id.tv_auth_subtitle);
+        authTopCluster = findViewById(R.id.auth_top_cluster);
+        authSwitchContainer = findViewById(R.id.auth_switch_container);
+        authTabIndicator = findViewById(R.id.auth_tab_indicator);
+        authFormStage = findViewById(R.id.auth_form_stage);
+        loginTitleTop = findViewById(R.id.login_title_top);
+        tvSignInTab = findViewById(R.id.tv_sign_in_tab);
+        loginPanel = findViewById(R.id.login_panel);
+        registerPanel = findViewById(R.id.register_panel);
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
         tvRegister = findViewById(R.id.tv_register);
         tvForgotPassword = findViewById(R.id.tv_forgot_password);
         tvLoginError = findViewById(R.id.tv_login_error);
+        etUsername = findViewById(R.id.et_username);
+        etRegisterEmail = findViewById(R.id.et_register_email);
+        etRegisterPassword = findViewById(R.id.et_register_password);
+        etConfirmPassword = findViewById(R.id.et_confirm_password);
+        btnRegister = findViewById(R.id.btn_register);
+        tvRegisterError = findViewById(R.id.tv_register_error);
 
-        // Toggle password visibility when tapping drawableEnd using transformation method
-        etPassword.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
-        etPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, com.example.chatappjava.R.drawable.ic_eye_off, 0);
-        etPassword.setOnTouchListener((v, event) -> {
-            final int DRAWABLE_END = 2; // right drawable
-            if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
-                android.graphics.drawable.Drawable endDrawable = etPassword.getCompoundDrawables()[DRAWABLE_END];
-                if (endDrawable != null) {
-                    int drawableWidth = endDrawable.getBounds().width();
-                    int touchAreaStart = etPassword.getWidth() - etPassword.getPaddingRight() - drawableWidth;
-                    if (event.getX() >= touchAreaStart) {
-                        boolean isHidden = etPassword.getTransformationMethod() instanceof android.text.method.PasswordTransformationMethod;
-                        if (isHidden) {
-                            etPassword.setTransformationMethod(android.text.method.HideReturnsTransformationMethod.getInstance());
-                            etPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, com.example.chatappjava.R.drawable.ic_eye, 0);
-                        } else {
-                            etPassword.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
-                            etPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, com.example.chatappjava.R.drawable.ic_eye_off, 0);
-                        }
-                        etPassword.setSelection(etPassword.getText().length());
-                        return true;
-                    }
-                }
+        setupPasswordToggle(etPassword);
+        setupPasswordToggle(etRegisterPassword);
+        setupPasswordToggle(etConfirmPassword);
+
+        authSwitchContainer.addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            if ((right - left) != (oldRight - oldLeft)) {
+                updateTabIndicator(false);
             }
-            return false;
         });
     }
     
@@ -87,21 +100,237 @@ public class LoginActivity extends AppCompatActivity {
     
     private void setupClickListeners() {
         btnLogin.setOnClickListener(v -> attemptLogin());
-        
-        tvRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivityForResult(intent, 1);
+        btnRegister.setOnClickListener(v -> attemptRegister());
+        tvSignInTab.setOnClickListener(v -> setAuthMode(false, true));
+        tvRegister.setOnClickListener(v -> setAuthMode(true, true));
+        tvForgotPassword.setOnClickListener(v -> showForgotPasswordDialog());
+    }
+
+    private void setupPasswordToggle(EditText editText) {
+        if (editText == null) {
+            return;
+        }
+
+        editText.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
+        editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_eye_off, 0);
+        editText.setOnTouchListener((v, event) -> {
+            final int drawableEnd = 2;
+            if (event.getAction() == android.view.MotionEvent.ACTION_UP) {
+                android.graphics.drawable.Drawable endDrawable = editText.getCompoundDrawables()[drawableEnd];
+                if (endDrawable != null) {
+                    int drawableWidth = endDrawable.getBounds().width();
+                    int touchAreaStart = editText.getWidth() - editText.getPaddingRight() - drawableWidth;
+                    if (event.getX() >= touchAreaStart) {
+                        boolean isHidden = editText.getTransformationMethod() instanceof android.text.method.PasswordTransformationMethod;
+                        if (isHidden) {
+                            editText.setTransformationMethod(android.text.method.HideReturnsTransformationMethod.getInstance());
+                            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_eye, 0);
+                        } else {
+                            editText.setTransformationMethod(android.text.method.PasswordTransformationMethod.getInstance());
+                            editText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_eye_off, 0);
+                        }
+                        editText.setSelection(editText.getText().length());
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
+    }
+
+    private void setAuthMode(boolean signUpMode, boolean animate) {
+        boolean modeChanged = isSignUpMode != signUpMode;
+        isSignUpMode = signUpMode;
+
+        if (animate && modeChanged) {
+            animateCopyChange(tvAuthTitle, signUpMode ? "Create Account" : "Welcome Back", 0L);
+            animateCopyChange(tvAuthSubtitle,
+                    signUpMode ? "Set up your profile and join the chat" : "Sign in to continue your conversations",
+                    35L);
+        } else {
+            applyModeCopy(signUpMode);
+        }
+
+        int activeColor = ContextCompat.getColor(this, android.R.color.white);
+        int inactiveColor = ContextCompat.getColor(this, R.color.text_secondary);
+        tvSignInTab.setTextColor(signUpMode ? inactiveColor : activeColor);
+        tvRegister.setTextColor(signUpMode ? activeColor : inactiveColor);
+
+        showLoginInlineError(null);
+        showRegisterInlineError(null);
+        animateModeChrome(animate && modeChanged);
+        updateVisiblePanel(animate && modeChanged);
+        updateTabIndicator(animate && modeChanged);
+    }
+
+    private void applyModeCopy(boolean signUpMode) {
+        tvAuthTitle.setText(signUpMode ? "Create Account" : "Welcome Back");
+        tvAuthSubtitle.setText(signUpMode
+                ? "Set up your profile and join the chat"
+                : "Sign in to continue your conversations");
+        tvAuthTitle.setAlpha(1f);
+        tvAuthSubtitle.setAlpha(1f);
+        tvAuthTitle.setTranslationY(0f);
+        tvAuthSubtitle.setTranslationY(0f);
+    }
+
+    private void animateCopyChange(TextView textView, String newText, long delayMs) {
+        float travel = dp(12f);
+        textView.animate().cancel();
+        textView.animate()
+                .alpha(0f)
+                .translationY(-travel * 0.45f)
+                .setStartDelay(delayMs)
+                .setDuration(95L)
+                .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
+                .withEndAction(() -> {
+                    textView.setText(newText);
+                    textView.setTranslationY(travel);
+                    textView.animate()
+                            .alpha(1f)
+                            .translationY(0f)
+                            .setDuration(260L)
+                            .setInterpolator(new android.view.animation.OvershootInterpolator(0.8f))
+                            .start();
+                })
+                .start();
+    }
+
+    private void animateModeChrome(boolean animate) {
+        float topLift = 0f;
+        float formLift = 0f;
+        float logoScale = isSignUpMode ? 0.985f : 1f;
+        float logoRotation = isSignUpMode ? 1f : 0f;
+
+        if (!animate) {
+            authTopCluster.setTranslationY(topLift);
+            authFormStage.setTranslationY(formLift);
+            loginTitleTop.setScaleX(logoScale);
+            loginTitleTop.setScaleY(logoScale);
+            loginTitleTop.setRotation(logoRotation);
+            return;
+        }
+
+        authTopCluster.animate().cancel();
+        authFormStage.animate().cancel();
+        loginTitleTop.animate().cancel();
+
+        authTopCluster.animate()
+                .translationY(topLift)
+                .setDuration(320L)
+                .setInterpolator(new android.view.animation.OvershootInterpolator(0.82f))
+                .start();
+
+        authFormStage.animate()
+                .translationY(formLift)
+                .setDuration(320L)
+                .setInterpolator(new android.view.animation.OvershootInterpolator(0.78f))
+                .start();
+
+        loginTitleTop.animate()
+                .scaleX(logoScale)
+                .scaleY(logoScale)
+                .rotation(logoRotation)
+                .setDuration(340L)
+                .setInterpolator(new android.view.animation.OvershootInterpolator(0.7f))
+                .start();
+    }
+
+    private void updateVisiblePanel(boolean animate) {
+        View incomingPanel = isSignUpMode ? registerPanel : loginPanel;
+        View outgoingPanel = isSignUpMode ? loginPanel : registerPanel;
+
+        if (!animate) {
+            incomingPanel.setVisibility(View.VISIBLE);
+            incomingPanel.setAlpha(1f);
+            incomingPanel.setTranslationY(0f);
+            incomingPanel.setScaleX(1f);
+            incomingPanel.setScaleY(1f);
+            outgoingPanel.setVisibility(View.GONE);
+            outgoingPanel.setAlpha(1f);
+            outgoingPanel.setTranslationY(0f);
+            outgoingPanel.setScaleX(1f);
+            outgoingPanel.setScaleY(1f);
+            return;
+        }
+
+        incomingPanel.bringToFront();
+        incomingPanel.setVisibility(View.VISIBLE);
+        incomingPanel.setAlpha(0f);
+        incomingPanel.setTranslationY(dp(26f));
+        incomingPanel.setScaleX(0.965f);
+        incomingPanel.setScaleY(0.965f);
+        incomingPanel.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(300L)
+                .setInterpolator(new android.view.animation.OvershootInterpolator(0.78f))
+                .start();
+
+        if (outgoingPanel.getVisibility() == View.VISIBLE) {
+            outgoingPanel.animate()
+                    .alpha(0f)
+                    .translationY(-dp(14f))
+                    .scaleX(0.975f)
+                    .scaleY(0.975f)
+                    .setDuration(180L)
+                    .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
+                    .withEndAction(() -> {
+                        outgoingPanel.setVisibility(View.GONE);
+                        outgoingPanel.setAlpha(1f);
+                        outgoingPanel.setTranslationY(0f);
+                        outgoingPanel.setScaleX(1f);
+                        outgoingPanel.setScaleY(1f);
+                    })
+                    .start();
+        }
+    }
+
+    private void updateTabIndicator(boolean animate) {
+        authSwitchContainer.post(() -> {
+            int availableWidth = authSwitchContainer.getWidth()
+                    - authSwitchContainer.getPaddingLeft()
+                    - authSwitchContainer.getPaddingRight();
+            if (availableWidth <= 0) {
+                return;
+            }
+
+            int indicatorWidth = availableWidth / 2;
+            android.view.ViewGroup.LayoutParams params = authTabIndicator.getLayoutParams();
+            if (params.width != indicatorWidth) {
+                params.width = indicatorWidth;
+                authTabIndicator.setLayoutParams(params);
+            }
+
+            float targetTranslation = isSignUpMode ? indicatorWidth : 0f;
+            authTabIndicator.animate().cancel();
+            if (animate) {
+                authTabIndicator.setScaleX(0.95f);
+                authTabIndicator.setAlpha(0.94f);
+                authTabIndicator.animate()
+                        .translationX(targetTranslation)
+                        .scaleX(1.03f)
+                        .alpha(1f)
+                        .setDuration(310L)
+                        .setInterpolator(new android.view.animation.OvershootInterpolator(0.84f))
+                        .withEndAction(() -> authTabIndicator.animate()
+                                .scaleX(1f)
+                                .setDuration(120L)
+                                .setInterpolator(new android.view.animation.DecelerateInterpolator())
+                                .start())
+                        .start();
+            } else {
+                authTabIndicator.setTranslationX(targetTranslation);
+                authTabIndicator.setScaleX(1f);
+                authTabIndicator.setAlpha(1f);
             }
         });
-        
-        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showForgotPasswordDialog();
-            }
-        });
+    }
+
+    private float dp(float value) {
+        return value * getResources().getDisplayMetrics().density;
     }
 
     private void showForgotPasswordDialog() {
@@ -396,7 +625,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
         
-        showLoading(true);
+        showLoginLoading(true);
         
         try {
             JSONObject loginData = new JSONObject();
@@ -409,8 +638,8 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showLoading(false);
-                            showInlineError("Connection error. Please try again.");
+                            showLoginLoading(false);
+                            showLoginInlineError("Connection error. Please try again.");
                         }
                     });
                 }
@@ -426,7 +655,7 @@ public class LoginActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            showLoading(false);
+                            showLoginLoading(false);
                             handleLoginResponse(response.code(), responseBody);
                         }
                     });
@@ -434,8 +663,8 @@ public class LoginActivity extends AppCompatActivity {
             });
             
         } catch (JSONException e) {
-            showLoading(false);
-            showInlineError("Data error. Please try again.");
+            showLoginLoading(false);
+            showLoginInlineError("Data error. Please try again.");
         }
     }
     
@@ -497,7 +726,7 @@ public class LoginActivity extends AppCompatActivity {
             
         } catch (JSONException e) {
             e.printStackTrace(); // Log the actual error for debugging
-            showInlineError("Data processing error.");
+            showLoginInlineError("Data processing error.");
         }
     }
     
@@ -511,37 +740,53 @@ public class LoginActivity extends AppCompatActivity {
             if (statusCode == 403) {
                 // Handle account locked
                 if ("locked".equals(accountStatus)) {
-                    showInlineError(message.isEmpty() ? "Account locked by administrator." : message);
+                    showLoginInlineError(message.isEmpty() ? "Account locked by administrator." : message);
                 } else {
-                    showInlineError(message.isEmpty() ? "Access denied." : message);
+                    showLoginInlineError(message.isEmpty() ? "Access denied." : message);
                 }
                 
             } else if (statusCode == 401) {
                 // Handle authentication errors
                 if ("not_found".equals(accountStatus)) {
-                    showInlineError(details.isEmpty() ? "Account not found." : details);
+                    showLoginInlineError(details.isEmpty() ? "Account not found." : details);
                     
                 } else if ("active".equals(accountStatus)) {
-                    showInlineError(details.isEmpty() ? "Incorrect password." : details);
+                    showLoginInlineError(details.isEmpty() ? "Incorrect password." : details);
                 } else {
-                    showInlineError(message.isEmpty() ? "Authentication failed." : message);
+                    showLoginInlineError(message.isEmpty() ? "Authentication failed." : message);
                 }
                 
             } else {
                 // Other errors
-                showInlineError(message.isEmpty() ? "Login error." : message);
+                showLoginInlineError(message.isEmpty() ? "Login error." : message);
             }
             
         } catch (JSONException e) {
             e.printStackTrace();
-            showInlineError("Error processing response.");
+            showLoginInlineError("Error processing response.");
         }
     }
 
-    private void showInlineError(String msg) {
+    private void showLoginInlineError(String msg) {
         if (tvLoginError == null) return;
+        if (msg == null || msg.trim().isEmpty()) {
+            tvLoginError.setText("");
+            tvLoginError.setVisibility(View.GONE);
+            return;
+        }
         tvLoginError.setText(msg);
         tvLoginError.setVisibility(View.VISIBLE);
+    }
+
+    private void showRegisterInlineError(String msg) {
+        if (tvRegisterError == null) return;
+        if (msg == null || msg.trim().isEmpty()) {
+            tvRegisterError.setText("");
+            tvRegisterError.setVisibility(View.GONE);
+            return;
+        }
+        tvRegisterError.setText(msg);
+        tvRegisterError.setVisibility(View.VISIBLE);
     }
     
     private void showAccountStatusDialog(String title, String message, String details, boolean isSuccess) {
@@ -576,9 +821,346 @@ public class LoginActivity extends AppCompatActivity {
         builder.show();
     }
     
-    private void showLoading(boolean show) {
+    private void showLoginLoading(boolean show) {
         btnLogin.setEnabled(!show);
-        btnLogin.setText(show ? "Logging in..." : "Login");
+        btnLogin.setText(show ? "Signing in..." : "Sign In");
+    }
+
+    private void showRegisterLoading(boolean show) {
+        btnRegister.setEnabled(!show);
+        btnRegister.setText(show ? "Creating account..." : "Sign Up");
+    }
+
+    private void attemptRegister() {
+        String username = etUsername.getText().toString().trim();
+        String email = etRegisterEmail.getText().toString().trim();
+        String password = etRegisterPassword.getText().toString().trim();
+        String confirmPassword = etConfirmPassword.getText().toString().trim();
+
+        if (!validateRegisterInput(username, email, password, confirmPassword)) {
+            return;
+        }
+
+        showRegisterLoading(true);
+        requestRegisterOtpAndShowDialog(username, email, password);
+    }
+
+    private boolean validateRegisterInput(String username, String email, String password, String confirmPassword) {
+        if (username.isEmpty()) {
+            etUsername.setError("Please enter username");
+            etUsername.requestFocus();
+            return false;
+        }
+
+        if (username.length() < 3 || username.length() > 30) {
+            etUsername.setError("Username must be between 3 and 30 characters");
+            etUsername.requestFocus();
+            return false;
+        }
+
+        if (!username.matches("^[a-zA-Z0-9_]+$")) {
+            etUsername.setError("Username can only contain letters, numbers, and underscores");
+            etUsername.requestFocus();
+            return false;
+        }
+
+        if (email.isEmpty()) {
+            etRegisterEmail.setError("Please enter your email");
+            etRegisterEmail.requestFocus();
+            return false;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etRegisterEmail.setError("Invalid email format");
+            etRegisterEmail.requestFocus();
+            return false;
+        }
+
+        if (password.isEmpty()) {
+            etRegisterPassword.setError("Please enter a password");
+            etRegisterPassword.requestFocus();
+            return false;
+        }
+
+        if (password.length() < 6) {
+            etRegisterPassword.setError("Password must be at least 6 characters");
+            etRegisterPassword.requestFocus();
+            return false;
+        }
+
+        if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")) {
+            etRegisterPassword.setError("Password must contain at least one uppercase letter, one lowercase letter, and one number");
+            etRegisterPassword.requestFocus();
+            return false;
+        }
+
+        if (confirmPassword.isEmpty()) {
+            etConfirmPassword.setError("Please confirm your password");
+            etConfirmPassword.requestFocus();
+            return false;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            etConfirmPassword.setError("Passwords do not match");
+            etConfirmPassword.requestFocus();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void requestRegisterOtpAndShowDialog(String username, String email, String password) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("username", username);
+            data.put("email", email);
+            data.put("password", password);
+
+            apiClient.requestRegisterOTP(data, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    runOnUiThread(() -> {
+                        showRegisterLoading(false);
+                        showRegisterInlineError("Failed to send OTP. Please try again.");
+                    });
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseBody = response.body() != null ? response.body().string() : "";
+                    runOnUiThread(() -> {
+                        showRegisterLoading(false);
+                        if (response.isSuccessful()) {
+                            showRegisterInlineError(null);
+                            showRegisterOtpDialog(email);
+                        } else {
+                            try {
+                                JSONObject json = new JSONObject(responseBody);
+                                String message = json.optString("message", "Failed to request OTP");
+                                showRegisterInlineError(message);
+                            } catch (Exception ex) {
+                                showRegisterInlineError("Failed to request OTP");
+                            }
+                        }
+                    });
+                }
+            });
+        } catch (JSONException e) {
+            showRegisterLoading(false);
+            showRegisterInlineError("Data Error. Please try again.");
+        }
+    }
+
+    private void showRegisterOtpDialog(String email) {
+        android.view.View dialogView = getLayoutInflater().inflate(R.layout.dialog_otp, null);
+        android.widget.EditText hiddenOtp = dialogView.findViewById(R.id.dialog_et_hidden_otp);
+        android.widget.TextView tvTimer = dialogView.findViewById(R.id.dialog_tv_timer);
+        android.widget.TextView tvError = dialogView.findViewById(R.id.dialog_tv_error);
+        android.view.View circlesContainer = dialogView.findViewById(R.id.otp_circles_container);
+        android.widget.TextView c1 = dialogView.findViewById(R.id.otp_c1);
+        android.widget.TextView c2 = dialogView.findViewById(R.id.otp_c2);
+        android.widget.TextView c3 = dialogView.findViewById(R.id.otp_c3);
+        android.widget.TextView c4 = dialogView.findViewById(R.id.otp_c4);
+        android.widget.TextView c5 = dialogView.findViewById(R.id.otp_c5);
+        android.widget.TextView c6 = dialogView.findViewById(R.id.otp_c6);
+        android.widget.Button btnResend = dialogView.findViewById(R.id.btn_resend_otp);
+
+        registerOtpDialog = new android.app.AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(false)
+                .create();
+
+        if (registerOtpDialog.getWindow() != null) {
+            android.view.Window w = registerOtpDialog.getWindow();
+            w.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
+        }
+        registerOtpDialog.setOnDismissListener(dialog -> {
+            if (registerCountDownTimer != null) {
+                registerCountDownTimer.cancel();
+            }
+        });
+
+        android.view.View.OnClickListener focusInput = v -> {
+            hiddenOtp.requestFocus();
+            android.view.inputmethod.InputMethodManager imm =
+                    (android.view.inputmethod.InputMethodManager) getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(hiddenOtp, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
+            }
+        };
+        circlesContainer.setOnClickListener(focusInput);
+        dialogView.setOnClickListener(focusInput);
+
+        android.text.TextWatcher watcher = new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(android.text.Editable s) {
+                String code = s.toString();
+                updateOtpCircles(code.length(), c1, c2, c3, c4, c5, c6);
+                if (code.length() > 0) {
+                    tvError.setVisibility(android.view.View.GONE);
+                }
+                if (code.length() == 6) {
+                    hiddenOtp.clearFocus();
+                    verifyRegisterOtp(email, code);
+                }
+            }
+        };
+        hiddenOtp.addTextChangedListener(watcher);
+
+        btnResend.setOnClickListener(v -> resendRegisterOtp(email, hiddenOtp, tvError, tvTimer));
+
+        startRegisterDialogTimer(tvTimer);
+        registerOtpDialog.show();
+
+        hiddenOtp.postDelayed(() -> {
+            hiddenOtp.requestFocus();
+            android.view.inputmethod.InputMethodManager imm =
+                    (android.view.inputmethod.InputMethodManager) getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.showSoftInput(hiddenOtp, android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 150);
+    }
+
+    private void resendRegisterOtp(String email, EditText hiddenOtp, TextView tvError, TextView tvTimer) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("username", etUsername.getText().toString().trim());
+            data.put("email", email);
+            data.put("password", etRegisterPassword.getText().toString().trim());
+
+            apiClient.requestRegisterOTP(data, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Failed to resend OTP", Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) {
+                    runOnUiThread(() -> {
+                        if (response.isSuccessful()) {
+                            hiddenOtp.setText("");
+                            tvError.setVisibility(View.GONE);
+                            startRegisterDialogTimer(tvTimer);
+                            Toast.makeText(LoginActivity.this, "OTP resent", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Failed to resend OTP", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        } catch (JSONException e) {
+            Toast.makeText(this, "Data Error. Please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void startRegisterDialogTimer(TextView tvTimer) {
+        if (registerCountDownTimer != null) {
+            registerCountDownTimer.cancel();
+        }
+        tvTimer.setText("01:00");
+        registerCountDownTimer = new android.os.CountDownTimer(60_000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long seconds = millisUntilFinished / 1000;
+                long mm = seconds / 60;
+                long ss = seconds % 60;
+                tvTimer.setText(String.format("%02d:%02d", mm, ss));
+            }
+
+            @Override
+            public void onFinish() {
+                tvTimer.setText("Expired. Please request again.");
+            }
+        }.start();
+    }
+
+    private void verifyRegisterOtp(String email, String otp) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("email", email);
+            data.put("otpCode", otp);
+            apiClient.verifyRegisterOTP(data, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseBody = response.body() != null ? response.body().string() : "";
+                    runOnUiThread(() -> {
+                        if (response.code() == 201) {
+                            if (registerCountDownTimer != null) {
+                                registerCountDownTimer.cancel();
+                            }
+                            if (registerOtpDialog != null && registerOtpDialog.isShowing()) {
+                                registerOtpDialog.dismiss();
+                            }
+                            handleRegisterResponse(response.code(), responseBody);
+                        } else {
+                            try {
+                                JSONObject json = new JSONObject(responseBody);
+                                String message = json.optString("message", "Invalid OTP");
+                                showRegisterOtpError(message);
+                            } catch (Exception ex) {
+                                showRegisterOtpError("Invalid OTP");
+                            }
+                        }
+                    });
+                }
+            });
+        } catch (JSONException e) {
+            Toast.makeText(this, "Data Error. Please try again.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void showRegisterOtpError(String message) {
+        if (registerOtpDialog == null || !registerOtpDialog.isShowing()) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        TextView errorView = registerOtpDialog.findViewById(R.id.dialog_tv_error);
+        EditText hiddenOtp = registerOtpDialog.findViewById(R.id.dialog_et_hidden_otp);
+        if (errorView != null) {
+            errorView.setText(message);
+            errorView.setVisibility(View.VISIBLE);
+        }
+        if (hiddenOtp != null) {
+            hiddenOtp.setText("");
+        }
+    }
+
+    private void handleRegisterResponse(int statusCode, String responseBody) {
+        try {
+            JSONObject jsonResponse = new JSONObject(responseBody);
+
+            if (statusCode == 201) {
+                Toast.makeText(this, "Registration successful! Please sign in.", Toast.LENGTH_LONG).show();
+                etEmail.setText(etRegisterEmail.getText().toString().trim());
+                etPassword.setText("");
+                clearRegisterInputs();
+                setAuthMode(false, true);
+                etPassword.requestFocus();
+            } else {
+                String message = jsonResponse.optString("message", "Registration failed");
+                showRegisterInlineError(message);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            showRegisterInlineError("Data processing error: " + e.getMessage());
+        }
+    }
+
+    private void clearRegisterInputs() {
+        etUsername.setText("");
+        etRegisterEmail.setText("");
+        etRegisterPassword.setText("");
+        etConfirmPassword.setText("");
+        showRegisterInlineError(null);
     }
     
     private void navigateToMainActivity() {
@@ -587,17 +1169,21 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        
-        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
-            String email = data.getStringExtra("email");
-            if (email != null) {
-                etEmail.setText(email);
-                etPassword.requestFocus();
-            }
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (intent != null && intent.getBooleanExtra(EXTRA_OPEN_SIGN_UP, false)) {
+            setAuthMode(true, false);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (registerCountDownTimer != null) {
+            registerCountDownTimer.cancel();
+        }
+        super.onDestroy();
     }
 }
