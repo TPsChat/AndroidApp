@@ -194,7 +194,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                     for (int i = 0; i < membersArray.length(); i++) {
                         JSONObject memberJson = membersArray.getJSONObject(i);
                         android.util.Log.d("GroupMembersActivity", "Parsing member " + i + ": " + memberJson.toString());
-                        User member = User.fromJson(memberJson);
+                        User member = User.fromJsonStatic(memberJson);
                         android.util.Log.d("GroupMembersActivity", "Parsed member: " + member.getDisplayName() + 
                                           ", ID: " + member.getId());
                         members.add(member);

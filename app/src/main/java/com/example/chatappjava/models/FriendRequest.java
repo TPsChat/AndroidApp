@@ -37,7 +37,7 @@ public class FriendRequest {
         if (json.has("senderId") && !json.isNull("senderId")) {
             try {
                 JSONObject senderJson = json.getJSONObject("senderId");
-                request.sender = User.fromJson(senderJson);
+                request.sender = User.fromJsonStatic(senderJson);
                 // Extract sender ID from the JSON object
                 request.senderId = senderJson.optString("_id", "");
                 System.out.println("FriendRequest.fromJson: Parsed sender: " + request.sender.getDisplayName());
@@ -51,7 +51,7 @@ public class FriendRequest {
         if (json.has("receiverId") && !json.isNull("receiverId")) {
             try {
                 JSONObject receiverJson = json.getJSONObject("receiverId");
-                request.receiver = User.fromJson(receiverJson);
+                request.receiver = User.fromJsonStatic(receiverJson);
                 // Extract receiver ID from the JSON object
                 request.receiverId = receiverJson.optString("_id", "");
                 System.out.println("FriendRequest.fromJson: Parsed receiver: " + (request.receiver != null ? request.receiver.getDisplayName() : "null"));

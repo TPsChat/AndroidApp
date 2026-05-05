@@ -121,9 +121,9 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
                             friends.clear();
                             allFriends.clear();
                             for (int i = 0; i < arr.length(); i++) {
-                                User u = User.fromJson(arr.getJSONObject(i));
-                                friends.add(u);
-                                allFriends.add(u);
+                                User fetched = User.fromJsonStatic(arr.getJSONObject(i));
+                                friends.add(fetched);
+                                allFriends.add(fetched);
                             }
                             adapter.notifyDataSetChanged();
                         }

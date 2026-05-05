@@ -233,8 +233,8 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                         // Extract user ID from member object (same as GroupMembersActivity)
                         String userId = null;
                         if (memberJson.has("user") && memberJson.get("user") instanceof JSONObject) {
-                            JSONObject userObj = memberJson.getJSONObject("user");
-                            userId = userObj.optString("_id", userObj.optString("id", ""));
+                            User user = User.fromJsonStatic(memberJson.getJSONObject("user"));
+                            userId = user.getId();
                         } else if (memberJson.has("_id")) {
                             userId = memberJson.optString("_id", "");
                         } else if (memberJson.has("id")) {
@@ -836,7 +836,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 
                 for (int i = 0; i < usersArray.length(); i++) {
                     JSONObject userJson = usersArray.getJSONObject(i);
-                    User user = User.fromJson(userJson);
+                    User user = User.fromJsonStatic(userJson);
                     
                     // Don't include current user in search results
                     if (!user.getId().equals(sharedPrefsManager.getUserId())) {

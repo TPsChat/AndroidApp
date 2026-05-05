@@ -802,9 +802,9 @@ public class CreatePostActivity extends AppCompatActivity {
                             friends.clear();
                             filteredFriends.clear();
                             for (int i = 0; i < arr.length(); i++) {
-                                User user = User.fromJson(arr.getJSONObject(i));
-                                friends.add(user);
-                                filteredFriends.add(user);
+                                User u = User.fromJsonStatic(arr.getJSONObject(i));
+                                friends.add(u);
+                                filteredFriends.add(u);
                             }
                             if (adapterRef[0] != null) {
                                 adapterRef[0].updateSelection(selectedUserIds);

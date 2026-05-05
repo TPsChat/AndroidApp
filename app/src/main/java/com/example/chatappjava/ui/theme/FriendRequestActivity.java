@@ -208,7 +208,8 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
                         List<User> list = new ArrayList<>();
                         for (int i = 0; i < arr.length(); i++) {
                             JSONObject u = arr.getJSONObject(i);
-                            list.add(User.fromJson(u));
+                            User user = User.fromJsonStatic(u);
+                            list.add(user);
                         }
                         runOnUiThread(() -> {
                             myFriends.clear();

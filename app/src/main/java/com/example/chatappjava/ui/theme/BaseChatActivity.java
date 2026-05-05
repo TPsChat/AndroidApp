@@ -1598,7 +1598,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             try {
                 String userJson = intent.getStringExtra("user");
                 JSONObject userJsonObj = new JSONObject(userJson);
-                otherUser = User.fromJson(userJsonObj);
+                otherUser = User.fromJsonStatic(userJsonObj);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

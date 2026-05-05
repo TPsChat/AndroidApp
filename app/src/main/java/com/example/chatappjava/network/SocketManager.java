@@ -249,7 +249,7 @@ public class SocketManager {
 
                     // Parse caller info
                     JSONObject callerJson = data.getJSONObject("caller");
-                    User caller = User.fromJson(callerJson);
+                    User caller = User.fromJsonStatic(callerJson);
                     
                     if (incomingCallListener != null) {
                         incomingCallListener.onIncomingCall(callId, caller, chatId, callType);

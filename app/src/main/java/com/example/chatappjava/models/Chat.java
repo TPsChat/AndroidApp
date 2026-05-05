@@ -281,20 +281,7 @@ public class Chat {
     
     public String getFullAvatarUrl() {
         android.util.Log.d("ChatModel", "getFullAvatarUrl() called with avatar: " + avatar);
-        
-        if (avatar == null || avatar.isEmpty()) {
-            android.util.Log.d("ChatModel", "Avatar is null or empty, returning null");
-            return null;
-        }
-        if (avatar.startsWith("http://") || avatar.startsWith("https://")) {
-            android.util.Log.d("ChatModel", "Avatar is already full URL: " + avatar);
-            return avatar; // Already a full URL
-        }
-        // Construct full URL from relative path
-        // Ensure avatar starts with / if it doesn't already
-        String avatarPath = avatar.startsWith("/") ? avatar : "/" + avatar;
-        String fullUrl = "http://" + com.example.chatappjava.config.ServerConfig.getServerIp() + 
-               ":" + com.example.chatappjava.config.ServerConfig.getServerPort() + avatarPath;
+        String fullUrl = com.example.chatappjava.utils.UrlUtils.getFullAvatarUrl(avatar);
         android.util.Log.d("ChatModel", "getFullAvatarUrl() returning: " + fullUrl + " (from input: " + avatar + ")");
         return fullUrl;
     }

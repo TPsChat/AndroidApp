@@ -1938,7 +1938,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                             friends.clear();
                             filteredFriends.clear();
                             for (int i = 0; i < arr.length(); i++) {
-                                User user = User.fromJson(arr.getJSONObject(i));
+                                User user = User.fromJsonStatic(arr.getJSONObject(i));
                                 friends.add(user);
                                 filteredFriends.add(user);
                             }
@@ -1987,7 +1987,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                             JSONArray arr = data.getJSONArray("friends");
                             friendsListForMention.clear();
                             for (int i = 0; i < arr.length(); i++) {
-                                User user = User.fromJson(arr.getJSONObject(i));
+                                User user = User.fromJsonStatic(arr.getJSONObject(i));
                                 friendsListForMention.add(user);
                             }
                         }

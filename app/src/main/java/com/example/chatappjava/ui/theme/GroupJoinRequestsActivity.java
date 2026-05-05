@@ -108,7 +108,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
                                 for (int i = 0; i < arr.length(); i++) {
                                     JSONObject r = arr.getJSONObject(i).optJSONObject("user");
                                     if (r != null) {
-                                        User u = User.fromJson(r);
+                                        User u = User.fromJsonStatic(arr.getJSONObject(i));
                                         requests.add(u);
                                         allRequests.add(u);
                                     }

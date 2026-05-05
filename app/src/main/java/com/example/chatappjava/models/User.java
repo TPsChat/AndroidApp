@@ -7,8 +7,9 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-public class User {
-    private String id;
+import com.example.chatappjava.constants.ModelFields;
+
+public class User extends BaseModel {
     private String username;
     private String email;
     private String avatar;
@@ -17,7 +18,6 @@ public class User {
     private String lastName;
     private String phoneNumber;
     private long lastSeen;
-    private boolean isActive;
     private boolean isFriend;
     private String friendshipStatus;
     private String friendRequestStatus; // none, sent, received
@@ -33,58 +33,71 @@ public class User {
         this.isActive = true;
     }
     
+    // Note: hashCode() is inherited from BaseModel, no need to override
+    
     // Create User from JSON
-    public static User fromJson(JSONObject json) throws JSONException {
+    public static User fromJsonStatic(JSONObject json) throws JSONException {
         User user = new User();
-        // Try both "id" and "_id" fields
-        user.id = json.optString("id", json.optString("_id", ""));
-        user.username = json.optString("username", "");
-        user.email = json.optString("email", "");
-        user.avatar = json.optString("avatar", "");
-        
-        // Handle profile nested object
-        JSONObject profile = json.optJSONObject("profile");
-        if (profile != null) {
-            user.firstName = profile.optString("firstName", "");
-            user.lastName = profile.optString("lastName", "");
-            user.bio = profile.optString("bio", "");
-            user.phoneNumber = profile.optString("phoneNumber", "");
-        }
-        
-        user.lastSeen = json.optLong("lastSeen", System.currentTimeMillis());
-        user.isActive = json.optBoolean("isActive", true);
-        user.isFriend = json.optBoolean("isFriend", false);
-        user.friendshipStatus = json.optString("friendshipStatus", "not_friends");
-        user.friendRequestStatus = json.optString("friendRequestStatus", "none");
-        user.friendRequestId = json.optString("friendRequestId", "");
-        
+        user.fromJson(json);
         return user;
     }
     
-    // Convert User to JSON
+    @Override
+    public void fromJson(JSONObject json) throws JSONException {
+        // Use BaseModel utility methods
+        this.id = parseStringWithFallback(json, ModelFields.ID_ALT, ModelFields.ID, "");
+        this.username = parseString(json, ModelFields.USERNAME, "");
+        this.email = parseString(json, ModelFields.EMAIL, "");
+        this.avatar = parseString(json, ModelFields.AVATAR, "");
+        
+        // Handle profile nested object
+        JSONObject profile = json.optJSONObject(ModelFields.PROFILE);
+        if (profile != null) {
+            this.firstName = parseString(profile, ModelFields.FIRST_NAME, "");
+            this.lastName = parseString(profile, ModelFields.LAST_NAME, "");
+            this.bio = parseString(profile, ModelFields.BIO, "");
+            this.phoneNumber = parseString(profile, ModelFields.PHONE_NUMBER, "");
+        }
+        
+        this.lastSeen = parseTimestamp(json, ModelFields.LAST_SEEN, System.currentTimeMillis());
+        this.isActive = parseBoolean(json, ModelFields.IS_ACTIVE, true);
+        this.isFriend = parseBoolean(json, "isFriend", false);
+        this.friendshipStatus = parseString(json, "friendshipStatus", ModelFields.FRIENDSHIP_NOT_FRIENDS);
+        this.friendRequestStatus = parseString(json, "friendRequestStatus", ModelFields.FRIENDSHIP_NONE);
+        this.friendRequestId = parseString(json, "friendRequestId", "");
+        
+        // Parse common fields from BaseModel
+        this.createdAt = parseTimestamp(json, ModelFields.CREATED_AT, 0);
+        this.updatedAt = parseTimestamp(json, ModelFields.UPDATED_AT, 0);
+    }
+    
+    @Override
     public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put("_id", id);
-        json.put("username", username);
-        json.put("email", email);
-        json.put("avatar", avatar);
+        
+        // Use BaseModel utility for common fields
+        putCommonFields(json);
+        
+        // Add User-specific fields
+        json.put(ModelFields.USERNAME, username);
+        json.put(ModelFields.EMAIL, email);
+        json.put(ModelFields.AVATAR, avatar);
+        json.put(ModelFields.LAST_SEEN, lastSeen);
         
         // Create profile object
         JSONObject profile = new JSONObject();
-        profile.put("firstName", firstName);
-        profile.put("lastName", lastName);
-        profile.put("bio", bio);
-        profile.put("phoneNumber", phoneNumber);
-        json.put("profile", profile);
+        profile.put(ModelFields.FIRST_NAME, firstName);
+        profile.put(ModelFields.LAST_NAME, lastName);
+        profile.put(ModelFields.BIO, bio);
+        profile.put(ModelFields.PHONE_NUMBER, phoneNumber);
+        json.put(ModelFields.PROFILE, profile);
         
-        json.put("lastSeen", lastSeen);
-        json.put("isActive", isActive);
         return json;
     }
     
     // Getters and Setters
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    // Note: getId(), setId(), getCreatedAt(), setCreatedAt(), getUpdatedAt(), setUpdatedAt(), 
+    // isActive(), setActive() are inherited from BaseModel
     
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
@@ -104,17 +117,7 @@ public class User {
     public void setAvatar(String avatar) { this.avatar = avatar; }
     
     public String getFullAvatarUrl() {
-        if (avatar == null || avatar.isEmpty()) {
-            return null;
-        }
-        if (avatar.startsWith("http://") || avatar.startsWith("https://")) {
-            return avatar; // Already a full URL
-        }
-        // Construct full URL from relative path
-        // Ensure avatar starts with / if it doesn't already
-        String avatarPath = avatar.startsWith("/") ? avatar : "/" + avatar;
-        return "http://" + com.example.chatappjava.config.ServerConfig.getServerIp() +
-               ":" + com.example.chatappjava.config.ServerConfig.getServerPort() + avatarPath;
+        return com.example.chatappjava.utils.UrlUtils.getFullAvatarUrl(avatar);
     }
     
     public String getBio() { return bio; }
@@ -127,6 +130,8 @@ public class User {
 
     public String getFriendRequestStatus() { return friendRequestStatus; }
     public String getFriendRequestId() { return friendRequestId; }
+    
+    // Note: hashCode() is inherited from BaseModel, no need to override
     
     // Helper methods
     public String getDisplayName() {
@@ -147,10 +152,7 @@ public class User {
         return Objects.equals(id, user.id);
     }
     
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : 0;
-    }
+    // Note: hashCode() is inherited from BaseModel, no need to override
     
     @NonNull
     @Override

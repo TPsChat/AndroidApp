@@ -293,7 +293,7 @@ public class ProfileActivity extends AppCompatActivity {
                     java.util.List<com.example.chatappjava.models.User> list = new java.util.ArrayList<>();
                     for (int i = 0; i < arr.length(); i++) {
                         org.json.JSONObject u = arr.getJSONObject(i);
-                        com.example.chatappjava.models.User friend = com.example.chatappjava.models.User.fromJson(u);
+                        com.example.chatappjava.models.User friend = com.example.chatappjava.models.User.fromJsonStatic(u);
                         list.add(friend);
                     }
                     runOnUiThread(() -> {
@@ -561,7 +561,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (statusCode == 200) {
                 JSONObject userData = jsonResponse.getJSONObject("data").getJSONObject("user");
-                currentUser = User.fromJson(userData);
+                currentUser = User.fromJsonStatic(userData);
                 populateFields();
             } else {
                 String message = jsonResponse.optString("message", "Failed to load profile");
@@ -865,7 +865,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             if (statusCode == 200) {
                 JSONObject userData = jsonResponse.getJSONObject("data").getJSONObject("user");
-                currentUser = User.fromJson(userData);
+                currentUser = User.fromJsonStatic(userData);
                 
                 // Update shared preferences with new user info
                 databaseManager.saveLoginInfo(databaseManager.getToken(), userData.toString());

@@ -235,7 +235,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                 if (userExtra != null && (userExtra.startsWith("{") || userExtra.startsWith("["))) {
                     // It's a JSON string
                     JSONObject userJsonObj = new JSONObject(userExtra);
-                    otherUser = User.fromJson(userJsonObj);
+                    otherUser = User.fromJsonStatic(userJsonObj);
                     android.util.Log.d("ProfileViewActivity", "User loaded from Intent JSON: id=" + (otherUser != null ? otherUser.getId() : "null"));
                     
                     // If user doesn't have ID, fetch from server
@@ -517,7 +517,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                     java.util.List<com.example.chatappjava.models.User> list = new java.util.ArrayList<>();
                     for (int i = 0; i < arr.length(); i++) {
                         org.json.JSONObject u = arr.getJSONObject(i);
-                        com.example.chatappjava.models.User friend = com.example.chatappjava.models.User.fromJson(u);
+                        com.example.chatappjava.models.User friend = com.example.chatappjava.models.User.fromJsonStatic(u);
                         list.add(friend);
                     }
                     runOnUiThread(() -> {
@@ -1114,7 +1114,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         JSONObject finalUserData = userData;
                         runOnUiThread(() -> {
                             try {
-                                otherUser = User.fromJson(finalUserData);
+                                otherUser = User.fromJsonStatic(finalUserData);
                                 android.util.Log.d("ProfileViewActivity", "User fetched by ID: id=" + (otherUser != null ? otherUser.getId() : "null"));
                                 
                                 // If still no ID, try to get from _id field directly
@@ -1203,7 +1203,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         JSONObject finalUserData = userData;
                         runOnUiThread(() -> {
                             try {
-                                otherUser = User.fromJson(finalUserData);
+                                otherUser = User.fromJsonStatic(finalUserData);
                                 android.util.Log.d("ProfileViewActivity", "User loaded: id=" + (otherUser != null ? otherUser.getId() : "null"));
                                 
                                 // If still no ID, try to get from _id field directly
@@ -1288,7 +1288,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         if (uname.equalsIgnoreCase(username)) { userObj = u; break; }
                     }
                     if (userObj == null) userObj = arr.getJSONObject(0);
-                    User fetched = User.fromJson(userObj);
+                    User fetched = User.fromJsonStatic(userObj);
                     otherUser = fetched;
                     runOnUiThread(() -> loadUserData());
                 } catch (Exception e) {

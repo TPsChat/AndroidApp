@@ -245,7 +245,7 @@ public class RingingActivity extends AppCompatActivity {
             
             String callerJson = getIntent().getStringExtra("caller");
             if (callerJson != null) {
-                caller = User.fromJson(new JSONObject(callerJson));
+                caller = User.fromJsonStatic(new JSONObject(callerJson));
             }
             
             callId = getIntent().getStringExtra("callId");

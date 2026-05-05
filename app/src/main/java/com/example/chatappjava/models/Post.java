@@ -204,7 +204,7 @@ public class Post {
                 Object tagObj = tagsArray.get(i);
                 if (tagObj instanceof JSONObject) {
                     try {
-                        User taggedUser = User.fromJson((JSONObject) tagObj);
+                        User taggedUser = User.fromJsonStatic((JSONObject) tagObj);
                         post.taggedUsers.add(taggedUser);
                     } catch (JSONException e) {
                         // Skip invalid user objects

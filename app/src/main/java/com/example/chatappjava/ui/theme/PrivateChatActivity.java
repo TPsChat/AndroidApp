@@ -707,7 +707,7 @@ public class PrivateChatActivity extends BaseChatActivity {
                         org.json.JSONObject finalUserData = userData;
                         runOnUiThread(() -> {
                             try {
-                                User updatedUser = User.fromJson(finalUserData);
+                                User updatedUser = User.fromJsonStatic(finalUserData);
                                 android.util.Log.d("PrivateChatActivity", "Updated otherUser data: id=" + (updatedUser != null ? updatedUser.getId() : "null") + 
                                     ", avatar=" + (updatedUser != null ? updatedUser.getAvatar() : "null"));
                                 

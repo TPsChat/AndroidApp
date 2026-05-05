@@ -107,7 +107,8 @@ public class BlockedUsersActivity extends AppCompatActivity {
                         JSONArray arr = json.getJSONObject("data").getJSONArray("users");
                         blockedUsers.clear();
                         for (int i = 0; i < arr.length(); i++) {
-                            blockedUsers.add(User.fromJson(arr.getJSONObject(i)));
+                            User user = User.fromJsonStatic(arr.getJSONObject(i));
+                            blockedUsers.add(user);
                         }
                         adapter.notifyDataSetChanged();
                         emptyState.setVisibility(blockedUsers.isEmpty() ? View.VISIBLE : View.GONE);
