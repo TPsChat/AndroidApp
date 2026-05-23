@@ -2537,7 +2537,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                         System.out.println("HomeActivity: Chat " + i + ": " + chatJson.toString());
                         
                         try {
-                            Chat chat = Chat.fromJson(chatJson);
+                            Chat chat = Chat.fromJson(chatJson, databaseManager.getUserId());
                             chats.add(chat);
                             serverChatIds.add(chat.getId());
                             

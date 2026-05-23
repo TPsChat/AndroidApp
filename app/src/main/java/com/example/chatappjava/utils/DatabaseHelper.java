@@ -8,7 +8,7 @@ import android.util.Log;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TAG = "DatabaseHelper";
     private static final String DATABASE_NAME = "ChatApp.db";
-    private static final int DATABASE_VERSION = 6; // Incremented for shared post object storage
+    private static final int DATABASE_VERSION = 7; // Incremented for other_participant on conversations
 
     // ===== Table: app_settings =====
     public static final String TABLE_APP_SETTINGS = "app_settings";
@@ -33,6 +33,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String COL_CONV_GROUP_ID = "group_id";
     public static final String COL_CONV_IS_PUBLIC = "is_public";
     public static final String COL_CONV_VISIBILITY = "visibility";
+    public static final String COL_CONV_OTHER_PARTICIPANT = "other_participant_json";
 
     // ===== Table: messages =====
     public static final String TABLE_MESSAGES = "messages";
@@ -84,7 +85,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         COL_CONV_PARTICIPANTS + " TEXT, " + // JSON array
         COL_CONV_GROUP_ID + " TEXT, " +
         COL_CONV_IS_PUBLIC + " INTEGER DEFAULT 0, " +
-        COL_CONV_VISIBILITY + " TEXT" +
+        COL_CONV_VISIBILITY + " TEXT, " +
+        COL_CONV_OTHER_PARTICIPANT + " TEXT" +
         ")";
 
     private static final String CREATE_TABLE_MESSAGES = 
@@ -285,6 +287,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Log.d(TAG, "Added shared_post column to posts table");
             } catch (Exception e) {
                 Log.e(TAG, "Error adding shared_post column: " + e.getMessage());
+            }
+        }
+
+        if (oldVersion < 7) {
+            try {
+                db.execSQL("ALTER TABLE " + TABLE_CONVERSATIONS + " ADD COLUMN " + COL_CONV_OTHER_PARTICIPANT + " TEXT");
+                Log.d(TAG, "Added other_participant_json column to conversations table");
+            } catch (Exception e) {
+                Log.e(TAG, "Error adding other_participant_json column: " + e.getMessage());
             }
         }
     }

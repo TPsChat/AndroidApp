@@ -61,6 +61,20 @@ public class ConversationRepository {
             values.put(DatabaseHelper.COL_CONV_GROUP_ID, chat.getGroupId());
             values.put(DatabaseHelper.COL_CONV_IS_PUBLIC, chat.isPublicGroup() ? 1 : 0);
             values.put(DatabaseHelper.COL_CONV_VISIBILITY, chat.getVisibility());
+
+            if (chat.isPrivateChat() && chat.getOtherParticipant() != null) {
+                try {
+                    values.put(
+                        DatabaseHelper.COL_CONV_OTHER_PARTICIPANT,
+                        chat.getOtherParticipant().toJson().toString()
+                    );
+                } catch (JSONException e) {
+                    Log.w(TAG, "Could not serialize other participant: " + e.getMessage());
+                    values.putNull(DatabaseHelper.COL_CONV_OTHER_PARTICIPANT);
+                }
+            } else {
+                values.putNull(DatabaseHelper.COL_CONV_OTHER_PARTICIPANT);
+            }
             
             // Convert participants list to JSON array
             List<String> participants = chat.getParticipantIds();
@@ -250,40 +264,36 @@ public class ConversationRepository {
             int groupIdIndex = cursor.getColumnIndex(DatabaseHelper.COL_CONV_GROUP_ID);
             int isPublicIndex = cursor.getColumnIndex(DatabaseHelper.COL_CONV_IS_PUBLIC);
             int visibilityIndex = cursor.getColumnIndex(DatabaseHelper.COL_CONV_VISIBILITY);
+            int otherParticipantIndex = cursor.getColumnIndex(DatabaseHelper.COL_CONV_OTHER_PARTICIPANT);
             
             if (idIndex >= 0) chat.setId(cursor.getString(idIndex));
             if (typeIndex >= 0) chat.setType(cursor.getString(typeIndex));
             if (nameIndex >= 0) chat.setName(cursor.getString(nameIndex));
             if (descriptionIndex >= 0) chat.setDescription(cursor.getString(descriptionIndex));
             
-            // Set avatar - for private chats, this is the other participant's avatar
+            if (otherParticipantIndex >= 0) {
+                String otherParticipantJson = cursor.getString(otherParticipantIndex);
+                if (otherParticipantJson != null && !otherParticipantJson.isEmpty()) {
+                    try {
+                        chat.setOtherParticipant(User.fromJsonStatic(new org.json.JSONObject(otherParticipantJson)));
+                    } catch (JSONException e) {
+                        Log.w(TAG, "Could not parse other participant JSON: " + e.getMessage());
+                    }
+                }
+            }
+
             if (avatarIndex >= 0) {
                 String avatar = cursor.getString(avatarIndex);
                 chat.setAvatar(avatar);
-                
-                // For private chats, also set avatar to otherParticipant if it exists
-                // This ensures avatar is available when loading from database
+
                 if (chat.isPrivateChat() && avatar != null && !avatar.isEmpty()) {
-                    try {
-                        java.lang.reflect.Field otherParticipantField = Chat.class.getDeclaredField("otherParticipant");
-                        otherParticipantField.setAccessible(true);
-                        User otherParticipant = (User) otherParticipantField.get(chat);
-                        
-                        // If otherParticipant doesn't exist, create a minimal one with avatar
-                        if (otherParticipant == null) {
-                            otherParticipant = new User();
-                            otherParticipant.setAvatar(avatar);
-                            otherParticipantField.set(chat, otherParticipant);
-                            Log.d(TAG, "Created otherParticipant with avatar from database: " + avatar);
-                        } else {
-                            // If otherParticipant exists but has no avatar, set it
-                            if (otherParticipant.getAvatar() == null || otherParticipant.getAvatar().isEmpty()) {
-                                otherParticipant.setAvatar(avatar);
-                                Log.d(TAG, "Set avatar to existing otherParticipant: " + avatar);
-                            }
-                        }
-                    } catch (Exception e) {
-                        Log.w(TAG, "Could not set otherParticipant avatar: " + e.getMessage());
+                    User otherParticipant = chat.getOtherParticipant();
+                    if (otherParticipant == null) {
+                        otherParticipant = new User();
+                        chat.setOtherParticipant(otherParticipant);
+                    }
+                    if (otherParticipant.getAvatar() == null || otherParticipant.getAvatar().isEmpty()) {
+                        otherParticipant.setAvatar(avatar);
                     }
                 }
             }

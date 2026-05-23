@@ -321,7 +321,9 @@ public class SyncManager {
                         if (conversations != null) {
                             for (int i = 0; i < conversations.length(); i++) {
                                 JSONObject convJson = conversations.getJSONObject(i);
-                                com.example.chatappjava.models.Chat chat = com.example.chatappjava.models.Chat.fromJson(convJson);
+                                String currentUserId = new DatabaseManager(context).getUserId();
+                                com.example.chatappjava.models.Chat chat =
+                                    com.example.chatappjava.models.Chat.fromJson(convJson, currentUserId);
                                 conversationRepository.saveConversation(chat);
                                 count++;
                             }

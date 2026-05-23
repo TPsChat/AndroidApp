@@ -48,6 +48,10 @@ public class Chat {
     
     // Create Chat from JSON
     public static Chat fromJson(JSONObject json) throws JSONException {
+        return fromJson(json, null);
+    }
+
+    public static Chat fromJson(JSONObject json, String currentUserId) throws JSONException {
         Chat chat = new Chat();
         chat.id = json.optString("_id", "");
         chat.type = json.optString("type", "private");
@@ -148,33 +152,108 @@ public class Chat {
             android.util.Log.d("Chat.fromJson", "No participants field found in JSON");
         }
         
-        // Parse otherParticipant if server provided it (for private chats)
+        parseOtherParticipant(chat, json);
+        if (currentUserId != null && !currentUserId.isEmpty()) {
+            resolvePrivateChatPeer(chat, currentUserId, json);
+        }
+        chat.syncPrivateChatDisplayName();
+
+        return chat;
+    }
+
+    private static boolean isGenericPrivateChatName(String value) {
+        if (value == null || value.isEmpty()) {
+            return true;
+        }
+        return "Private Chat".equalsIgnoreCase(value) || "Unknown User".equalsIgnoreCase(value);
+    }
+
+    private static User parseParticipantUser(JSONObject participantObj) throws JSONException {
+        if (participantObj == null) {
+            return null;
+        }
+        JSONObject userObj = participantObj.optJSONObject("user");
+        if (userObj != null) {
+            return User.fromJsonStatic(userObj);
+        }
+        if (participantObj.has("username") || participantObj.has("_id") || participantObj.has("id")) {
+            return User.fromJsonStatic(participantObj);
+        }
+        return null;
+    }
+
+    private static void parseOtherParticipant(Chat chat, JSONObject json) throws JSONException {
         JSONObject other = json.optJSONObject("otherParticipant");
-        if (other != null) {
-            User u = new User();
-            u.setId(other.optString("_id", other.optString("id", "")));
-            u.setUsername(other.optString("username", ""));
-            u.setEmail(other.optString("email", ""));
-            u.setAvatar(other.optString("avatar", ""));
-            u.setFriend(other.optBoolean("isFriend", false));
-            u.setFriendshipStatus(other.optString("friendshipStatus", "not_friends"));
-            
-            // Parse profile if available
-            JSONObject profile = other.optJSONObject("profile");
-            if (profile != null) {
-                u.setFirstName(profile.optString("firstName", ""));
-                u.setLastName(profile.optString("lastName", ""));
+        if (other == null) {
+            return;
+        }
+
+        JSONObject userObj = other.optJSONObject("user");
+        if (userObj != null) {
+            chat.otherParticipant = User.fromJsonStatic(userObj);
+            return;
+        }
+
+        User u = new User();
+        u.setId(other.optString("_id", other.optString("id", "")));
+        u.setUsername(other.optString("username", ""));
+        u.setEmail(other.optString("email", ""));
+        u.setAvatar(other.optString("avatar", ""));
+        u.setFriend(other.optBoolean("isFriend", false));
+        u.setFriendshipStatus(other.optString("friendshipStatus", "not_friends"));
+
+        JSONObject profile = other.optJSONObject("profile");
+        if (profile != null) {
+            u.setFirstName(profile.optString("firstName", ""));
+            u.setLastName(profile.optString("lastName", ""));
+        }
+
+        chat.otherParticipant = u;
+    }
+
+    private static void resolvePrivateChatPeer(Chat chat, String currentUserId, JSONObject json) throws JSONException {
+        if (!chat.isPrivateChat() || chat.otherParticipant != null) {
+            return;
+        }
+
+        JSONArray participantsArray = json.optJSONArray("participants");
+        if (participantsArray == null) {
+            return;
+        }
+
+        for (int i = 0; i < participantsArray.length(); i++) {
+            Object participantEntry = participantsArray.opt(i);
+            if (!(participantEntry instanceof JSONObject)) {
+                continue;
             }
-            
-            chat.otherParticipant = u;
-            // Server already sets chat.name to otherParticipant.user.username, so we don't override it
-            // Only set name if it's empty and we have otherParticipant data
-            if ((chat.name == null || chat.name.isEmpty()) && u.getUsername() != null && !u.getUsername().isEmpty()) {
-                chat.name = u.getUsername();
+            User participantUser = parseParticipantUser((JSONObject) participantEntry);
+            if (participantUser == null) {
+                continue;
+            }
+            String participantId = participantUser.getId();
+            if (participantId != null && !participantId.isEmpty() && !participantId.equals(currentUserId)) {
+                chat.otherParticipant = participantUser;
+                return;
             }
         }
-        
-        return chat;
+    }
+
+    private void syncPrivateChatDisplayName() {
+        if (!isPrivateChat() || otherParticipant == null) {
+            return;
+        }
+        String displayName = otherParticipant.getDisplayName();
+        if (displayName == null || displayName.isEmpty()) {
+            displayName = otherParticipant.getUsername();
+        }
+        if (displayName != null && !displayName.isEmpty() && isGenericPrivateChatName(name)) {
+            name = displayName;
+        }
+    }
+
+    public void setOtherParticipant(User otherParticipant) {
+        this.otherParticipant = otherParticipant;
+        syncPrivateChatDisplayName();
     }
     
     // Convert Chat to JSON
@@ -300,24 +379,19 @@ public class Chat {
     }
     
     public String getDisplayName() {
-        // For private chats, prioritize name field (set by server with other participant's username)
         if (isPrivateChat()) {
-            // First, try the name field (server sets this to otherParticipant.user.username)
-            if (name != null && !name.isEmpty() && !name.equals("Private Chat") && !name.equals("Unknown User")) {
-                return name;
-            }
-            // Fallback to otherParticipant's display name if name field is not set
             if (otherParticipant != null) {
                 String otherName = otherParticipant.getDisplayName();
                 if (otherName != null && !otherName.isEmpty()) {
                     return otherName;
                 }
-                // If otherParticipant exists but has no display name, use username
                 if (otherParticipant.getUsername() != null && !otherParticipant.getUsername().isEmpty()) {
                     return otherParticipant.getUsername();
                 }
             }
-            // Last resort
+            if (!isGenericPrivateChatName(name)) {
+                return name;
+            }
             return "Private Chat";
         }
         
