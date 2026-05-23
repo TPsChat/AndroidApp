@@ -40,8 +40,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="SocialApp"
-            android:textColor="#FFFFFF"
+            android:fontFamily="@font/plus_jakarta_sans"
+            android:text="Explore"
+            android:textColor="@color/md3_on_surface"
             android:textSize="24sp"
             android:textStyle="bold"
             android:maxLines="1"
@@ -58,7 +59,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_notifications"
@@ -72,7 +73,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#D7DEE8" />
+            app:tint="@color/md3_secondary" />
 
     </LinearLayout>
 
@@ -85,7 +86,7 @@
         android:layout_marginEnd="18dp"
         android:layout_marginTop="16dp"
         android:orientation="vertical"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="12dp"
         android:translationZ="8dp"
         android:padding="14dp"
@@ -108,7 +109,7 @@
                 android:src="@drawable/ic_profile_placeholder"
                 android:elevation="8dp"
                 android:translationZ="5dp"
-                app:civ_border_color="#33FFFFFF"
+                app:civ_border_color="@color/md3_border_glow"
                 app:civ_border_width="1.5dp" />
 
             <LinearLayout
@@ -120,7 +121,7 @@
                 android:gravity="center_vertical"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@drawable/bg_message_field_shadow"
+                android:background="@drawable/bg_soft_inset"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp">
 
@@ -129,7 +130,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="What's on your mind?"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:textSize="15sp" />
 
             </LinearLayout>
@@ -139,7 +140,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#22FFFFFF"
+            android:background="@color/md3_border_subtle"
             android:layout_marginTop="6dp"
             android:layout_marginBottom="10dp" />
 
@@ -165,14 +166,14 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@android:drawable/ic_menu_camera"
-                    app:tint="#FF4D57" />
+                    app:tint="@color/md3_primary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Live"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -192,14 +193,14 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@android:drawable/ic_menu_gallery"
-                    app:tint="#FF4D57" />
+                    app:tint="@color/md3_primary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Photo"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -219,14 +220,14 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_video_call"
-                    app:tint="#FF4D57" />
+                    app:tint="@color/md3_primary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Video"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -270,9 +271,7 @@
         android:layout_marginBottom="14dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="@drawable/bg_message_field_shadow"
-        android:elevation="16dp"
-        android:translationZ="12dp"
+        android:background="@drawable/bg_glass_nav"
         android:padding="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -294,14 +293,14 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@android:drawable/ic_menu_view"
-                app:tint="#FFFFFF" />
+                app:tint="@color/md3_on_surface" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="Feed"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -323,14 +322,14 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_group"
-                app:tint="#9AA4B2" />
+                app:tint="@color/md3_secondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="Groups"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -352,14 +351,14 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_video_call"
-                app:tint="#9AA4B2" />
+                app:tint="@color/md3_secondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="Watch"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
@@ -381,14 +380,14 @@
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:src="@drawable/ic_profile_placeholder"
-                app:tint="#9AA4B2" />
+                app:tint="@color/md3_secondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="Profile"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 

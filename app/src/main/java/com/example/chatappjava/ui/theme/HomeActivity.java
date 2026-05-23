@@ -1102,13 +1102,6 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         
         Log.d(TAG, "Loading user profile - Username: " + username + ", Avatar URL: " + avatarUrl);
         
-        // Set username
-        if (username != null && !username.isEmpty()) {
-            tvUserName.setText(username);
-        } else {
-            tvUserName.setText("User");
-        }
-        
         // Load avatar - handle URL like ProfileActivity
         if (avatarUrl != null && !avatarUrl.isEmpty()) {
             Log.d(TAG, "Loading avatar from URL: " + avatarUrl);
@@ -1203,9 +1196,21 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             llCreatePostBar.setVisibility(View.GONE);
         }
         
-        // Toggle New Group Extended FAB visibility: only on Search & Groups tab
+        // Header action: new chat / new group
         if (efabNewGroup != null) {
-            efabNewGroup.setVisibility(tabIndex == 1 ? View.VISIBLE : View.GONE);
+            efabNewGroup.setVisibility(tabIndex == 0 || tabIndex == 1 ? View.VISIBLE : View.GONE);
+        }
+        if (tvUserName != null) {
+            int titleRes;
+            switch (tabIndex) {
+                case 1: titleRes = R.string.home_title_groups; break;
+                case 2: titleRes = R.string.home_title_calls; break;
+                case 3: titleRes = R.string.home_title_posts; break;
+                case 4: titleRes = R.string.home_title_notifications; break;
+                case 5: titleRes = R.string.home_title_settings; break;
+                default: titleRes = R.string.home_title_chats; break;
+            }
+            tvUserName.setText(titleRes);
         }
         
         // Update RecyclerView constraints and padding for different tabs using ConstraintSet
@@ -1246,9 +1251,13 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                         chatListCard.setLayoutParams(params);
                     }
                 }
-                // Remove padding bottom
                 if (recyclerView != null) {
-                    recyclerView.setPadding(0, 0, 0, 0);
+                    int h = (int) (88 * getResources().getDisplayMetrics().density);
+                    recyclerView.setPadding(
+                            (int) (8 * getResources().getDisplayMetrics().density),
+                            (int) (8 * getResources().getDisplayMetrics().density),
+                            (int) (8 * getResources().getDisplayMetrics().density),
+                            h);
                 }
                 constraintSet.applyTo(rootLayout);
             }

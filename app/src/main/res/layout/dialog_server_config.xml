@@ -17,7 +17,7 @@
         android:paddingEnd="20dp"
         android:paddingTop="22dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="14dp"
         android:translationZ="10dp">
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="Server Configuration"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textStyle="bold"
             android:gravity="center"
             android:paddingStart="16dp"
@@ -43,7 +43,7 @@
             android:text="Server IP"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:layout_marginBottom="8dp" />
 
         <EditText
@@ -53,10 +53,10 @@
             android:inputType="text"
             android:hint="Enter server IP address"
             android:textSize="15sp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#7F8A99"
+            android:textColor="@color/md3_on_surface"
+            android:textColorHint="@color/md3_on_surface_secondary"
             android:gravity="center_vertical"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textCursorDrawable="@null"
@@ -69,7 +69,7 @@
             android:text="Server Port"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:layout_marginBottom="8dp" />
 
         <EditText
@@ -79,10 +79,10 @@
             android:inputType="number"
             android:hint="Enter server port"
             android:textSize="15sp"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#7F8A99"
+            android:textColor="@color/md3_on_surface"
+            android:textColorHint="@color/md3_on_surface_secondary"
             android:gravity="center_vertical"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textCursorDrawable="@null"
@@ -107,14 +107,14 @@
                 android:layout_weight="1"
                 android:text="Use HTTPS"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
             <CheckBox
                 android:id="@+id/cb_use_https"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="#FF4D57" />
+                android:buttonTint="@color/md3_primary" />
 
         </LinearLayout>
 
@@ -137,14 +137,14 @@
                 android:layout_weight="1"
                 android:text="Use WSS (WebSocket Secure)"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
             <CheckBox
                 android:id="@+id/cb_use_wss"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="#FF4D57" />
+                android:buttonTint="@color/md3_primary" />
 
         </LinearLayout>
 
@@ -162,7 +162,7 @@
                 android:minWidth="92dp"
                 android:text="Cancel"
                 android:textAllCaps="false"
-                android:textColor="#FF4D57"
+                android:textColor="@color/dialog_button_secondary_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:background="@drawable/bg_reject_button_modern"
@@ -181,7 +181,7 @@
                 android:minWidth="92dp"
                 android:text="Save"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/dialog_button_filled_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:background="@drawable/bg_new_message_button"

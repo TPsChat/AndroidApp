@@ -39,7 +39,7 @@
             android:elevation="8dp"
             android:translationZ="5dp"
             app:civ_border_width="1.5dp"
-            app:civ_border_color="#33FFFFFF" />
+            app:civ_border_color="@color/md3_border_glow" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="Display Name"
@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:textSize="13sp"
                 android:maxLines="1"
                 android:ellipsize="end"
@@ -79,7 +79,7 @@
             android:id="@+id/cb_select"
             android:layout_width="42dp"
             android:layout_height="42dp"
-            android:buttonTint="#FF4D57"
+            android:buttonTint="@color/md3_primary"
             android:background="@drawable/bg_icon_circle_transparent"
             android:gravity="center"
             android:elevation="6dp"

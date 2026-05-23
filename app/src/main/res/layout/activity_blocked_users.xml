@@ -45,7 +45,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -54,7 +54,7 @@
             android:layout_weight="1"
             android:layout_marginStart="14dp"
             android:text="Blocked Users"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="22sp"
             android:textStyle="bold"
             android:maxLines="1"
@@ -93,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:indeterminateTint="#FF4D57" />
+                android:indeterminateTint="@color/md3_primary" />
 
             <!-- Empty State -->
             <LinearLayout
@@ -110,7 +110,7 @@
                 android:paddingTop="34dp"
                 android:paddingBottom="34dp"
                 android:visibility="gone"
-                android:background="@drawable/bg_empty_state_panel"
+                android:background="@drawable/bg_obsidian_card"
                 android:elevation="12dp"
                 android:translationZ="8dp">
 
@@ -123,14 +123,14 @@
                     android:background="@drawable/bg_icon_circle_dark"
                     android:elevation="8dp"
                     android:translationZ="5dp"
-                    app:tint="#FF4D57" />
+                    app:tint="@color/md3_primary" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="No Blocked Users"
                     android:textSize="21sp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
 
@@ -139,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:text="You haven't blocked anyone yet"
                     android:textSize="14sp"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:textAlignment="center"
                     android:gravity="center" />
 

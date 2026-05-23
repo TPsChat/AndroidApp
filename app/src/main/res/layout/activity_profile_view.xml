@@ -45,7 +45,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <TextView
             android:layout_width="0dp"
@@ -56,7 +56,7 @@
             android:text="Profile"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:maxLines="1"
             android:ellipsize="end" />
 
@@ -70,7 +70,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#D7DEE8" />
+            app:tint="@color/md3_secondary" />
 
     </LinearLayout>
 
@@ -108,7 +108,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:gravity="center"
-                    android:background="@drawable/bg_empty_state_panel"
+                    android:background="@drawable/bg_obsidian_card"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:paddingTop="28dp"
@@ -125,7 +125,7 @@
                         android:elevation="12dp"
                         android:translationZ="8dp"
                         app:civ_border_width="2dp"
-                        app:civ_border_color="#33FFFFFF" />
+                        app:civ_border_color="@color/md3_border_glow" />
 
                     <TextView
                         android:id="@+id/tv_username"
@@ -134,7 +134,7 @@
                         android:text="Username"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:layout_marginTop="14dp" />
 
                     <TextView
@@ -142,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:text="View profile information"
                         android:textSize="13sp"
-                        android:textColor="#9AA4B2"
+                        android:textColor="@color/md3_on_surface_secondary"
                         android:layout_marginTop="4dp" />
 
                 </LinearLayout>
@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:orientation="vertical"
-                    android:background="@drawable/bg_empty_state_panel"
+                    android:background="@drawable/bg_obsidian_card"
                     android:paddingStart="18dp"
                     android:paddingEnd="18dp"
                     android:paddingTop="20dp"
@@ -167,7 +167,7 @@
                         android:text="Personal Information"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:layout_marginBottom="14dp" />
 
                     <!-- First Name -->
@@ -186,7 +186,7 @@
                             android:layout_height="wrap_content"
                             android:text="First Name"
                             android:textSize="13sp"
-                            android:textColor="#9AA4B2" />
+                            android:textColor="@color/md3_on_surface_secondary" />
 
                         <TextView
                             android:id="@+id/tv_first_name"
@@ -194,7 +194,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="14sp"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/md3_on_surface"
                             android:textStyle="bold"
                             tools:text="John" />
 
@@ -216,7 +216,7 @@
                             android:layout_height="wrap_content"
                             android:text="Last Name"
                             android:textSize="13sp"
-                            android:textColor="#9AA4B2" />
+                            android:textColor="@color/md3_on_surface_secondary" />
 
                         <TextView
                             android:id="@+id/tv_last_name"
@@ -224,7 +224,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="14sp"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/md3_on_surface"
                             android:textStyle="bold"
                             tools:text="Doe" />
 
@@ -246,7 +246,7 @@
                             android:layout_height="wrap_content"
                             android:text="Email"
                             android:textSize="13sp"
-                            android:textColor="#9AA4B2" />
+                            android:textColor="@color/md3_on_surface_secondary" />
 
                         <TextView
                             android:id="@+id/tv_email"
@@ -254,7 +254,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="14sp"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/md3_on_surface"
                             android:textStyle="bold"
                             android:maxLines="1"
                             android:ellipsize="end"
@@ -277,7 +277,7 @@
                             android:layout_height="wrap_content"
                             android:text="Phone"
                             android:textSize="13sp"
-                            android:textColor="#9AA4B2" />
+                            android:textColor="@color/md3_on_surface_secondary" />
 
                         <TextView
                             android:id="@+id/tv_phone_number"
@@ -285,7 +285,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="14sp"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/md3_on_surface"
                             android:textStyle="bold"
                             tools:text="+123456789" />
 
@@ -299,7 +299,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:orientation="vertical"
-                    android:background="@drawable/bg_empty_state_panel"
+                    android:background="@drawable/bg_obsidian_card"
                     android:paddingStart="18dp"
                     android:paddingEnd="18dp"
                     android:paddingTop="20dp"
@@ -313,7 +313,7 @@
                         android:text="About"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:layout_marginBottom="12dp" />
 
                     <TextView
@@ -321,7 +321,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        android:textColor="#D7DEE8"
+                        android:textColor="@color/md3_on_surface"
                         android:lineSpacingExtra="4dp"
                         tools:text="This is a sample bio text that describes the user." />
 
@@ -333,7 +333,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:orientation="vertical"
-                    android:background="@drawable/bg_empty_state_panel"
+                    android:background="@drawable/bg_obsidian_card"
                     android:paddingStart="18dp"
                     android:paddingEnd="18dp"
                     android:paddingTop="20dp"
@@ -348,7 +348,7 @@
                         android:text="Friends"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:layout_marginBottom="10dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -368,7 +368,7 @@
                         android:layout_height="wrap_content"
                         android:text="No friends to show"
                         android:textSize="14sp"
-                        android:textColor="#9AA4B2"
+                        android:textColor="@color/md3_on_surface_secondary"
                         android:visibility="gone"
                         android:layout_marginTop="8dp" />
 
@@ -379,7 +379,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/bg_empty_state_panel"
+                    android:background="@drawable/bg_obsidian_card"
                     android:paddingStart="18dp"
                     android:paddingEnd="18dp"
                     android:paddingTop="20dp"
@@ -394,7 +394,7 @@
                         android:text="Posts"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:layout_marginBottom="10dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -413,7 +413,7 @@
                         android:layout_height="wrap_content"
                         android:text="No posts to show"
                         android:textSize="14sp"
-                        android:textColor="#9AA4B2"
+                        android:textColor="@color/md3_on_surface_secondary"
                         android:visibility="gone"
                         android:layout_marginTop="8dp" />
 

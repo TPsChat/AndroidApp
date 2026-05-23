@@ -1,0 +1,1231 @@
+{
+  "projectInfo": {
+    "appName": "TP CHAT",
+    "currentVersion": "Material Design 2.5 (Mixed)",
+    "targetVersion": "Material Design 3",
+    "redesignScope": "Complete UI Overhaul",
+    "designGoals": [
+      "Modernize visual style to Material Design 3 standards",
+      "Improve UX/Usability with enhanced interaction patterns",
+      "Maintain brand identity while adopting MD3 components",
+      "Support dark and light theme seamlessly"
+    ],
+    "appType": "Social Chat & Messaging Application",
+    "features": ["Private Messaging", "Group Chat", "Video Calls", "Social Feed", "User Profiles", "Search", "Friend Requests"]
+  },
+
+  "colorSystem": {
+    "description": "Material Design 3 Dynamic Color with brand-aligned custom palette",
+    "lightTheme": {
+      "primary": "#0E394B",
+      "onPrimary": "#FFFFFF",
+      "primaryContainer": "#B0E0FF",
+      "onPrimaryContainer": "#001D2C",
+      "secondary": "#EC4899",
+      "onSecondary": "#FFFFFF",
+      "secondaryContainer": "#FFD9EA",
+      "onSecondaryContainer": "#3D0023",
+      "tertiary": "#7B68EE",
+      "onTertiary": "#FFFFFF",
+      "tertiaryContainer": "#EFE0FF",
+      "onTertiaryContainer": "#2D005E",
+      "error": "#E53935",
+      "onError": "#FFFFFF",
+      "errorContainer": "#FFEDEE",
+      "onErrorContainer": "#410002",
+      "background": "#FFFBFE",
+      "onBackground": "#1C1B1F",
+      "surface": "#FFFBFE",
+      "onSurface": "#1C1B1F",
+      "surfaceVariant": "#E7E0EC",
+      "onSurfaceVariant": "#49454E",
+      "outline": "#79747E",
+      "outlineVariant": "#CAC7D0",
+      "success": "#4CAF50",
+      "warning": "#FF9800",
+      "info": "#2196F3"
+    },
+    "darkTheme": {
+      "primary": "#7BCCFF",
+      "onPrimary": "#002E42",
+      "primaryContainer": "#005A7D",
+      "onPrimaryContainer": "#B0E0FF",
+      "secondary": "#FFB0D9",
+      "onSecondary": "#5E0038",
+      "secondaryContainer": "#840055",
+      "onSecondaryContainer": "#FFD9EA",
+      "tertiary": "#D9B8FF",
+      "onTertiary": "#46007D",
+      "tertiaryContainer": "#600DAB",
+      "onTertiaryContainer": "#EFE0FF",
+      "error": "#FFB4AB",
+      "onError": "#690005",
+      "errorContainer": "#93000A",
+      "onErrorContainer": "#FFEDEE",
+      "background": "#1C1B1F",
+      "onBackground": "#E8E7EB",
+      "surface": "#1C1B1F",
+      "onSurface": "#E8E7EB",
+      "surfaceVariant": "#49454E",
+      "onSurfaceVariant": "#CAC7D0",
+      "outline": "#938F99",
+      "outlineVariant": "#49454E",
+      "success": "#81C784",
+      "warning": "#FFB74D",
+      "info": "#64B5F6"
+    },
+    "messageColors": {
+      "sentBubble": "#0E394B",
+      "sentBubbleGradient": ["#0E394B", "#005A7D"],
+      "receivedBubble": "#E7E0EC",
+      "receivedBubbleText": "#1C1B1F",
+      "sentText": "#FFFFFF",
+      "replyHighlight": "#7BCCFF"
+    }
+  },
+
+  "typography": {
+    "fontFamily": "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+    "customFonts": [
+      {
+        "name": "Roboto",
+        "variants": ["Light:300", "Regular:400", "Medium:500", "SemiBold:600", "Bold:700"]
+      }
+    ],
+    "textStyles": {
+      "displayLarge": {
+        "fontSize": 57,
+        "lineHeight": 64,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "usage": "App title screens, major headings"
+      },
+      "displayMedium": {
+        "fontSize": 45,
+        "lineHeight": 52,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "usage": "Screen titles, major sections"
+      },
+      "displaySmall": {
+        "fontSize": 36,
+        "lineHeight": 44,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "usage": "Secondary titles"
+      },
+      "headlineLarge": {
+        "fontSize": 32,
+        "lineHeight": 40,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "usage": "Chat screen headers"
+      },
+      "headlineMedium": {
+        "fontSize": 28,
+        "lineHeight": 36,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "usage": "Subsection headers"
+      },
+      "headlineSmall": {
+        "fontSize": 24,
+        "lineHeight": 32,
+        "fontWeight": "400",
+        "letterSpacing": 0,
+        "usage": "Card titles, message thread headers"
+      },
+      "titleLarge": {
+        "fontSize": 22,
+        "lineHeight": 28,
+        "fontWeight": "500",
+        "letterSpacing": 0,
+        "usage": "Dialog titles, card titles"
+      },
+      "titleMedium": {
+        "fontSize": 16,
+        "lineHeight": 24,
+        "fontWeight": "500",
+        "letterSpacing": 0.15,
+        "usage": "Subheadings, button labels"
+      },
+      "titleSmall": {
+        "fontSize": 14,
+        "lineHeight": 20,
+        "fontWeight": "500",
+        "letterSpacing": 0.1,
+        "usage": "Small headers, labels"
+      },
+      "bodyLarge": {
+        "fontSize": 16,
+        "lineHeight": 24,
+        "fontWeight": "400",
+        "letterSpacing": 0.5,
+        "usage": "Primary body text, message content"
+      },
+      "bodyMedium": {
+        "fontSize": 14,
+        "lineHeight": 20,
+        "fontWeight": "400",
+        "letterSpacing": 0.25,
+        "usage": "Secondary body text, descriptions"
+      },
+      "bodySmall": {
+        "fontSize": 12,
+        "lineHeight": 16,
+        "fontWeight": "400",
+        "letterSpacing": 0.4,
+        "usage": "Supporting text, timestamps"
+      },
+      "labelLarge": {
+        "fontSize": 14,
+        "lineHeight": 20,
+        "fontWeight": "500",
+        "letterSpacing": 0.1,
+        "usage": "Button labels, tags"
+      },
+      "labelMedium": {
+        "fontSize": 12,
+        "lineHeight": 16,
+        "fontWeight": "500",
+        "letterSpacing": 0.5,
+        "usage": "Small labels, badges"
+      },
+      "labelSmall": {
+        "fontSize": 11,
+        "lineHeight": 16,
+        "fontWeight": "500",
+        "letterSpacing": 0.5,
+        "usage": "Micro labels, small badges"
+      }
+    }
+  },
+
+  "spacingSystem": {
+    "baseUnit": 4,
+    "scale": [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48, 52, 56, 60, 64],
+    "keySpaces": {
+      "screenHorizontal": 16,
+      "screenVertical": 16,
+      "cardPadding": 16,
+      "cardItemMargin": 8,
+      "buttonHorizontal": 24,
+      "buttonVertical": 12,
+      "itemSpacing": 8,
+      "sectionSpacing": 24,
+      "dividerMargin": 16
+    }
+  },
+
+  "componentSystem": {
+    "buttons": {
+      "filled": {
+        "backgroundColor": "primary",
+        "textColor": "onPrimary",
+        "cornerRadius": 100,
+        "height": 40,
+        "padding": "24dp horizontal, 12dp vertical",
+        "elevation": 0,
+        "shadowColor": "none",
+        "states": {
+          "default": "backgroundColor: primary",
+          "pressed": "scaleY: 0.98, elevation: 2dp",
+          "hover": "opacity: 0.08",
+          "disabled": "opacity: 0.38, backgroundColor: onSurface"
+        },
+        "usage": "Primary actions, send message, create post"
+      },
+      "filledTonal": {
+        "backgroundColor": "primaryContainer",
+        "textColor": "onPrimaryContainer",
+        "cornerRadius": 100,
+        "height": 40,
+        "padding": "24dp horizontal, 12dp vertical",
+        "elevation": 0,
+        "states": {
+          "default": "backgroundColor: primaryContainer",
+          "pressed": "scaleY: 0.98, opacity: 0.12"
+        },
+        "usage": "Secondary actions, edit, optional actions"
+      },
+      "outlined": {
+        "backgroundColor": "transparent",
+        "borderColor": "outline",
+        "borderWidth": 1,
+        "textColor": "primary",
+        "cornerRadius": 100,
+        "height": 40,
+        "padding": "24dp horizontal, 12dp vertical",
+        "elevation": 0,
+        "states": {
+          "pressed": "backgroundColor: primary, opacity: 0.08"
+        },
+        "usage": "Cancel, back, secondary options"
+      },
+      "text": {
+        "backgroundColor": "transparent",
+        "textColor": "primary",
+        "cornerRadius": 100,
+        "padding": "12dp horizontal, 8dp vertical",
+        "minWidth": "none",
+        "elevation": 0,
+        "states": {
+          "pressed": "backgroundColor: primary, opacity: 0.12"
+        },
+        "usage": "Tertiary actions, links, dismissible options"
+      }
+    },
+    "cards": {
+      "elevated": {
+        "backgroundColor": "surface",
+        "elevation": 1,
+        "cornerRadius": 12,
+        "padding": 16,
+        "borderColor": "outlineVariant",
+        "borderWidth": 1,
+        "usage": "Chat list items, friend requests, notifications"
+      },
+      "filled": {
+        "backgroundColor": "surfaceVariant",
+        "elevation": 0,
+        "cornerRadius": 12,
+        "padding": 16,
+        "usage": "Post feed items, secondary content"
+      },
+      "outlined": {
+        "backgroundColor": "surface",
+        "borderColor": "outline",
+        "borderWidth": 1,
+        "cornerRadius": 12,
+        "padding": 16,
+        "elevation": 0,
+        "usage": "Optional cards, expandable sections"
+      }
+    },
+    "chips": {
+      "assist": {
+        "backgroundColor": "surface",
+        "borderColor": "outline",
+        "borderWidth": 1,
+        "cornerRadius": 8,
+        "padding": "8dp horizontal, 4dp vertical",
+        "height": 32,
+        "textSize": 14,
+        "usage": "Tags, filters, mentions"
+      },
+      "filter": {
+        "backgroundColor": "surfaceVariant",
+        "selectedColor": "primary",
+        "cornerRadius": 8,
+        "height": 32,
+        "usage": "Search filters, chat filters"
+      },
+      "input": {
+        "backgroundColor": "surfaceVariant",
+        "cornerRadius": 8,
+        "height": 32,
+        "usage": "Input chips, removable tags"
+      }
+    },
+    "dialogs": {
+      "cornerRadius": 28,
+      "backgroundColor": "surface",
+      "elevation": 3,
+      "padding": 24,
+      "maxWidth": "560dp (tablet), 280dp (phone)",
+      "usage": "Confirmations, alerts, options menus"
+    },
+    "textFields": {
+      "filled": {
+        "backgroundColor": "surfaceVariant",
+        "cornerRadius": 4,
+        "height": 56,
+        "padding": "16dp horizontal, 16dp vertical",
+        "labelColor": "onSurfaceVariant",
+        "textColor": "onSurface",
+        "cursorColor": "primary",
+        "usage": "Standard text input fields"
+      },
+      "outlined": {
+        "backgroundColor": "transparent",
+        "borderColor": "outline",
+        "borderWidth": 1,
+        "cornerRadius": 4,
+        "height": 56,
+        "padding": "12dp",
+        "usage": "Message input, search fields"
+      }
+    },
+    "navigationBar": {
+      "backgroundColor": "surface",
+      "elevation": 3,
+      "height": 80,
+      "iconSize": 24,
+      "labelSize": 12,
+      "itemSpacing": "equal distribution",
+      "items": ["home", "search", "chat", "profile", "groups"],
+      "activeColor": "primary",
+      "inactiveColor": "onSurfaceVariant",
+      "rippleEffect": true,
+      "cornerRadius": "0 (bottom navigation)"
+    },
+    "topAppBar": {
+      "small": {
+        "height": 64,
+        "padding": 16,
+        "elevation": 0,
+        "backgroundColor": "surface",
+        "usage": "Standard screen headers"
+      },
+      "medium": {
+        "height": 112,
+        "padding": 16,
+        "elevation": 0,
+        "backgroundColor": "surface",
+        "usage": "Chat screen headers, user profiles"
+      },
+      "large": {
+        "height": 152,
+        "padding": 16,
+        "elevation": 0,
+        "backgroundColor": "surface",
+        "usage": "Detail screens, expandable headers"
+      }
+    }
+  },
+
+  "screens": {
+    "authentication": {
+      "loginRegister": {
+        "name": "Login & Registration Screen",
+        "layout": "ConstraintLayout with NestedScrollView",
+        "backgroundColor": "background (light) / surface (dark)",
+        "headerArea": {
+          "logo": "App icon (108dp), centered",
+          "title": "TP CHAT (displaySmall)",
+          "subtitle": "Connect, Chat, Share (bodyMedium, onSurfaceVariant)"
+        },
+        "tabLayout": {
+          "style": "Material Design 3 Tabs",
+          "tabs": ["Sign In", "Sign Up"],
+          "activeUnderline": "primary, height 3dp",
+          "padding": "16dp horizontal"
+        },
+        "formContent": {
+          "emailField": {
+            "type": "outlined text field",
+            "height": 56,
+            "labelText": "Email or Username",
+            "leadingIcon": "ic_email",
+            "trailingIcon": "validation state",
+            "margin": "16dp top"
+          },
+          "passwordField": {
+            "type": "outlined text field",
+            "height": 56,
+            "labelText": "Password",
+            "leadingIcon": "ic_lock",
+            "trailingIcon": "ic_eye / ic_eye_off (toggle)",
+            "obscureText": true,
+            "margin": "12dp top"
+          },
+          "additionalFields": {
+            "name": "Sign Up only (bodyMedium)",
+            "phone": "Sign Up only (bodyMedium)",
+            "agreeCheckbox": "I agree to terms (labelSmall)"
+          },
+          "spacing": "12dp between fields"
+        },
+        "actionArea": {
+          "primaryButton": {
+            "type": "filled",
+            "label": "Sign In / Sign Up",
+            "fullWidth": true,
+            "margin": "24dp top, 16dp horizontal"
+          },
+          "forgotPassword": {
+            "type": "text button",
+            "label": "Forgot Password?",
+            "alignment": "right",
+            "margin": "12dp top"
+          },
+          "divider": {
+            "text": "Or continue with",
+            "margin": "24dp top"
+          },
+          "socialButtons": {
+            "google": {
+              "type": "outlined",
+              "icon": "ic_google",
+              "width": "100%",
+              "margin": "12dp"
+            },
+            "facebook": {
+              "type": "outlined",
+              "icon": "ic_facebook",
+              "width": "100%",
+              "margin": "12dp"
+            }
+          }
+        },
+        "bottomArea": {
+          "switchText": "Already have account? Sign In",
+          "margin": "24dp top, 16dp horizontal"
+        }
+      }
+    },
+    "home": {
+      "name": "Home & Chat List Screen",
+      "layout": "CoordinatorLayout with AppBarLayout",
+      "backgroundColor": "background",
+      "topAppBar": {
+        "type": "medium (112dp)",
+        "backgroundColor": "surface",
+        "elevation": 0,
+        "content": {
+          "leading": "User avatar (CircleImageView, 40dp)",
+          "title": "Messages (headlineSmall)",
+          "trailing": [
+            {
+              "icon": "ic_search",
+              "action": "navigate to SearchActivity"
+            },
+            {
+              "icon": "ic_more",
+              "action": "show menu options"
+            }
+          ]
+        },
+        "searchBar": {
+          "type": "Material Search Bar",
+          "placeholder": "Search conversations...",
+          "leadingIcon": "ic_search",
+          "trailingIcon": "ic_close (when active)",
+          "backgroundColor": "surfaceVariant",
+          "cornerRadius": 28,
+          "margin": "8dp top, 16dp horizontal",
+          "height": 48
+        }
+      },
+      "tabLayout": {
+        "style": "Material 3 Secondary Tabs",
+        "tabs": ["Direct", "Groups", "Archived"],
+        "activeIndicator": "primary underline (3dp height)",
+        "minHeight": 48
+      },
+      "contentArea": {
+        "messageList": {
+          "type": "RecyclerView with elevated cards",
+          "itemLayout": "item_message_preview.xml",
+          "itemHeight": "76dp",
+          "itemMargin": "4dp vertical, 8dp horizontal",
+          "itemContent": {
+            "avatar": "CircleImageView (48dp), leading",
+            "senderName": "titleMedium, onSurface",
+            "lastMessage": "bodyMedium, onSurfaceVariant",
+            "timestamp": "labelSmall, onSurfaceVariant (right)",
+            "unreadBadge": "filled tonal chip, secondary"
+          },
+          "itemBackground": "elevated card (1dp elevation, outlineVariant border)"
+        },
+        "emptyState": {
+          "illustration": "ic_chat_empty (96dp)",
+          "title": "No messages yet",
+          "subtitle": "Start a conversation with friends",
+          "action": "filled button - Find Friends"
+        }
+      },
+      "floatingActionButton": {
+        "type": "FAB (large, 56dp)",
+        "icon": "ic_edit (pen/pencil)",
+        "backgroundColor": "primary",
+        "foregroundColor": "onPrimary",
+        "margin": "16dp bottom, 16dp right",
+        "action": "navigate to SearchActivity to start new chat",
+        "elevation": 3,
+        "pressEffect": "scale 0.95"
+      }
+    },
+    "search": {
+      "name": "Search & Find Users",
+      "layout": "ConstraintLayout",
+      "topAppBar": {
+        "type": "small (64dp)",
+        "content": {
+          "back": "ic_back button",
+          "searchField": {
+            "type": "outlined text field, expanded",
+            "hint": "Search users, groups...",
+            "leadingIcon": "ic_search",
+            "trailingIcon": "ic_close (clear)"
+          }
+        }
+      },
+      "filterChips": {
+        "layout": "horizontal flow",
+        "chips": ["Users", "Groups", "Posts"],
+        "type": "filter chips",
+        "margin": "12dp"
+      },
+      "results": {
+        "type": "RecyclerView",
+        "itemHeight": "64dp",
+        "itemContent": {
+          "avatar": "CircleImageView (48dp)",
+          "name": "titleMedium",
+          "subtitle": "bodySmall (status/username)",
+          "action": "trailing button - follow/message"
+        }
+      },
+      "noResults": {
+        "title": "No results found",
+        "subtitle": "Try different search terms",
+        "icon": "ic_search_empty"
+      }
+    },
+    "privateChatScreen": {
+      "name": "Private Chat Conversation",
+      "layout": "CoordinatorLayout",
+      "topAppBar": {
+        "type": "small (64dp)",
+        "backgroundColor": "surface",
+        "content": {
+          "leading": [
+            {
+              "icon": "ic_back",
+              "action": "back"
+            },
+            {
+              "avatar": "CircleImageView (32dp)",
+              "name": "titleMedium",
+              "status": "bodySmall, onSurfaceVariant"
+            }
+          ],
+          "trailing": [
+            {
+              "icon": "ic_video_call",
+              "action": "start video call"
+            },
+            {
+              "icon": "ic_call",
+              "action": "start voice call"
+            },
+            {
+              "icon": "ic_more",
+              "action": "more options"
+            }
+          ]
+        }
+      },
+      "chatContent": {
+        "type": "RecyclerView with background",
+        "backgroundColor": "background",
+        "messageLayout": {
+          "sent": {
+            "alignment": "right",
+            "bubbleStyle": "filled (primaryContainer gradient)",
+            "bubbleRadius": 24,
+            "bubbleMargin": "8dp",
+            "textColor": "onPrimaryContainer",
+            "timestamp": "labelSmall, onPrimaryContainer (60% opacity)",
+            "maxWidth": "80% of screen"
+          },
+          "received": {
+            "alignment": "left",
+            "bubbleStyle": "elevated card (1dp border, outlineVariant)",
+            "bubbleRadius": 24,
+            "bubbleMargin": "8dp",
+            "textColor": "onSurface",
+            "timestamp": "labelSmall, onSurfaceVariant",
+            "maxWidth": "80% of screen"
+          },
+          "replyMessage": {
+            "container": "nested elevated card",
+            "topBorder": "3dp, primary",
+            "padding": "8dp",
+            "fontSize": "bodySmall (14sp)"
+          },
+          "voiceMessage": {
+            "icon": "ic_mic_voice (24dp)",
+            "playButton": "circular button",
+            "duration": "labelSmall",
+            "waveform": "visual representation"
+          },
+          "imageMessage": {
+            "radius": 16,
+            "maxWidth": "70% of screen",
+            "shadow": "elevation 2dp"
+          }
+        },
+        "dateSeparator": {
+          "text": "Today / 2 days ago / date",
+          "style": "labelSmall, centered",
+          "padding": "16dp vertical, 8dp horizontal"
+        }
+      },
+      "messageInput": {
+        "layout": "ConstraintLayout at bottom",
+        "backgroundColor": "surface",
+        "elevation": 3,
+        "padding": "8dp",
+        "components": {
+          "textField": {
+            "type": "outlined (expandable)",
+            "hint": "Type a message...",
+            "minHeight": 40,
+            "maxHeight": 120,
+            "horizontalMargin": "8dp",
+            "leadingIcon": "ic_add (attachment menu)"
+          },
+          "attachmentMenu": {
+            "type": "horizontal icon row (collapsed initially)",
+            "icons": ["ic_image", "ic_file", "ic_location", "ic_camera"],
+            "style": "icon buttons with touch feedback"
+          },
+          "sendButton": {
+            "type": "FAB or icon button",
+            "icon": "ic_send",
+            "backgroundColor": "primary",
+            "size": "40dp (icon button) or 48dp (FAB)",
+            "action": "send message"
+          },
+          "voiceButton": {
+            "type": "icon button (if no text)",
+            "icon": "ic_mic",
+            "action": "record voice message",
+            "holdToRecord": true
+          }
+        }
+      },
+      "swipeActions": {
+        "swipeLeft": "show delete + more options",
+        "swipeRight": "reply action",
+        "animation": "smooth reveal"
+      }
+    },
+    "groupChatScreen": {
+      "name": "Group Chat Conversation",
+      "extends": "privateChatScreen",
+      "topAppBar": {
+        "additions": {
+          "groupAvatar": "ic_group_avatar (32dp) or member avatars",
+          "groupName": "titleMedium",
+          "memberCount": "bodySmall (e.g., '12 members')"
+        }
+      },
+      "messageLayout": {
+        "groupBubble": {
+          "senderName": "labelSmall, primary (above message)",
+          "userAvatar": "CircleImageView (24dp), left of bubble",
+          "messageBubble": "same as private chat"
+        }
+      },
+      "topAppBar": {
+        "trailing": [
+          {
+            "icon": "ic_video_call",
+            "action": "start group video call"
+          },
+          {
+            "icon": "ic_info",
+            "action": "show group info panel"
+          }
+        ]
+      }
+    },
+    "postFeed": {
+      "name": "Social Feed / Posts",
+      "layout": "CoordinatorLayout",
+      "topAppBar": {
+        "type": "medium (112dp)",
+        "title": "Posts (headlineSmall)",
+        "actions": ["ic_search", "ic_filter"]
+      },
+      "tabLayout": {
+        "tabs": ["For You", "Following", "Trending"],
+        "style": "Material 3 Primary Tabs"
+      },
+      "feedContent": {
+        "type": "RecyclerView",
+        "itemLayout": "item_post.xml",
+        "itemMargin": "8dp",
+        "postCard": {
+          "style": "filled (surfaceVariant background)",
+          "elevation": 1,
+          "borderRadius": 12,
+          "padding": 16,
+          "author": {
+            "avatar": "CircleImageView (40dp)",
+            "name": "titleMedium",
+            "handle": "bodySmall (@username)",
+            "timestamp": "labelSmall (time ago)"
+          },
+          "moreButton": {
+            "type": "icon button",
+            "icon": "ic_more",
+            "alignment": "top right",
+            "menu": ["Edit", "Delete", "Report", "Share"]
+          },
+          "content": {
+            "text": "bodyLarge (post caption)",
+            "images": "grid layout (1-4 images)",
+            "imageRadius": 8
+          },
+          "engagement": {
+            "layout": "horizontal row",
+            "components": [
+              {
+                "icon": "ic_heart",
+                "label": "123 Likes",
+                "color": "error (when liked)"
+              },
+              {
+                "icon": "ic_comment",
+                "label": "45 Comments",
+                "color": "secondary"
+              },
+              {
+                "icon": "ic_share",
+                "label": "23 Shares",
+                "color": "primary"
+              }
+            ]
+          },
+          "actionButtons": {
+            "layout": "horizontal row",
+            "buttons": [
+              {
+                "type": "text button",
+                "icon": "ic_heart",
+                "label": "Like",
+                "rippleColor": "error"
+              },
+              {
+                "type": "text button",
+                "icon": "ic_comment",
+                "label": "Comment",
+                "rippleColor": "secondary"
+              },
+              {
+                "type": "text button",
+                "icon": "ic_share",
+                "label": "Share",
+                "rippleColor": "primary"
+              }
+            ],
+            "spacing": "equal"
+          }
+        }
+      },
+      "floatingActionButton": {
+        "icon": "ic_edit",
+        "label": "Post",
+        "backgroundColor": "primary",
+        "action": "navigate to CreatePostActivity"
+      }
+    },
+    "createPost": {
+      "name": "Create/Edit Post Screen",
+      "layout": "ConstraintLayout with NestedScrollView",
+      "topAppBar": {
+        "type": "small (64dp)",
+        "title": "Create Post (titleMedium)",
+        "actions": [
+          {
+            "label": "Post",
+            "action": "submit post"
+          }
+        ]
+      },
+      "authorInfo": {
+        "layout": "horizontal",
+        "avatar": "CircleImageView (40dp)",
+        "nameField": "titleMedium, non-interactive",
+        "privacySelector": "outlined button (Public/Friends/Private)"
+      },
+      "textArea": {
+        "type": "text field",
+        "hint": "What's on your mind?",
+        "minHeight": 100,
+        "style": "outlined",
+        "textSize": 16
+      },
+      "mediaSection": {
+        "imageGrid": "GridLayout (2-3 columns)",
+        "addButton": "outlined button with ic_image icon",
+        "removeButton": "icon button (delete)"
+      },
+      "actionButtons": {
+        "layout": "horizontal chips",
+        "buttons": [
+          "ic_image (Add Photo)",
+          "ic_location (Add Location)",
+          "ic_tag (Add Tags)"
+        ]
+      }
+    },
+    "profileScreen": {
+      "name": "User Profile / My Profile",
+      "layout": "NestedScrollView with ConstraintLayout",
+      "backgroundColor": "background",
+      "headerArea": {
+        "topAppBar": {
+          "type": "medium (112dp) collapsible",
+          "backgroundColor": "primary",
+          "systemBarColor": "primary"
+        },
+        "profileHeader": {
+          "avatar": "CircleImageView (80dp), centered",
+          "name": "displaySmall (32sp), centered",
+          "username": "bodyMedium (@handle), centered",
+          "bio": "bodyMedium (2-3 lines max), centered",
+          "stats": {
+            "layout": "horizontal row",
+            "items": [
+              {"label": "Posts", "value": "45"},
+              {"label": "Followers", "value": "1.2K"},
+              {"label": "Following", "value": "342"}
+            ],
+            "spacing": "equal"
+          }
+        }
+      },
+      "actionButtons": {
+        "layout": "horizontal",
+        "spacing": "8dp",
+        "buttons": [
+          {
+            "type": "filled",
+            "label": "Edit Profile / Message",
+            "icon": "ic_edit",
+            "flex": 1
+          },
+          {
+            "type": "outlined",
+            "icon": "ic_share",
+            "flex": "none"
+          },
+          {
+            "type": "outlined",
+            "icon": "ic_more",
+            "flex": "none"
+          }
+        ]
+      },
+      "tabLayout": {
+        "tabs": ["Posts", "Saved", "Tagged"],
+        "activeIndicator": "primary"
+      },
+      "postGrid": {
+        "type": "GridLayout (2-3 columns)",
+        "itemAspectRatio": "1:1",
+        "itemMargin": "4dp"
+      },
+      "settingsSection": {
+        "title": "Settings (titleMedium)",
+        "items": [
+          {
+            "label": "Privacy",
+            "icon": "ic_privacy",
+            "action": "navigate to privacy settings"
+          },
+          {
+            "label": "Notifications",
+            "icon": "ic_notification",
+            "action": "navigate to notification settings"
+          },
+          {
+            "label": "Blocked Users",
+            "icon": "ic_block",
+            "action": "navigate to blocked list"
+          },
+          {
+            "label": "Help & Support",
+            "icon": "ic_help",
+            "action": "navigate to support"
+          },
+          {
+            "label": "Logout",
+            "icon": "ic_logout",
+            "textColor": "error",
+            "action": "logout"
+          }
+        ]
+      }
+    },
+    "videoCall": {
+      "name": "Video Call Screen",
+      "layout": "FrameLayout (fullscreen)",
+      "backgroundColor": "#000000",
+      "mainVideoArea": {
+        "videoSurface": "SurfaceTexture (full screen)",
+        "borderRadius": "system safe area aware"
+      },
+      "remoteParticipants": {
+        "layout": "GridLayout or horizontal scroll",
+        "participantCard": {
+          "videoSurface": "small preview",
+          "cornerRadius": 8,
+          "elevation": 2,
+          "border": "2dp primary (active speaker)"
+        }
+      },
+      "controlsPanel": {
+        "alignment": "bottom center",
+        "backgroundColor": "#00000080 (semi-transparent)",
+        "padding": 16,
+        "layout": "horizontal",
+        "controls": [
+          {
+            "icon": "ic_mic / ic_mic_off",
+            "action": "toggle microphone",
+            "activeColor": "primary",
+            "inactiveColor": "error"
+          },
+          {
+            "icon": "ic_videocam / ic_video_off",
+            "action": "toggle video",
+            "activeColor": "primary",
+            "inactiveColor": "error"
+          },
+          {
+            "icon": "ic_switch_camera",
+            "action": "switch camera",
+            "color": "onPrimary"
+          },
+          {
+            "icon": "ic_end_call",
+            "action": "end call",
+            "backgroundColor": "error",
+            "size": "FAB (56dp)"
+          },
+          {
+            "icon": "ic_more",
+            "action": "more options",
+            "color": "onPrimary"
+          }
+        ],
+        "spacing": "8dp between controls"
+      },
+      "statsOverlay": {
+        "position": "top right corner",
+        "elements": [
+          "Call duration (MM:SS)",
+          "Connection quality (signal icon)"
+        ],
+        "backgroundColor": "#00000080",
+        "textColor": "onPrimary",
+        "padding": "8dp",
+        "cornerRadius": 8
+      }
+    }
+  },
+
+  "animationSystem": {
+    "transitions": {
+      "screenTransition": {
+        "duration": 300,
+        "curve": "easeInOutCubic",
+        "type": "fade + slide"
+      },
+      "buttonPress": {
+        "duration": 150,
+        "curve": "easeOutCubic",
+        "scale": 0.96,
+        "elevation": "0 to 2dp"
+      },
+      "cardSwipe": {
+        "duration": 200,
+        "curve": "easeOutCubic",
+        "translateX": "full width"
+      },
+      "messageReveal": {
+        "duration": 200,
+        "curve": "easeOutCubic",
+        "alpha": "0 to 1",
+        "translateY": "24dp down to 0"
+      }
+    },
+    "loopingAnimations": {
+      "pulseEffect": {
+        "duration": 1500,
+        "scale": "1 to 1.1 to 1",
+        "alpha": "1 to 0.7 to 1",
+        "usage": "recording indicator, calling state"
+      },
+      "wavingHand": {
+        "duration": 500,
+        "rotation": "0 to 15 to -15 to 0",
+        "usage": "typing indicator"
+      }
+    }
+  },
+
+  "iconography": {
+    "system": "Material Design Icons 3",
+    "size": {
+      "micro": "16dp (badges, tags)",
+      "small": "20dp (inline, supplementary)",
+      "medium": "24dp (standard UI icons)",
+      "large": "32dp (prominent actions)",
+      "extraLarge": "48dp (standalone actions, avatars)"
+    },
+    "stroke": "2dp for medium, 1.5dp for small",
+    "colorUsage": {
+      "primary": "active actions, selected state",
+      "secondary": "secondary actions, likes",
+      "error": "decline/delete/danger",
+      "success": "accept/confirm/complete",
+      "onSurfaceVariant": "disabled/inactive state"
+    },
+    "commonIcons": {
+      "messaging": ["ic_send", "ic_reply", "ic_emoji", "ic_mic", "ic_image", "ic_attachment"],
+      "calls": ["ic_call", "ic_video_call", "ic_end_call", "ic_mic", "ic_videocam"],
+      "navigation": ["ic_home", "ic_search", "ic_chat", "ic_profile", "ic_group"],
+      "social": ["ic_heart", "ic_comment", "ic_share", "ic_bookmark"],
+      "actions": ["ic_edit", "ic_delete", "ic_more", "ic_close", "ic_back"]
+    }
+  },
+
+  "elevation": {
+    "none": "0dp (surface elements)",
+    "level1": "1dp (outlined cards, disabled)",
+    "level2": "3dp (elevated cards, modals)",
+    "level3": "6dp (floating buttons, menus)",
+    "level4": "8dp (dialogs, persistent headers)",
+    "level5": "12dp (overlay surfaces)"
+  },
+
+  "cornerRadius": {
+    "none": "0dp",
+    "small": "4dp (text fields, small components)",
+    "medium": "8dp (chips, standard components)",
+    "large": "12dp (cards)",
+    "extraLarge": "20dp (dialogs, large cards)",
+    "full": "100dp (buttons, chips, avatars)"
+  },
+
+  "darkModeStrategy": {
+    "automatic": "Follow system dark mode setting",
+    "implementation": "values/ and values-night/ resources",
+    "colorInversion": "All colors follow Material Design 3 dark theme guidelines",
+    "contrastRequirements": {
+      "level_AA": "4.5:1 for small text",
+      "level_AAA": "7:1 for body text",
+      "wcag": "WCAG 2.1 AA compliance"
+    }
+  },
+
+  "responsiveDesign": {
+    "screenBreakpoints": {
+      "mobile": {
+        "width": "< 600dp",
+        "layout": "single column, full width components",
+        "navigationBar": "bottom (Material Bottom Navigation)"
+      },
+      "tablet": {
+        "width": "600dp - 1200dp",
+        "layout": "two column (sidebar + content)",
+        "navigationRail": "permanent on left side",
+        "dialogMaxWidth": "560dp"
+      },
+      "desktop": {
+        "width": "> 1200dp",
+        "layout": "three column (navigation, content, details)",
+        "navigationRail": "permanent left sidebar",
+        "additionalSidebar": "detail panel on right"
+      }
+    }
+  },
+
+  "accessibility": {
+    "minimumTouchTarget": "48x48dp for all interactive elements",
+    "fontScaling": "support up to 200% text scaling",
+    "darkModeSupport": "full Material Design 3 dark theme",
+    "screenReaderContent": {
+      "buttonLabels": "descriptive labels for all buttons",
+      "imageDescriptions": "contentDescription for all images",
+      "headerHierarchy": "proper heading levels"
+    },
+    "colorContrast": "minimum 4.5:1 for text",
+    "reduceMotion": "provide no-animation alternatives"
+  },
+
+  "implementationGuidelines": {
+    "framework": "Material Components for Android (MDC)",
+    "theme": "MaterialComponents theme parent",
+    "colors": "Use theme attributes (@attr/colorPrimary, etc.) instead of hardcoded values",
+    "shapes": "Use Material ShapeAppearance for consistent corner radius",
+    "motion": "Implement Material Motion patterns for transitions",
+    "resources": {
+      "valuesDirectory": "colors, dimens, strings organized by concern",
+      "drawableDirectory": "vector drawables (.xml) for all icons",
+      "layoutDirectory": "modular layout files with proper naming conventions"
+    },
+    "codeOrganization": {
+      "activities": "One activity per screen concept",
+      "fragments": "Use for nested navigation or tab content",
+      "viewModels": "MVVM pattern for state management",
+      "liveData": "reactive data binding for UI updates"
+    },
+    "performance": {
+      "textureMemory": "optimize drawable sizes",
+      "renderingOptimization": "avoid overdraw, use hardware acceleration",
+      "animationPerformance": "60fps target, use ValueAnimator for complex animations"
+    }
+  },
+
+  "deliverables": {
+    "phase1_colorSystem": {
+      "tasks": [
+        "Create colors.xml (light theme) with all Material Design 3 colors",
+        "Create colors.xml (dark theme) in values-night/",
+        "Create dimens.xml for spacing, typography sizes",
+        "Create attrs.xml for custom theme attributes"
+      ],
+      "timeline": "2-3 days"
+    },
+    "phase2_components": {
+      "tasks": [
+        "Update button styles (filled, tonal, outlined, text)",
+        "Create card component layouts (elevated, filled, outlined)",
+        "Design chip components (assist, filter, input)",
+        "Create text field variants"
+      ],
+      "timeline": "4-5 days"
+    },
+    "phase3_screens": {
+      "tasks": [
+        "Redesign Login/Register screens",
+        "Redesign Home & Chat List",
+        "Redesign Private Chat screen",
+        "Redesign Group Chat screen",
+        "Redesign Post Feed",
+        "Redesign User Profile"
+      ],
+      "timeline": "10-12 days"
+    },
+    "phase4_refinement": {
+      "tasks": [
+        "Implement animations and transitions",
+        "Add accessibility features",
+        "Optimize performance",
+        "Test on multiple devices and screen sizes"
+      ],
+      "timeline": "5-7 days"
+    }
+  },
+
+  "notes": {
+    "brandIdentity": "Maintain teal/cyan primary color (#0E394B) from current design while adopting Material Design 3 structure",
+    "userExperience": "Ensure smooth transitions between screens, responsive feedback for all interactions",
+    "compatibility": "Support Android 9 (API 28) and above",
+    "testing": "Test on phones (5-6.5 inch), tablets (7-10 inch), with both light and dark themes",
+    "futureEnhancements": "Consider implementing Material You dynamic color support for Android 12+",
+    "references": [
+      "https://m3.material.io/",
+      "https://material.io/design/color/the-color-system.html",
+      "https://developer.android.com/jetpack/compose/themes"
+    ]
+  }
+}

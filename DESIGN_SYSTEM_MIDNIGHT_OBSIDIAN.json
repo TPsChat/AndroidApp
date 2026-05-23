@@ -1,0 +1,568 @@
+{
+  "project": {
+    "name": "TP CHAT",
+    "version": "2.0",
+    "designSystem": "Midnight Obsidian",
+    "description": "Ultra-dark glassmorphism theme with vibrant neon coral accents, designed for premium mobile experience",
+    "targetPlatform": "Android (Material Design 3)",
+    "typography": "Plus Jakarta Sans"
+  },
+  "designPhilosophy": {
+    "foundation": "Deep obsidian-like surfaces optimized for OLED displays",
+    "accents": "Vibrant coral/neon primary color for high-priority interactions",
+    "depth": "Multi-layered elevation using inner glows, backdrop blur, and diffused shadows",
+    "shapes": "Extreme softness: 24-32px corner radius throughout, pill-shaped buttons",
+    "feel": "Cinematic, immersive, exclusive, tactilely modern"
+  },
+  "colorSystem": {
+    "primary": {
+      "description": "Coral/Neon Red - Primary accent for buttons, active states, badges",
+      "hex": "#ffb3ae",
+      "rgb": "rgb(255, 179, 174)",
+      "usage": "Primary action buttons, active tab indicator, error states, badges"
+    },
+    "primaryDark": {
+      "description": "Darker coral for pressed states",
+      "hex": "#FF4B4B",
+      "rgb": "rgb(255, 75, 75)",
+      "usage": "Button pressed state, active indicators, neon glow accent"
+    },
+    "background": {
+      "description": "Deep black background",
+      "hex": "#111317",
+      "rgb": "rgb(17, 19, 23)",
+      "usage": "Main canvas background"
+    },
+    "surface": {
+      "description": "Primary surface color",
+      "hex": "#1a1c20",
+      "rgb": "rgb(26, 28, 32)",
+      "usage": "Elevated containers, cards, dialogs"
+    },
+    "surfaceHigh": {
+      "description": "Elevated surface for higher hierarchy",
+      "hex": "#282a2e",
+      "rgb": "rgb(40, 42, 46)",
+      "usage": "Second elevation level"
+    },
+    "surfaceVariant": {
+      "description": "Surface variant for differentiation",
+      "hex": "#333539",
+      "rgb": "rgb(51, 53, 57)",
+      "usage": "Alternative surface, dividers"
+    },
+    "onSurface": {
+      "description": "Text on surfaces - off-white",
+      "hex": "#e2e2e8",
+      "rgb": "rgb(226, 226, 232)",
+      "usage": "Primary text on dark surfaces"
+    },
+    "onSurfaceSecondary": {
+      "description": "Secondary text - 60% opacity",
+      "hex": "#e2e2e8",
+      "rgb": "rgb(226, 226, 232)",
+      "opacity": "60%",
+      "usage": "Secondary text, subtitles, hints"
+    },
+    "onSurfaceTertiary": {
+      "description": "Tertiary text - 50% opacity",
+      "hex": "#e2e2e8",
+      "rgb": "rgb(226, 226, 232)",
+      "opacity": "50%",
+      "usage": "Disabled text, placeholder text"
+    },
+    "outlineVariant": {
+      "description": "Border color",
+      "hex": "#5b403e",
+      "rgb": "rgb(91, 64, 62)",
+      "usage": "1px borders on secondary buttons, dividers"
+    },
+    "outline": {
+      "description": "Outline color for accents",
+      "hex": "#ab8886",
+      "rgb": "rgb(171, 136, 134)",
+      "usage": "Accent borders, highlights"
+    }
+  },
+  "typography": {
+    "fontFamily": "Plus Jakarta Sans",
+    "scales": {
+      "headlineLarge": {
+        "size": 28,
+        "weight": 700,
+        "lineHeight": 36,
+        "letterSpacing": -0.02,
+        "usage": "Major screen titles"
+      },
+      "headlineMedium": {
+        "size": 22,
+        "weight": 600,
+        "lineHeight": 28,
+        "letterSpacing": -0.01,
+        "usage": "Section headers, card titles"
+      },
+      "headlineSmall": {
+        "size": 20,
+        "weight": 600,
+        "lineHeight": 24,
+        "letterSpacing": 0,
+        "usage": "Subsection headers"
+      },
+      "bodyLarge": {
+        "size": 16,
+        "weight": 500,
+        "lineHeight": 24,
+        "letterSpacing": 0.5,
+        "usage": "Primary text content, message text"
+      },
+      "bodyMedium": {
+        "size": 14,
+        "weight": 400,
+        "lineHeight": 20,
+        "letterSpacing": 0.25,
+        "usage": "Secondary text, subtitles"
+      },
+      "bodySmall": {
+        "size": 12,
+        "weight": 400,
+        "lineHeight": 16,
+        "letterSpacing": 0.4,
+        "usage": "Small body text"
+      },
+      "labelSmall": {
+        "size": 12,
+        "weight": 600,
+        "lineHeight": 16,
+        "letterSpacing": 0.5,
+        "usage": "Labels, badges, small buttons"
+      },
+      "labelMedium": {
+        "size": 12,
+        "weight": 500,
+        "lineHeight": 16,
+        "letterSpacing": 0.5,
+        "usage": "Medium labels"
+      },
+      "labelLarge": {
+        "size": 14,
+        "weight": 500,
+        "lineHeight": 20,
+        "letterSpacing": 0.1,
+        "usage": "Large labels, button text"
+      }
+    }
+  },
+  "spacing": {
+    "base": 4,
+    "xs": 8,
+    "sm": 12,
+    "md": 16,
+    "lg": 24,
+    "xl": 32,
+    "gutter": 16,
+    "mobileSideMargin": 20,
+    "description": "All values in pixels (dp)"
+  },
+  "borderRadius": {
+    "small": 12,
+    "default": 16,
+    "medium": 24,
+    "large": 32,
+    "extraLarge": 48,
+    "full": 9999,
+    "description": "Extreme softness with 24-32px for most components",
+    "usage": {
+      "buttons": "24-32px (pill-shaped)",
+      "cards": "24px",
+      "inputs": "24px",
+      "dialogs": "24-32px",
+      "mediaPreview": "16-20px"
+    }
+  },
+  "elevation": {
+    "strategy": "Multi-layered using inner glows, backdrop blur, and diffused shadows",
+    "levels": {
+      "none": "Base surface, no elevation",
+      "level1": "Subtle inner glow, 1-2px border",
+      "level2": "Inner glow + 20px backdrop blur (80% opacity)",
+      "level3": "Higher inner glow + 24px backdrop blur (85% opacity)"
+    },
+    "shadows": {
+      "type": "Diffused/smear shadows with neon accent glow",
+      "dropShadow": "rgba(0,0,0,0.3) blur(8-12px)",
+      "innerShadow": "rgba(0,0,0,0.5) inset blur(4-8px)",
+      "neonGlow": "Coral primary color at 15-25% opacity"
+    }
+  },
+  "components": {
+    "buttons": {
+      "primary": {
+        "description": "Main action button",
+        "shape": "Pill-shaped (9999px radius)",
+        "height": "48-56dp",
+        "padding": "12-16dp horizontal, 12dp vertical",
+        "backgroundColor": "primary",
+        "textColor": "onSurface",
+        "typography": "labelSmall or bodyMedium, semibold",
+        "states": {
+          "default": "primary color with subtle inner glow",
+          "pressed": "scale 0.95, darker tint",
+          "hover": "neon glow effect (15-25% opacity)",
+          "disabled": "50% opacity, cursor disabled"
+        }
+      },
+      "secondary": {
+        "description": "Optional or supportive action",
+        "shape": "Pill-shaped (24-32px radius)",
+        "height": "40-48dp",
+        "padding": "12-16dp horizontal, 8dp vertical",
+        "backgroundColor": "surface",
+        "border": "1px solid outlineVariant",
+        "textColor": "onSurface",
+        "typography": "labelSmall, semibold",
+        "states": {
+          "default": "dark background with border",
+          "pressed": "scale 0.95, subtle highlight",
+          "disabled": "50% opacity"
+        }
+      },
+      "icon": {
+        "description": "Compact icon action",
+        "shape": "Square or circular, 32-48dp",
+        "padding": "8dp",
+        "textColor": "onSurface",
+        "backgroundColor": "transparent",
+        "states": {
+          "default": "secondary opacity",
+          "active": "primary accent color",
+          "pressed": "scale 0.95, glow effect",
+          "hover": "subtle highlight"
+        }
+      }
+    },
+    "inputs": {
+      "textInput": {
+        "description": "Text entry field",
+        "height": "48-56dp",
+        "shape": "Rounded 24px",
+        "backgroundColor": "surfaceHigh",
+        "textColor": "onSurface",
+        "placeholderColor": "onSurfaceTertiary",
+        "border": "None (soft inset style)",
+        "padding": "12-16dp",
+        "typography": "bodyMedium",
+        "focusState": "Subtle glow with primary accent"
+      },
+      "searchBar": {
+        "description": "Search input field",
+        "height": "48dp",
+        "shape": "Pill-shaped (32px radius)",
+        "backgroundColor": "surface",
+        "glassmorphism": "20px backdrop blur, 80% opacity",
+        "border": "Optional 1px border",
+        "padding": "12-16dp",
+        "iconLeft": "Search icon (24-28dp)",
+        "iconRight": "Clear button (when active)",
+        "typography": "bodyMedium"
+      }
+    },
+    "cards": {
+      "elevatedCard": {
+        "description": "List items, post cards, containers",
+        "shape": "Rounded 24px",
+        "padding": "16-24dp",
+        "backgroundColor": "surface",
+        "border": "Optional 1px border (outlineVariant)",
+        "elevation": "Level 1-2 with subtle inner glow",
+        "spacing": "8-12dp between items"
+      },
+      "floatingIsland": {
+        "description": "Search bars, bottom nav, menus",
+        "shape": "Rounded 24-32px",
+        "backgroundColor": "surface",
+        "opacity": "80%",
+        "glassmorphism": "20-24px backdrop blur",
+        "elevation": "Level 2-3",
+        "animation": "Subtle spring effect on appear"
+      },
+      "messageBubble": {
+        "description": "Chat message container",
+        "shape": "Rounded 24px",
+        "padding": "12-16dp",
+        "sentMessageBg": "primary",
+        "receivedMessageBg": "surfaceHigh",
+        "border": "None (sent), 1px optional (received)",
+        "maxWidth": "80% of screen width",
+        "textColor": "onSurface"
+      }
+    },
+    "tabs": {
+      "style": "Secondary style with underline indicator",
+      "padding": "12-16dp horizontal",
+      "height": "48dp",
+      "indicatorColor": "primary",
+      "indicatorHeight": "3-4px",
+      "textColor": "onSurfaceSecondary",
+      "activeTextColor": "onSurface"
+    },
+    "badges": {
+      "notification": {
+        "description": "Unread count, status indicator",
+        "shape": "Pill (9999px)",
+        "size": "20-24dp height",
+        "backgroundColor": "primary",
+        "textColor": "white",
+        "typography": "labelSmall",
+        "padding": "2-4dp horizontal"
+      },
+      "status": {
+        "description": "Online/offline indicator",
+        "shape": "Circular, 8-12dp",
+        "border": "1px white border",
+        "position": "Corner of avatar",
+        "colors": {
+          "online": "#00C853",
+          "offline": "#757575",
+          "away": "#FFC400"
+        }
+      }
+    }
+  },
+  "screens": [
+    {
+      "id": 1,
+      "name": "Login & Registration",
+      "purpose": "User authentication and account creation",
+      "keyElements": [
+        "Logo and app name (top, centered)",
+        "Tab system (Sign In / Sign Up)",
+        "Email/username input (soft inset, 24px radius)",
+        "Password input with visibility toggle",
+        "Primary submit button (coral, pill-shaped)",
+        "Forgot password link",
+        "Social login buttons (Google, Facebook)",
+        "Mode switch text (bottom)"
+      ],
+      "complexity": "Medium"
+    },
+    {
+      "id": 2,
+      "name": "Home & Chat List",
+      "purpose": "Display active conversations and navigation",
+      "keyElements": [
+        "Top bar: avatar (40dp) + title + action button",
+        "Floating search bar (glassmorphic, 32px radius)",
+        "Tab row: Direct, Groups, Archived",
+        "Chat list: avatar (48dp) + name + preview + timestamp + badge",
+        "Coral left indicator for unread",
+        "Floating action button (64dp, coral)"
+      ],
+      "complexity": "High"
+    },
+    {
+      "id": 3,
+      "name": "Search Results",
+      "purpose": "Search and discover users, groups, posts",
+      "keyElements": [
+        "Top bar: back + search input",
+        "Filter chips: All, People, Channels",
+        "Results list: avatar + name + subtitle + action",
+        "No results state: illustration + message"
+      ],
+      "complexity": "Medium"
+    },
+    {
+      "id": 4,
+      "name": "Private Chat",
+      "purpose": "1-on-1 messaging",
+      "keyElements": [
+        "Top bar: back + participant (avatar + name + status) + call icons",
+        "Message list: sent (right, coral), received (left, dark)",
+        "Message variants: text, image, voice, reply",
+        "Date separators",
+        "Input area: text field + attachment + send button",
+        "Floating island input (80% opacity, 20px blur)"
+      ],
+      "complexity": "High"
+    },
+    {
+      "id": 5,
+      "name": "Group Chat",
+      "purpose": "Group messaging with participant context",
+      "keyElements": [
+        "Top bar: back + group (avatar + name + count) + call icon",
+        "Messages with sender name (label-sm) + avatar (32dp)",
+        "Same message input as private chat",
+        "Grouped messages from same sender"
+      ],
+      "complexity": "High"
+    },
+    {
+      "id": 6,
+      "name": "Social Feed",
+      "purpose": "Browse posts from connections",
+      "keyElements": [
+        "Top bar: avatar + title + search icon",
+        "Tab row: For You, Following, Trending",
+        "Post cards: author + text + media grid + engagement",
+        "Action buttons: like, comment, share",
+        "Floating action button (64dp, coral)"
+      ],
+      "complexity": "High"
+    },
+    {
+      "id": 7,
+      "name": "Create Post",
+      "purpose": "Compose and publish posts",
+      "keyElements": [
+        "Top bar: close + title + publish button",
+        "Author row: avatar + name + privacy selector",
+        "Text area: large input (soft inset, 24px radius)",
+        "Media grid: attach images",
+        "Action buttons: photo, location, tags",
+        "Character count (bottom right)"
+      ],
+      "complexity": "Medium"
+    },
+    {
+      "id": 8,
+      "name": "User Profile",
+      "purpose": "Display user profile and activity",
+      "keyElements": [
+        "Header: avatar (80dp) + name (headline-lg) + username + bio",
+        "Stats row: posts, followers, following",
+        "Action buttons: edit, message, share",
+        "Tab row: Posts, Saved, Tagged",
+        "Content grid: 2-3 columns, 1:1 aspect",
+        "Settings menu: privacy, notifications, help, logout"
+      ],
+      "complexity": "High"
+    },
+    {
+      "id": 9,
+      "name": "Video Call",
+      "purpose": "Manage active video call",
+      "keyElements": [
+        "Fullscreen video area (main participant)",
+        "Remote participant tiles (bottom-right)",
+        "Header overlay: name + duration + recording indicator",
+        "Control panel: microphone, video, camera, end call (floating island)",
+        "Stats overlay: duration + quality indicator"
+      ],
+      "complexity": "High"
+    },
+    {
+      "id": 10,
+      "name": "Incoming Call",
+      "purpose": "Display incoming call with accept/decline",
+      "keyElements": [
+        "Top text: INCOMING VIDEO CALL",
+        "Caller avatar: large (120-160dp) with ring animation",
+        "Caller name (headline-lg)",
+        "Caller info: device + location",
+        "Accept button (64dp, coral, pill-shaped, bottom-right)",
+        "Decline button (64dp, red, pill-shaped, bottom-left)",
+        "Message and Remind Me buttons"
+      ],
+      "complexity": "Medium"
+    }
+  ],
+  "animations": {
+    "screenTransition": {
+      "duration": 300,
+      "easing": "ease-in-out"
+    },
+    "buttonPress": {
+      "duration": 150,
+      "scale": 0.95,
+      "easing": "ease-out"
+    },
+    "messageAppear": {
+      "duration": 200,
+      "type": "fade + slide-up",
+      "easing": "ease-out"
+    },
+    "pulseEffect": {
+      "duration": 1500,
+      "type": "loop",
+      "usage": "Recording indicator, calling state"
+    },
+    "glowEffect": {
+      "type": "Neon accent glow",
+      "opacity": "15-25%",
+      "usage": "Primary buttons, active states",
+      "duration": "300ms fade-in"
+    }
+  },
+  "accessibility": {
+    "minimumTouchTarget": "48x48dp",
+    "contrastRatio": "WCAG AA minimum 4.5:1 for text",
+    "textScaling": "Support up to 200%",
+    "keyboardNavigation": "Full support with visible focus indicators",
+    "contentDescriptions": "All icons must have @string descriptions",
+    "hapticFeedback": "Vibration on critical actions"
+  },
+  "platformSpecific": {
+    "android": {
+      "framework": "Jetpack Compose / Material 3",
+      "minSDK": 24,
+      "targetSDK": 34,
+      "darkTheme": "Always enabled",
+      "themes": {
+        "compose": "Use Material 3 dark theme with custom color scheme",
+        "xml": "Use Material 3 with dark mode enabled"
+      },
+      "customImplementation": {
+        "glassmorphism": "RenderEffect (API 31+) or custom background drawable",
+        "borderRadius": "ShapeAppearanceModel for custom shapes",
+        "shadows": "Custom shadow drawables with BlurMaskFilter",
+        "backdropBlur": "RenderEffect.createBlurEffect() or CompositionLocalProvider"
+      }
+    }
+  },
+  "implementationPhases": {
+    "phase1": {
+      "name": "Foundation Setup (3-4 days)",
+      "tasks": [
+        "Set up Material 3 dark theme with Midnight Obsidian colors",
+        "Create color resources in colors.xml",
+        "Create typography scales using Material 3 text styles",
+        "Set up spacing/dimension resources",
+        "Create custom shapes (ShapeAppearanceModel)"
+      ]
+    },
+    "phase2": {
+      "name": "Component Library (4-5 days)",
+      "tasks": [
+        "Implement custom buttons (primary, secondary, icon)",
+        "Implement custom cards and containers",
+        "Implement input fields with glassmorphism",
+        "Create badge and indicator components",
+        "Build tab and navigation components"
+      ]
+    },
+    "phase3": {
+      "name": "Screen Implementation (7-8 days)",
+      "tasks": [
+        "Implement all 10 screens using components",
+        "Add animations and transitions",
+        "Implement message bubbles and chat logic",
+        "Add video call UI",
+        "Implement dialogs and modals"
+      ]
+    },
+    "phase4": {
+      "name": "Polish & Testing (3-4 days)",
+      "tasks": [
+        "Optimize performance (image compression, lazy loading)",
+        "Test accessibility (WCAG AA)",
+        "Ensure keyboard navigation",
+        "Test on multiple device sizes",
+        "Final UI/UX review and adjustments"
+      ]
+    }
+  },
+  "designSystemStatus": "Ready for Implementation",
+  "lastUpdated": "2026-05-24",
+  "version": "2.0 (Midnight Obsidian)"
+}

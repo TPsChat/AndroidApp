@@ -61,10 +61,12 @@
         android:id="@+id/tv_call_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/plus_jakarta_sans"
         android:text="Incoming Video Call"
-        android:textSize="28sp"
+        android:textSize="14sp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/md3_primary"
+        android:letterSpacing="0.15"
         android:layout_marginTop="42dp"
         android:elevation="12dp"
         android:translationZ="8dp"
@@ -81,7 +83,7 @@
         android:layout_marginEnd="28dp"
         android:layout_marginTop="22dp"
         android:orientation="vertical"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:paddingStart="24dp"
         android:paddingEnd="24dp"
         android:paddingTop="32dp"
@@ -101,15 +103,15 @@
             android:src="@drawable/ic_profile_placeholder"
             android:elevation="14dp"
             android:translationZ="10dp"
-            app:civ_border_color="#33FFFFFF"
-            app:civ_border_width="2dp" />
+            app:civ_border_color="@color/md3_border_glow"
+            app:civ_border_width="3dp" />
 
         <TextView
             android:id="@+id/tv_caller_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="John Doe"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="27sp"
             android:textStyle="bold"
             android:maxLines="1"
@@ -121,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="is calling you..."
-            android:textColor="#9AA4B2"
+            android:textColor="@color/md3_on_surface_secondary"
             android:textSize="17sp"
             android:layout_marginBottom="10dp" />
 
@@ -132,7 +134,7 @@
             android:minWidth="78dp"
             android:gravity="center"
             android:text="00:00"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="15sp"
             android:textStyle="bold"
             android:background="@drawable/bg_icon_circle_dark"
@@ -146,7 +148,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
-        android:background="@drawable/bg_message_field_shadow"
+        android:background="@drawable/bg_soft_inset"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingStart="22dp"
@@ -164,7 +166,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Calling..."
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -173,7 +175,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ringing"
-            android:textColor="#9AA4B2"
+            android:textColor="@color/md3_on_surface_secondary"
             android:textSize="14sp"
             android:layout_marginTop="4dp" />
 
@@ -201,7 +203,7 @@
             android:layout_height="wrap_content"
             android:text="Swipe to answer or decline"
             android:textSize="15sp"
-            android:textColor="#D7DEE8"
+            android:textColor="@color/md3_on_surface"
             android:layout_marginBottom="14dp"
             android:gravity="center" />
 
@@ -210,7 +212,7 @@
             android:id="@+id/swipe_track"
             android:layout_width="300dp"
             android:layout_height="64dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:elevation="12dp"
             android:translationZ="8dp">
 
@@ -239,7 +241,7 @@
                 android:layout_gravity="center_vertical|start"
                 android:layout_marginStart="22dp"
                 android:text="Decline"
-                android:textColor="#FF6A72"
+                android:textColor="@color/md3_error"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -250,7 +252,7 @@
                 android:layout_gravity="center_vertical|end"
                 android:layout_marginEnd="24dp"
                 android:text="Accept"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -260,7 +262,7 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:layout_gravity="center"
-                android:background="@drawable/bg_send_circle_modern"
+                android:background="@drawable/bg_call_accept_circle"
                 android:elevation="16dp"
                 android:translationZ="12dp">
 
@@ -269,7 +271,7 @@
                     android:layout_height="26dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_call"
-                    app:tint="#FFFFFF" />
+                    app:tint="@color/md3_on_surface" />
 
             </FrameLayout>
 

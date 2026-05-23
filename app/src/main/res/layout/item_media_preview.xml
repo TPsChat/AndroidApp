@@ -6,7 +6,7 @@
     android:layout_marginEnd="10dp"
     app:cardCornerRadius="18dp"
     app:cardElevation="10dp"
-    app:cardBackgroundColor="#151B24"
+    app:cardBackgroundColor="@color/md3_surface_container"
     app:cardUseCompatPadding="true">
 
     <RelativeLayout
@@ -42,7 +42,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:visibility="gone"
-            app:tint="#FFFFFF" />
+            app:tint="@color/md3_on_surface" />
 
         <!-- Remove Button -->
         <ImageButton
@@ -58,7 +58,7 @@
             android:padding="9dp"
             android:elevation="12dp"
             android:translationZ="8dp"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
     </RelativeLayout>
 

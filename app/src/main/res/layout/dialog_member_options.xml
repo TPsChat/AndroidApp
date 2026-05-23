@@ -18,7 +18,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="14dp"
         android:translationZ="10dp">
 
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Member Options"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textStyle="bold"
             android:gravity="center"
             android:paddingStart="16dp"
@@ -58,7 +58,7 @@
                 android:elevation="8dp"
                 android:translationZ="5dp"
                 app:civ_border_width="1.5dp"
-                app:civ_border_color="#33FFFFFF" />
+                app:civ_border_color="@color/md3_border_glow" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -74,7 +74,7 @@
                     android:text="Member Name"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:text="@username"
                     android:textSize="13sp"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:layout_marginTop="3dp"
                     android:maxLines="1"
                     android:ellipsize="end" />
@@ -102,7 +102,7 @@
                 android:elevation="8dp"
                 android:translationZ="5dp"
                 android:stateListAnimator="@animator/btn_shadow_animator"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
         </LinearLayout>
 
@@ -127,7 +127,7 @@
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_info_details"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -135,7 +135,7 @@
                 android:layout_weight="1"
                 android:text="View Profile"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -170,7 +170,7 @@
                 android:layout_weight="1"
                 android:text="Transfer Ownership"
                 android:textSize="15sp"
-                android:textColor="#FFA500"
+                android:textColor="@color/text_white"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -197,7 +197,7 @@
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_sort_by_size"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -205,7 +205,7 @@
                 android:layout_weight="1"
                 android:text="Promote to Moderator"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -232,7 +232,7 @@
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_sort_by_size"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -240,7 +240,7 @@
                 android:layout_weight="1"
                 android:text="Demote to Member"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -266,7 +266,7 @@
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_delete"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -274,7 +274,7 @@
                 android:layout_weight="1"
                 android:text="Remove from Group"
                 android:textSize="15sp"
-                android:textColor="#FF4D57"
+                android:textColor="@color/dialog_button_destructive_text"
                 android:textStyle="bold" />
 
         </LinearLayout>

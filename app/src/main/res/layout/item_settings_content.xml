@@ -27,7 +27,7 @@
             android:text="Account Settings"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:layout_marginBottom="12dp" />
 
         <!-- Profile -->
@@ -39,7 +39,7 @@
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
             android:layout_marginBottom="8dp"
@@ -51,7 +51,7 @@
                 android:layout_height="22dp"
                 android:layout_marginEnd="12dp"
                 android:src="@drawable/ic_tag"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -60,7 +60,7 @@
                 android:text="Profile"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#D7DEE8" />
+                android:textColor="@color/md3_on_surface" />
 
             <ImageView
                 android:layout_width="22dp"
@@ -79,7 +79,7 @@
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
             android:layout_marginBottom="8dp"
@@ -91,7 +91,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_setting"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -100,7 +100,7 @@
                 android:text="Change Password"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#D7DEE8" />
+                android:textColor="@color/md3_on_surface" />
 
             <ImageView
                 android:layout_width="22dp"
@@ -119,7 +119,7 @@
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
             android:elevation="4dp"
@@ -130,7 +130,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_close"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -139,13 +139,13 @@
                 android:text="Logout"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#FF4D57" />
+                android:textColor="@color/md3_primary" />
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@android:drawable/ic_menu_more"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
         </LinearLayout>
 
@@ -168,7 +168,7 @@
             android:text="Privacy &amp; Security"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:layout_marginBottom="12dp" />
 
         <!-- Blocked Users -->
@@ -180,7 +180,7 @@
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
             android:layout_marginBottom="8dp"
@@ -192,7 +192,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_close"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -201,7 +201,7 @@
                 android:text="Blocked Users"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#D7DEE8" />
+                android:textColor="@color/md3_on_surface" />
 
             <ImageView
                 android:layout_width="22dp"
@@ -220,7 +220,7 @@
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
             android:elevation="4dp"
@@ -231,7 +231,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_delete"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -240,13 +240,13 @@
                 android:text="Delete Account"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#FF4D57" />
+                android:textColor="@color/md3_primary" />
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@android:drawable/ic_menu_more"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
         </LinearLayout>
 
@@ -269,7 +269,7 @@
             android:text="Notifications"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:layout_marginBottom="12dp" />
 
         <!-- Push Notifications -->
@@ -285,7 +285,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="12dp"
-                android:background="@drawable/bg_message_field_shadow"
+                android:background="@drawable/bg_soft_inset"
                 android:orientation="vertical"
                 android:elevation="4dp"
                 android:translationZ="3dp">
@@ -295,7 +295,7 @@
                     android:layout_height="wrap_content"
                     android:text="Push Notifications"
                     android:textSize="15sp"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textStyle="bold" />
 
                 <TextView
@@ -303,7 +303,7 @@
                     android:layout_height="wrap_content"
                     android:text="Receive notifications for new messages"
                     android:textSize="12sp"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:layout_marginTop="5dp" />
 
             </LinearLayout>
@@ -314,7 +314,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:checked="true"
-                android:thumbTint="#FF4D57"
+                android:thumbTint="@color/md3_primary"
                 android:trackTint="#44FF4D57" />
 
         </LinearLayout>
@@ -332,7 +332,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="12dp"
-                android:background="@drawable/bg_message_field_shadow"
+                android:background="@drawable/bg_soft_inset"
                 android:orientation="vertical"
                 android:elevation="4dp"
                 android:translationZ="3dp">
@@ -342,7 +342,7 @@
                     android:layout_height="wrap_content"
                     android:text="Sound"
                     android:textSize="15sp"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textStyle="bold" />
 
                 <TextView
@@ -350,7 +350,7 @@
                     android:layout_height="wrap_content"
                     android:text="Play sound for notifications"
                     android:textSize="12sp"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:layout_marginTop="5dp" />
 
             </LinearLayout>
@@ -361,7 +361,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:checked="true"
-                android:thumbTint="#FF4D57"
+                android:thumbTint="@color/md3_primary"
                 android:trackTint="#44FF4D57" />
 
         </LinearLayout>
@@ -378,7 +378,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="12dp"
-                android:background="@drawable/bg_message_field_shadow"
+                android:background="@drawable/bg_soft_inset"
                 android:orientation="vertical"
                 android:elevation="4dp"
                 android:translationZ="3dp">
@@ -388,7 +388,7 @@
                     android:layout_height="wrap_content"
                     android:text="Vibrate"
                     android:textSize="15sp"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textStyle="bold" />
 
                 <TextView
@@ -396,7 +396,7 @@
                     android:layout_height="wrap_content"
                     android:text="Vibrate for notifications"
                     android:textSize="12sp"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:layout_marginTop="5dp" />
 
             </LinearLayout>
@@ -407,7 +407,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:checked="true"
-                android:thumbTint="#FF4D57"
+                android:thumbTint="@color/md3_primary"
                 android:trackTint="#44FF4D57" />
 
         </LinearLayout>
@@ -431,7 +431,7 @@
             android:text="Server Settings"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:layout_marginBottom="12dp" />
 
         <!-- Server Configuration -->
@@ -443,7 +443,7 @@
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
             android:layout_marginBottom="8dp"
@@ -455,7 +455,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_preferences"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -464,7 +464,7 @@
                 android:text="Server Configuration"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#D7DEE8" />
+                android:textColor="@color/md3_on_surface" />
 
             <ImageView
                 android:layout_width="22dp"
@@ -483,7 +483,7 @@
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
             android:elevation="4dp"
@@ -494,7 +494,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_restore"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -503,13 +503,13 @@
                 android:text="Reset Settings"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#FF4D57" />
+                android:textColor="@color/md3_primary" />
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@android:drawable/ic_menu_more"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
         </LinearLayout>
 
@@ -532,7 +532,7 @@
             android:text="About"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:layout_marginBottom="12dp" />
 
         <!-- App Version -->
@@ -543,7 +543,7 @@
             android:gravity="center_vertical"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:layout_marginBottom="8dp"
             android:elevation="4dp"
             android:translationZ="3dp">
@@ -553,7 +553,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_info"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -562,7 +562,7 @@
                 android:text="App Version"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#D7DEE8" />
+                android:textColor="@color/md3_on_surface" />
 
             <TextView
                 android:id="@+id/tv_app_version"
@@ -571,7 +571,7 @@
                 android:text="1.0.0"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="#9AA4B2" />
+                android:textColor="@color/md3_on_surface_secondary" />
 
         </LinearLayout>
 
@@ -580,7 +580,7 @@
             android:id="@+id/option_help_support"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingStart="12dp"
@@ -595,14 +595,14 @@
                 android:layout_height="22dp"
                 android:layout_marginEnd="12dp"
                 android:src="@drawable/ic_help"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Help &amp; Support"
-                android:textColor="#D7DEE8"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 

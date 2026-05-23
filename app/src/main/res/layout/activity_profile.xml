@@ -45,7 +45,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <TextView
             android:layout_width="0dp"
@@ -56,7 +56,7 @@
             android:text="@string/profile"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:maxLines="1"
             android:ellipsize="end" />
 
@@ -69,7 +69,7 @@
             android:text="@string/save"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:background="@drawable/bg_new_message_button"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
@@ -107,7 +107,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/bg_empty_state_panel"
+                android:background="@drawable/bg_obsidian_card"
                 android:paddingStart="20dp"
                 android:paddingTop="22dp"
                 android:paddingEnd="20dp"
@@ -131,7 +131,7 @@
                         android:elevation="12dp"
                         android:translationZ="8dp"
                         app:civ_border_width="2dp"
-                        app:civ_border_color="#33FFFFFF" />
+                        app:civ_border_color="@color/md3_border_glow" />
 
                     <TextView
                         android:id="@+id/tv_change_avatar"
@@ -142,7 +142,7 @@
                         android:text="@string/change_avatar"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textColor="#FF4D57"
+                        android:textColor="@color/md3_primary"
                         android:background="@drawable/bg_icon_circle_transparent"
                         android:paddingStart="18dp"
                         android:paddingEnd="18dp"
@@ -156,7 +156,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/username"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -167,12 +167,13 @@
                     android:layout_height="54dp"
                     android:layout_marginBottom="14dp"
                     android:inputType="text"
-                    android:background="@drawable/bg_message_field_shadow"
+                    android:background="@drawable/bg_soft_inset"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#7F8A99"
+                    android:textColor="@color/md3_on_surface"
+                    android:textColorHint="@color/md3_on_surface_secondary"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -181,7 +182,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/first_name"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -192,12 +193,13 @@
                     android:layout_height="54dp"
                     android:layout_marginBottom="14dp"
                     android:inputType="textPersonName"
-                    android:background="@drawable/bg_message_field_shadow"
+                    android:background="@drawable/bg_soft_inset"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#7F8A99"
+                    android:textColor="@color/md3_on_surface"
+                    android:textColorHint="@color/md3_on_surface_secondary"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -206,7 +208,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/last_name"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -217,12 +219,13 @@
                     android:layout_height="54dp"
                     android:layout_marginBottom="14dp"
                     android:inputType="textPersonName"
-                    android:background="@drawable/bg_message_field_shadow"
+                    android:background="@drawable/bg_soft_inset"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#7F8A99"
+                    android:textColor="@color/md3_on_surface"
+                    android:textColorHint="@color/md3_on_surface_secondary"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -231,7 +234,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/phone_number"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -242,12 +245,13 @@
                     android:layout_height="54dp"
                     android:layout_marginBottom="14dp"
                     android:inputType="phone"
-                    android:background="@drawable/bg_message_field_shadow"
+                    android:background="@drawable/bg_soft_inset"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:gravity="center_vertical"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#7F8A99"
+                    android:textColor="@color/md3_on_surface"
+                    android:textColorHint="@color/md3_on_surface_secondary"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -256,7 +260,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/bio"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -268,13 +272,14 @@
                     android:layout_marginBottom="18dp"
                     android:inputType="textMultiLine"
                     android:gravity="top|start"
-                    android:background="@drawable/bg_message_field_shadow"
+                    android:background="@drawable/bg_soft_inset"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:paddingStart="16dp"
                     android:paddingTop="14dp"
                     android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#7F8A99"
+                    android:textColor="@color/md3_on_surface"
+                    android:textColorHint="@color/md3_on_surface_secondary"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -294,7 +299,7 @@
                         android:text="Friends"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:layout_marginBottom="8dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -313,7 +318,7 @@
                         android:layout_height="wrap_content"
                         android:text="No friends to show"
                         android:textSize="14sp"
-                        android:textColor="#9AA4B2"
+                        android:textColor="@color/md3_on_surface_secondary"
                         android:visibility="gone"
                         android:layout_marginTop="8dp" />
 
@@ -335,7 +340,7 @@
                         android:text="Posts"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:layout_marginBottom="8dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -354,7 +359,7 @@
                         android:layout_height="wrap_content"
                         android:text="No posts to show"
                         android:textSize="14sp"
-                        android:textColor="#9AA4B2"
+                        android:textColor="@color/md3_on_surface_secondary"
                         android:visibility="gone"
                         android:layout_marginTop="8dp" />
 
@@ -372,7 +377,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:indeterminateTint="#FF4D57"
+        android:indeterminateTint="@color/md3_primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

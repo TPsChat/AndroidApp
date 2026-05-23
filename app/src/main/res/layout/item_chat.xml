@@ -1,78 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="6dp"
-    android:orientation="vertical"
+    android:layout_marginStart="@dimen/spacing_xs"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="@dimen/spacing_xs"
+    android:layout_marginBottom="4dp"
     android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:clipChildren="false"
     android:clipToPadding="false"
-    android:clipChildren="false">
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <View
+        android:id="@+id/view_active_indicator"
+        android:layout_width="4dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center_vertical|start"
+        android:background="@drawable/bg_active_chat_indicator"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:minHeight="86dp"
-        android:orientation="horizontal"
+        android:background="@drawable/bg_obsidian_card"
         android:gravity="center_vertical"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:background="@drawable/bg_option_row_dark"
-        android:elevation="8dp"
-        android:translationZ="5dp"
-        android:clipToPadding="false"
-        android:clipChildren="false">
+        android:minHeight="80dp"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/spacing_md"
+        android:paddingTop="@dimen/spacing_sm"
+        android:paddingEnd="@dimen/spacing_md"
+        android:paddingBottom="@dimen/spacing_sm">
 
-        <!-- Chat Avatar -->
-        <!-- Chat Avatar -->
         <RelativeLayout
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:layout_marginEnd="14dp"
-            android:clipToPadding="false"
-            android:clipChildren="false">
+            android:layout_width="@dimen/avatar_md"
+            android:layout_height="@dimen/avatar_md"
+            android:layout_marginEnd="@dimen/spacing_md"
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_chat_avatar"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
+                android:layout_width="@dimen/avatar_md"
+                android:layout_height="@dimen/avatar_md"
                 android:src="@drawable/ic_profile_placeholder"
-                android:elevation="8dp"
-                android:translationZ="5dp"
-                app:civ_border_width="1.5dp"
-                app:civ_border_color="#33FFFFFF" />
+                app:civ_border_color="@color/md3_border_glow"
+                app:civ_border_width="2dp" />
 
-            <!-- Online dot nằm đè lên avatar -->
             <View
                 android:id="@+id/view_online_dot"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:layout_alignEnd="@id/iv_chat_avatar"
                 android:layout_alignBottom="@id/iv_chat_avatar"
-                android:layout_marginEnd="1dp"
-                android:layout_marginBottom="1dp"
                 android:background="@drawable/bg_online_dot"
-                android:elevation="20dp"
-                android:translationZ="20dp" />
+                android:visibility="gone" />
 
         </RelativeLayout>
 
-        <!-- Chat Info -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <!-- Chat Name and Time Row -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -82,58 +75,63 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_toStartOf="@+id/tv_last_message_time"
                     android:layout_marginEnd="8dp"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="#FFFFFF"
-                    android:singleLine="true"
+                    android:layout_toStartOf="@+id/tv_last_message_time"
                     android:ellipsize="end"
-                    tools:text="John Doe" />
+                    android:fontFamily="@font/plus_jakarta_sans"
+                    android:singleLine="true"
+                    android:textColor="@color/md3_on_surface"
+                    android:textSize="@dimen/text_body_large"
+                    android:textStyle="bold"
+                    tools:text="Sara Sanders" />
 
                 <TextView
                     android:id="@+id/tv_last_message_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:textColor="#9AA4B2"
-                    android:textSize="12sp"
-                    tools:text="2m" />
+                    android:fontFamily="@font/plus_jakarta_sans"
+                    android:textColor="@color/md3_primary"
+                    android:textSize="@dimen/text_label_small"
+                    android:textStyle="bold"
+                    tools:text="12:35" />
 
             </RelativeLayout>
 
-            <!-- Last Message and Unread Count Row -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp">
+                android:layout_marginTop="6dp">
 
                 <TextView
                     android:id="@+id/tv_last_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_toStartOf="@+id/tv_unread_count"
                     android:layout_marginEnd="8dp"
-                    android:textSize="14sp"
-                    android:textColor="#9AA4B2"
-                    android:singleLine="true"
+                    android:layout_toStartOf="@+id/tv_unread_count"
                     android:ellipsize="end"
-                    tools:text="Hey, how are you doing?" />
+                    android:fontFamily="@font/plus_jakarta_sans"
+                    android:singleLine="true"
+                    android:textColor="@color/md3_on_surface_variant"
+                    android:textSize="@dimen/text_body_medium"
+                    tools:text="Can you buy me dinner?" />
 
                 <TextView
                     android:id="@+id/tv_unread_count"
-                    android:layout_width="24dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="24dp"
                     android:layout_alignParentEnd="true"
-                    android:gravity="center"
                     android:background="@drawable/bg_badge_red_modern"
-                    android:textSize="12sp"
-                    android:textColor="#FFFFFF"
+                    android:fontFamily="@font/plus_jakarta_sans"
+                    android:gravity="center"
+                    android:minWidth="24dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="@color/md3_on_primary"
+                    android:textSize="@dimen/text_label_small"
                     android:textStyle="bold"
                     android:visibility="gone"
-                    android:elevation="8dp"
-                    android:translationZ="5dp"
                     tools:text="3"
                     tools:visibility="visible" />
 
@@ -143,4 +141,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</FrameLayout>

@@ -18,7 +18,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="14dp"
         android:translationZ="10dp">
 
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Group Info"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textStyle="bold"
             android:gravity="center"
             android:paddingStart="16dp"
@@ -58,7 +58,7 @@
                 android:elevation="8dp"
                 android:translationZ="5dp"
                 app:civ_border_width="1.5dp"
-                app:civ_border_color="#33FFFFFF" />
+                app:civ_border_color="@color/md3_border_glow" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -74,7 +74,7 @@
                     android:text="Group Name"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:text="0 members"
                     android:textSize="13sp"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:layout_marginTop="3dp" />
 
             </LinearLayout>
@@ -100,7 +100,7 @@
                 android:elevation="8dp"
                 android:translationZ="5dp"
                 android:stateListAnimator="@animator/btn_shadow_animator"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
         </LinearLayout>
 
@@ -123,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:text="Created: Unknown"
                 android:textSize="14sp"
-                android:textColor="#D7DEE8"
+                android:textColor="@color/md3_on_surface"
                 android:layout_marginBottom="12dp" />
 
             <LinearLayout
@@ -139,7 +139,7 @@
                     android:layout_weight="1"
                     android:text="ID: ..."
                     android:textSize="13sp"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:maxLines="1"
                     android:ellipsize="middle" />
 
@@ -150,7 +150,7 @@
                     android:minWidth="72dp"
                     android:gravity="center"
                     android:text="Copy"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/dialog_button_filled_text"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:paddingStart="16dp"

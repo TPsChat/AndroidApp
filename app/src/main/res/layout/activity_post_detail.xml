@@ -46,7 +46,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <TextView
             android:id="@+id/tv_title"
@@ -55,7 +55,7 @@
             android:layout_weight="1"
             android:layout_marginStart="14dp"
             android:text="Post"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="22sp"
             android:textStyle="bold"
             android:maxLines="1"
@@ -104,7 +104,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:padding="14dp"
-                        android:background="@drawable/bg_empty_state_panel"
+                        android:background="@drawable/bg_obsidian_card"
                         android:elevation="12dp"
                         android:translationZ="8dp">
 
@@ -123,7 +123,7 @@
                                 android:src="@drawable/ic_profile_placeholder"
                                 android:elevation="8dp"
                                 android:translationZ="5dp"
-                                app:civ_border_color="#33FFFFFF"
+                                app:civ_border_color="@color/md3_border_glow"
                                 app:civ_border_width="1.5dp" />
 
                             <LinearLayout
@@ -144,7 +144,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="John Doe"
-                                        android:textColor="#FFFFFF"
+                                        android:textColor="@color/md3_on_surface"
                                         android:textSize="16sp"
                                         android:textStyle="bold" />
 
@@ -154,7 +154,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginStart="4dp"
                                         android:text=""
-                                        android:textColor="#FF4D57"
+                                        android:textColor="@color/md3_primary"
                                         android:textSize="16sp"
                                         android:clickable="true"
                                         android:focusable="true"
@@ -169,7 +169,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="3dp"
                                     android:text="2 hours ago"
-                                    android:textColor="#9AA4B2"
+                                    android:textColor="@color/md3_on_surface_secondary"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
@@ -185,7 +185,7 @@
                                 android:elevation="8dp"
                                 android:translationZ="5dp"
                                 android:stateListAnimator="@animator/btn_shadow_animator"
-                                app:tint="#D7DEE8" />
+                                app:tint="@color/md3_secondary" />
 
                         </LinearLayout>
 
@@ -201,7 +201,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text="This is a sample post content."
-                                android:textColor="#D7DEE8"
+                                android:textColor="@color/md3_on_surface"
                                 android:textSize="15sp"
                                 android:lineSpacingMultiplier="1.2"
                                 android:paddingBottom="10dp" />
@@ -257,7 +257,7 @@
                                         android:elevation="12dp"
                                         android:translationZ="8dp"
                                         android:stateListAnimator="@animator/btn_shadow_animator"
-                                        app:tint="#FFFFFF" />
+                                        app:tint="@color/md3_on_surface" />
 
                                 </FrameLayout>
 
@@ -288,7 +288,7 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@android:drawable/btn_star_big_on"
-                                    app:tint="#FF4D57" />
+                                    app:tint="@color/md3_primary" />
 
                                 <TextView
                                     android:id="@+id/tv_likes_count"
@@ -296,7 +296,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
                                     android:text="1.2K"
-                                    android:textColor="#9AA4B2"
+                                    android:textColor="@color/md3_on_surface_secondary"
                                     android:textSize="14sp" />
 
                             </LinearLayout>
@@ -307,7 +307,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="245 comments"
-                                android:textColor="#9AA4B2"
+                                android:textColor="@color/md3_on_surface_secondary"
                                 android:textSize="14sp"
                                 android:clickable="true"
                                 android:focusable="true"
@@ -319,7 +319,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="12 shares"
-                                android:textColor="#9AA4B2"
+                                android:textColor="@color/md3_on_surface_secondary"
                                 android:textSize="14sp" />
 
                         </LinearLayout>
@@ -327,7 +327,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="#22FFFFFF"
+                            android:background="@color/md3_border_subtle"
                             android:layout_marginTop="4dp"
                             android:layout_marginBottom="6dp" />
 
@@ -354,7 +354,7 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@android:drawable/btn_star_big_off"
-                                    app:tint="#FF4D57" />
+                                    app:tint="@color/md3_primary" />
 
                                 <TextView
                                     android:id="@+id/tv_like_text"
@@ -362,7 +362,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:text="Like"
-                                    android:textColor="#D7DEE8"
+                                    android:textColor="@color/md3_on_surface"
                                     android:textSize="14sp" />
 
                             </LinearLayout>
@@ -382,14 +382,14 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@android:drawable/ic_menu_recent_history"
-                                    app:tint="#FF4D57" />
+                                    app:tint="@color/md3_primary" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:text="Comment"
-                                    android:textColor="#D7DEE8"
+                                    android:textColor="@color/md3_on_surface"
                                     android:textSize="14sp" />
 
                             </LinearLayout>
@@ -409,14 +409,14 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@android:drawable/ic_menu_share"
-                                    app:tint="#FF4D57" />
+                                    app:tint="@color/md3_primary" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:text="Share"
-                                    android:textColor="#D7DEE8"
+                                    android:textColor="@color/md3_on_surface"
                                     android:textSize="14sp" />
 
                             </LinearLayout>
@@ -439,7 +439,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Comments"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:textSize="19sp"
                         android:textStyle="bold"
                         android:paddingStart="6dp"
@@ -453,7 +453,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:visibility="gone"
-                        android:indeterminateTint="#FF4D57"
+                        android:indeterminateTint="@color/md3_primary"
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp" />
 
@@ -468,7 +468,7 @@
                         android:paddingTop="34dp"
                         android:paddingBottom="34dp"
                         android:visibility="gone"
-                        android:background="@drawable/bg_empty_state_panel"
+                        android:background="@drawable/bg_obsidian_card"
                         android:elevation="12dp"
                         android:translationZ="8dp">
 
@@ -478,14 +478,14 @@
                             android:src="@android:drawable/ic_menu_recent_history"
                             android:background="@drawable/bg_icon_circle_dark"
                             android:padding="16dp"
-                            app:tint="#FF4D57" />
+                            app:tint="@color/md3_primary" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:text="No comments yet"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/md3_on_surface"
                             android:textStyle="bold"
                             android:textSize="18sp" />
 
@@ -494,7 +494,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="Be the first to comment!"
-                            android:textColor="#9AA4B2"
+                            android:textColor="@color/md3_on_surface_secondary"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -517,7 +517,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="View more comments"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:clickable="true"
@@ -580,7 +580,7 @@
                 android:text="Replying to"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:textColor="#FF4D57" />
+                android:textColor="@color/md3_primary" />
 
             <TextView
                 android:id="@+id/tv_reply_target_comment"
@@ -588,7 +588,7 @@
                 android:layout_height="wrap_content"
                 android:text="Username"
                 android:textSize="14sp"
-                android:textColor="#D7DEE8"
+                android:textColor="@color/md3_on_surface"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -605,7 +605,7 @@
             android:elevation="8dp"
             android:translationZ="5dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#D7DEE8" />
+            app:tint="@color/md3_secondary" />
 
     </LinearLayout>
 
@@ -634,7 +634,7 @@
             android:gravity="center_vertical"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:elevation="12dp"
             android:translationZ="8dp">
 
@@ -643,7 +643,7 @@
                 android:layout_width="34dp"
                 android:layout_height="34dp"
                 android:src="@drawable/ic_profile_placeholder"
-                app:civ_border_color="#33FFFFFF"
+                app:civ_border_color="@color/md3_border_glow"
                 app:civ_border_width="1dp" />
 
             <EditText
@@ -657,8 +657,8 @@
                 android:maxHeight="120dp"
                 android:background="@android:color/transparent"
                 android:hint="Write a comment..."
-                android:textColorHint="#7F8A99"
-                android:textColor="#FFFFFF"
+                android:textColorHint="@color/md3_on_surface_secondary"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="14sp"
                 android:inputType="textCapSentences|textMultiLine"
                 android:gravity="center_vertical|start"
@@ -678,7 +678,7 @@
                 android:padding="8dp"
                 android:visibility="visible"
                 android:stateListAnimator="@animator/btn_shadow_animator"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
         </LinearLayout>
 
@@ -695,7 +695,7 @@
             android:elevation="16dp"
             android:translationZ="12dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FFFFFF" />
+            app:tint="@color/md3_on_surface" />
 
     </LinearLayout>
 

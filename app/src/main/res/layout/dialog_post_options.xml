@@ -18,7 +18,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="14dp"
         android:translationZ="10dp">
 
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Post Options"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textStyle="bold"
             android:gravity="center"
             android:paddingStart="16dp"
@@ -59,7 +59,7 @@
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_edit"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -67,7 +67,7 @@
                 android:layout_weight="1"
                 android:text="Edit Post"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -94,7 +94,7 @@
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_delete"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -102,7 +102,7 @@
                 android:layout_weight="1"
                 android:text="Delete Post"
                 android:textSize="15sp"
-                android:textColor="#FF4D57"
+                android:textColor="@color/dialog_button_destructive_text"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -129,7 +129,7 @@
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_view"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -137,7 +137,7 @@
                 android:layout_weight="1"
                 android:text="Hide Post"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -146,7 +146,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#22FFFFFF"
+            android:background="@color/md3_border_subtle"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="14dp" />
 
@@ -168,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:text="Cancel"
                 android:textSize="15sp"
-                android:textColor="#FF4D57"
+                android:textColor="@color/dialog_button_secondary_text"
                 android:textStyle="bold" />
 
         </LinearLayout>

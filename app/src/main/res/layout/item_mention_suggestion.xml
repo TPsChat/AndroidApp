@@ -39,7 +39,7 @@
             android:elevation="8dp"
             android:translationZ="5dp"
             app:civ_border_width="1.5dp"
-            app:civ_border_color="#33FFFFFF" />
+            app:civ_border_color="@color/md3_border_glow" />
 
         <!-- User Info -->
         <LinearLayout
@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="John Doe"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:singleLine="true"
@@ -68,7 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@username"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:textSize="13sp"
                 android:layout_marginTop="4dp"
                 android:singleLine="true"
@@ -81,7 +81,7 @@
             android:layout_width="38dp"
             android:layout_height="38dp"
             android:text="@"
-            android:textColor="#FF4D57"
+            android:textColor="@color/md3_primary"
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"

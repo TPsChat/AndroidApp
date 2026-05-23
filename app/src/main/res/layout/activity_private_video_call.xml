@@ -42,7 +42,7 @@
                 android:src="@drawable/ic_profile_placeholder"
                 android:elevation="16dp"
                 android:translationZ="12dp"
-                app:civ_border_color="#33FFFFFF"
+                app:civ_border_color="@color/md3_border_glow"
                 app:civ_border_width="2dp" />
 
         </LinearLayout>
@@ -56,7 +56,7 @@
         android:layout_height="166dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="18dp"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="18dp"
         android:translationZ="14dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -86,7 +86,7 @@
                 android:src="@drawable/ic_profile_placeholder"
                 android:elevation="10dp"
                 android:translationZ="6dp"
-                app:civ_border_color="#33FFFFFF"
+                app:civ_border_color="@color/md3_border_glow"
                 app:civ_border_width="1.5dp" />
 
         </LinearLayout>
@@ -101,11 +101,10 @@
         android:layout_marginStart="18dp"
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="18dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/bg_video_controls_bar"
         android:gravity="center"
         android:orientation="horizontal"
-        android:elevation="18dp"
-        android:translationZ="14dp"
+        android:padding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -118,7 +117,7 @@
             android:minWidth="72dp"
             android:gravity="center"
             android:text="00:00"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_marginEnd="12dp"
@@ -139,7 +138,7 @@
             android:elevation="14dp"
             android:translationZ="10dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <!-- Camera toggle button -->
         <ImageButton
@@ -154,7 +153,7 @@
             android:elevation="14dp"
             android:translationZ="10dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <!-- Switch camera button -->
         <ImageButton
@@ -169,21 +168,21 @@
             android:elevation="14dp"
             android:translationZ="10dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#D7DEE8" />
+            app:tint="@color/md3_secondary" />
 
         <!-- End call button -->
         <ImageButton
             android:id="@+id/btn_end_call"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/bg_send_circle_modern"
+            android:background="@drawable/bg_call_decline_circle"
             android:src="@drawable/ic_end_call"
             android:padding="16dp"
             android:scaleType="centerInside"
             android:elevation="16dp"
             android:translationZ="12dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FFFFFF" />
+            app:tint="@color/md3_on_surface" />
 
     </LinearLayout>
 
@@ -204,14 +203,14 @@
         <ProgressBar
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:indeterminateTint="#FF4D57" />
+            android:indeterminateTint="@color/md3_primary" />
 
         <TextView
             android:id="@+id/tv_loading_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Connecting to call..."
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="16sp"
             android:textStyle="bold"
             android:layout_marginTop="12dp" />

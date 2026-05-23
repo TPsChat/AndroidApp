@@ -56,7 +56,7 @@
                     android:layout_height="54dp"
                     android:scaleType="centerCrop"
                     android:layout_marginBottom="8dp"
-                    android:background="@drawable/bg_message_field_shadow"
+                    android:background="@drawable/bg_soft_inset"
                     android:visibility="gone"
                     tools:src="@drawable/ic_profile_placeholder" />
 
@@ -64,7 +64,7 @@
                     android:id="@+id/tv_sent_reply_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textStyle="bold"
                     android:textSize="12sp"
                     tools:text="Alice" />
@@ -76,7 +76,7 @@
                     android:maxWidth="230dp"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="12sp"
                     android:lineSpacingExtra="2dp"
                     tools:text="Previous message content preview" />
@@ -101,7 +101,7 @@
                     android:paddingEnd="14dp"
                     android:paddingBottom="22dp"
                     android:text="This is a sent message"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="14sp"
                     android:lineSpacingExtra="3dp"
                     android:elevation="8dp"
@@ -145,7 +145,7 @@
                 android:layout_marginTop="4dp"
                 android:text="(edited)"
                 android:textSize="10sp"
-                android:textColor="#7F8A99"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:visibility="gone" />
 
             <FrameLayout
@@ -203,7 +203,7 @@
                 android:layout_marginEnd="6dp"
                 android:text="10:30 AM"
                 android:textSize="10sp"
-                android:textColor="#7F8A99"
+                android:textColor="@color/md3_on_surface_secondary"
                 tools:text="10:30 AM" />
 
         </LinearLayout>
@@ -233,7 +233,7 @@
             android:elevation="8dp"
             android:translationZ="5dp"
             app:civ_border_width="1.2dp"
-            app:civ_border_color="#33FFFFFF" />
+            app:civ_border_color="@color/md3_border_glow" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -266,7 +266,7 @@
                     android:layout_height="54dp"
                     android:scaleType="centerCrop"
                     android:layout_marginBottom="8dp"
-                    android:background="@drawable/bg_message_field_shadow"
+                    android:background="@drawable/bg_soft_inset"
                     android:visibility="gone"
                     tools:src="@drawable/ic_profile_placeholder" />
 
@@ -274,7 +274,7 @@
                     android:id="@+id/tv_received_reply_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textStyle="bold"
                     android:textSize="12sp"
                     tools:text="Bob" />
@@ -286,7 +286,7 @@
                     android:maxWidth="230dp"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="12sp"
                     android:lineSpacingExtra="2dp"
                     tools:text="Previous message content preview" />
@@ -297,7 +297,7 @@
                 android:id="@+id/tv_sender_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:layout_marginStart="4dp"
@@ -323,7 +323,7 @@
                     android:paddingEnd="14dp"
                     android:paddingBottom="22dp"
                     android:text="This is a received message"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="14sp"
                     android:lineSpacingExtra="3dp"
                     android:elevation="8dp"
@@ -368,7 +368,7 @@
                 android:layout_marginStart="6dp"
                 android:text="(edited)"
                 android:textSize="10sp"
-                android:textColor="#7F8A99"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:visibility="gone" />
 
             <FrameLayout
@@ -426,7 +426,7 @@
                 android:layout_marginStart="6dp"
                 android:text="10:30 AM"
                 android:textSize="10sp"
-                android:textColor="#7F8A99"
+                android:textColor="@color/md3_on_surface_secondary"
                 tools:text="10:30 AM" />
 
         </LinearLayout>

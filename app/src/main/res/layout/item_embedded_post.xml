@@ -35,7 +35,7 @@
             android:src="@drawable/ic_profile_placeholder"
             android:elevation="8dp"
             android:translationZ="5dp"
-            app:civ_border_color="#33FFFFFF"
+            app:civ_border_color="@color/md3_border_glow"
             app:civ_border_width="1.5dp" />
 
         <!-- Username -->
@@ -46,7 +46,7 @@
             android:layout_weight="1"
             android:layout_marginStart="12dp"
             android:text="Original Author"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="14sp"
             android:textStyle="bold"
             android:maxLines="1"
@@ -60,7 +60,7 @@
             android:src="@drawable/ic_arrow_right"
             android:background="@drawable/bg_icon_circle_transparent"
             android:padding="8dp"
-            app:tint="#FF4D57"
+            app:tint="@color/md3_primary"
             android:contentDescription="View original post"
             android:clickable="true"
             android:focusable="true" />
@@ -73,7 +73,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="This is the original post content..."
-        android:textColor="#D7DEE8"
+        android:textColor="@color/md3_on_surface"
         android:textSize="14sp"
         android:lineSpacingExtra="4dp"
         android:paddingBottom="10dp" />
@@ -84,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="200dp"
-        android:background="@drawable/bg_message_field_shadow"
+        android:background="@drawable/bg_soft_inset"
         android:elevation="6dp"
         android:translationZ="4dp"
         android:visibility="gone"
@@ -130,7 +130,7 @@
                 android:elevation="12dp"
                 android:translationZ="8dp"
                 android:stateListAnimator="@animator/btn_shadow_animator"
-                app:tint="#FFFFFF" />
+                app:tint="@color/md3_on_surface" />
 
         </FrameLayout>
 

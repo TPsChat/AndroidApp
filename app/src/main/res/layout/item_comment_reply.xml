@@ -38,7 +38,7 @@
             android:src="@drawable/ic_profile_placeholder"
             android:elevation="8dp"
             android:translationZ="5dp"
-            app:civ_border_color="#33FFFFFF"
+            app:civ_border_color="@color/md3_border_glow"
             app:civ_border_width="1.2dp" />
 
         <!-- Reply Content -->
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:maxWidth="220dp"
                     android:text="Username"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:maxLines="1"
@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:maxWidth="240dp"
                     android:text="This is a reply to the comment."
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="13sp"
                     android:lineSpacingExtra="3dp"
                     android:linksClickable="true"
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="2m"
-                    android:textColor="#7F8A99"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:textSize="11sp" />
 
                 <!-- Like Count -->
@@ -121,7 +121,7 @@
                     android:minWidth="26dp"
                     android:layout_marginStart="8dp"
                     android:text="0"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -137,7 +137,7 @@
                     android:layout_height="28dp"
                     android:layout_marginStart="8dp"
                     android:text="Like"
-                    android:textColor="#FF4D57"
+                    android:textColor="@color/md3_primary"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -154,7 +154,7 @@
                     android:layout_height="28dp"
                     android:layout_marginStart="6dp"
                     android:text="Reply"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:gravity="center"

@@ -17,7 +17,7 @@
         android:paddingEnd="20dp"
         android:paddingTop="22dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="14dp"
         android:translationZ="10dp">
 
@@ -28,7 +28,7 @@
             android:text="Group Settings"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:gravity="center"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
@@ -44,11 +44,11 @@
             android:text="Group Name"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:layout_marginBottom="14dp"
-            android:background="@drawable/bg_message_field_shadow"
+            android:background="@drawable/bg_soft_inset"
             android:elevation="8dp"
             android:translationZ="5dp"
             android:maxLines="1"
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:text="Public Group"
                     android:textSize="15sp"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textStyle="bold" />
 
                 <TextView
@@ -89,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:text="Anyone can join this group"
                     android:textSize="12sp"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:layout_marginTop="4dp" />
 
             </LinearLayout>
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:thumbTint="#FF4D57"
+                android:thumbTint="@color/md3_primary"
                 android:trackTint="#33404D5A" />
 
         </LinearLayout>
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:text="When enabled, anyone can find and join this group. When disabled, only invited members can join."
             android:textSize="12sp"
-            android:textColor="#9AA4B2"
+            android:textColor="@color/md3_on_surface_secondary"
             android:lineSpacingExtra="3dp"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
@@ -130,7 +130,7 @@
                 android:minWidth="92dp"
                 android:text="Cancel"
                 android:textAllCaps="false"
-                android:textColor="#FF4D57"
+                android:textColor="@color/dialog_button_secondary_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:background="@drawable/bg_reject_button_modern"
@@ -149,7 +149,7 @@
                 android:minWidth="92dp"
                 android:text="Save"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/dialog_button_filled_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:background="@drawable/bg_new_message_button"

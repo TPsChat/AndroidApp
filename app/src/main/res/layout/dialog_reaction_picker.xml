@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/bg_empty_state_panel"
+    android:background="@drawable/bg_obsidian_card"
     android:elevation="14dp"
     android:translationZ="10dp"
     android:paddingStart="10dp"

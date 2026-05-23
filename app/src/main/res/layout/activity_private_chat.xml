@@ -45,7 +45,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/palette_crimson" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile"
@@ -55,7 +55,7 @@
             android:src="@android:drawable/ic_menu_view"
             android:elevation="10dp"
             android:translationZ="6dp"
-            app:civ_border_color="#33FFFFFF"
+            app:civ_border_color="@color/md3_border_glow"
             app:civ_border_width="1.5dp" />
 
         <LinearLayout
@@ -70,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/henry_arthur_name"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Typing..."
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:textSize="12sp"
                 android:layout_marginTop="2dp" />
 
@@ -99,7 +99,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_cancel_call"
@@ -115,7 +115,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_more"
@@ -128,7 +128,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#D7DEE8" />
+            app:tint="@color/md3_secondary" />
 
     </LinearLayout>
 
@@ -155,13 +155,13 @@
             android:layout_height="18dp"
             android:layout_marginEnd="8dp"
             android:src="@android:drawable/ic_dialog_alert"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="No Internet Connection"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -192,13 +192,13 @@
             android:layout_height="18dp"
             android:layout_marginEnd="8dp"
             android:src="@android:drawable/ic_menu_sort_by_size"
-            app:tint="#FFFFFF" />
+            app:tint="@color/md3_on_surface" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Summarize Chat"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -229,7 +229,7 @@
             android:layout_height="18dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/ic_video_call"
-            app:tint="#FFFFFF" />
+            app:tint="@color/md3_on_surface" />
 
         <TextView
             android:id="@+id/tv_group_call_notification_text"
@@ -237,7 +237,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Group video call in progress"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="13sp"
             android:textStyle="bold" />
 
@@ -245,7 +245,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="TAP TO JOIN"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="11sp"
             android:textStyle="bold"
             android:paddingStart="10dp"
@@ -297,7 +297,7 @@
                 android:layout_gravity="bottom|end"
                 android:layout_margin="14dp"
                 android:text="↓ Tin nhắn mới"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="12sp"
                 android:textAllCaps="false"
                 android:paddingStart="14dp"
@@ -338,7 +338,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Typing..."
-                android:textColor="#D7DEE8"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="13sp" />
 
         </LinearLayout>
@@ -382,7 +382,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:textColor="#FF4D57"
+                android:textColor="@color/md3_primary"
                 tools:text="Alice" />
 
             <TextView
@@ -392,7 +392,7 @@
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textSize="12sp"
-                android:textColor="#D7DEE8"
+                android:textColor="@color/md3_on_surface"
                 tools:text="Previous message content preview" />
 
         </LinearLayout>
@@ -408,7 +408,7 @@
             android:elevation="8dp"
             android:translationZ="5dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#D7DEE8" />
+            app:tint="@color/md3_secondary" />
 
     </LinearLayout>
 
@@ -444,7 +444,7 @@
                 android:gravity="center_vertical"
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
-                android:background="@drawable/bg_message_field_shadow"
+                android:background="@drawable/bg_soft_inset"
                 android:elevation="12dp"
                 android:translationZ="8dp">
 
@@ -457,7 +457,7 @@
                     android:src="@drawable/ic_emoji_smile"
                     android:padding="8dp"
                     android:stateListAnimator="@animator/btn_shadow_animator"
-                    app:tint="#FF4D57" />
+                    app:tint="@color/md3_primary" />
 
                 <EditText
                     android:id="@+id/et_message"
@@ -472,8 +472,8 @@
                     android:minHeight="40dp"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#7F8A99"
+                    android:textColor="@color/md3_on_surface"
+                    android:textColorHint="@color/md3_on_surface_secondary"
                     android:textCursorDrawable="@null"
                     android:textSize="14sp" />
 
@@ -486,7 +486,7 @@
                     android:src="@android:drawable/ic_menu_gallery"
                     android:padding="8dp"
                     android:stateListAnimator="@animator/btn_shadow_animator"
-                    app:tint="#FF4D57" />
+                    app:tint="@color/md3_primary" />
 
                 <!-- Nút mic nằm bên trong -->
                 <ImageButton
@@ -498,7 +498,7 @@
                     android:src="@drawable/ic_mic_voice"
                     android:padding="8dp"
                     android:stateListAnimator="@animator/btn_shadow_animator"
-                    app:tint="#FF4D57" />
+                    app:tint="@color/md3_primary" />
 
             </LinearLayout>
 
@@ -515,7 +515,7 @@
                 android:elevation="16dp"
                 android:translationZ="12dp"
                 android:stateListAnimator="@animator/btn_shadow_animator"
-                app:tint="#FFFFFF" />
+                app:tint="@color/text_white" />
 
         </LinearLayout>
 

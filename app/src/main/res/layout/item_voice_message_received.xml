@@ -29,7 +29,7 @@
         android:layout_marginEnd="12dp"
         android:elevation="8dp"
         android:translationZ="5dp"
-        app:tint="#FF4D57" />
+        app:tint="@color/md3_primary" />
 
     <!-- Progress Bar -->
     <ProgressBar
@@ -40,7 +40,7 @@
         android:layout_weight="1"
         android:max="100"
         android:progress="0"
-        android:progressTint="#FF4D57"
+        android:progressTint="@color/md3_primary"
         android:progressBackgroundTint="#33404A57"
         android:layout_marginEnd="12dp" />
 
@@ -51,7 +51,7 @@
         android:layout_height="wrap_content"
         android:text="0:00"
         android:textSize="13sp"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/md3_on_surface"
         android:textStyle="bold" />
 
 </LinearLayout>

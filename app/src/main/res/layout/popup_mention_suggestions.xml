@@ -10,7 +10,7 @@
     app:cardCornerRadius="18dp"
     app:cardElevation="12dp"
     app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="#151B24">
+    app:cardBackgroundColor="@color/md3_surface_container">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Tag someone"
-            android:textColor="#FF4D57"
+            android:textColor="@color/md3_primary"
             android:textSize="13sp"
             android:textStyle="bold"
             android:paddingStart="16dp"
@@ -41,7 +41,7 @@
             android:layout_height="1dp"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:background="#22FFFFFF" />
+            android:background="@color/md3_border_subtle" />
 
         <!-- Suggestions List -->
         <androidx.recyclerview.widget.RecyclerView

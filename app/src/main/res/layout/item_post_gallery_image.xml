@@ -10,7 +10,7 @@
     app:cardCornerRadius="16dp"
     app:cardElevation="8dp"
     app:cardUseCompatPadding="false"
-    app:cardBackgroundColor="#151B24">
+    app:cardBackgroundColor="@color/md3_surface_container">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -41,7 +41,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="+5"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:background="@drawable/bg_send_circle_modern"

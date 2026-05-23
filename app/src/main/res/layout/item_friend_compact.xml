@@ -39,7 +39,7 @@
             android:elevation="8dp"
             android:translationZ="5dp"
             app:civ_border_width="1.5dp"
-            app:civ_border_color="#33FFFFFF" />
+            app:civ_border_color="@color/md3_border_glow" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="Display Name"
@@ -66,7 +66,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:textSize="13sp"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="\@username"

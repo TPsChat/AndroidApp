@@ -44,7 +44,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <TextView
             android:layout_width="0dp"
@@ -52,7 +52,7 @@
             android:layout_weight="1"
             android:layout_marginStart="14dp"
             android:text="Create Group"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="22sp"
             android:textStyle="bold"
             android:maxLines="1"
@@ -66,7 +66,7 @@
             android:gravity="center"
             android:text="Create"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textSize="14sp"
             android:textStyle="bold"
             android:paddingStart="18dp"
@@ -100,7 +100,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:orientation="vertical"
-            android:background="@drawable/bg_empty_state_panel"
+            android:background="@drawable/bg_obsidian_card"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:paddingTop="20dp"
@@ -114,7 +114,7 @@
                 android:text="Group Information"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:layout_marginBottom="14dp" />
 
             <!-- Group Name -->
@@ -123,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:text="Group Name"
                 android:textSize="13sp"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:layout_marginBottom="8dp" />
 
             <EditText
@@ -133,9 +133,9 @@
                 android:hint="Enter group name"
                 android:inputType="textCapWords"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#7F8A99"
-                android:background="@drawable/bg_message_field_shadow"
+                android:textColor="@color/md3_on_surface"
+                android:textColorHint="@color/md3_on_surface_secondary"
+                android:background="@drawable/bg_soft_inset"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:gravity="center_vertical"
@@ -148,7 +148,7 @@
                 android:layout_height="wrap_content"
                 android:text="Description (Optional)"
                 android:textSize="13sp"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:layout_marginBottom="8dp" />
 
             <EditText
@@ -159,9 +159,9 @@
                 android:inputType="textCapSentences|textMultiLine"
                 android:maxLines="3"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
-                android:textColorHint="#7F8A99"
-                android:background="@drawable/bg_message_field_shadow"
+                android:textColor="@color/md3_on_surface"
+                android:textColorHint="@color/md3_on_surface_secondary"
+                android:background="@drawable/bg_soft_inset"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:paddingTop="14dp"
@@ -188,7 +188,7 @@
                         android:layout_height="wrap_content"
                         android:text="Public Group"
                         android:textSize="16sp"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:textStyle="bold" />
 
                     <TextView
@@ -196,7 +196,7 @@
                         android:layout_height="wrap_content"
                         android:text="Anyone can join this group"
                         android:textSize="12sp"
-                        android:textColor="#9AA4B2"
+                        android:textColor="@color/md3_on_surface_secondary"
                         android:layout_marginTop="5dp" />
 
                 </LinearLayout>
@@ -206,7 +206,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="false"
-                    android:thumbTint="#FF4D57"
+                    android:thumbTint="@color/md3_primary"
                     android:trackTint="#33404D5A" />
 
             </LinearLayout>
@@ -219,7 +219,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:background="@drawable/bg_empty_state_panel"
+            android:background="@drawable/bg_obsidian_card"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:paddingTop="20dp"
@@ -233,7 +233,7 @@
                 android:text="Select Friends"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:layout_marginBottom="6dp" />
 
             <TextView
@@ -241,7 +241,7 @@
                 android:layout_height="wrap_content"
                 android:text="Select at least 2 friends to create a group"
                 android:textSize="13sp"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:layout_marginBottom="14dp" />
 
             <!-- Search Field -->
@@ -250,7 +250,7 @@
                 android:layout_height="52dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@drawable/bg_message_field_shadow"
+                android:background="@drawable/bg_soft_inset"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
                 android:layout_marginBottom="12dp"
@@ -262,7 +262,7 @@
                     android:layout_height="20dp"
                     android:src="@drawable/ic_search"
                     android:layout_marginEnd="10dp"
-                    app:tint="#FF4D57" />
+                    app:tint="@color/md3_primary" />
 
                 <EditText
                     android:id="@+id/et_search"
@@ -271,8 +271,8 @@
                     android:layout_weight="1"
                     android:hint="Search friends..."
                     android:textSize="15sp"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#7F8A99"
+                    android:textColor="@color/md3_on_surface"
+                    android:textColorHint="@color/md3_on_surface_secondary"
                     android:background="@android:color/transparent"
                     android:inputType="text"
                     android:gravity="center_vertical"
@@ -287,7 +287,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:indeterminateTint="#FF4D57"
+                android:indeterminateTint="@color/md3_primary"
                 android:layout_marginBottom="8dp" />
 
             <!-- Friends RecyclerView -->

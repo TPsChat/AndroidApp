@@ -45,7 +45,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -59,7 +59,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Group Settings"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -69,7 +69,7 @@
                 android:id="@+id/tv_group_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#9AA4B2"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:textSize="13sp"
                 android:layout_marginTop="3dp"
                 tools:text="My Awesome Group" />
@@ -104,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:orientation="vertical"
-                android:background="@drawable/bg_empty_state_panel"
+                android:background="@drawable/bg_obsidian_card"
                 android:paddingStart="18dp"
                 android:paddingEnd="18dp"
                 android:paddingTop="20dp"
@@ -118,7 +118,7 @@
                     android:text="Group Information"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:layout_marginBottom="14dp" />
 
                 <LinearLayout
@@ -141,7 +141,7 @@
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_menu_info_details"
                         android:layout_marginEnd="12dp"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -150,13 +150,13 @@
                         android:text="View Group Info"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="@color/md3_on_surface" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@android:drawable/ic_menu_more"
-                        app:tint="#9AA4B2" />
+                        app:tint="@color/md3_on_surface_secondary" />
 
                 </LinearLayout>
 
@@ -179,7 +179,7 @@
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_menu_camera"
                         android:layout_marginEnd="12dp"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -188,13 +188,13 @@
                         android:text="Change Group Avatar"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="@color/md3_on_surface" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@android:drawable/ic_menu_more"
-                        app:tint="#9AA4B2" />
+                        app:tint="@color/md3_on_surface_secondary" />
 
                 </LinearLayout>
 
@@ -206,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:orientation="vertical"
-                android:background="@drawable/bg_empty_state_panel"
+                android:background="@drawable/bg_obsidian_card"
                 android:paddingStart="18dp"
                 android:paddingEnd="18dp"
                 android:paddingTop="20dp"
@@ -220,7 +220,7 @@
                     android:text="Privacy Settings"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:layout_marginBottom="14dp" />
 
                 <LinearLayout
@@ -241,7 +241,7 @@
                             android:layout_height="wrap_content"
                             android:text="Public Group"
                             android:textSize="16sp"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/md3_on_surface"
                             android:textStyle="bold" />
 
                         <TextView
@@ -249,7 +249,7 @@
                             android:layout_height="wrap_content"
                             android:text="Anyone can join this group"
                             android:textSize="12sp"
-                            android:textColor="#9AA4B2"
+                            android:textColor="@color/md3_on_surface_secondary"
                             android:layout_marginTop="5dp" />
 
                     </LinearLayout>
@@ -259,7 +259,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="false"
-                        android:thumbTint="#FF4D57"
+                        android:thumbTint="@color/md3_primary"
                         android:trackTint="#33404D5A" />
 
                 </LinearLayout>
@@ -270,7 +270,7 @@
                     android:layout_height="wrap_content"
                     android:text="When enabled, anyone can find and join this group. When disabled, only invited members can join."
                     android:textSize="12sp"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:lineSpacingExtra="2dp" />
 
             </LinearLayout>
@@ -281,7 +281,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:orientation="vertical"
-                android:background="@drawable/bg_empty_state_panel"
+                android:background="@drawable/bg_obsidian_card"
                 android:paddingStart="18dp"
                 android:paddingEnd="18dp"
                 android:paddingTop="20dp"
@@ -295,7 +295,7 @@
                     android:text="Member Management"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:layout_marginBottom="14dp" />
 
                 <LinearLayout
@@ -318,7 +318,7 @@
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_input_add"
                         android:layout_marginEnd="12dp"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -327,13 +327,13 @@
                         android:text="Add Members"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="@color/md3_on_surface" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@android:drawable/ic_menu_more"
-                        app:tint="#9AA4B2" />
+                        app:tint="@color/md3_on_surface_secondary" />
 
                 </LinearLayout>
 
@@ -357,7 +357,7 @@
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_menu_view"
                         android:layout_marginEnd="12dp"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -366,13 +366,13 @@
                         android:text="Members"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="@color/md3_on_surface" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@android:drawable/ic_menu_more"
-                        app:tint="#9AA4B2" />
+                        app:tint="@color/md3_on_surface_secondary" />
 
                 </LinearLayout>
 
@@ -395,7 +395,7 @@
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_menu_agenda"
                         android:layout_marginEnd="12dp"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -404,7 +404,7 @@
                         android:text="Join Requests"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="#FFFFFF" />
+                        android:textColor="@color/md3_on_surface" />
 
                     <TextView
                         android:id="@+id/tv_request_count"
@@ -417,7 +417,7 @@
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"
                         android:background="@drawable/bg_badge_red_modern"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/md3_on_surface"
                         android:textStyle="bold"
                         android:textSize="12sp"
                         android:text="0"
@@ -428,7 +428,7 @@
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@android:drawable/ic_menu_more"
-                        app:tint="#9AA4B2" />
+                        app:tint="@color/md3_on_surface_secondary" />
 
                 </LinearLayout>
 
@@ -440,7 +440,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:orientation="vertical"
-                android:background="@drawable/bg_empty_state_panel"
+                android:background="@drawable/bg_obsidian_card"
                 android:paddingStart="18dp"
                 android:paddingEnd="18dp"
                 android:paddingTop="20dp"
@@ -454,7 +454,7 @@
                     android:text="Danger Zone"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="#FF4D57"
+                    android:textColor="@color/md3_primary"
                     android:layout_marginBottom="14dp" />
 
                 <LinearLayout
@@ -477,7 +477,7 @@
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_menu_close_clear_cancel"
                         android:layout_marginEnd="12dp"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -486,13 +486,13 @@
                         android:text="Leave Group"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="#FF4D57" />
+                        android:textColor="@color/md3_primary" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@android:drawable/ic_menu_more"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                 </LinearLayout>
 
@@ -515,7 +515,7 @@
                         android:layout_height="24dp"
                         android:src="@android:drawable/ic_menu_delete"
                         android:layout_marginEnd="12dp"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -524,13 +524,13 @@
                         android:text="Delete Group"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="#FF4D57" />
+                        android:textColor="@color/md3_primary" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@android:drawable/ic_menu_more"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                 </LinearLayout>
 

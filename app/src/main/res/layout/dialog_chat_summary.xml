@@ -17,7 +17,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="14dp"
         android:translationZ="10dp">
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="AI Summary"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textStyle="bold"
             android:gravity="center"
             android:paddingStart="16dp"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:minHeight="120dp"
                 android:textSize="15sp"
-                android:textColor="#D7DEE8"
+                android:textColor="@color/md3_on_surface"
                 android:lineSpacingExtra="6dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"

@@ -17,7 +17,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="14dp"
         android:translationZ="10dp">
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:text="Reactions"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textStyle="bold"
             android:gravity="center"
             android:paddingStart="16dp"
@@ -89,7 +89,7 @@
                 android:gravity="center"
                 android:text="♡"
                 android:textSize="28sp"
-                android:textColor="#FF4D57"
+                android:textColor="@color/dialog_button_secondary_text"
                 android:background="@drawable/bg_icon_circle_dark"
                 android:layout_marginBottom="12dp" />
 
@@ -98,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:text="No reactions yet"
                 android:textSize="15sp"
-                android:textColor="#D7DEE8"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold"
                 android:gravity="center" />
 

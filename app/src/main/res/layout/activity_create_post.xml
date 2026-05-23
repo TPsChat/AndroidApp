@@ -45,7 +45,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <!-- User Profile Info -->
         <LinearLayout
@@ -64,7 +64,7 @@
                 android:src="@drawable/ic_profile_placeholder"
                 android:elevation="10dp"
                 android:translationZ="6dp"
-                app:civ_border_color="#33FFFFFF"
+                app:civ_border_color="@color/md3_border_glow"
                 app:civ_border_width="1.5dp" />
 
             <TextView
@@ -73,7 +73,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:text="User Name"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:maxLines="1"
@@ -88,10 +88,11 @@
             android:minWidth="82dp"
             android:text="Post"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:fontFamily="@font/plus_jakarta_sans"
+            android:textColor="@color/md3_on_primary"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:background="@drawable/bg_new_message_button"
+            android:background="@drawable/bg_primary_pill"
             android:paddingStart="22dp"
             android:paddingEnd="22dp"
             android:enabled="false"
@@ -129,10 +130,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="230dp"
-                android:background="@drawable/bg_empty_state_panel"
+                android:background="@drawable/bg_obsidian_card"
                 android:hint="What's on your mind?"
-                android:textColorHint="#7F8A99"
-                android:textColor="#FFFFFF"
+                android:textColorHint="@color/md3_on_surface_secondary"
+                android:textColor="@color/md3_on_surface"
                 android:textSize="18sp"
                 android:lineSpacingMultiplier="1.3"
                 android:paddingStart="18dp"
@@ -165,7 +166,7 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:layout_marginTop="12dp"
-                android:background="@drawable/bg_empty_state_panel"
+                android:background="@drawable/bg_obsidian_card"
                 android:paddingTop="14dp"
                 android:elevation="10dp"
                 android:translationZ="6dp">
@@ -178,7 +179,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
                     android:text="0 / 5 images"
-                    android:textColor="#9AA4B2"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:textSize="12sp" />
 
                 <HorizontalScrollView
@@ -213,7 +214,7 @@
                 android:paddingEnd="16dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@drawable/bg_message_field_shadow"
+                android:background="@drawable/bg_soft_inset"
                 android:elevation="10dp"
                 android:translationZ="6dp">
 
@@ -221,7 +222,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_privacy"
-                    app:tint="#FF4D57" />
+                    app:tint="@color/md3_primary" />
 
                 <TextView
                     android:id="@+id/tv_privacy"
@@ -230,7 +231,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
                     android:text="Public"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -238,7 +239,7 @@
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_arrow_down"
-                    app:tint="#D7DEE8" />
+                    app:tint="@color/md3_secondary" />
 
             </LinearLayout>
 
@@ -254,7 +255,7 @@
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:visibility="gone"
-                android:background="@drawable/bg_empty_state_panel"
+                android:background="@drawable/bg_obsidian_card"
                 android:elevation="10dp"
                 android:translationZ="6dp">
 
@@ -273,7 +274,7 @@
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:src="@drawable/ic_location"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                     <TextView
                         android:id="@+id/tv_location"
@@ -282,7 +283,7 @@
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
                         android:text="Location name"
-                        android:textColor="#D7DEE8"
+                        android:textColor="@color/md3_on_surface"
                         android:textSize="14sp" />
 
                     <ImageButton
@@ -294,7 +295,7 @@
                         android:contentDescription="Remove location"
                         android:padding="9dp"
                         android:stateListAnimator="@animator/btn_shadow_animator"
-                        app:tint="#D7DEE8" />
+                        app:tint="@color/md3_secondary" />
 
                 </LinearLayout>
 
@@ -313,7 +314,7 @@
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:src="@drawable/ic_tag"
-                        app:tint="#FF4D57" />
+                        app:tint="@color/md3_primary" />
 
                     <TextView
                         android:id="@+id/tv_tagged_users"
@@ -322,7 +323,7 @@
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
                         android:text="Tagged users"
-                        android:textColor="#D7DEE8"
+                        android:textColor="@color/md3_on_surface"
                         android:textSize="14sp" />
 
                     <ImageButton
@@ -334,7 +335,7 @@
                         android:contentDescription="Remove tags"
                         android:padding="9dp"
                         android:stateListAnimator="@animator/btn_shadow_animator"
-                        app:tint="#D7DEE8" />
+                        app:tint="@color/md3_secondary" />
 
                 </LinearLayout>
 
@@ -372,7 +373,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_tag_people"
@@ -386,7 +387,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_location"
@@ -400,7 +401,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#FF4D57" />
+            app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_emoji"
@@ -414,7 +415,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#D7DEE8" />
+            app:tint="@color/md3_secondary" />
 
         <ImageButton
             android:id="@+id/iv_more_options"
@@ -428,7 +429,7 @@
             android:elevation="12dp"
             android:translationZ="8dp"
             android:stateListAnimator="@animator/btn_shadow_animator"
-            app:tint="#D7DEE8" />
+            app:tint="@color/md3_secondary" />
 
     </LinearLayout>
 

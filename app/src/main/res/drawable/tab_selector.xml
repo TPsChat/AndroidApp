@@ -1,22 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item android:state_selected="true">
-        <shape>
-            <gradient
-                android:startColor="#FF6A72"
-                android:centerColor="#FF4D57"
-                android:endColor="#D93645"
-                android:angle="270" />
-            <corners android:radius="100dp" />
-        </shape>
+        <layer-list>
+            <item
+                android:left="0dp"
+                android:top="2dp"
+                android:right="2dp"
+                android:bottom="0dp">
+                <shape>
+                    <solid android:color="#66000000" />
+                    <corners android:radius="@dimen/radius_pill" />
+                </shape>
+            </item>
+            <item
+                android:left="0dp"
+                android:top="0dp"
+                android:right="2dp"
+                android:bottom="2dp">
+                <shape>
+                    <gradient
+                        android:angle="135"
+                        android:endColor="@color/palette_blood"
+                        android:startColor="@color/palette_wine" />
+                    <corners android:radius="@dimen/radius_pill" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
-
     <item>
         <shape>
-            <solid android:color="#001E252E" />
-            <corners android:radius="100dp" />
+            <solid android:color="@android:color/transparent" />
+            <corners android:radius="@dimen/radius_pill" />
         </shape>
     </item>
-
 </selector>

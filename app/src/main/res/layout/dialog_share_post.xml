@@ -18,7 +18,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_empty_state_panel"
+        android:background="@drawable/bg_obsidian_card"
         android:elevation="14dp"
         android:translationZ="10dp">
 
@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Share Post"
             android:textSize="20sp"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/md3_on_surface"
             android:textStyle="bold"
             android:gravity="center"
             android:paddingStart="16dp"
@@ -58,7 +58,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_edit"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -66,7 +66,7 @@
                 android:layout_weight="1"
                 android:text="Share to your Feed"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -92,7 +92,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_send"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -100,7 +100,7 @@
                 android:layout_weight="1"
                 android:text="Send as Message"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -127,7 +127,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_info"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -135,7 +135,7 @@
                 android:layout_weight="1"
                 android:text="Share to Story"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -162,7 +162,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_group_icon"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -170,7 +170,7 @@
                 android:layout_weight="1"
                 android:text="Share to Group/Page"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -179,7 +179,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#22FFFFFF"
+            android:background="@color/md3_border_subtle"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="14dp" />
 
@@ -204,7 +204,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_link"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -212,7 +212,7 @@
                 android:layout_weight="1"
                 android:text="Copy Link"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -237,7 +237,7 @@
                 android:layout_height="22dp"
                 android:src="@drawable/ic_link"
                 android:layout_marginEnd="12dp"
-                app:tint="#FF4D57" />
+                app:tint="@color/md3_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -245,7 +245,7 @@
                 android:layout_weight="1"
                 android:text="Share to Other Apps"
                 android:textSize="15sp"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>

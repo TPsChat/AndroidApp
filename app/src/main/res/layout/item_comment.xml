@@ -27,7 +27,7 @@
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_color="#33FFFFFF"
+            app:civ_border_color="@color/md3_border_glow"
             app:civ_border_width="1.5dp"
             android:elevation="8dp"
             android:translationZ="5dp"
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:maxWidth="240dp"
                     android:text="Username"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:maxLines="1"
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:maxWidth="260dp"
                     android:text="This is a comment text that can span multiple lines and support emojis and links."
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="14sp"
                     android:lineSpacingExtra="3dp"
                     android:linksClickable="true"
@@ -98,7 +98,7 @@
                     android:scaleType="centerCrop"
                     android:adjustViewBounds="true"
                     android:visibility="gone"
-                    android:background="@drawable/bg_message_field_shadow"
+                    android:background="@drawable/bg_soft_inset"
                     android:contentDescription="Comment media" />
 
             </LinearLayout>
@@ -118,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5m"
-                    android:textColor="#7F8A99"
+                    android:textColor="@color/md3_on_surface_secondary"
                     android:textSize="12sp" />
 
                 <!-- Like Button -->
@@ -128,7 +128,7 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="10dp"
                     android:text="Like"
-                    android:textColor="#FF4D57"
+                    android:textColor="@color/md3_primary"
                     android:textStyle="bold"
                     android:textSize="12sp"
                     android:gravity="center"
@@ -145,7 +145,7 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="6dp"
                     android:text="Reply"
-                    android:textColor="#D7DEE8"
+                    android:textColor="@color/md3_on_surface"
                     android:textStyle="bold"
                     android:textSize="12sp"
                     android:gravity="center"
@@ -165,7 +165,7 @@
                     android:gravity="center_vertical"
                     android:paddingStart="6dp"
                     android:paddingEnd="6dp"
-                    android:background="@drawable/bg_message_field_shadow"
+                    android:background="@drawable/bg_soft_inset"
                     android:visibility="gone">
 
                     <TextView
@@ -226,7 +226,7 @@
                     android:minWidth="28dp"
                     android:layout_marginStart="4dp"
                     android:text="0"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/md3_on_surface"
                     android:textSize="12sp"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -247,7 +247,7 @@
                     android:src="@drawable/ic_more"
                     android:contentDescription="Comment options"
                     android:padding="7dp"
-                    app:tint="#D7DEE8"
+                    app:tint="@color/md3_secondary"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -272,7 +272,7 @@
             android:layout_width="wrap_content"
             android:layout_height="34dp"
             android:text="View 3 replies"
-            android:textColor="#FF4D57"
+            android:textColor="@color/md3_primary"
             android:textSize="13sp"
             android:textStyle="bold"
             android:gravity="center_vertical"
