@@ -5,20 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/background_primary"
-    tools:context=".ui.theme.HomeActivity">
+    android:background="@drawable/bg_chat_screen_dark">
 
     <ImageView
         android:id="@+id/bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:alpha="0.12"
         android:scaleType="centerCrop"
-        android:src="@drawable/backgroud"
+        android:contentDescription="Background Image"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:contentDescription="Background Image" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_top_actions"
@@ -27,53 +26,64 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_begin="40dp" />
 
-    <!-- Search Bar (replaces top bar) -->
+    <!-- Search Bar Floating -->
     <LinearLayout
         android:id="@+id/search_bar_home"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="18dp"
         android:orientation="horizontal"
-        android:background="@drawable/rounded_container"
+        android:background="@drawable/bg_message_field_shadow"
         android:gravity="center_vertical"
-        android:padding="12dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         android:clickable="true"
         android:focusable="true"
+        android:elevation="12dp"
+        android:translationZ="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        
+
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
             android:src="@drawable/ic_search"
             android:layout_marginEnd="12dp"
-            app:tint="@color/icon_utility"
+            app:tint="#FF4D57"
             android:contentDescription="Search Icon" />
-        
+
         <TextView
             android:id="@+id/tv_search_hint"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Search"
-            android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textColor="#7F8A99"
             android:gravity="center_vertical" />
+
     </LinearLayout>
 
+    <!-- User Profile Section -->
     <LinearLayout
         android:id="@+id/user_profile_section"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="18dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="@drawable/rounded_container"
-        android:padding="16dp"
+        android:background="@drawable/bg_empty_state_panel"
+        android:paddingStart="14dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
         android:visibility="gone"
+        android:elevation="12dp"
+        android:translationZ="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -82,14 +92,16 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_color="#0E394B"
-            app:civ_border_width="2dp"
-            android:contentDescription="User Avatar" />
+            android:contentDescription="User Avatar"
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            app:civ_border_color="#33FFFFFF"
+            app:civ_border_width="1.5dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="14dp"
             android:orientation="vertical">
 
             <TextView
@@ -99,268 +111,165 @@
                 android:ellipsize="end"
                 android:maxWidth="150dp"
                 android:text="User Name"
-                android:textColor="@color/black"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/tab_container"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginHorizontal="0dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="0dp"
-        android:padding="8dp"
-        android:background="#F2F0EF"
-        android:elevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <ImageView
-            android:id="@+id/iv_chats"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/tab_selector"
-            android:src="@drawable/ic_chat"
-            app:tint="@color/tab_icon_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerInside"
-            android:padding="12dp"
-            android:contentDescription="Chats" />
-        <ImageView
-            android:id="@+id/iv_groups"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/tab_selector"
-            android:src="@drawable/ic_group"
-            app:tint="@color/tab_icon_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerInside"
-            android:padding="12dp"
-            android:contentDescription="Groups" />
-
-        <ImageView
-            android:id="@+id/iv_calls"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/tab_selector"
-            android:src="@drawable/ic_call"
-            app:tint="@color/tab_icon_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerInside"
-            android:padding="12dp"
-            android:contentDescription="Calls" />
-
-        <ImageView
-            android:id="@+id/iv_posts"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/tab_selector"
-            android:src="@drawable/ic_post"
-            app:tint="@color/tab_icon_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerInside"
-            android:padding="12dp"
-            android:contentDescription="Posts" />
-
-        <ImageView
-            android:id="@+id/iv_notifications"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/tab_selector"
-            android:src="@drawable/ic_notification"
-            app:tint="@color/tab_icon_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerInside"
-            android:padding="12dp"
-            android:contentDescription="Notifications" />
-
-        <ImageView
-            android:id="@+id/iv_settings"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/tab_selector"
-            android:src="@drawable/ic_setting"
-            app:tint="@color/tab_icon_selector"
-            android:clickable="true"
-            android:focusable="true"
-            android:scaleType="centerInside"
-            android:padding="12dp"
-            android:contentDescription="Settings" />
 
     </LinearLayout>
 
-    <!-- Action Bar for Posts Tab (Create Post Section) -->
+    <!-- Create Post Bar -->
     <LinearLayout
         android:id="@+id/ll_create_post_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="12dp"
         android:orientation="vertical"
-        android:background="@color/background_secondary"
-        android:elevation="2dp"
-        android:padding="12dp"
+        android:background="@drawable/bg_empty_state_panel"
+        android:padding="14dp"
         android:visibility="gone"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@id/user_profile_section"
+        android:elevation="12dp"
+        android:translationZ="8dp"
+        app:layout_constraintTop_toBottomOf="@id/search_bar_home"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Profile Picture and Input Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingBottom="8dp">
+            android:paddingBottom="10dp">
 
-            <!-- Profile Picture Thumbnail -->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_post_profile_thumbnail"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:src="@drawable/ic_profile_placeholder"
-                app:civ_border_color="@color/border_light"
-                app:civ_border_width="2dp" />
+                android:elevation="8dp"
+                android:translationZ="5dp"
+                app:civ_border_color="#33FFFFFF"
+                app:civ_border_width="1.5dp" />
 
-            <!-- What's on your mind? Input -->
             <LinearLayout
                 android:id="@+id/ll_create_post_input"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="46dp"
                 android:layout_weight="1"
                 android:layout_marginStart="12dp"
                 android:orientation="vertical"
+                android:gravity="center_vertical"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="@drawable/rounded_container"
-                android:backgroundTint="@color/surface_secondary"
-                android:padding="12dp">
+                android:background="@drawable/bg_message_field_shadow"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp">
 
                 <TextView
                     android:id="@+id/tv_create_post_hint"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="What's on your mind?"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="16sp" />
+                    android:textColor="#9AA4B2"
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
-        <!-- Separator Line -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/border_light"
-            android:layout_marginVertical="8dp" />
+            android:background="#22FFFFFF"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="10dp" />
 
-        <!-- Quick Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center">
 
-            <!-- Live Button -->
             <LinearLayout
                 android:id="@+id/ll_live_post"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="42dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackground">
+                android:background="@drawable/bg_icon_circle_transparent">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@android:drawable/ic_menu_camera"
-                    app:tint="@color/icon_live" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Live"
-                    android:textColor="@color/text_primary"
+                    android:textColor="#D7DEE8"
                     android:textSize="14sp" />
 
             </LinearLayout>
 
-            <!-- Photo Button -->
             <LinearLayout
                 android:id="@+id/ll_photo_post"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="42dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackground">
+                android:background="@drawable/bg_icon_circle_transparent">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@android:drawable/ic_menu_gallery"
-                    app:tint="@color/icon_photo" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Photo"
-                    android:textColor="@color/text_primary"
+                    android:textColor="#D7DEE8"
                     android:textSize="14sp" />
 
             </LinearLayout>
 
-            <!-- Video Button -->
             <LinearLayout
                 android:id="@+id/ll_video_post"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="42dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackground">
+                android:background="@drawable/bg_icon_circle_transparent">
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_video_call"
-                    app:tint="@color/icon_video" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Video"
-                    android:textColor="@color/text_primary"
+                    android:textColor="#D7DEE8"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -369,18 +278,23 @@
 
     </LinearLayout>
 
+    <!-- Friend Requests / Friends Entry -->
     <LinearLayout
         android:id="@+id/ll_friend_requests"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/rounded_container"
+        android:layout_height="56dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_message_field_shadow"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="14dp"
+        android:elevation="12dp"
+        android:translationZ="8dp"
         app:layout_constraintTop_toBottomOf="@id/search_bar_home"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -391,7 +305,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Friends"
-            android:textColor="@color/black"
+            android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -399,14 +313,17 @@
             android:id="@+id/tv_friend_request_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_unread_count"
+            android:background="@drawable/bg_badge_red_modern"
             android:gravity="center"
-            android:minWidth="20dp"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
+            android:minWidth="24dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
             android:text="0"
-            android:textColor="@android:color/white"
+            android:textColor="#FFFFFF"
             android:textSize="12sp"
+            android:textStyle="bold"
             android:visibility="gone" />
 
         <ImageView
@@ -414,62 +331,179 @@
             android:layout_height="28dp"
             android:layout_marginStart="8dp"
             android:src="@drawable/ic_more"
-            app:tint="@color/icon_utility"
+            app:tint="#D7DEE8"
             android:contentDescription="More Options" />
 
     </LinearLayout>
 
+    <!-- Main List -->
     <LinearLayout
         android:id="@+id/chat_list_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/ll_friend_requests"
         app:layout_constraintBottom_toTopOf="@id/tab_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-        
-        <!-- Posts Action Bar Container (shown only for Posts tab) -->
+
         <LinearLayout
             android:id="@+id/ll_posts_action_bar_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
-        </LinearLayout>
+            android:visibility="gone" />
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/transparent"
             android:padding="0dp">
+
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_chat_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
-                    android:paddingBottom="0dp"
-                    android:background="@android:color/transparent"/>
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:scrollbars="none"
+                    android:background="@android:color/transparent" />
+
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         </FrameLayout>
 
     </LinearLayout>
 
+    <!-- Bottom Navigation -->
+    <LinearLayout
+        android:id="@+id/tab_container"
+        android:layout_width="0dp"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="14dp"
+        android:padding="6dp"
+        android:background="@drawable/bg_message_field_shadow"
+        android:elevation="16dp"
+        android:translationZ="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_chats"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector"
+            android:src="@drawable/ic_chat"
+            app:tint="@color/tab_icon_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerInside"
+            android:padding="13dp"
+            android:contentDescription="Chats" />
+
+        <ImageView
+            android:id="@+id/iv_groups"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector"
+            android:src="@drawable/ic_group"
+            app:tint="@color/tab_icon_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerInside"
+            android:padding="13dp"
+            android:contentDescription="Groups" />
+
+        <ImageView
+            android:id="@+id/iv_calls"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector"
+            android:src="@drawable/ic_call"
+            app:tint="@color/tab_icon_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerInside"
+            android:padding="13dp"
+            android:contentDescription="Calls" />
+
+        <ImageView
+            android:id="@+id/iv_posts"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector"
+            android:src="@drawable/ic_post"
+            app:tint="@color/tab_icon_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerInside"
+            android:padding="13dp"
+            android:contentDescription="Posts" />
+
+        <ImageView
+            android:id="@+id/iv_notifications"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector"
+            android:src="@drawable/ic_notification"
+            app:tint="@color/tab_icon_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerInside"
+            android:padding="13dp"
+            android:contentDescription="Notifications" />
+
+        <ImageView
+            android:id="@+id/iv_settings"
+            android:layout_width="0dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector"
+            android:src="@drawable/ic_setting"
+            app:tint="@color/tab_icon_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:scaleType="centerInside"
+            android:padding="13dp"
+            android:contentDescription="Settings" />
+
+    </LinearLayout>
+
+    <!-- Floating Action Button -->
     <ImageButton
         android:id="@+id/efab_new_group"
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:layout_margin="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="20dp"
         android:visibility="gone"
-        android:background="@drawable/bg_create_group_gradient"
+        android:background="@drawable/bg_send_circle_modern"
         android:contentDescription="@string/create_group_description"
         android:src="@drawable/ic_add"
-        android:padding="12dp"
+        android:padding="13dp"
         android:scaleType="centerInside"
-        app:tint="@color/icon_white"
+        android:elevation="16dp"
+        android:translationZ="12dp"
+        android:stateListAnimator="@animator/btn_shadow_animator"
+        app:tint="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@id/tab_container"
         app:layout_constraintEnd_toEndOf="parent" />
 

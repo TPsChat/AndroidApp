@@ -3,64 +3,92 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="12dp"
-    android:background="?android:attr/selectableItemBackground"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
-    android:gravity="center_vertical">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
-    <!-- Avatar -->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_mention_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_profile_placeholder"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@color/border_light" />
-
-    <!-- User Info -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="12dp"
-        android:orientation="vertical">
+        android:minHeight="78dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/bg_option_row_dark"
+        android:elevation="8dp"
+        android:translationZ="5dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
-        <!-- Display Name -->
-        <TextView
-            android:id="@+id/tv_mention_display_name"
-            android:layout_width="wrap_content"
+        <!-- Avatar -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_mention_avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_profile_placeholder"
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            app:civ_border_width="1.5dp"
+            app:civ_border_color="#33FFFFFF" />
+
+        <!-- User Info -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="John Doe"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
+
+            <!-- Display Name -->
+            <TextView
+                android:id="@+id/tv_mention_display_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="John Doe"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <!-- Username -->
+            <TextView
+                android:id="@+id/tv_mention_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@username"
+                android:textColor="#9AA4B2"
+                android:textSize="13sp"
+                android:layout_marginTop="4dp"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+        </LinearLayout>
+
+        <!-- @ Icon Indicator -->
+        <TextView
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:text="@"
+            android:textColor="#FF4D57"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:singleLine="true"
-            android:ellipsize="end" />
-
-        <!-- Username -->
-        <TextView
-            android:id="@+id/tv_mention_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@username"
-            android:textColor="@color/text_secondary"
-            android:textSize="14sp"
-            android:singleLine="true"
-            android:ellipsize="end" />
+            android:gravity="center"
+            android:background="@drawable/bg_icon_circle_transparent"
+            android:elevation="6dp"
+            android:translationZ="4dp" />
 
     </LinearLayout>
 
-    <!-- @ Icon Indicator -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@"
-        android:textColor="@color/primary_color"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginStart="8dp" />
-
 </LinearLayout>
-

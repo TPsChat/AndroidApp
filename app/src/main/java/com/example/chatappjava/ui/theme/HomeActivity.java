@@ -55,7 +55,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     
     // UI Components
     // tvMessagesTitle removed - no longer needed
-    private ImageView ivSearch, ivMoreVert;
+    private ImageView ivSearch;
     private View btnNewGroupAction;
     private View efabNewGroup;
     private ImageView ivChats, ivGroups, ivCalls, ivPosts, ivNotifications, ivSettings;
@@ -191,7 +191,6 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     private void initializeViews() {
         // messages_title removed from layout
         ivSearch = findViewById(R.id.iv_search);
-        ivMoreVert = findViewById(R.id.iv_more_vert);
         userProfileSection = findViewById(R.id.user_profile_section);
         searchBarHome = findViewById(R.id.search_bar_home);
         ivChats = findViewById(R.id.iv_chats);
@@ -278,9 +277,6 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         // Hide old top bar elements
         if (ivSearch != null) {
             ivSearch.setVisibility(View.GONE);
-        }
-        if (ivMoreVert != null) {
-            ivMoreVert.setVisibility(View.GONE);
         }
         if (userProfileSection != null) {
             userProfileSection.setVisibility(View.GONE);

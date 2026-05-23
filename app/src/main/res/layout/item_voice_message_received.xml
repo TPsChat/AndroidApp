@@ -1,40 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="240dp"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:background="@drawable/bg_message_received"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp"
-    android:minWidth="120dp"
-    android:minHeight="48dp">
+    android:paddingStart="12dp"
+    android:paddingEnd="14dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:minHeight="52dp"
+    android:elevation="8dp"
+    android:translationZ="5dp"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
     <!-- Play/Pause Button -->
     <ImageButton
         android:id="@+id/btn_voice_play"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:background="@drawable/bg_icon_circle_dark"
         android:src="@android:drawable/ic_media_play"
-        android:scaleType="fitCenter"
+        android:scaleType="centerInside"
         android:contentDescription="Play voice message"
-        android:tint="@color/primary_color"
-        android:layout_marginEnd="12dp" />
+        android:padding="9dp"
+        android:layout_marginEnd="12dp"
+        android:elevation="8dp"
+        android:translationZ="5dp"
+        app:tint="#FF4D57" />
 
     <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progress_voice"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
-        android:layout_height="4dp"
+        android:layout_height="5dp"
         android:layout_weight="1"
         android:max="100"
         android:progress="0"
-        android:progressTint="@color/primary_color"
-        android:progressBackgroundTint="#30000000"
+        android:progressTint="#FF4D57"
+        android:progressBackgroundTint="#33404A57"
         android:layout_marginEnd="12dp" />
 
     <!-- Duration/Time -->
@@ -44,8 +51,7 @@
         android:layout_height="wrap_content"
         android:text="0:00"
         android:textSize="13sp"
-        android:textColor="@color/chat_text_received"
+        android:textColor="#FFFFFF"
         android:textStyle="bold" />
 
 </LinearLayout>
-

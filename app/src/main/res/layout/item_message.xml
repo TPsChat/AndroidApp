@@ -6,7 +6,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:padding="4dp"
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
     android:clipChildren="false"
     android:clipToPadding="false">
 
@@ -17,8 +20,10 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="end"
-        android:layout_marginEnd="2dp"
-        android:visibility="gone">
+        android:layout_marginEnd="4dp"
+        android:visibility="gone"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -33,35 +38,49 @@
                 android:id="@+id/ll_sent_reply_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="260dp"
                 android:orientation="vertical"
                 android:background="@drawable/bg_message_reply_sent"
-                android:padding="8dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="4dp"
+                android:elevation="6dp"
+                android:translationZ="4dp"
                 android:visibility="gone">
+
                 <ImageView
                     android:id="@+id/iv_sent_reply_thumb"
-                    android:layout_width="72dp"
-                    android:layout_height="48dp"
+                    android:layout_width="82dp"
+                    android:layout_height="54dp"
                     android:scaleType="centerCrop"
                     android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_message_field_shadow"
                     android:visibility="gone"
                     tools:src="@drawable/ic_profile_placeholder" />
+
                 <TextView
                     android:id="@+id/tv_sent_reply_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
+                    android:textColor="#FFFFFF"
                     android:textStyle="bold"
                     android:textSize="12sp"
-                    tools:text="Alice"/>
+                    tools:text="Alice" />
+
                 <TextView
                     android:id="@+id/tv_sent_reply_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxWidth="230dp"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:textColor="@android:color/black"
+                    android:textColor="#D7DEE8"
                     android:textSize="12sp"
-                    tools:text="Previous message content preview"/>
+                    android:lineSpacingExtra="2dp"
+                    tools:text="Previous message content preview" />
+
             </LinearLayout>
 
             <FrameLayout
@@ -75,36 +94,39 @@
                     android:id="@+id/tv_sent_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxWidth="270dp"
                     android:background="@drawable/bg_message_sent"
-                    android:paddingLeft="12dp"
+                    android:paddingStart="14dp"
                     android:paddingTop="12dp"
-                    android:paddingRight="12dp"
+                    android:paddingEnd="14dp"
                     android:paddingBottom="22dp"
                     android:text="This is a sent message"
-                    android:textColor="@color/chat_text_sent"
+                    android:textColor="#FFFFFF"
                     android:textSize="14sp"
+                    android:lineSpacingExtra="3dp"
+                    android:elevation="8dp"
+                    android:translationZ="5dp"
                     tools:text="This is a sent message" />
 
                 <!-- Overlay reactions badge at bottom-end of bubble -->
                 <ImageView
                     android:id="@+id/iv_sent_reaction_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="2dp"
-                    android:translationX="2dp"
-                    android:translationY="6dp"
-                    android:maxWidth="24dp"
-                    android:maxHeight="24dp"
+                    android:translationX="4dp"
+                    android:translationY="7dp"
                     android:adjustViewBounds="true"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:elevation="6dp"
-                    android:translationZ="6dp"
+                    android:background="@drawable/bg_icon_circle_dark"
+                    android:padding="3dp"
+                    android:elevation="10dp"
+                    android:translationZ="8dp"
                     android:visibility="gone"
-                    tools:src="@drawable/ic_launcher_round" />
+                    tools:src="@drawable/ic_launcher_foreground" />
+
             </FrameLayout>
 
             <!-- Voice Message Container (Sent) -->
@@ -120,17 +142,18 @@
                 android:id="@+id/tv_sent_edited"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:text="(edited)"
                 android:textSize="10sp"
-                android:textColor="@color/gray"
-                android:visibility="gone"/>
+                android:textColor="#7F8A99"
+                android:visibility="gone" />
 
             <FrameLayout
                 android:id="@+id/fl_sent_image_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:visibility="gone">
@@ -141,46 +164,47 @@
                     android:layout_height="wrap_content"
                     android:maxWidth="250dp"
                     android:maxHeight="300dp"
-                    android:minWidth="120dp"
-                    android:minHeight="120dp"
+                    android:minWidth="130dp"
+                    android:minHeight="130dp"
                     android:scaleType="centerCrop"
                     android:background="@drawable/bg_image_message_sent"
                     android:padding="2dp"
                     android:adjustViewBounds="true"
                     android:clickable="true"
                     android:focusable="true"
+                    android:elevation="8dp"
+                    android:translationZ="5dp"
                     android:foreground="?attr/selectableItemBackground" />
 
                 <ImageView
                     android:id="@+id/iv_sent_image_reaction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="2dp"
-                    android:translationX="2dp"
-                    android:translationY="6dp"
-                    android:maxWidth="24dp"
-                    android:maxHeight="24dp"
+                    android:translationX="4dp"
+                    android:translationY="7dp"
                     android:adjustViewBounds="true"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:elevation="6dp"
-                    android:translationZ="6dp"
+                    android:background="@drawable/bg_icon_circle_dark"
+                    android:padding="3dp"
+                    android:elevation="10dp"
+                    android:translationZ="8dp"
                     android:visibility="gone" />
+
             </FrameLayout>
 
             <TextView
                 android:id="@+id/tv_sent_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="6dp"
                 android:text="10:30 AM"
                 android:textSize="10sp"
-                android:textColor="@color/text_hint"
+                android:textColor="#7F8A99"
                 tools:text="10:30 AM" />
-
 
         </LinearLayout>
 
@@ -193,18 +217,23 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="start"
-        android:layout_marginStart="2dp"
-        android:visibility="gone">
+        android:layout_marginStart="4dp"
+        android:visibility="gone"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_sender_avatar"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="4dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="2dp"
+            android:layout_marginEnd="7dp"
+            android:layout_marginTop="4dp"
             android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_width="1dp"
-            app:civ_border_color="@color/border_light" />
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            app:civ_border_width="1.2dp"
+            app:civ_border_color="#33FFFFFF" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -219,43 +248,60 @@
                 android:id="@+id/ll_received_reply_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxWidth="260dp"
                 android:orientation="vertical"
                 android:background="@drawable/bg_message_reply_received"
-                android:padding="8dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:layout_marginBottom="4dp"
+                android:elevation="6dp"
+                android:translationZ="4dp"
                 android:visibility="gone">
+
                 <ImageView
                     android:id="@+id/iv_received_reply_thumb"
-                    android:layout_width="72dp"
-                    android:layout_height="48dp"
+                    android:layout_width="82dp"
+                    android:layout_height="54dp"
                     android:scaleType="centerCrop"
                     android:layout_marginBottom="8dp"
+                    android:background="@drawable/bg_message_field_shadow"
                     android:visibility="gone"
                     tools:src="@drawable/ic_profile_placeholder" />
+
                 <TextView
                     android:id="@+id/tv_received_reply_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@android:color/black"
+                    android:textColor="#FFFFFF"
                     android:textStyle="bold"
                     android:textSize="12sp"
-                    tools:text="Bob"/>
+                    tools:text="Bob" />
+
                 <TextView
                     android:id="@+id/tv_received_reply_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxWidth="230dp"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:textColor="@android:color/black"
+                    android:textColor="#D7DEE8"
                     android:textSize="12sp"
-                    tools:text="Previous message content preview"/>
+                    android:lineSpacingExtra="2dp"
+                    tools:text="Previous message content preview" />
+
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_sender_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/gray"
+                android:textColor="#9AA4B2"
                 android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="3dp"
                 android:visibility="gone"
                 tools:text="Alice" />
 
@@ -270,36 +316,39 @@
                     android:id="@+id/tv_received_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxWidth="270dp"
                     android:background="@drawable/bg_message_received"
-                    android:paddingLeft="12dp"
+                    android:paddingStart="14dp"
                     android:paddingTop="12dp"
-                    android:paddingRight="12dp"
+                    android:paddingEnd="14dp"
                     android:paddingBottom="22dp"
                     android:text="This is a received message"
-                    android:textColor="@color/chat_text_received"
+                    android:textColor="#FFFFFF"
                     android:textSize="14sp"
+                    android:lineSpacingExtra="3dp"
+                    android:elevation="8dp"
+                    android:translationZ="5dp"
                     tools:text="This is a received message" />
 
                 <!-- Overlay reactions badge at bottom-end of bubble -->
                 <ImageView
                     android:id="@+id/iv_received_reaction_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="2dp"
-                    android:translationX="2dp"
-                    android:translationY="6dp"
-                    android:maxWidth="24dp"
-                    android:maxHeight="24dp"
+                    android:translationX="4dp"
+                    android:translationY="7dp"
                     android:adjustViewBounds="true"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:elevation="6dp"
-                    android:translationZ="6dp"
+                    android:background="@drawable/bg_icon_circle_dark"
+                    android:padding="3dp"
+                    android:elevation="10dp"
+                    android:translationZ="8dp"
                     android:visibility="gone"
-                    tools:src="@drawable/ic_launcher_round" />
+                    tools:src="@drawable/ic_launcher_foreground" />
+
             </FrameLayout>
 
             <!-- Voice Message Container (Received) -->
@@ -315,17 +364,19 @@
                 android:id="@+id/tv_received_edited"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="6dp"
                 android:text="(edited)"
                 android:textSize="10sp"
-                android:textColor="@color/gray"
-                android:visibility="gone"/>
+                android:textColor="#7F8A99"
+                android:visibility="gone" />
 
             <FrameLayout
                 android:id="@+id/fl_received_image_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="4dp"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:visibility="gone">
@@ -336,46 +387,47 @@
                     android:layout_height="wrap_content"
                     android:maxWidth="250dp"
                     android:maxHeight="300dp"
-                    android:minWidth="120dp"
-                    android:minHeight="120dp"
+                    android:minWidth="130dp"
+                    android:minHeight="130dp"
                     android:scaleType="centerCrop"
                     android:background="@drawable/bg_image_message_received"
                     android:padding="2dp"
                     android:adjustViewBounds="true"
                     android:clickable="true"
                     android:focusable="true"
+                    android:elevation="8dp"
+                    android:translationZ="5dp"
                     android:foreground="?attr/selectableItemBackground" />
 
                 <ImageView
                     android:id="@+id/iv_received_image_reaction"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="26dp"
+                    android:layout_height="26dp"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="2dp"
-                    android:translationX="2dp"
-                    android:translationY="6dp"
-                    android:maxWidth="24dp"
-                    android:maxHeight="24dp"
+                    android:translationX="4dp"
+                    android:translationY="7dp"
                     android:adjustViewBounds="true"
                     android:clickable="true"
                     android:focusable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless"
-                    android:elevation="6dp"
-                    android:translationZ="6dp"
+                    android:background="@drawable/bg_icon_circle_dark"
+                    android:padding="3dp"
+                    android:elevation="10dp"
+                    android:translationZ="8dp"
                     android:visibility="gone" />
+
             </FrameLayout>
 
             <TextView
                 android:id="@+id/tv_received_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="6dp"
                 android:text="10:30 AM"
                 android:textSize="10sp"
-                android:textColor="@color/text_hint"
+                android:textColor="#7F8A99"
                 tools:text="10:30 AM" />
-
 
         </LinearLayout>
 

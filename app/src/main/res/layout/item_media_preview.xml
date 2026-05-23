@@ -3,13 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="120dp"
     android:layout_height="120dp"
-    android:layout_marginEnd="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp">
+    android:layout_marginEnd="10dp"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="10dp"
+    app:cardBackgroundColor="#151B24"
+    app:cardUseCompatPadding="true">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#05070A"
+        android:clipToPadding="true"
+        android:clipChildren="true">
 
         <!-- Media Image/Video Thumbnail -->
         <ImageView
@@ -19,33 +24,41 @@
             android:scaleType="centerCrop"
             android:contentDescription="Media preview" />
 
+        <!-- Dark overlay nhẹ để icon nổi hơn -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#22000000" />
+
         <!-- Video Play Icon Overlay -->
         <ImageView
             android:id="@+id/iv_video_indicator"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:layout_centerInParent="true"
             android:src="@android:drawable/ic_media_play"
-            android:background="@drawable/circle_background"
-            android:backgroundTint="#80000000"
-            android:padding="6dp"
+            android:background="@drawable/bg_send_circle_modern"
+            android:padding="10dp"
+            android:elevation="12dp"
+            android:translationZ="8dp"
             android:visibility="gone"
-            app:tint="@android:color/white" />
+            app:tint="#FFFFFF" />
 
         <!-- Remove Button -->
         <ImageButton
             android:id="@+id/iv_remove_media"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_margin="4dp"
-            android:background="@drawable/circle_background"
-            android:backgroundTint="#E53935"
+            android:layout_margin="7dp"
+            android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_close"
             android:contentDescription="Remove media"
-            android:padding="6dp"
-            app:tint="@android:color/white" />
+            android:padding="9dp"
+            android:elevation="12dp"
+            android:translationZ="8dp"
+            app:tint="#FF4D57" />
 
     </RelativeLayout>
 

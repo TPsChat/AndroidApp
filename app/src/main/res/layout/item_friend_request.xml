@@ -4,19 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
     android:orientation="vertical">
 
-    <!-- Nền bo tròn mờ nhẹ -->
+    <!-- Card item -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_container"
+        android:background="@drawable/bg_empty_state_panel"
         android:orientation="vertical"
-        android:padding="4dp">
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="12dp"
+        android:elevation="10dp"
+        android:translationZ="6dp">
 
-        <!-- Hàng trên: Avatar + Thông tin người dùng + Thời gian -->
+        <!-- Avatar + Info -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,9 +34,10 @@
                 android:id="@+id/civ_profile_picture"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
-                android:layout_marginLeft="10dp"
                 android:src="@drawable/ic_profile_placeholder"
-                app:civ_border_color="#B3FFFFFF"
+                android:elevation="8dp"
+                android:translationZ="5dp"
+                app:civ_border_color="#33FFFFFF"
                 app:civ_border_width="1.5dp" />
 
             <LinearLayout
@@ -45,7 +53,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/black"
+                    android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     tools:text="Fong Nguyen" />
@@ -54,66 +62,103 @@
                     android:id="@+id/tv_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/black"
+                    android:textColor="#9AA4B2"
                     android:textSize="12sp"
                     tools:text="fong.nguyen@example.com" />
+
             </LinearLayout>
+
         </LinearLayout>
 
-        <!-- Hàng cuối: nút thao tác -->
+        <!-- Action buttons -->
         <LinearLayout
             android:id="@+id/ll_action_buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
             android:gravity="end"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btn_reject"
-                style="@style/AppDangerButtonOutlined"
-                android:layout_height="36dp"
-                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:minWidth="86dp"
                 android:text="Reject"
-                android:textSize="12sp" />
+                android:textAllCaps="false"
+                android:textColor="#FF4D57"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_reject_button_modern"
+                android:backgroundTint="@null"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:elevation="8dp"
+                android:translationZ="5dp"
+                android:stateListAnimator="@animator/btn_shadow_animator" />
 
             <Button
                 android:id="@+id/btn_accept"
-                style="@style/AppPrimaryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:minWidth="86dp"
+                android:layout_marginStart="10dp"
                 android:text="Accept"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="30dp"
-                android:textAllCaps="true" />
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_accept_button_modern"
+                android:backgroundTint="@null"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:elevation="10dp"
+                android:translationZ="6dp"
+                android:stateListAnimator="@animator/btn_shadow_animator" />
+
         </LinearLayout>
 
-        <!-- Trạng thái khi đã gửi yêu cầu -->
+        <!-- Sent request actions -->
         <LinearLayout
             android:id="@+id/ll_sent_request_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
+            android:layout_marginTop="14dp"
+            android:gravity="end|center_vertical"
             android:orientation="horizontal"
             android:visibility="gone"
             tools:visibility="gone">
-
-            <Button
-                android:id="@+id/btn_cancel"
-                style="@style/AppDangerButtonOutlined"
-                android:layout_height="36dp"
-                android:layout_marginRight="35dp"
-                android:text="Cancel"
-                android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/tv_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="55dp"
-                android:textColor="#4CAF50"
+                android:layout_marginEnd="12dp"
+                android:textColor="#9AA4B2"
                 android:textSize="12sp"
+                android:textStyle="bold"
                 tools:text="Pending" />
+
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:minWidth="86dp"
+                android:text="Cancel"
+                android:textAllCaps="false"
+                android:textColor="#FF4D57"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_reject_button_modern"
+                android:backgroundTint="@null"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:elevation="8dp"
+                android:translationZ="5dp"
+                android:stateListAnimator="@animator/btn_shadow_animator" />
 
         </LinearLayout>
 

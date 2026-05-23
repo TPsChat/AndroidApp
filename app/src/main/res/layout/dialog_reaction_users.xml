@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
     android:soundEffectsEnabled="true"
-    android:backgroundTint="@android:color/transparent"
+    android:background="@android:color/transparent"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -14,9 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/dialog_background_less_transparent"
-        android:maxHeight="500dp">
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="18dp"
+        android:background="@drawable/bg_empty_state_panel"
+        android:elevation="14dp"
+        android:translationZ="10dp">
 
         <!-- Title -->
         <TextView
@@ -24,26 +27,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Reactions"
-            android:textSize="18sp"
-            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:gravity="center"
-            android:padding="16dp"/>
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="18dp" />
 
         <!-- Reactions List Container -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="120dp"
+            android:maxHeight="400dp"
             android:orientation="vertical"
-            android:maxHeight="400dp">
+            android:background="@drawable/bg_option_row_dark"
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_reaction_users"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="4dp"
-                android:paddingVertical="4dp"
-                android:clipToPadding="false" />
+                android:maxHeight="380dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:clipToPadding="false"
+                android:scrollbars="none"
+                android:overScrollMode="never" />
 
         </LinearLayout>
 
@@ -52,17 +71,36 @@
             android:id="@+id/ll_empty_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="32dp"
+            android:paddingStart="28dp"
+            android:paddingEnd="28dp"
+            android:paddingTop="26dp"
+            android:paddingBottom="26dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:elevation="8dp"
+            android:translationZ="5dp"
             android:visibility="gone">
+
+            <TextView
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:gravity="center"
+                android:text="♡"
+                android:textSize="28sp"
+                android:textColor="#FF4D57"
+                android:background="@drawable/bg_icon_circle_dark"
+                android:layout_marginBottom="12dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="No reactions yet"
-                android:textSize="14sp"
-                android:textColor="@color/black" />
+                android:textSize="15sp"
+                android:textColor="#D7DEE8"
+                android:textStyle="bold"
+                android:gravity="center" />
 
         </LinearLayout>
 

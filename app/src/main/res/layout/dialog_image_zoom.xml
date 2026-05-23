@@ -4,7 +4,9 @@
     android:id="@+id/dialog_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:background="#05070A"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <!-- Zoom image with PhotoView for zoom functionality -->
     <com.github.chrisbanes.photoview.PhotoView
@@ -16,26 +18,24 @@
         android:adjustViewBounds="true"
         android:contentDescription="Zoomed image" />
 
-    <!-- Close button on top -->
-    <LinearLayout android:orientation="vertical" android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- Close button floating -->
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:backgroundTint="@android:color/transparent">
-
-        <ImageView
-            android:id="@+id/iv_close"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/rounded_container"
-            android:padding="12dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_close"
-            android:contentDescription="Close"
-            app:tint="#FF6B6B" />
-
-    </LinearLayout>
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="18dp"
+        android:background="@drawable/bg_icon_circle_dark"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_close"
+        android:contentDescription="Close"
+        android:elevation="14dp"
+        android:translationZ="10dp"
+        android:stateListAnimator="@animator/btn_shadow_animator"
+        app:tint="#FF4D57" />
 
 </RelativeLayout>

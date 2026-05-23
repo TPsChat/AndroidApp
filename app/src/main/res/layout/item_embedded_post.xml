@@ -4,12 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="12dp"
+    android:padding="14dp"
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
-    android:background="@color/background_secondary"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:background="@drawable/bg_option_row_dark"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:elevation="8dp"
+    android:translationZ="5dp"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
     <!-- Header: Avatar, Username, Arrow -->
     <LinearLayout
@@ -17,16 +23,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingBottom="8dp">
+        android:paddingBottom="10dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
         <!-- Avatar -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_embedded_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_color="@color/border_light"
-            app:civ_border_width="1dp" />
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            app:civ_border_color="#33FFFFFF"
+            app:civ_border_width="1.5dp" />
 
         <!-- Username -->
         <TextView
@@ -36,17 +46,21 @@
             android:layout_weight="1"
             android:layout_marginStart="12dp"
             android:text="Original Author"
-            android:textColor="@color/text_primary"
+            android:textColor="#FFFFFF"
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
-        <!-- Arrow icon (clickable) -->
+        <!-- Arrow icon -->
         <ImageView
             android:id="@+id/iv_embedded_arrow"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:src="@drawable/ic_arrow_right"
-            app:tint="@color/icon_utility"
+            android:background="@drawable/bg_icon_circle_transparent"
+            android:padding="8dp"
+            app:tint="#FF4D57"
             android:contentDescription="View original post"
             android:clickable="true"
             android:focusable="true" />
@@ -59,10 +73,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="This is the original post content..."
-        android:textColor="@color/text_primary"
+        android:textColor="#D7DEE8"
         android:textSize="14sp"
-        android:lineSpacingMultiplier="1.3"
-        android:paddingBottom="8dp" />
+        android:lineSpacingExtra="4dp"
+        android:paddingBottom="10dp" />
 
     <!-- Media Container -->
     <FrameLayout
@@ -70,13 +84,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="200dp"
-        android:visibility="gone">
+        android:background="@drawable/bg_message_field_shadow"
+        android:elevation="6dp"
+        android:translationZ="4dp"
+        android:visibility="gone"
+        android:clipToPadding="true"
+        android:clipChildren="true">
 
         <!-- Single Image -->
         <ImageView
             android:id="@+id/iv_embedded_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="200dp"
             android:scaleType="centerCrop"
             android:adjustViewBounds="true"
             android:visibility="gone" />
@@ -88,29 +108,32 @@
             android:layout_height="wrap_content"
             android:minHeight="300dp"
             android:visibility="gone"
-            android:background="@android:color/black">
+            android:background="#05070A">
 
             <ImageView
                 android:id="@+id/iv_embedded_video_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:minHeight="300dp"
                 android:scaleType="centerCrop"
                 android:adjustViewBounds="true" />
 
             <ImageButton
                 android:id="@+id/iv_embedded_video_play"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="62dp"
+                android:layout_height="62dp"
                 android:layout_gravity="center"
-                android:background="@drawable/circle_background"
-                android:backgroundTint="#80000000"
+                android:background="@drawable/bg_send_circle_modern"
                 android:src="@drawable/ic_play"
                 android:contentDescription="Play video"
-                app:tint="@color/icon_white" />
+                android:padding="17dp"
+                android:elevation="12dp"
+                android:translationZ="8dp"
+                android:stateListAnimator="@animator/btn_shadow_animator"
+                app:tint="#FFFFFF" />
 
         </FrameLayout>
 
     </FrameLayout>
 
 </LinearLayout>
-

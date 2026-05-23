@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <!-- Màu xanh online -->
+    <solid android:color="#22C55E" />
+
+    <!-- Viền trắng giống Messenger -->
+    <stroke
+        android:width="2dp"
+        android:color="#FFFFFF" />
+
+    <!-- Kích thước mặc định -->
+    <size
+        android:width="14dp"
+        android:height="14dp" />
+
+</shape>

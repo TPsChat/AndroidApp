@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#55FFFFFF">
+
+    <item>
+        <layer-list>
+
+            <item
+                android:left="2dp"
+                android:right="2dp"
+                android:top="5dp"
+                android:bottom="0dp">
+                <shape android:shape="oval">
+                    <solid android:color="#90000000" />
+                </shape>
+            </item>
+
+            <item
+                android:left="0dp"
+                android:right="0dp"
+                android:top="0dp"
+                android:bottom="5dp">
+                <shape android:shape="oval">
+                    <gradient
+                        android:startColor="#FF6A72"
+                        android:centerColor="#FF4D57"
+                        android:endColor="#D93645"
+                        android:angle="270" />
+                </shape>
+            </item>
+
+        </layer-list>
+    </item>
+
+</ripple>

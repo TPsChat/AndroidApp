@@ -1057,9 +1057,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 // On sent bubble (usually colored background), white text with bold
                 spannable.setSpan(colorSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             } else {
-                // On received bubble (light background), use white color (may need to adjust based on your theme)
-                // If white doesn't work well on light background, you might want to use a darker color
-                // For now, using white as requested
                 spannable.setSpan(colorSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             spannable.setSpan(styleSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

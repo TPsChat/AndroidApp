@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
     android:soundEffectsEnabled="true"
-    android:backgroundTint="@android:color/transparent"
+    android:background="@android:color/transparent"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -13,8 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/dialog_background_less_transparent">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="22dp"
+        android:paddingBottom="20dp"
+        android:background="@drawable/bg_empty_state_panel"
+        android:elevation="14dp"
+        android:translationZ="10dp">
 
         <!-- Title -->
         <TextView
@@ -23,10 +28,13 @@
             android:layout_height="wrap_content"
             android:text="Email Verification"
             android:textStyle="bold"
-            android:textSize="18sp"
-            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
             android:gravity="center"
-            android:padding="16dp"/>
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="12dp" />
 
         <!-- Message -->
         <TextView
@@ -35,9 +43,12 @@
             android:layout_height="wrap_content"
             android:text="Enter the 6-digit OTP sent to your email."
             android:textSize="15sp"
-            android:textColor="@color/black"
+            android:textColor="#D7DEE8"
             android:gravity="center"
-            android:paddingBottom="20dp"/>
+            android:lineSpacingExtra="4dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingBottom="18dp" />
 
         <!-- Hidden input to capture numeric OTP -->
         <EditText
@@ -53,36 +64,106 @@
             android:cursorVisible="false"
             android:importantForAutofill="no"
             android:alpha="0"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
         <!-- OTP Circles Container -->
-        <LinearLayout android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/otp_circles_container"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginVertical="8dp"
-            android:backgroundTint="@android:color/transparent" android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            <LinearLayout
-                android:id="@+id/otp_circles_container"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
+            <TextView
+                android:id="@+id/otp_c1"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:gravity="center"
-                android:padding="16dp"
-                android:background="@drawable/rounded_container">
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_icon_circle_dark" />
 
-                <TextView android:id="@+id/otp_c1" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
-                <Space android:layout_width="10dp" android:layout_height="0dp"/>
-                <TextView android:id="@+id/otp_c2" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
-                <Space android:layout_width="10dp" android:layout_height="0dp"/>
-                <TextView android:id="@+id/otp_c3" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
-                <Space android:layout_width="10dp" android:layout_height="0dp"/>
-                <TextView android:id="@+id/otp_c4" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
-                <Space android:layout_width="10dp" android:layout_height="0dp"/>
-                <TextView android:id="@+id/otp_c5" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
-                <Space android:layout_width="10dp" android:layout_height="0dp"/>
-                <TextView android:id="@+id/otp_c6" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/otp_circle_empty" />
-            </LinearLayout>
+            <Space
+                android:layout_width="9dp"
+                android:layout_height="0dp" />
+
+            <TextView
+                android:id="@+id/otp_c2"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_icon_circle_dark" />
+
+            <Space
+                android:layout_width="9dp"
+                android:layout_height="0dp" />
+
+            <TextView
+                android:id="@+id/otp_c3"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_icon_circle_dark" />
+
+            <Space
+                android:layout_width="9dp"
+                android:layout_height="0dp" />
+
+            <TextView
+                android:id="@+id/otp_c4"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_icon_circle_dark" />
+
+            <Space
+                android:layout_width="9dp"
+                android:layout_height="0dp" />
+
+            <TextView
+                android:id="@+id/otp_c5"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_icon_circle_dark" />
+
+            <Space
+                android:layout_width="9dp"
+                android:layout_height="0dp" />
+
+            <TextView
+                android:id="@+id/otp_c6"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/bg_icon_circle_dark" />
+
         </LinearLayout>
 
         <!-- Error Message -->
@@ -92,53 +173,48 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textSize="12sp"
-            android:textColor="#FF6B6B"
+            android:textColor="#FF6A72"
             android:visibility="gone"
             android:gravity="center"
-            android:paddingTop="8dp"/>
+            android:paddingTop="4dp"
+            android:paddingBottom="8dp" />
 
         <!-- Timer -->
-        <LinearLayout android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/dialog_tv_timer"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:minWidth="84dp"
             android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@android:color/transparent" android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="12dp"
-                android:background="@drawable/rounded_container">
-
-                <TextView
-                    android:id="@+id/dialog_tv_timer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:text="01:00" />
-
-            </LinearLayout>
-        </LinearLayout>
+            android:gravity="center"
+            android:text="01:00"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_message_field_shadow"
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="16dp" />
 
         <!-- Resend Button -->
-        <LinearLayout
+        <Button
+            android:id="@+id/btn_resend_otp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="8dp">
-
-            <Button
-                android:id="@+id/btn_resend_otp"
-                style="@style/AppPrimaryButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Resend OTP"
-                android:textAllCaps="false"/>
-
-        </LinearLayout>
+            android:layout_height="48dp"
+            android:text="Resend OTP"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:background="@drawable/bg_new_message_button"
+            android:backgroundTint="@null"
+            android:elevation="12dp"
+            android:translationZ="8dp"
+            android:stateListAnimator="@animator/btn_shadow_animator"
+            android:insetTop="0dp"
+            android:insetBottom="0dp" />
 
     </LinearLayout>
+
 </LinearLayout>

@@ -1,54 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/background_secondary"
-    tools:context=".ui.theme.CreatePostActivity">
+    android:background="@drawable/bg_chat_screen_dark">
 
-    <!-- Top Action Bar (Fixed) -->
+    <ImageView
+        android:id="@+id/bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.12"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Top Floating Action Bar -->
     <LinearLayout
         android:id="@+id/top_action_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="18dp"
         android:orientation="horizontal"
-        android:background="@color/background_secondary"
-        android:elevation="4dp"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
+        android:background="@android:color/transparent"
         android:gravity="center_vertical"
+        android:elevation="14dp"
+        android:translationZ="10dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Close/Cancel Icon -->
         <ImageButton
             android:id="@+id/iv_close"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_close"
             android:contentDescription="Close"
-            app:tint="@color/icon_utility" />
+            android:padding="11dp"
+            android:elevation="12dp"
+            android:translationZ="8dp"
+            android:stateListAnimator="@animator/btn_shadow_animator"
+            app:tint="#FF4D57" />
 
-        <!-- User Profile Info (Center) -->
+        <!-- User Profile Info -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginHorizontal="16dp">
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="12dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_user_avatar"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
                 android:src="@drawable/ic_profile_placeholder"
-                app:civ_border_color="@color/border_light"
-                app:civ_border_width="1dp" />
+                android:elevation="10dp"
+                android:translationZ="6dp"
+                app:civ_border_color="#33FFFFFF"
+                app:civ_border_width="1.5dp" />
 
             <TextView
                 android:id="@+id/tv_username"
@@ -56,25 +73,31 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:text="User Name"
-                android:textColor="@color/text_primary"
+                android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
         </LinearLayout>
 
-        <!-- Post Button -->
         <Button
             android:id="@+id/btn_post"
             android:layout_width="wrap_content"
-            android:layout_height="36dp"
+            android:layout_height="40dp"
+            android:minWidth="82dp"
             android:text="Post"
-            android:textColor="@android:color/white"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:background="@drawable/button_gradient_primary"
-            android:paddingHorizontal="24dp"
+            android:background="@drawable/bg_new_message_button"
+            android:paddingStart="22dp"
+            android:paddingEnd="22dp"
             android:enabled="false"
-            android:minWidth="80dp" />
+            android:elevation="12dp"
+            android:translationZ="8dp"
+            android:stateListAnimator="@animator/btn_shadow_animator" />
 
     </LinearLayout>
 
@@ -84,6 +107,11 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
         app:layout_constraintTop_toBottomOf="@id/top_action_bar"
         app:layout_constraintBottom_toTopOf="@id/bottom_toolbar"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,62 +121,73 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="64dp"
-            android:paddingBottom="80dp">
+            android:paddingBottom="16dp">
 
-            <!-- Text Input Field -->
+            <!-- Text Input Card -->
             <EditText
                 android:id="@+id/et_post_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="200dp"
-                android:background="@android:color/transparent"
+                android:minHeight="230dp"
+                android:background="@drawable/bg_empty_state_panel"
                 android:hint="What's on your mind?"
-                android:textColorHint="@color/text_hint"
-                android:textColor="@color/text_primary"
+                android:textColorHint="#7F8A99"
+                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:lineSpacingMultiplier="1.3"
-                android:padding="16dp"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:paddingTop="18dp"
+                android:paddingBottom="18dp"
                 android:gravity="top|start"
                 android:inputType="textCapSentences|textMultiLine"
                 android:scrollbars="vertical"
-                android:overScrollMode="always" />
+                android:overScrollMode="always"
+                android:textCursorDrawable="@null"
+                android:elevation="12dp"
+                android:translationZ="8dp" />
 
-            <!-- Embedded Original Post Card (when sharing) -->
+            <!-- Embedded Original Post Card -->
             <include
                 android:id="@+id/embedded_post_card"
                 layout="@layout/item_embedded_post"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp" />
 
             <!-- Attached Media Preview -->
             <LinearLayout
+                android:id="@+id/ll_media_preview_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:visibility="gone"
-                android:id="@+id/ll_media_preview_container">
-                
-                <!-- Image count indicator -->
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_empty_state_panel"
+                android:paddingTop="14dp"
+                android:elevation="10dp"
+                android:translationZ="6dp">
+
                 <TextView
                     android:id="@+id/tv_image_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
                     android:text="0 / 5 images"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="#9AA4B2"
                     android:textSize="12sp" />
 
                 <HorizontalScrollView
                     android:id="@+id/hsv_media_preview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="horizontal"
-                    android:paddingHorizontal="16dp"
+                    android:scrollbars="none"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
                     android:paddingBottom="16dp">
 
                     <LinearLayout
@@ -156,32 +195,33 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <!-- Media items will be added dynamically -->
-
-                    </LinearLayout>
+                        android:gravity="center_vertical" />
 
                 </HorizontalScrollView>
+
             </LinearLayout>
 
             <!-- Privacy Settings Selector -->
             <LinearLayout
                 android:id="@+id/ll_privacy_settings"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
+                android:layout_marginTop="14dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:padding="16dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 android:clickable="true"
                 android:focusable="true"
-                android:background="?attr/selectableItemBackground">
+                android:background="@drawable/bg_message_field_shadow"
+                android:elevation="10dp"
+                android:translationZ="6dp">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/ic_privacy"
-                    app:tint="@color/icon_utility" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:id="@+id/tv_privacy"
@@ -190,14 +230,15 @@
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
                     android:text="Public"
-                    android:textColor="@color/text_primary"
-                    android:textSize="15sp" />
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
                     android:src="@drawable/ic_arrow_down"
-                    app:tint="@color/icon_utility" />
+                    app:tint="#D7DEE8" />
 
             </LinearLayout>
 
@@ -207,9 +248,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="16dp"
-                android:visibility="gone">
+                android:layout_marginTop="12dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:visibility="gone"
+                android:background="@drawable/bg_empty_state_panel"
+                android:elevation="10dp"
+                android:translationZ="6dp">
 
                 <!-- Location Info -->
                 <LinearLayout
@@ -218,14 +265,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingVertical="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:src="@drawable/ic_location"
-                        app:tint="@color/icon_location" />
+                        app:tint="#FF4D57" />
 
                     <TextView
                         android:id="@+id/tv_location"
@@ -234,17 +282,19 @@
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
                         android:text="Location name"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="#D7DEE8"
                         android:textSize="14sp" />
 
                     <ImageButton
                         android:id="@+id/iv_remove_location"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:background="@drawable/bg_icon_circle_dark"
                         android:src="@drawable/ic_close"
                         android:contentDescription="Remove location"
-                        app:tint="@color/icon_utility" />
+                        android:padding="9dp"
+                        android:stateListAnimator="@animator/btn_shadow_animator"
+                        app:tint="#D7DEE8" />
 
                 </LinearLayout>
 
@@ -255,14 +305,15 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:paddingVertical="8dp"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:visibility="gone">
 
                     <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:src="@drawable/ic_tag"
-                        app:tint="@color/icon_tag" />
+                        app:tint="#FF4D57" />
 
                     <TextView
                         android:id="@+id/tv_tagged_users"
@@ -271,17 +322,19 @@
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
                         android:text="Tagged users"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="#D7DEE8"
                         android:textSize="14sp" />
 
                     <ImageButton
                         android:id="@+id/iv_remove_tags"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:layout_width="34dp"
+                        android:layout_height="34dp"
+                        android:background="@drawable/bg_icon_circle_dark"
                         android:src="@drawable/ic_close"
                         android:contentDescription="Remove tags"
-                        app:tint="@color/icon_utility" />
+                        android:padding="9dp"
+                        android:stateListAnimator="@animator/btn_shadow_animator"
+                        app:tint="#D7DEE8" />
 
                 </LinearLayout>
 
@@ -291,76 +344,92 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Utility Toolbar (Fixed) -->
+    <!-- Bottom Floating Utility Toolbar -->
     <LinearLayout
         android:id="@+id/bottom_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="14dp"
         android:orientation="horizontal"
-        android:background="@color/background_secondary"
-        android:elevation="4dp"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
+        android:background="@android:color/transparent"
         android:gravity="center_vertical"
+        android:elevation="14dp"
+        android:translationZ="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Photo/Video Picker -->
         <ImageButton
             android:id="@+id/iv_photo_video"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_image"
             android:contentDescription="Add photo or video"
-            app:tint="@color/icon_photo" />
+            android:padding="10dp"
+            android:elevation="12dp"
+            android:translationZ="8dp"
+            android:stateListAnimator="@animator/btn_shadow_animator"
+            app:tint="#FF4D57" />
 
-        <!-- Tag People -->
         <ImageButton
             android:id="@+id/iv_tag_people"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_tag"
             android:contentDescription="Tag people"
-            app:tint="@color/icon_tag" />
+            android:padding="10dp"
+            android:elevation="12dp"
+            android:translationZ="8dp"
+            android:stateListAnimator="@animator/btn_shadow_animator"
+            app:tint="#FF4D57" />
 
-        <!-- Location -->
         <ImageButton
             android:id="@+id/iv_location"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_location"
             android:contentDescription="Add location"
-            app:tint="@color/icon_location" />
+            android:padding="10dp"
+            android:elevation="12dp"
+            android:translationZ="8dp"
+            android:stateListAnimator="@animator/btn_shadow_animator"
+            app:tint="#FF4D57" />
 
-        <!-- Emoji/Sticker -->
         <ImageButton
             android:id="@+id/iv_emoji"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_emoji_smile"
             android:contentDescription="Add emoji"
-            app:tint="@color/icon_utility" />
+            android:padding="10dp"
+            android:elevation="12dp"
+            android:translationZ="8dp"
+            android:stateListAnimator="@animator/btn_shadow_animator"
+            app:tint="#D7DEE8" />
 
-        <!-- More Options -->
         <ImageButton
             android:id="@+id/iv_more_options"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_more"
             android:contentDescription="More options"
-            app:tint="@color/icon_utility" />
+            android:padding="10dp"
+            android:elevation="12dp"
+            android:translationZ="8dp"
+            android:stateListAnimator="@animator/btn_shadow_animator"
+            app:tint="#D7DEE8" />
 
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-

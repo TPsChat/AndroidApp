@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
     android:soundEffectsEnabled="true"
-    android:backgroundTint="@android:color/transparent"
+    android:background="@android:color/transparent"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -14,8 +14,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/dialog_background_less_transparent">
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="18dp"
+        android:background="@drawable/bg_empty_state_panel"
+        android:elevation="14dp"
+        android:translationZ="10dp">
 
         <!-- Title -->
         <TextView
@@ -23,134 +28,117 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Post Options"
-            android:textSize="18sp"
-            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:gravity="center"
-            android:padding="16dp"/>
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="18dp" />
 
-        <!-- Options Container -->
+        <!-- Edit Post Option -->
         <LinearLayout
+            android:id="@+id/option_edit_post"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            <!-- Edit Post Option (for own posts) -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_edit"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:backgroundTint="@android:color/transparent"
-                android:orientation="vertical">
+                android:layout_weight="1"
+                android:text="Edit Post"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/option_edit_post"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/rounded_container"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:visibility="gone">
+        </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_edit"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/text_primary" />
+        <!-- Delete Post Option -->
+        <LinearLayout
+            android:id="@+id/option_delete_post"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_danger_option_row"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Edit Post"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary"
-                        android:textStyle="bold" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
 
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Delete Post Option (for own posts) -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:backgroundTint="@android:color/transparent"
-                android:orientation="vertical">
+                android:layout_weight="1"
+                android:text="Delete Post"
+                android:textSize="15sp"
+                android:textColor="#FF4D57"
+                android:textStyle="bold" />
 
-                <LinearLayout
-                    android:id="@+id/option_delete_post"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/rounded_container"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:visibility="gone">
+        </LinearLayout>
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_delete"
-                        android:layout_marginEnd="12dp"
-                        app:tint="#E53935" />
+        <!-- Hide Post Option -->
+        <LinearLayout
+            android:id="@+id/option_hide_post"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Delete Post"
-                        android:textSize="16sp"
-                        android:textColor="#E53935"
-                        android:textStyle="bold" />
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_view"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
 
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Hide Post Option (for others' posts) -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="2dp"
-                android:backgroundTint="@android:color/transparent"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:id="@+id/option_hide_post"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/rounded_container"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@android:drawable/ic_menu_view"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/text_primary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Hide Post"
-                        android:textSize="16sp"
-                        android:textColor="@color/text_primary"
-                        android:textStyle="bold" />
-
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_weight="1"
+                android:text="Hide Post"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -158,37 +146,31 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/border_light"
-            android:layout_marginVertical="8dp" />
+            android:background="#22FFFFFF"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="14dp" />
 
         <!-- Cancel Button -->
         <LinearLayout
+            android:id="@+id/option_cancel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent"
-            android:orientation="vertical">
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg_reject_button_modern"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            <LinearLayout
-                android:id="@+id/option_cancel"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center"
-                android:background="@drawable/rounded_container"
-                android:clickable="true"
-                android:focusable="true">
+                android:text="Cancel"
+                android:textSize="15sp"
+                android:textColor="#FF4D57"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cancel"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_secondary"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

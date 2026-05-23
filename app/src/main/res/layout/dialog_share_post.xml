@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
     android:soundEffectsEnabled="true"
-    android:backgroundTint="@android:color/transparent"
+    android:background="@android:color/transparent"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -14,8 +14,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/dialog_background_less_transparent">
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="18dp"
+        android:background="@drawable/bg_empty_state_panel"
+        android:elevation="14dp"
+        android:translationZ="10dp">
 
         <!-- Title -->
         <TextView
@@ -23,143 +28,150 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Share Post"
-            android:textSize="18sp"
-            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:gravity="center"
-            android:padding="16dp"/>
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="18dp" />
 
-        <!-- Main Share Options -->
+        <!-- Share to Feed -->
         <LinearLayout
+            android:id="@+id/option_share_to_feed"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            <!-- Share to Feed -->
-            <LinearLayout
-                android:id="@+id/option_share_to_feed"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_edit"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/rounded_container"
-                android:layout_marginVertical="2dp"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_weight="1"
+                android:text="Share to your Feed"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_edit"
-                    android:layout_marginEnd="12dp"
-                    app:tint="@color/icon_primary_action" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Share to your Feed"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+        <!-- Send as Message -->
+        <LinearLayout
+            android:id="@+id/option_send_as_message"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            </LinearLayout>
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_send"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
 
-            <!-- Send as Message -->
-            <LinearLayout
-                android:id="@+id/option_send_as_message"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/rounded_container"
-                android:layout_marginVertical="2dp"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_weight="1"
+                android:text="Send as Message"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_send"
-                    android:layout_marginEnd="12dp"
-                    app:tint="@color/icon_primary_action" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Send as Message"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+        <!-- Share to Story -->
+        <LinearLayout
+            android:id="@+id/option_share_to_story"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            </LinearLayout>
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_info"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
 
-            <!-- Share to Story -->
-            <LinearLayout
-                android:id="@+id/option_share_to_story"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/rounded_container"
-                android:layout_marginVertical="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone">
+                android:layout_weight="1"
+                android:text="Share to Story"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_story"
-                    android:layout_marginEnd="12dp"
-                    app:tint="@color/icon_live" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Share to Story"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+        <!-- Share to Group/Page -->
+        <LinearLayout
+            android:id="@+id/option_share_to_group"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            </LinearLayout>
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_group_icon"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
 
-            <!-- Share to Group/Page -->
-            <LinearLayout
-                android:id="@+id/option_share_to_group"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/rounded_container"
-                android:layout_marginVertical="2dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_group_icon"
-                    android:layout_marginEnd="12dp"
-                    app:tint="@color/icon_primary_action" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Share to Group/Page"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+                android:layout_weight="1"
+                android:text="Share to Group/Page"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -167,80 +179,77 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/border_light"
-            android:layout_marginVertical="8dp" />
+            android:background="#22FFFFFF"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="14dp" />
 
-        <!-- Utility Actions -->
+        <!-- Copy Link -->
         <LinearLayout
+            android:id="@+id/option_copy_link"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            <!-- Copy Link -->
-            <LinearLayout
-                android:id="@+id/option_copy_link"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_link"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/rounded_container"
-                android:layout_marginVertical="2dp"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_weight="1"
+                android:text="Copy Link"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_link"
-                    android:layout_marginEnd="12dp"
-                    app:tint="@color/icon_utility" />
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Copy Link"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+        <!-- Share to External Apps -->
+        <LinearLayout
+            android:id="@+id/option_share_external"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            </LinearLayout>
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_link"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
 
-            <!-- Share to External Apps -->
-            <LinearLayout
-                android:id="@+id/option_share_external"
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/rounded_container"
-                android:layout_marginVertical="2dp"
-                android:clickable="true"
-                android:focusable="true">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:src="@drawable/ic_link"
-                    android:layout_marginEnd="12dp"
-                    app:tint="@color/icon_utility" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Share to Other Apps"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
+                android:layout_weight="1"
+                android:text="Share to Other Apps"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
     </LinearLayout>
 
 </LinearLayout>
-

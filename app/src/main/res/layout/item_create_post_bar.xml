@@ -4,11 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/background_secondary"
-    android:padding="12dp"
-    android:layout_marginHorizontal="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
     android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp">
+    android:layout_marginBottom="8dp"
+    android:padding="12dp"
+    android:background="@drawable/bg_option_row_dark"
+    android:elevation="8dp"
+    android:translationZ="5dp"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
     <!-- Profile Picture and Input Row -->
     <LinearLayout
@@ -16,38 +21,47 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingBottom="8dp">
+        android:paddingBottom="10dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
         <!-- Profile Picture Thumbnail -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_post_profile_thumbnail"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
             android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_color="@color/border_light"
-            app:civ_border_width="2dp" />
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            app:civ_border_color="#33FFFFFF"
+            app:civ_border_width="1.5dp" />
 
         <!-- What's on your mind? Input -->
         <LinearLayout
             android:id="@+id/ll_create_post_input"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="46dp"
             android:layout_weight="1"
             android:layout_marginStart="12dp"
             android:orientation="vertical"
+            android:gravity="center_vertical"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/rounded_container"
-            android:backgroundTint="@color/surface_secondary"
-            android:padding="12dp">
+            android:background="@drawable/bg_message_field_shadow"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:elevation="6dp"
+            android:translationZ="4dp">
 
             <TextView
                 android:id="@+id/tv_create_post_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="What's on your mind?"
-                android:textColor="@color/text_secondary"
-                android:textSize="16sp" />
+                android:textColor="#9AA4B2"
+                android:textSize="15sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
 
         </LinearLayout>
 
@@ -57,8 +71,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/border_light"
-        android:layout_marginVertical="8dp" />
+        android:background="#22FFFFFF"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="10dp" />
 
     <!-- Quick Action Buttons -->
     <LinearLayout
@@ -71,28 +86,31 @@
         <LinearLayout
             android:id="@+id/ll_live_post"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center"
-            android:padding="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:layout_marginEnd="6dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+            android:background="@drawable/bg_icon_circle_transparent">
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@android:drawable/ic_menu_camera"
-                app:tint="@color/icon_live" />
+                app:tint="#FF4D57" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="7dp"
                 android:text="Live"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp" />
+                android:textColor="#D7DEE8"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -100,28 +118,32 @@
         <LinearLayout
             android:id="@+id/ll_photo_post"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center"
-            android:padding="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="3dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+            android:background="@drawable/bg_icon_circle_transparent">
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@android:drawable/ic_menu_gallery"
-                app:tint="@color/icon_photo" />
+                app:tint="#FF4D57" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="7dp"
                 android:text="Photo"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp" />
+                android:textColor="#D7DEE8"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -129,32 +151,34 @@
         <LinearLayout
             android:id="@+id/ll_video_post"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center"
-            android:padding="8dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:layout_marginStart="6dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="?attr/selectableItemBackground">
+            android:background="@drawable/bg_icon_circle_transparent">
 
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_video_call"
-                app:tint="@color/icon_video" />
+                app:tint="#FF4D57" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="7dp"
                 android:text="Video"
-                android:textColor="@color/text_primary"
-                android:textSize="14sp" />
+                android:textColor="#D7DEE8"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
     </LinearLayout>
 
 </LinearLayout>
-

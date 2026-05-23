@@ -4,7 +4,9 @@
     android:id="@+id/dialog_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    android:background="#05070A"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <!-- ViewPager2 for swiping between images -->
     <androidx.viewpager2.widget.ViewPager2
@@ -12,46 +14,45 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Close button on top -->
-    <LinearLayout 
-        android:orientation="vertical" 
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!-- Close button floating -->
+    <ImageView
+        android:id="@+id/iv_close"
+        android:layout_width="46dp"
+        android:layout_height="46dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:backgroundTint="@android:color/transparent">
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="18dp"
+        android:background="@drawable/bg_icon_circle_dark"
+        android:padding="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_close"
+        android:contentDescription="Close"
+        android:elevation="14dp"
+        android:translationZ="10dp"
+        android:stateListAnimator="@animator/btn_shadow_animator"
+        app:tint="#FF4D57" />
 
-        <ImageView
-            android:id="@+id/iv_close"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:background="@drawable/rounded_container"
-            android:padding="12dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_close"
-            android:contentDescription="Close"
-            app:tint="#FF6B6B" />
-
-    </LinearLayout>
-
-    <!-- Image counter (e.g., "1 / 5") -->
+    <!-- Image counter -->
     <TextView
         android:id="@+id/tv_image_counter"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
+        android:minWidth="74dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:background="@drawable/rounded_container"
-        android:backgroundTint="#80000000"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="8dp"
+        android:gravity="center"
+        android:background="@drawable/bg_message_field_shadow"
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
         android:text="1 / 5"
-        android:textColor="@android:color/white"
+        android:textColor="#FFFFFF"
         android:textSize="14sp"
+        android:textStyle="bold"
+        android:elevation="14dp"
+        android:translationZ="10dp"
         android:visibility="gone" />
 
 </RelativeLayout>
-

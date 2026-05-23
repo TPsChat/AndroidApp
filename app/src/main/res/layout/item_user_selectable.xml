@@ -1,63 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
-    
-    
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    android:orientation="vertical"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="74dp"
         android:orientation="horizontal"
-        android:fitsSystemWindows="true"
-        android:padding="12dp"
-        android:background="@drawable/rounded_container"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/bg_option_row_dark"
+        android:elevation="8dp"
+        android:translationZ="5dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile_picture"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#B3FFFFFF" />
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            app:civ_border_width="1.5dp"
+            app:civ_border_color="#33FFFFFF" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="12dp">
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="10dp">
 
             <TextView
                 android:id="@+id/tv_display_name"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textSize="18sp"
-                android:textColor="@color/black"
-                android:text="Display Name"/>
+                android:textSize="16sp"
+                android:textColor="#FFFFFF"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="Display Name"
+                tools:text="Display Name" />
 
             <TextView
                 android:id="@+id/tv_username"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="@username"/>
+                android:layout_marginTop="4dp"
+                android:textColor="#9AA4B2"
+                android:textSize="13sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@username"
+                tools:text="@username" />
+
         </LinearLayout>
 
         <CheckBox
             android:id="@+id/cb_select"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:buttonTint="#FF4D57"
+            android:background="@drawable/bg_icon_circle_transparent"
+            android:gravity="center"
+            android:elevation="6dp"
+            android:translationZ="4dp" />
 
     </LinearLayout>
 
 </LinearLayout>
-
-

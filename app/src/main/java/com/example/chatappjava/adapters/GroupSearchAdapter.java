@@ -156,8 +156,8 @@ public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.
                 if (joinStatus != null && joinStatus.equals("pending")) {
                     btnAction.setText("Cancel");
                     btnAction.setEnabled(true);
-                    btnAction.setBackground(ContextCompat.getDrawable(context, R.drawable.button_danger_outlined));
-                    btnAction.setTextColor(0xFFE53935); // Match AppDangerButtonOutlined text color
+                    btnAction.setBackground(ContextCompat.getDrawable(context, R.drawable.bg_reject_button_modern));
+                    btnAction.setTextColor(0xFFFF4D57);
                     android.util.Log.d("GroupSearchAdapter", "Set button to Cancel Request (red)");
                 } else if (group.isPublicGroup()) {
                     btnAction.setText("Join");

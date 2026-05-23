@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
     android:soundEffectsEnabled="true"
-    android:backgroundTint="@android:color/transparent"
+    android:background="@android:color/transparent"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -13,8 +14,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/dialog_background_less_transparent">
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="18dp"
+        android:background="@drawable/bg_empty_state_panel"
+        android:elevation="14dp"
+        android:translationZ="10dp">
 
         <!-- Title -->
         <TextView
@@ -22,295 +28,340 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Chat Options"
-            android:textSize="18sp"
-            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:gravity="center"
-            android:padding="16dp"/>
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="18dp" />
 
         <!-- View Profile/Group Info Option -->
-        <LinearLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent" android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/option_view_info"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            <LinearLayout
-                android:id="@+id/option_view_info"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_info_details"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/rounded_container">
+                android:layout_weight="1"
+                android:text="View Info"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_info_details"
-                    android:layout_marginEnd="12dp"
-                    app:tint="@color/black" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="View Info"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
         </LinearLayout>
 
-        <!-- Add Members Option (Group only) -->
-        <LinearLayout android:id="@+id/card_add_members"
+        <!-- Add Members Option -->
+        <LinearLayout
+            android:id="@+id/card_add_members"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent"
-            android:visibility="gone" android:orientation="vertical">
+            android:visibility="gone"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/option_add_members"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="58dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
-                android:padding="16dp"
                 android:gravity="center_vertical"
-                android:background="@drawable/rounded_container">
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:background="@drawable/bg_option_row_dark"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="8dp"
+                android:translationZ="5dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_input_add"
                     android:layout_marginEnd="12dp"
-                    app:tint="@color/black" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Add Members"
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    android:textColor="#FFFFFF"
                     android:textStyle="bold" />
 
             </LinearLayout>
+
         </LinearLayout>
 
-        <!-- Remove Members Option (Group only) -->
-        <LinearLayout android:id="@+id/card_remove_members"
+        <!-- Remove Members Option -->
+        <LinearLayout
+            android:id="@+id/card_remove_members"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent"
-            android:visibility="gone" android:orientation="vertical">
+            android:visibility="gone"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/option_remove_members"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="58dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
-                android:padding="16dp"
                 android:gravity="center_vertical"
-                android:background="@drawable/rounded_container">
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:background="@drawable/bg_danger_option_row"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="8dp"
+                android:translationZ="5dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:layout_marginEnd="12dp"
-                    app:tint="#FF6B6B" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Remove Members"
-                    android:textSize="16sp"
-                    android:textColor="#FF6B6B"
+                    android:textSize="15sp"
+                    android:textColor="#FF4D57"
                     android:textStyle="bold" />
 
             </LinearLayout>
+
         </LinearLayout>
 
-        <!-- Leave Group Option (Group only) -->
-        <LinearLayout android:id="@+id/card_leave_group"
+        <!-- Leave Group Option -->
+        <LinearLayout
+            android:id="@+id/card_leave_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent"
-            android:visibility="gone" android:orientation="vertical">
+            android:visibility="gone"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/option_leave_group"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="58dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
-                android:padding="16dp"
                 android:gravity="center_vertical"
-                android:background="@drawable/rounded_container">
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:background="@drawable/bg_danger_option_row"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="8dp"
+                android:translationZ="5dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:layout_marginEnd="12dp"
-                    app:tint="#FF6B6B" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Leave Group"
-                    android:textSize="16sp"
-                    android:textColor="#FF6B6B"
+                    android:textSize="15sp"
+                    android:textColor="#FF4D57"
                     android:textStyle="bold" />
 
             </LinearLayout>
+
         </LinearLayout>
 
         <!-- Delete Chat Option -->
-        <LinearLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent" android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/option_delete_chat"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:background="@drawable/bg_danger_option_row"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            <LinearLayout
-                android:id="@+id/option_delete_chat"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:layout_marginEnd="12dp"
+                app:tint="#FF4D57" />
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/rounded_container">
+                android:layout_weight="1"
+                android:text="Delete Chat"
+                android:textSize="15sp"
+                android:textColor="#FF4D57"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_delete"
-                    android:layout_marginEnd="12dp"
-                    app:tint="#FF6B6B" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Delete Chat"
-                    android:textSize="16sp"
-                    android:textColor="#FF6B6B"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
         </LinearLayout>
 
-        <!-- Unfriend Option (Private only) -->
-        <LinearLayout android:id="@+id/card_unfriend"
+        <!-- Unfriend Option -->
+        <LinearLayout
+            android:id="@+id/card_unfriend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent"
-            android:visibility="gone" android:orientation="vertical">
+            android:visibility="gone"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/option_unfriend"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="58dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
-                android:padding="16dp"
                 android:gravity="center_vertical"
-                android:background="@drawable/rounded_container">
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:background="@drawable/bg_danger_option_row"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="8dp"
+                android:translationZ="5dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:layout_marginEnd="12dp"
-                    app:tint="#FF6B6B" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Unfriend"
-                    android:textSize="16sp"
-                    android:textColor="#FF6B6B"
+                    android:textSize="15sp"
+                    android:textColor="#FF4D57"
                     android:textStyle="bold" />
 
             </LinearLayout>
+
         </LinearLayout>
 
-        <!-- Block User Option (Private only) -->
-        <LinearLayout android:id="@+id/card_block_user"
+        <!-- Block User Option -->
+        <LinearLayout
+            android:id="@+id/card_block_user"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent"
-            android:visibility="gone" android:orientation="vertical">
+            android:visibility="gone"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/option_block_user"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="58dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal"
-                android:padding="16dp"
                 android:gravity="center_vertical"
-                android:background="@drawable/rounded_container">
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:background="@drawable/bg_danger_option_row"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="8dp"
+                android:translationZ="5dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:layout_marginEnd="12dp"
-                    app:tint="#FF6B6B" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Block User"
-                    android:textSize="16sp"
-                    android:textColor="#FF6B6B"
+                    android:textSize="15sp"
+                    android:textColor="#FF4D57"
                     android:textStyle="bold" />
 
             </LinearLayout>
+
         </LinearLayout>
 
-        <!-- Delete Group Option (Group only) -->
-        <LinearLayout android:id="@+id/card_delete_group"
+        <!-- Delete Group Option -->
+        <LinearLayout
+            android:id="@+id/card_delete_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent"
-            android:visibility="gone" android:orientation="vertical">
+            android:visibility="gone"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/option_delete_group"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="58dp"
                 android:orientation="horizontal"
-                android:padding="16dp"
                 android:gravity="center_vertical"
-                android:background="@drawable/rounded_container">
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:background="@drawable/bg_danger_option_row"
+                android:clickable="true"
+                android:focusable="true"
+                android:elevation="8dp"
+                android:translationZ="5dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_delete"
                     android:layout_marginEnd="12dp"
-                    app:tint="#FF6B6B" />
+                    app:tint="#FF4D57" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Delete Group"
-                    android:textSize="16sp"
-                    android:textColor="#FF6B6B"
+                    android:textSize="15sp"
+                    android:textColor="#FF4D57"
                     android:textStyle="bold" />
 
             </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>
+
 </LinearLayout>

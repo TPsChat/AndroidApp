@@ -4,30 +4,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="8dp"
-    android:layout_marginVertical="4dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
     android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:minHeight="82dp"
         android:orientation="horizontal"
-        android:padding="12dp"
-        android:background="@drawable/rounded_container"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:background="@drawable/bg_option_row_dark"
+        android:elevation="8dp"
+        android:translationZ="5dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
         <!-- User Avatar -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_notification_avatar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginEnd="12dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="14dp"
             android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_width="2dp"
-            app:civ_border_color="@color/border_light" />
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            app:civ_border_width="1.5dp"
+            app:civ_border_color="#33FFFFFF" />
 
         <!-- Notification Content -->
         <LinearLayout
@@ -42,8 +56,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="User name tagged you in a post"
-                android:textColor="@color/text_primary"
+                android:textColor="#FFFFFF"
                 android:textSize="14sp"
+                android:lineSpacingExtra="2dp"
                 android:maxLines="2"
                 android:ellipsize="end" />
 
@@ -52,36 +67,48 @@
                 android:id="@+id/tv_notification_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:text="2 hours ago"
-                android:textColor="@color/text_secondary"
+                android:textColor="#9AA4B2"
                 android:textSize="12sp" />
 
         </LinearLayout>
 
-        <!-- Post Preview Image (if available) -->
-        <ImageView
-            android:id="@+id/iv_notification_preview"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:scaleType="centerCrop"
-            android:background="@drawable/rounded_container"
-            android:visibility="gone"
-            tools:visibility="visible"
-            tools:src="@drawable/ic_image" />
+        <!-- Post Preview Image -->
+        <FrameLayout
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_message_field_shadow"
+            android:elevation="6dp"
+            android:translationZ="4dp"
+            android:clipToPadding="true"
+            android:clipChildren="true">
+
+            <ImageView
+                android:id="@+id/iv_notification_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:padding="2dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                tools:src="@drawable/ic_image" />
+
+        </FrameLayout>
 
         <!-- Unread Indicator -->
         <View
             android:id="@+id/view_unread_indicator"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/circle_background"
-            android:backgroundTint="@color/primary_color"
-            android:visibility="gone" />
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/bg_badge_red_modern"
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </LinearLayout>
 
 </LinearLayout>
-

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
     android:soundEffectsEnabled="true"
-    android:backgroundTint="@android:color/transparent"
+    android:background="@android:color/transparent"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -13,8 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="12dp"
-        android:background="@drawable/dialog_background_less_transparent">
+        android:paddingStart="18dp"
+        android:paddingEnd="18dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="18dp"
+        android:background="@drawable/bg_empty_state_panel"
+        android:elevation="14dp"
+        android:translationZ="10dp">
 
         <!-- Title -->
         <TextView
@@ -22,131 +27,128 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="React"
-            android:textSize="18sp"
-            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:gravity="center"
-            android:padding="16dp"/>
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="18dp" />
 
         <!-- Emoji Container -->
-        <LinearLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent" android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/container_emojis"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="6"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:background="@drawable/bg_option_row_dark"
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            android:layout_marginBottom="12dp">
 
-            <LinearLayout
-                android:id="@+id/container_emojis"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:weightSum="6"
-                android:padding="16dp"
-                android:background="@drawable/rounded_container">
+            <TextView
+                android:id="@+id/emoji_1"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:text="👍"
+                android:textSize="28sp"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_transparent" />
 
-                <!-- Rows of emoji choices; keep simple vertical list for accessibility -->
-                <TextView
-                    android:id="@+id/emoji_1"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="👍"
-                    android:textColor="@color/black"
-                    android:textSize="28sp"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground" />
-                <TextView
-                    android:id="@+id/emoji_2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="❤️"
-                    android:textColor="@color/black"
-                    android:textSize="28sp"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground" />
-                <TextView
-                    android:id="@+id/emoji_3"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="😂"
-                    android:textColor="@color/black"
-                    android:textSize="28sp"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground" />
-                <TextView
-                    android:id="@+id/emoji_4"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="😮"
-                    android:textColor="@color/black"
-                    android:textSize="28sp"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground" />
-                <TextView
-                    android:id="@+id/emoji_5"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="😢"
-                    android:textColor="@color/black"
-                    android:textSize="28sp"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground" />
-                <TextView
-                    android:id="@+id/emoji_6"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="🔥"
-                    android:textColor="@color/black"
-                    android:textSize="28sp"
-                    android:padding="12dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground" />
+            <TextView
+                android:id="@+id/emoji_2"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:text="❤️"
+                android:textSize="28sp"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_transparent" />
 
-            </LinearLayout>
+            <TextView
+                android:id="@+id/emoji_3"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:text="😂"
+                android:textSize="28sp"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_transparent" />
+
+            <TextView
+                android:id="@+id/emoji_4"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:text="😮"
+                android:textSize="28sp"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_transparent" />
+
+            <TextView
+                android:id="@+id/emoji_5"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:text="😢"
+                android:textSize="28sp"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_transparent" />
+
+            <TextView
+                android:id="@+id/emoji_6"
+                android:layout_width="0dp"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:text="🔥"
+                android:textSize="28sp"
+                android:gravity="center"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/bg_icon_circle_transparent" />
+
         </LinearLayout>
 
         <!-- Remove Reaction Button -->
-        <LinearLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="2dp"
-            android:backgroundTint="@android:color/transparent" android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/btn_remove_react"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@drawable/bg_danger_option_row"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="8dp"
+            android:translationZ="5dp">
 
-            <LinearLayout
-                android:id="@+id/btn_remove_react"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical"
-                android:background="@drawable/rounded_container">
+                android:text="Remove Reaction"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:textColor="#FF4D57"
+                android:textSize="15sp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Remove Reaction"
-                    android:gravity="center"
-                    android:textStyle="bold"
-                    android:textColor="#FF6B6B"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
+
 </LinearLayout>

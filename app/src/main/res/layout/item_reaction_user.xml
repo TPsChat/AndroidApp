@@ -1,59 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:padding="16dp"
-    android:layout_marginVertical="2dp"
-    android:background="@drawable/rounded_container"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginBottom="6dp"
+    android:orientation="vertical"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
-    <!-- User Avatar -->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_user_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:src="@drawable/ic_profile_placeholder"
-        app:civ_border_color="#B3FFFFFF"
-        app:civ_border_width="1dp" />
-
-    <!-- User Info -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="12dp"
-        android:orientation="vertical">
+        android:minHeight="78dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/bg_option_row_dark"
+        android:elevation="8dp"
+        android:translationZ="5dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
-        <TextView
-            android:id="@+id/tv_user_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="User Name"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+        <!-- User Avatar -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_user_avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_profile_placeholder"
+            android:elevation="8dp"
+            android:translationZ="5dp"
+            app:civ_border_color="#33FFFFFF"
+            app:civ_border_width="1.5dp" />
 
-        <TextView
-            android:id="@+id/tv_user_username"
-            android:layout_width="wrap_content"
+        <!-- User Info -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@username"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:layout_weight="1"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_user_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="User Name"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="User Name" />
+
+            <TextView
+                android:id="@+id/tv_user_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@username"
+                android:textColor="#9AA4B2"
+                android:textSize="13sp"
+                android:layout_marginTop="4dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="@username" />
+
+        </LinearLayout>
+
+        <!-- Reaction Emoji -->
+        <TextView
+            android:id="@+id/tv_reaction_emoji"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:text="👍"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:background="@drawable/bg_icon_circle_transparent"
+            android:elevation="8dp"
+            android:translationZ="5dp" />
 
     </LinearLayout>
-
-    <!-- Reaction Emoji -->
-    <TextView
-        android:id="@+id/tv_reaction_emoji"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="👍"
-        android:textSize="24sp"
-        android:layout_marginEnd="8dp" />
 
 </LinearLayout>
