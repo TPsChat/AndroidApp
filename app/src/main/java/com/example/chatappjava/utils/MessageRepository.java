@@ -688,13 +688,7 @@ public class MessageRepository {
             if (editedAtIndex >= 0) message.setEditedAt(cursor.getLong(editedAtIndex));
             if (reactionsIndex >= 0) {
                 String reactions = cursor.getString(reactionsIndex);
-                try {
-                    java.lang.reflect.Field reactField = Message.class.getDeclaredField("reactionsRaw");
-                    reactField.setAccessible(true);
-                    reactField.set(message, reactions);
-                } catch (Exception e) {
-                    Log.w(TAG, "Could not set reactions field");
-                }
+                message.setReactionsRaw(reactions);
             }
             if (clientNonceIndex >= 0) message.setClientNonce(cursor.getString(clientNonceIndex));
             

@@ -28,6 +28,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
+
+    public static final String PAYLOAD_REACTION = "payload_reaction";
     
     public interface OnMessageClickListener {
         void onMessageClick(Message message);
@@ -140,6 +142,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         Message message = messages.get(position);
         holder.bind(message, currentUserId, isGroupChat, holder.itemView.getContext());
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.contains(PAYLOAD_REACTION)) {
+            Message message = messages.get(position);
+            boolean isFromCurrentUser = message.getSenderId() != null
+                    && message.getSenderId().equals(currentUserId);
+            holder.bindReactionsOnly(message, isFromCurrentUser, holder.itemView.getContext());
+            return;
+        }
+        super.onBindViewHolder(holder, position, payloads);
     }
     
     @Override
@@ -851,29 +865,57 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             dlg.show();
         }
 
+        void bindReactionsOnly(Message message, boolean isFromCurrentUser, Context context) {
+            if (isFromCurrentUser) {
+                if (message.isImageMessage()) {
+                    updateReactionIcon(ivSentImageReaction, message, context);
+                    if (ivSentReactionImage != null) {
+                        ivSentReactionImage.setVisibility(View.GONE);
+                    }
+                } else {
+                    updateReactionIcon(ivSentReactionImage, message, context);
+                    if (ivSentImageReaction != null) {
+                        ivSentImageReaction.setVisibility(View.GONE);
+                    }
+                }
+            } else {
+                if (message.isImageMessage()) {
+                    updateReactionIcon(ivReceivedImageReaction, message, context);
+                    if (ivReceivedReactionImage != null) {
+                        ivReceivedReactionImage.setVisibility(View.GONE);
+                    }
+                } else {
+                    updateReactionIcon(ivReceivedReactionImage, message, context);
+                    if (ivReceivedImageReaction != null) {
+                        ivReceivedImageReaction.setVisibility(View.GONE);
+                    }
+                }
+            }
+        }
+
         private void updateReactionIcon(ImageView badgeView, Message message, Context context) {
             if (badgeView == null) return;
-            java.util.Map<String, Integer> sum = message.getReactionSummary();
-            if (sum == null || sum.isEmpty()) {
+            message.ensureReactionSummaryFromRaw();
+            String topEmoji = message.getTopReactionEmoji();
+            if (topEmoji.isEmpty()) {
+                Object tag = badgeView.getTag();
+                if (tag == null && badgeView.getVisibility() != View.VISIBLE) {
+                    return;
+                }
+                badgeView.setTag(null);
                 badgeView.setVisibility(View.GONE);
                 return;
             }
-            // Pick the most frequent emoji
-            String topEmoji = null; int max = -1;
-            for (java.util.Map.Entry<String, Integer> e : sum.entrySet()) {
-                Integer c = e.getValue();
-                if (c != null && c > max) { max = c; topEmoji = e.getKey(); }
-            }
-            if (topEmoji == null || topEmoji.isEmpty()) {
-                badgeView.setVisibility(View.GONE);
+            if (topEmoji.equals(badgeView.getTag()) && badgeView.getVisibility() == View.VISIBLE) {
                 return;
             }
             try {
                 android.graphics.Bitmap bmp = createEmojiBitmap(topEmoji, context);
                 badgeView.setImageBitmap(bmp);
-                // Optional background to mimic floating chip
+                badgeView.setTag(topEmoji);
                 badgeView.setVisibility(View.VISIBLE);
             } catch (Exception ignored) {
+                badgeView.setTag(null);
                 badgeView.setVisibility(View.GONE);
             }
         }

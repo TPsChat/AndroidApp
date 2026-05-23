@@ -1957,29 +1957,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
 
     protected void loadMessages() {
         if (currentChat == null) return;
-        
-        // CRITICAL: Don't reload if user is reading old messages (for polling/refresh)
-        // Only allow initial load
-        boolean isRefresh = !isInitialLoad;
-        if (isRefresh) {
-            // For refresh/polling, check if user is reading old messages
-            // BUT: Still allow loading from database to show cached messages
-            // Only block the API call to server
-            boolean shouldBlockRefresh = isUserReadingOldMessages || !shouldAutoScroll || isReadingOldMessages();
-            if (shouldBlockRefresh) {
-                android.util.Log.d("BaseChatActivity", "BLOCKED loadMessages API call (refresh) - user reading old messages, but checking for new messages in DB");
-                // FIX: Still check for new messages in DB and append them (don't reload entire list)
-                // This ensures real-time chat works even when user is reading old messages
-                checkAndAppendNewMessagesFromDB();
-                return; // Skip API call if user is reading old messages
-            }
-            android.util.Log.d("BaseChatActivity", "ALLOWED loadMessages (refresh) - user at bottom");
+
+        if (!isInitialLoad) {
+            refreshMessagesIncremental();
+            return;
         }
 
-        // Clear messages list first to avoid duplicates
+        // Initial load only — replace list once from cache, then fetch from server
         messages.clear();
-        
-        // First, load from cache for instant UI
         loadMessagesFromDatabase();
         
         // Then sync deltas from server if network is available
@@ -1988,18 +1973,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             if (token == null || token.isEmpty()) {
                 return;
             }
-            
-            if (!isRefresh) {
-                currentPage = 1;
-                hasMore = true;
-            }
-            
-            // Use sync deltas for refresh, full API call for initial load
-            if (isRefresh && backgroundSyncManager != null && backgroundSyncManager.shouldSyncForeground()) {
-                backgroundSyncManager.syncMessages(token, false);
-                return;
-            }
-            
+
+            currentPage = 1;
+            hasMore = true;
+
             // Initial load: use full API call
             apiClient.getMessages(token, currentChat.getId(), 1, pageSize, new Callback() {
             @SuppressLint("NotifyDataSetChanged")
@@ -2033,69 +2010,21 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                         messageRepository.saveMessagesBatch(pageOne);
                                     }
                                 }
-                                boolean addedNewAtEnd = false;
-                                int newMessagesCount = 0;
-                                int updatedMessagesCount = 0;
-                                
-                                if (!isRefresh) {
-                                    // Initial load - clear and replace all messages
-                                    int oldSize = messages.size();
-                                    messages.clear();
-                                    // Deduplicate by ID before adding
-                                    java.util.Set<String> seenIds = new java.util.HashSet<>();
-                                    for (Message m : pageOne) {
-                                        String msgId = m.getId();
-                                        if (msgId != null && !msgId.isEmpty() && !seenIds.contains(msgId)) {
-                                            messages.add(m);
-                                            seenIds.add(msgId);
-                                        }
+                                // Initial load — replace list from server page
+                                int oldSize = messages.size();
+                                messages.clear();
+                                java.util.Set<String> seenIds = new java.util.HashSet<>();
+                                for (Message m : pageOne) {
+                                    String msgId = m.getId();
+                                    if (msgId != null && !msgId.isEmpty() && !seenIds.contains(msgId)) {
+                                        messages.add(m);
+                                        seenIds.add(msgId);
                                     }
-                                    // Use notifyItemRangeInserted for better performance
-                                    if (oldSize == 0 && !messages.isEmpty()) {
-                                        messageAdapter.notifyItemRangeInserted(0, messages.size());
-                                    } else if (!messages.isEmpty()) {
-                                        messageAdapter.notifyDataSetChanged(); // Only for initial load when list was not empty
-                                    }
-                                } else {
-                                    // Refresh/polling - merge: upsert by id; if id not found, try replace local placeholder; else append
-                                    java.util.List<Integer> changedIndices = new java.util.ArrayList<>();
-                                    for (Message m : pageOne) {
-                                        String msgId = m.getId();
-                                        if (msgId == null || msgId.isEmpty()) continue; // Skip messages without ID
-                                        
-                                        int existingIdx = indexOfMessageById(msgId);
-                                        if (existingIdx >= 0) {
-                                            // Update existing message
-                                            messages.set(existingIdx, m);
-                                            changedIndices.add(existingIdx);
-                                            updatedMessagesCount++;
-                                        } else {
-                                            // Check for local placeholder
-                                            int localIdx = findLocalPlaceholderIndex(m);
-                                            if (localIdx >= 0) {
-                                                // Replace local placeholder
-                                                messages.set(localIdx, m);
-                                                changedIndices.add(localIdx);
-                                                updatedMessagesCount++;
-                                            } else {
-                                                // New message - add to end
-                                                messages.add(m);
-                                                addedNewAtEnd = true;
-                                                newMessagesCount++;
-                                            }
-                                        }
-                                    }
-                                    
-                                    // Notify changes incrementally for better performance
-                                    if (newMessagesCount > 0) {
-                                        messageAdapter.notifyItemRangeInserted(messages.size() - newMessagesCount, newMessagesCount);
-                                    }
-                                    if (updatedMessagesCount > 0 && !changedIndices.isEmpty()) {
-                                        // Notify individual changes
-                                        for (int idx : changedIndices) {
-                                            messageAdapter.notifyItemChanged(idx);
-                                        }
-                                    }
+                                }
+                                if (oldSize == 0 && !messages.isEmpty()) {
+                                    messageAdapter.notifyItemRangeInserted(0, messages.size());
+                                } else if (!messages.isEmpty()) {
+                                    messageAdapter.notifyDataSetChanged();
                                 }
                                 
                                 // Update chat info if available
@@ -2112,25 +2041,11 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                     }
                                 }
                                 
-                                // Only use notifyDataSetChanged if no incremental updates were made
-                                if (isRefresh && newMessagesCount == 0 && updatedMessagesCount == 0) {
-                                    // No changes, no need to notify
-                                }
-                                
-                                // Update summarize indicator
                                 updateSummarizeIndicator();
 
-                                // Handle scrolling based on context
-                                if (!isRefresh) {
-                                    // Always scroll to bottom on initial load and enable auto-scroll
-                                    shouldAutoScroll = true;
-                                    scrollToBottom();
-                             
-                                    isInitialLoad = false;
-                                } else if (addedNewAtEnd) {
-                                    // Only scroll if there are new messages and user is at bottom
-                                    scrollToBottomIfAtBottom();
-                                }
+                                shouldAutoScroll = true;
+                                scrollToBottom();
+                                isInitialLoad = false;
                             } else {
                                 String errorMessage = jsonResponse.optString("message", "Failed to load messages");
                                 Toast.makeText(BaseChatActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
@@ -3229,6 +3144,94 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
      * Check for new messages in DB and append them to the list (without reloading entire list)
      * This is used when user is reading old messages - we still want to show new messages
      */
+    /**
+     * Poll / background refresh: sync with server and patch the list in place (no full reload).
+     */
+    protected void refreshMessagesIncremental() {
+        if (currentChat == null) return;
+
+        String token = databaseManager.getToken();
+        if (token != null && !token.isEmpty() && backgroundSyncManager != null) {
+            backgroundSyncManager.syncForeground(token);
+        }
+
+        checkAndAppendNewMessagesFromDB();
+        mergeRecentMessageUpdatesFromDB();
+    }
+
+    private void mergeRecentMessageUpdatesFromDB() {
+        if (currentChat == null || messageRepository == null || messages == null || messages.isEmpty()) {
+            return;
+        }
+        if (isUpdatingMessages || isLoadingMore) {
+            return;
+        }
+
+        new Thread(() -> {
+            int loadLimit = Math.max(messages.size(), initialDbLoadLimit);
+            List<Message> dbMessages = messageRepository.getMessagesForChat(currentChat.getId(), loadLimit);
+            if (dbMessages == null || dbMessages.isEmpty()) {
+                return;
+            }
+
+            java.util.Map<String, Message> dbById = new java.util.HashMap<>();
+            for (Message m : dbMessages) {
+                if (m.getId() != null && !m.getId().isEmpty()) {
+                    dbById.put(m.getId(), m);
+                }
+            }
+
+            runOnUiThread(() -> {
+                if (messageAdapter == null) {
+                    return;
+                }
+                java.util.List<Integer> reactionOnlyIndices = new java.util.ArrayList<>();
+                java.util.List<Integer> fullUpdateIndices = new java.util.ArrayList<>();
+                for (int i = 0; i < messages.size(); i++) {
+                    Message local = messages.get(i);
+                    if (local == null || local.getId() == null) {
+                        continue;
+                    }
+                    Message fromDb = dbById.get(local.getId());
+                    if (fromDb == null) {
+                        continue;
+                    }
+                    fromDb.ensureReactionSummaryFromRaw();
+                    local.ensureReactionSummaryFromRaw();
+
+                    if (!hasNonReactionVisualChanges(local, fromDb)) {
+                        if (!Message.reactionsVisuallyEqual(local, fromDb)) {
+                            local.copyReactionDataFrom(fromDb);
+                            reactionOnlyIndices.add(i);
+                        }
+                        continue;
+                    }
+                    messages.set(i, fromDb);
+                    fullUpdateIndices.add(i);
+                }
+                for (int idx : reactionOnlyIndices) {
+                    messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_REACTION);
+                }
+                for (int idx : fullUpdateIndices) {
+                    messageAdapter.notifyItemChanged(idx);
+                }
+            });
+        }).start();
+    }
+
+    private static boolean hasNonReactionVisualChanges(Message local, Message fromDb) {
+        if (!java.util.Objects.equals(local.getContent(), fromDb.getContent())) {
+            return true;
+        }
+        if (local.isEdited() != fromDb.isEdited()) {
+            return true;
+        }
+        if (local.getEditedAt() != fromDb.getEditedAt()) {
+            return true;
+        }
+        return false;
+    }
+
     protected void checkAndAppendNewMessagesFromDB() {
         if (currentChat == null || messageRepository == null || messages == null) return;
         
@@ -3441,9 +3444,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                     backgroundSyncManager.syncForeground(token);
                 }
                 
-                // Also trigger loadMessages but it will check if user is reading old messages
-                // loadMessages will handle the UI update logic internally
-                loadMessages();
+                refreshMessagesIncremental();
                 
                 pollHandler.postDelayed(this, 3000); // Poll every 3 seconds
             }
@@ -3644,7 +3645,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             message.incrementReaction(emoji);
             int idx = indexOfMessageById(message.getId());
             if (idx >= 0) {
-                messageAdapter.notifyItemChanged(idx);
+                messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_REACTION);
             } else {
                 messageAdapter.notifyDataSetChanged();
             }
@@ -4098,7 +4099,11 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                     // Optimistic UI update
                     message.decrementReaction(emojiToRemove);
                     int idx = indexOfMessageById(message.getId());
-                    if (idx >= 0) messageAdapter.notifyItemChanged(idx); else messageAdapter.notifyDataSetChanged();
+                    if (idx >= 0) {
+                        messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_REACTION);
+                    } else {
+                        messageAdapter.notifyDataSetChanged();
+                    }
 
                     apiClient.removeReaction(token, message.getId(), emojiToRemove, new okhttp3.Callback() {
                         @Override public void onFailure(okhttp3.Call call, java.io.IOException e) { }

@@ -189,6 +189,7 @@ public class Message {
         if (json.has("reactions") && json.get("reactions") instanceof org.json.JSONArray) {
             message.reactionsRaw = json.getJSONArray("reactions").toString();
         }
+        message.ensureReactionSummaryFromRaw();
         message.clientNonce = json.optString("clientNonce", null);
         if (json.has("senderInfo") && json.get("senderInfo") instanceof JSONObject) {
             JSONObject senderInfoJson = json.getJSONObject("senderInfo");
@@ -294,6 +295,77 @@ public class Message {
     public void setReplyToImageThumb(String v) { this.replyToImageThumb = v; }
 
     public java.util.Map<String, Integer> getReactionSummary() { return reactionSummary; }
+
+    public void setReactionsRaw(String reactionsRaw) {
+        this.reactionsRaw = reactionsRaw;
+        this.reactionSummary = null;
+        ensureReactionSummaryFromRaw();
+    }
+
+    /** Build summary map from stored reactions JSON (e.g. when loading from SQLite). */
+    public void ensureReactionSummaryFromRaw() {
+        if (reactionSummary != null && !reactionSummary.isEmpty()) {
+            return;
+        }
+        if (reactionsRaw == null || reactionsRaw.isEmpty()) {
+            return;
+        }
+        try {
+            org.json.JSONArray arr = new org.json.JSONArray(reactionsRaw);
+            java.util.Map<String, Integer> map = new java.util.HashMap<>();
+            for (int i = 0; i < arr.length(); i++) {
+                org.json.JSONObject r = arr.getJSONObject(i);
+                String emoji = r.optString("emoji", "");
+                if (!emoji.isEmpty()) {
+                    map.put(emoji, map.getOrDefault(emoji, 0) + 1);
+                }
+            }
+            if (!map.isEmpty()) {
+                reactionSummary = map;
+            }
+        } catch (org.json.JSONException ignored) {
+        }
+    }
+
+    public String getTopReactionEmoji() {
+        ensureReactionSummaryFromRaw();
+        if (reactionSummary == null || reactionSummary.isEmpty()) {
+            return "";
+        }
+        String topEmoji = "";
+        int max = -1;
+        for (java.util.Map.Entry<String, Integer> entry : reactionSummary.entrySet()) {
+            Integer count = entry.getValue();
+            if (count != null && count > max) {
+                max = count;
+                topEmoji = entry.getKey();
+            }
+        }
+        return topEmoji != null ? topEmoji : "";
+    }
+
+    public void copyReactionDataFrom(Message other) {
+        if (other == null) {
+            return;
+        }
+        reactionsRaw = other.reactionsRaw;
+        if (other.reactionSummary != null && !other.reactionSummary.isEmpty()) {
+            reactionSummary = new java.util.HashMap<>(other.reactionSummary);
+        } else {
+            reactionSummary = null;
+            ensureReactionSummaryFromRaw();
+        }
+    }
+
+    public static boolean reactionsVisuallyEqual(Message a, Message b) {
+        if (a == null && b == null) {
+            return true;
+        }
+        if (a == null || b == null) {
+            return false;
+        }
+        return java.util.Objects.equals(a.getTopReactionEmoji(), b.getTopReactionEmoji());
+    }
 
     public void incrementReaction(String emoji) {
         if (emoji == null) return;
