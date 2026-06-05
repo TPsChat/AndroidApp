@@ -36,8 +36,6 @@
             android:layout_width="34dp"
             android:layout_height="34dp"
             android:src="@drawable/ic_profile_placeholder"
-            android:elevation="8dp"
-            android:translationZ="5dp"
             app:civ_border_color="@color/md3_border_glow"
             app:civ_border_width="1.2dp" />
 
@@ -62,9 +60,7 @@
                 android:paddingEnd="13dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:background="@drawable/bg_option_row_dark"
-                android:elevation="8dp"
-                android:translationZ="5dp">
+                android:background="@drawable/bg_obsidian_card">
 
                 <!-- Username -->
                 <TextView
@@ -101,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="5dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="@dimen/spacing_xs"
                 android:gravity="center_vertical">
 
                 <!-- Timestamp -->
@@ -119,7 +115,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="26dp"
                     android:minWidth="26dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/spacing_xs"
                     android:text="0"
                     android:textColor="@color/md3_on_surface"
                     android:textSize="11sp"
@@ -135,9 +131,9 @@
                     android:id="@+id/tv_reply_like"
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/spacing_xs"
                     android:text="Like"
-                    android:textColor="@color/md3_primary"
+                    android:textColor="@color/text_white"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:gravity="center"

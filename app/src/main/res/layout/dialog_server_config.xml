@@ -17,9 +17,7 @@
         android:paddingEnd="20dp"
         android:paddingTop="22dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -97,8 +95,6 @@
             android:paddingStart="14dp"
             android:paddingEnd="10dp"
             android:background="@drawable/bg_option_row_dark"
-            android:elevation="8dp"
-            android:translationZ="5dp"
             android:layout_marginBottom="10dp">
 
             <TextView
@@ -127,8 +123,6 @@
             android:paddingStart="14dp"
             android:paddingEnd="10dp"
             android:background="@drawable/bg_option_row_dark"
-            android:elevation="8dp"
-            android:translationZ="5dp"
             android:layout_marginBottom="18dp">
 
             <TextView
@@ -169,10 +163,7 @@
                 android:backgroundTint="@null"
                 android:paddingStart="18dp"
                 android:paddingEnd="18dp"
-                android:layout_marginEnd="10dp"
-                android:elevation="8dp"
-                android:translationZ="5dp"
-                android:stateListAnimator="@animator/btn_shadow_animator" />
+                android:layout_marginEnd="10dp" />
 
             <Button
                 android:id="@+id/btn_save_server_config"
@@ -187,10 +178,7 @@
                 android:background="@drawable/bg_new_message_button"
                 android:backgroundTint="@null"
                 android:paddingStart="22dp"
-                android:paddingEnd="22dp"
-                android:elevation="12dp"
-                android:translationZ="8dp"
-                android:stateListAnimator="@animator/btn_shadow_animator" />
+                android:paddingEnd="22dp" />
 
         </LinearLayout>
 

@@ -18,9 +18,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -46,8 +44,6 @@
             android:paddingStart="14dp"
             android:paddingEnd="10dp"
             android:background="@drawable/bg_option_row_dark"
-            android:elevation="8dp"
-            android:translationZ="5dp"
             android:layout_marginBottom="12dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -55,8 +51,6 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_group_avatar"
-                android:elevation="8dp"
-                android:translationZ="5dp"
                 app:civ_border_width="1.5dp"
                 app:civ_border_color="@color/md3_border_glow" />
 
@@ -97,9 +91,6 @@
                 android:contentDescription="Close"
                 android:background="@drawable/bg_icon_circle_dark"
                 android:padding="10dp"
-                android:elevation="8dp"
-                android:translationZ="5dp"
-                android:stateListAnimator="@animator/btn_shadow_animator"
                 app:tint="@color/md3_primary" />
 
         </LinearLayout>
@@ -113,9 +104,7 @@
             android:paddingEnd="14dp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:background="@drawable/bg_option_row_dark"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:background="@drawable/bg_option_row_dark">
 
             <TextView
                 android:id="@+id/tv_group_created"
@@ -156,9 +145,6 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:background="@drawable/bg_new_message_button"
-                    android:elevation="10dp"
-                    android:translationZ="6dp"
-                    android:stateListAnimator="@animator/btn_shadow_animator"
                     android:clickable="true"
                     android:focusable="true" />
 

@@ -117,15 +117,15 @@ public class ReactionUserAdapter extends RecyclerView.Adapter<ReactionUserAdapte
     }
 
     private String getReactionEmoji(String type) {
-        if (type == null) return "👍";
+        if (type == null) return "+1";
         switch (type) {
-            case "like": return "👍";
-            case "love": return "❤️";
-            case "haha": return "😂";
-            case "wow": return "😮";
-            case "sad": return "😢";
-            case "angry": return "😠";
-            default: return "👍";
+            case "like": return "+1";
+            case "love": return "Luv";
+            case "haha": return "Haha";
+            case "wow": return "Wow";
+            case "sad": return "Sad";
+            case "angry": return "Angry";
+            default: return "+1";
         }
     }
 

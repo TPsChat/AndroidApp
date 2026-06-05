@@ -365,7 +365,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
                 tvPrivacyDescription.setText("When enabled, anyone can find and join this group. When disabled, only invited members can join.");
             } else {
                 tvPrivacyDescription.setText("Only group creator and admins can change privacy settings.");
-                tvPrivacyDescription.setTextColor(getResources().getColor(android.R.color.darker_gray));
+                tvPrivacyDescription.setTextColor(getResources().getColor(com.example.chatappjava.R.color.text_white));
             }
         }
     }

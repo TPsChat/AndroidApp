@@ -18,9 +18,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -49,9 +47,7 @@
             android:paddingEnd="14dp"
             android:background="@drawable/bg_option_row_dark"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="24dp"
@@ -90,9 +86,7 @@
                 android:paddingEnd="14dp"
                 android:background="@drawable/bg_option_row_dark"
                 android:clickable="true"
-                android:focusable="true"
-                android:elevation="8dp"
-                android:translationZ="5dp">
+                android:focusable="true">
 
                 <ImageView
                     android:layout_width="24dp"
@@ -133,16 +127,14 @@
                 android:paddingEnd="14dp"
                 android:background="@drawable/bg_danger_option_row"
                 android:clickable="true"
-                android:focusable="true"
-                android:elevation="8dp"
-                android:translationZ="5dp">
+                android:focusable="true">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:layout_marginEnd="12dp"
-                    app:tint="@color/md3_primary" />
+                    app:tint="@color/md3_error" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -176,16 +168,14 @@
                 android:paddingEnd="14dp"
                 android:background="@drawable/bg_danger_option_row"
                 android:clickable="true"
-                android:focusable="true"
-                android:elevation="8dp"
-                android:translationZ="5dp">
+                android:focusable="true">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:layout_marginEnd="12dp"
-                    app:tint="@color/md3_primary" />
+                    app:tint="@color/md3_error" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -212,16 +202,14 @@
             android:paddingEnd="14dp"
             android:background="@drawable/bg_danger_option_row"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_delete"
                 android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/md3_error" />
 
             <TextView
                 android:layout_width="0dp"
@@ -253,16 +241,14 @@
                 android:paddingEnd="14dp"
                 android:background="@drawable/bg_danger_option_row"
                 android:clickable="true"
-                android:focusable="true"
-                android:elevation="8dp"
-                android:translationZ="5dp">
+                android:focusable="true">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:layout_marginEnd="12dp"
-                    app:tint="@color/md3_primary" />
+                    app:tint="@color/md3_error" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -296,16 +282,14 @@
                 android:paddingEnd="14dp"
                 android:background="@drawable/bg_danger_option_row"
                 android:clickable="true"
-                android:focusable="true"
-                android:elevation="8dp"
-                android:translationZ="5dp">
+                android:focusable="true">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:layout_marginEnd="12dp"
-                    app:tint="@color/md3_primary" />
+                    app:tint="@color/md3_error" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -338,16 +322,14 @@
                 android:paddingEnd="14dp"
                 android:background="@drawable/bg_danger_option_row"
                 android:clickable="true"
-                android:focusable="true"
-                android:elevation="8dp"
-                android:translationZ="5dp">
+                android:focusable="true">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@android:drawable/ic_menu_delete"
                     android:layout_marginEnd="12dp"
-                    app:tint="@color/md3_primary" />
+                    app:tint="@color/md3_error" />
 
                 <TextView
                     android:layout_width="0dp"

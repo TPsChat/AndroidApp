@@ -1155,10 +1155,10 @@ public class GroupVideoCallActivity extends AppCompatActivity {
             // Add mute/video status to name
             StringBuilder statusText = new StringBuilder();
             if (item.isAudioMuted) {
-                statusText.append(" 🔇");
+                statusText.append(" [muted]");
             }
             if (item.isVideoMuted) {
-                statusText.append(" 📹");
+                statusText.append(" [no-vid]");
             }
             
             holder.tvMemberName.setText(displayName + statusText.toString());

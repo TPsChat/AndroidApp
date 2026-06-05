@@ -6,7 +6,7 @@
         android:right="2dp"
         android:bottom="0dp">
         <shape>
-            <solid android:color="#66000000" />
+            <solid android:color="@color/danger_ripple" />
             <corners android:radius="@dimen/radius_lg" />
         </shape>
     </item>
@@ -18,8 +18,8 @@
         <shape>
             <gradient
                 android:angle="135"
-                android:endColor="@color/palette_blood"
-                android:startColor="@color/palette_wine" />
+                android:endColor="@color/danger_gradient_end"
+                android:startColor="@color/danger_gradient_start" />
             <corners android:radius="@dimen/radius_lg" />
         </shape>
     </item>

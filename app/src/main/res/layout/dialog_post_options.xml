@@ -18,9 +18,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -50,9 +48,7 @@
             android:background="@drawable/bg_option_row_dark"
             android:clickable="true"
             android:focusable="true"
-            android:visibility="gone"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="24dp"
@@ -85,16 +81,14 @@
             android:background="@drawable/bg_danger_option_row"
             android:clickable="true"
             android:focusable="true"
-            android:visibility="gone"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_delete"
                 android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/md3_error" />
 
             <TextView
                 android:layout_width="0dp"
@@ -120,9 +114,7 @@
             android:background="@drawable/bg_option_row_dark"
             android:clickable="true"
             android:focusable="true"
-            android:visibility="gone"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="24dp"
@@ -159,9 +151,7 @@
             android:gravity="center"
             android:background="@drawable/bg_reject_button_modern"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:focusable="true">
 
             <TextView
                 android:layout_width="wrap_content"

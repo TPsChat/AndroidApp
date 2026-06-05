@@ -262,7 +262,8 @@ public class Call {
         return getDisplayName("");
     }
     public String getCallTypeIcon() {
-        return isVideoCall() ? "📹" : "📞";
+        // Emoji-free tokens to match the UI design system (video vs audio).
+        return isVideoCall() ? "VID" : "TEL";
     }
     
     public String getStatusText() {

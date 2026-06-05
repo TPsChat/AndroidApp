@@ -151,7 +151,7 @@ public class LoginActivity extends AppCompatActivity {
             applyModeCopy(signUpMode);
         }
 
-        int activeColor = ContextCompat.getColor(this, android.R.color.white);
+        int activeColor = ContextCompat.getColor(this, R.color.md3_on_primary);
         int inactiveColor = ContextCompat.getColor(this, R.color.text_secondary);
         tvSignInTab.setTextColor(signUpMode ? inactiveColor : activeColor);
         tvRegister.setTextColor(signUpMode ? activeColor : inactiveColor);
@@ -352,8 +352,8 @@ public class LoginActivity extends AppCompatActivity {
         et.setHint("Email address");
         et.setInputType(android.text.InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         et.setPadding(50, 20, 50, 20);
-        et.setTextColor(getResources().getColor(com.example.chatappjava.R.color.black));
-        et.setHintTextColor(getResources().getColor(com.example.chatappjava.R.color.black));
+        et.setTextColor(getResources().getColor(com.example.chatappjava.R.color.text_white));
+        et.setHintTextColor(getResources().getColor(com.example.chatappjava.R.color.text_white));
         et.setBackground(getResources().getDrawable(com.example.chatappjava.R.drawable.rounded_container));
         
         // Set layout parameters
@@ -541,8 +541,8 @@ public class LoginActivity extends AppCompatActivity {
         etNew.setHint("New password");
         etNew.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
         etNew.setPadding(50, 20, 50, 20);
-        etNew.setTextColor(getResources().getColor(com.example.chatappjava.R.color.black));
-        etNew.setHintTextColor(getResources().getColor(com.example.chatappjava.R.color.black));
+        etNew.setTextColor(getResources().getColor(com.example.chatappjava.R.color.text_white));
+        etNew.setHintTextColor(getResources().getColor(com.example.chatappjava.R.color.text_white));
         etNew.setBackground(getResources().getDrawable(com.example.chatappjava.R.drawable.rounded_container));
         
         // Set layout parameters for new password field
@@ -558,8 +558,8 @@ public class LoginActivity extends AppCompatActivity {
         etConfirm.setHint("Confirm password");
         etConfirm.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
         etConfirm.setPadding(50, 20, 50, 20);
-        etConfirm.setTextColor(getResources().getColor(com.example.chatappjava.R.color.black));
-        etConfirm.setHintTextColor(getResources().getColor(com.example.chatappjava.R.color.black));
+        etConfirm.setTextColor(getResources().getColor(com.example.chatappjava.R.color.text_white));
+        etConfirm.setHintTextColor(getResources().getColor(com.example.chatappjava.R.color.text_white));
         etConfirm.setBackground(getResources().getDrawable(com.example.chatappjava.R.drawable.rounded_container));
         
         // Set layout parameters for confirm password field

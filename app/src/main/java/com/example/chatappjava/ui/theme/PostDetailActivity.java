@@ -1759,7 +1759,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
     private static final java.util.regex.Pattern MENTION_PATTERN = java.util.regex.Pattern.compile("@([A-Za-z0-9_]+)");
     
     // Apply mention styling to TextView
-    private static void applyMentionStyling(TextView textView, String content) {
+    private void applyMentionStyling(TextView textView, String content) {
         if (content == null) {
             textView.setText("");
             return;
@@ -1774,7 +1774,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             
             // Style: blue color and bold
             android.text.style.StyleSpan styleSpan = new android.text.style.StyleSpan(android.graphics.Typeface.BOLD);
-            android.text.style.ForegroundColorSpan colorSpan = new android.text.style.ForegroundColorSpan(0xFF2D6BB3); // Primary blue color
+            android.text.style.ForegroundColorSpan colorSpan = new android.text.style.ForegroundColorSpan(getColor(R.color.text_white));
             
             spannable.setSpan(colorSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(styleSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

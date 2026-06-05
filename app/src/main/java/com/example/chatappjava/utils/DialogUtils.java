@@ -85,8 +85,8 @@ public final class DialogUtils {
         editText.setSelection(editText.getText().length()); // Place cursor at end
         editText.setHint("Enter new message content...");
         editText.setPadding(50, 20, 50, 20);
-        editText.setTextColor(context.getResources().getColor(com.example.chatappjava.R.color.black));
-        editText.setHintTextColor(context.getResources().getColor(com.example.chatappjava.R.color.black));
+        editText.setTextColor(context.getResources().getColor(com.example.chatappjava.R.color.text_white));
+        editText.setHintTextColor(context.getResources().getColor(com.example.chatappjava.R.color.text_white));
         editText.setBackground(context.getResources().getDrawable(com.example.chatappjava.R.drawable.rounded_container));
         
         // Set layout parameters

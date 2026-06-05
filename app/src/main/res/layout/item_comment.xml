@@ -29,8 +29,6 @@
             android:src="@drawable/ic_profile_placeholder"
             app:civ_border_color="@color/md3_border_glow"
             app:civ_border_width="1.5dp"
-            android:elevation="8dp"
-            android:translationZ="5dp"
             android:clickable="true"
             android:focusable="true" />
 
@@ -54,9 +52,7 @@
                 android:paddingEnd="14dp"
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
-                android:background="@drawable/bg_option_row_dark"
-                android:elevation="8dp"
-                android:translationZ="5dp">
+                android:background="@drawable/bg_obsidian_card">
 
                 <!-- Username -->
                 <TextView
@@ -108,8 +104,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="6dp"
-                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginStart="@dimen/spacing_xs"
                 android:gravity="center_vertical">
 
                 <!-- Timestamp -->
@@ -128,7 +124,7 @@
                     android:layout_height="30dp"
                     android:layout_marginStart="10dp"
                     android:text="Like"
-                    android:textColor="@color/md3_primary"
+                    android:textColor="@color/text_white"
                     android:textStyle="bold"
                     android:textSize="12sp"
                     android:gravity="center"
@@ -160,7 +156,7 @@
                     android:id="@+id/ll_reaction_icons_inline"
                     android:layout_width="wrap_content"
                     android:layout_height="28dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/spacing_xs"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
                     android:paddingStart="6dp"
@@ -172,48 +168,48 @@
                         android:id="@+id/tv_reaction_like"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="👍"
-                        android:textSize="14sp"
+                        android:text="+1"
+                        android:textSize="11sp"
                         android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_reaction_love"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="❤️"
-                        android:textSize="14sp"
+                        android:text="Luv"
+                        android:textSize="11sp"
                         android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_reaction_haha"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="😂"
-                        android:textSize="14sp"
+                        android:text="Haha"
+                        android:textSize="11sp"
                         android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_reaction_wow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="😮"
-                        android:textSize="14sp"
+                        android:text="Wow"
+                        android:textSize="11sp"
                         android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_reaction_sad"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="😢"
-                        android:textSize="14sp"
+                        android:text="Sad"
+                        android:textSize="11sp"
                         android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tv_reaction_angry"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="😠"
-                        android:textSize="14sp"
+                        android:text="Angry"
+                        android:textSize="11sp"
                         android:visibility="gone" />
 
                 </LinearLayout>
@@ -272,7 +268,7 @@
             android:layout_width="wrap_content"
             android:layout_height="34dp"
             android:text="View 3 replies"
-            android:textColor="@color/md3_primary"
+            android:textColor="@color/text_white"
             android:textSize="13sp"
             android:textStyle="bold"
             android:gravity="center_vertical"

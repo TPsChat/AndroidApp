@@ -16,8 +16,6 @@
         android:orientation="vertical"
         android:background="@drawable/bg_option_row_dark"
         android:padding="16dp"
-        android:elevation="8dp"
-        android:translationZ="5dp"
         android:clipToPadding="false"
         android:clipChildren="false">
 
@@ -42,9 +40,7 @@
             android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginBottom="8dp"
-            android:elevation="4dp"
-            android:translationZ="3dp">
+            android:layout_marginBottom="8dp">
 
             <ImageView
                 android:layout_width="22dp"
@@ -82,9 +78,7 @@
             android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginBottom="8dp"
-            android:elevation="4dp"
-            android:translationZ="3dp">
+            android:layout_marginBottom="8dp">
 
             <ImageView
                 android:layout_width="22dp"
@@ -121,9 +115,7 @@
             android:paddingEnd="12dp"
             android:background="@drawable/bg_soft_inset"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="4dp"
-            android:translationZ="3dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="22dp"
@@ -139,7 +131,7 @@
                 android:text="Logout"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/md3_primary" />
+                android:textColor="@color/text_white" />
 
             <ImageView
                 android:layout_width="20dp"
@@ -158,9 +150,7 @@
         android:layout_marginBottom="10dp"
         android:orientation="vertical"
         android:background="@drawable/bg_option_row_dark"
-        android:padding="16dp"
-        android:elevation="8dp"
-        android:translationZ="5dp">
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -183,9 +173,7 @@
             android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginBottom="8dp"
-            android:elevation="4dp"
-            android:translationZ="3dp">
+            android:layout_marginBottom="8dp">
 
             <ImageView
                 android:layout_width="22dp"
@@ -222,9 +210,7 @@
             android:paddingEnd="12dp"
             android:background="@drawable/bg_soft_inset"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="4dp"
-            android:translationZ="3dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="22dp"
@@ -240,7 +226,7 @@
                 android:text="Delete Account"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/md3_primary" />
+                android:textColor="@color/text_white" />
 
             <ImageView
                 android:layout_width="20dp"
@@ -259,9 +245,7 @@
         android:layout_marginBottom="10dp"
         android:orientation="vertical"
         android:background="@drawable/bg_option_row_dark"
-        android:padding="16dp"
-        android:elevation="8dp"
-        android:translationZ="5dp">
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -286,9 +270,7 @@
                 android:layout_weight="1"
                 android:padding="12dp"
                 android:background="@drawable/bg_soft_inset"
-                android:orientation="vertical"
-                android:elevation="4dp"
-                android:translationZ="3dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -333,9 +315,7 @@
                 android:layout_weight="1"
                 android:padding="12dp"
                 android:background="@drawable/bg_soft_inset"
-                android:orientation="vertical"
-                android:elevation="4dp"
-                android:translationZ="3dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -379,9 +359,7 @@
                 android:layout_weight="1"
                 android:padding="12dp"
                 android:background="@drawable/bg_soft_inset"
-                android:orientation="vertical"
-                android:elevation="4dp"
-                android:translationZ="3dp">
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -421,9 +399,7 @@
         android:layout_marginBottom="10dp"
         android:orientation="vertical"
         android:background="@drawable/bg_option_row_dark"
-        android:padding="16dp"
-        android:elevation="8dp"
-        android:translationZ="5dp">
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -446,9 +422,7 @@
             android:background="@drawable/bg_soft_inset"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginBottom="8dp"
-            android:elevation="4dp"
-            android:translationZ="3dp">
+            android:layout_marginBottom="8dp">
 
             <ImageView
                 android:layout_width="22dp"
@@ -485,9 +459,7 @@
             android:paddingEnd="12dp"
             android:background="@drawable/bg_soft_inset"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="4dp"
-            android:translationZ="3dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="22dp"
@@ -503,7 +475,7 @@
                 android:text="Reset Settings"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="@color/md3_primary" />
+                android:textColor="@color/text_white" />
 
             <ImageView
                 android:layout_width="20dp"
@@ -522,9 +494,7 @@
         android:layout_marginBottom="8dp"
         android:orientation="vertical"
         android:background="@drawable/bg_option_row_dark"
-        android:padding="16dp"
-        android:elevation="8dp"
-        android:translationZ="5dp">
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -544,9 +514,7 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:background="@drawable/bg_soft_inset"
-            android:layout_marginBottom="8dp"
-            android:elevation="4dp"
-            android:translationZ="3dp">
+            android:layout_marginBottom="8dp">
 
             <ImageView
                 android:layout_width="22dp"
@@ -586,9 +554,7 @@
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="4dp"
-            android:translationZ="3dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="22dp"

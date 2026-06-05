@@ -11,8 +11,6 @@
     android:paddingTop="22dp"
     android:paddingBottom="20dp"
     android:background="@drawable/bg_obsidian_card"
-    android:elevation="14dp"
-    android:translationZ="10dp"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -48,9 +46,7 @@
             android:layout_width="46dp"
             android:layout_height="46dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:elevation="8dp"
-            android:translationZ="5dp" />
+            android:background="@drawable/bg_icon_circle_dark" />
 
         <!-- Recording dot -->
         <ImageView
@@ -59,9 +55,7 @@
             android:layout_height="24dp"
             android:layout_centerInParent="true"
             android:src="@drawable/recording_indicator"
-            android:contentDescription="Recording"
-            android:elevation="12dp"
-            android:translationZ="8dp" />
+            android:contentDescription="Recording" />
 
     </RelativeLayout>
 
@@ -88,8 +82,6 @@
         android:textColor="@color/md3_on_surface"
         android:textStyle="bold"
         android:background="@drawable/bg_soft_inset"
-        android:elevation="8dp"
-        android:translationZ="5dp"
         android:paddingStart="18dp"
         android:paddingEnd="18dp" />
 

@@ -17,9 +17,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -47,8 +45,6 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
             android:background="@drawable/bg_option_row_dark"
-            android:elevation="8dp"
-            android:translationZ="5dp"
             android:layout_marginBottom="12dp">
 
             <TextView
@@ -56,8 +52,8 @@
                 android:layout_width="0dp"
                 android:layout_height="46dp"
                 android:layout_weight="1"
-                android:text="👍"
-                android:textSize="28sp"
+                android:text="+1"
+                android:textSize="12sp"
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
@@ -68,8 +64,8 @@
                 android:layout_width="0dp"
                 android:layout_height="46dp"
                 android:layout_weight="1"
-                android:text="❤️"
-                android:textSize="28sp"
+                android:text="Luv"
+                android:textSize="12sp"
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
@@ -80,8 +76,8 @@
                 android:layout_width="0dp"
                 android:layout_height="46dp"
                 android:layout_weight="1"
-                android:text="😂"
-                android:textSize="28sp"
+                android:text="Haha"
+                android:textSize="12sp"
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
@@ -92,8 +88,8 @@
                 android:layout_width="0dp"
                 android:layout_height="46dp"
                 android:layout_weight="1"
-                android:text="😮"
-                android:textSize="28sp"
+                android:text="Wow"
+                android:textSize="12sp"
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
@@ -104,8 +100,8 @@
                 android:layout_width="0dp"
                 android:layout_height="46dp"
                 android:layout_weight="1"
-                android:text="😢"
-                android:textSize="28sp"
+                android:text="Sad"
+                android:textSize="12sp"
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
@@ -116,8 +112,8 @@
                 android:layout_width="0dp"
                 android:layout_height="46dp"
                 android:layout_weight="1"
-                android:text="🔥"
-                android:textSize="28sp"
+                android:text="Fire"
+                android:textSize="12sp"
                 android:gravity="center"
                 android:clickable="true"
                 android:focusable="true"
@@ -134,9 +130,7 @@
             android:gravity="center"
             android:background="@drawable/bg_danger_option_row"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:focusable="true">
 
             <TextView
                 android:layout_width="match_parent"

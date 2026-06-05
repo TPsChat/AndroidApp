@@ -17,9 +17,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -43,9 +41,7 @@
             android:fillViewport="true"
             android:scrollbars="none"
             android:overScrollMode="never"
-            android:background="@drawable/bg_option_row_dark"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:background="@drawable/bg_option_row_dark">
 
             <android.widget.GridLayout
                 android:id="@+id/emoji_grid"

@@ -18,9 +18,7 @@
         android:paddingEnd="20dp"
         android:paddingTop="22dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -70,9 +68,7 @@
             android:background="@drawable/bg_option_row_dark"
             android:clickable="true"
             android:focusable="true"
-            android:layout_marginBottom="16dp"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:layout_marginBottom="16dp">
 
             <ImageView
                 android:layout_width="24dp"
@@ -133,8 +129,6 @@
                 android:background="@drawable/bg_reject_button_modern"
                 android:clickable="true"
                 android:focusable="true"
-                android:elevation="8dp"
-                android:translationZ="5dp"
                 android:layout_marginEnd="10dp">
 
                 <TextView
@@ -157,9 +151,7 @@
                 android:gravity="center"
                 android:background="@drawable/bg_new_message_button"
                 android:clickable="true"
-                android:focusable="true"
-                android:elevation="12dp"
-                android:translationZ="8dp">
+                android:focusable="true">
 
                 <TextView
                     android:layout_width="wrap_content"

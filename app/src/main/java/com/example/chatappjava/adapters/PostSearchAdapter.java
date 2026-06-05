@@ -146,9 +146,9 @@ public class PostSearchAdapter extends RecyclerView.Adapter<PostSearchAdapter.Po
         }
         
         // Engagement stats with emoji/icons
-        holder.tvLikes.setText("❤ " + post.getLikesCount());
-        holder.tvComments.setText("💬 " + post.getCommentsCount());
-        holder.tvShares.setText("📤 " + post.getSharesCount());
+        holder.tvLikes.setText(post.getLikesCount() + " likes");
+        holder.tvComments.setText(post.getCommentsCount() + " cmt");
+        holder.tvShares.setText(post.getSharesCount() + " share");
         
         // Timestamp
         if (post.getTimestamp() > 0) {

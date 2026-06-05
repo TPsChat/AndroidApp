@@ -187,16 +187,7 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
         }
         
         private int getStatusColor(String status) {
-            switch (status) {
-                case "ended":
-                    return ContextCompat.getColor(context, android.R.color.holo_green_dark);
-                case "declined":
-                case "missed":
-                case "cancelled":
-                    return ContextCompat.getColor(context, android.R.color.holo_red_dark);
-                default:
-                    return ContextCompat.getColor(context, android.R.color.darker_gray);
-            }
+            return ContextCompat.getColor(context, R.color.text_white);
         }
         
         private void setCallActionButton(Call call) {

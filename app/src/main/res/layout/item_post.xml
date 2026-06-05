@@ -8,7 +8,7 @@
     android:layout_marginTop="@dimen/spacing_xs"
     android:layout_marginEnd="@dimen/spacing_xs"
     android:layout_marginBottom="@dimen/spacing_xs"
-    android:background="@drawable/bg_glass_panel"
+    android:background="@drawable/bg_obsidian_card"
     android:clickable="true"
     android:clipChildren="false"
     android:clipToPadding="false"
@@ -36,8 +36,6 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/ic_profile_placeholder"
-                android:elevation="8dp"
-                android:translationZ="5dp"
                 app:civ_border_color="@color/md3_border_glow"
                 app:civ_border_width="2dp" />
 
@@ -61,7 +59,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:maxWidth="160dp"
-                        android:text="John Doe"
+                        android:text="Sophia Nguyen"
                         android:textColor="@color/md3_on_surface"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -74,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="5dp"
                         android:text=""
-                        android:textColor="@color/md3_primary"
+                        android:textColor="@color/text_white"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:clickable="true"
@@ -94,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="2 hours ago"
+                    android:text=""
                     android:textColor="@color/md3_on_surface_secondary"
                     android:textSize="12sp" />
 
@@ -109,8 +107,6 @@
                 android:src="@drawable/ic_more"
                 android:contentDescription="Post options"
                 android:padding="9dp"
-                android:elevation="6dp"
-                android:translationZ="4dp"
                 app:tint="@color/md3_secondary" />
 
         </LinearLayout>
@@ -127,7 +123,7 @@
                 android:id="@+id/tv_post_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="This is a sample post content. It can be multiline and will truncate if too long. Users can expand to see more."
+                android:text=""
                 android:textColor="@color/md3_on_surface"
                 android:textSize="15sp"
                 android:lineSpacingExtra="4dp"
@@ -142,8 +138,6 @@
                 android:layout_height="wrap_content"
                 android:minHeight="200dp"
                 android:background="@drawable/bg_soft_inset"
-                android:elevation="8dp"
-                android:translationZ="5dp"
                 android:visibility="gone"
                 android:clipToPadding="true"
                 android:clipChildren="true">
@@ -193,9 +187,6 @@
                         android:src="@android:drawable/ic_media_play"
                         android:contentDescription="Play video"
                         android:padding="18dp"
-                        android:elevation="12dp"
-                        android:translationZ="8dp"
-                        android:stateListAnimator="@animator/btn_shadow_animator"
                         app:tint="@color/md3_on_surface" />
 
                 </FrameLayout>

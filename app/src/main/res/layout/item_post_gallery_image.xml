@@ -8,7 +8,6 @@
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
     app:cardUseCompatPadding="false"
     app:cardBackgroundColor="@color/md3_surface_container">
 
@@ -44,9 +43,7 @@
                 android:textColor="@color/md3_on_surface"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:background="@drawable/bg_send_circle_modern"
-                android:elevation="12dp"
-                android:translationZ="8dp" />
+                android:background="@drawable/bg_send_circle_modern" />
 
         </FrameLayout>
 

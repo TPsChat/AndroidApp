@@ -1,136 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="6dp"
-    app:cardCornerRadius="18dp"
-    app:cardElevation="10dp"
-    app:cardUseCompatPadding="true"
-    app:cardBackgroundColor="@color/md3_surface_container">
+    android:layout_marginStart="@dimen/spacing_xs"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="@dimen/spacing_xs"
+    android:layout_marginBottom="4dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="210dp"
-        android:background="#05070A"
-        android:clipToPadding="false"
-        android:clipChildren="false">
+        android:background="@drawable/bg_obsidian_card"
+        android:clipChildren="false"
+        android:clipToPadding="false">
 
-        <!-- Video surface -->
-        <org.webrtc.SurfaceViewRenderer
-            android:id="@+id/sv_participant_video"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <!-- Placeholder when video is off -->
-        <LinearLayout
-            android:id="@+id/video_placeholder"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:background="#101722"
-            android:visibility="visible">
+            android:background="@color/video_stage">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_participant_avatar"
-                android:layout_width="96dp"
-                android:layout_height="96dp"
-                android:src="@drawable/ic_profile_placeholder"
-                android:elevation="12dp"
-                android:translationZ="8dp"
-                app:civ_border_color="@color/md3_border_glow"
-                app:civ_border_width="2dp" />
+            <org.webrtc.SurfaceViewRenderer
+                android:id="@+id/sv_participant_video"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-            <TextView
-                android:id="@+id/tv_participant_name_placeholder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="User"
-                android:textColor="@color/md3_on_surface"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginTop="12dp" />
+            <LinearLayout
+                android:id="@+id/video_placeholder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/video_stage_soft"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="visible">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Camera Off"
-                android:textColor="@color/md3_on_surface_secondary"
-                android:textSize="12sp"
-                android:layout_marginTop="4dp" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/iv_participant_avatar"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:src="@drawable/ic_profile_placeholder"
+                    app:civ_border_color="@color/md3_border_glow"
+                    app:civ_border_width="2dp" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_participant_name_placeholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="User"
+                    android:textColor="@color/text_white"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-        <!-- Connection quality indicator -->
-        <ImageView
-            android:id="@+id/iv_connection_quality"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="10dp"
-            android:src="@drawable/ic_signal"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:padding="8dp"
-            android:elevation="10dp"
-            android:translationZ="6dp"
-            android:visibility="gone"
-            app:tint="#22C55E" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Camera Off"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
 
-        <!-- Bottom info overlay -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/gradient_overlay"
-            android:orientation="horizontal"
-            android:paddingStart="12dp"
-            android:paddingEnd="10dp"
-            android:gravity="center_vertical">
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_participant_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="User Name"
-                android:textColor="@color/md3_on_surface"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:ellipsize="end" />
-
-            <!-- Muted indicator -->
             <ImageView
-                android:id="@+id/iv_muted_indicator"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/ic_mic_off"
+                android:id="@+id/iv_connection_quality"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="10dp"
                 android:background="@drawable/bg_icon_circle_dark"
                 android:padding="8dp"
-                android:elevation="10dp"
-                android:translationZ="6dp"
+                android:src="@drawable/ic_signal"
                 android:visibility="gone"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/success_color" />
 
-            <!-- Speaking indicator -->
-            <ImageView
-                android:id="@+id/iv_speaking_indicator"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
-                android:layout_marginStart="8dp"
-                android:src="@drawable/ic_volume"
-                android:background="@drawable/bg_icon_circle_dark"
-                android:padding="8dp"
-                android:elevation="10dp"
-                android:translationZ="6dp"
-                android:visibility="gone"
-                app:tint="#22C55E" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/gradient_overlay"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="12dp"
+                android:paddingEnd="10dp">
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tv_participant_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="User Name"
+                    android:textColor="@color/text_white"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/iv_muted_indicator"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="@dimen/spacing_xs"
+                    android:background="@drawable/bg_icon_circle_dark"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_mic_off"
+                    android:visibility="gone"
+                    app:tint="@color/md3_primary" />
+
+                <ImageView
+                    android:id="@+id/iv_speaking_indicator"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:layout_marginStart="@dimen/spacing_xs"
+                    android:background="@drawable/bg_icon_circle_dark"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_volume"
+                    android:visibility="gone"
+                    app:tint="@color/success_color" />
+
+            </LinearLayout>
+
+        </FrameLayout>
 
     </RelativeLayout>
 
-</androidx.cardview.widget.CardView>
+</FrameLayout>

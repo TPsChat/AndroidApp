@@ -18,9 +18,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -46,8 +44,6 @@
             android:paddingStart="14dp"
             android:paddingEnd="10dp"
             android:background="@drawable/bg_option_row_dark"
-            android:elevation="8dp"
-            android:translationZ="5dp"
             android:layout_marginBottom="12dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -55,8 +51,6 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:src="@drawable/ic_profile_placeholder"
-                android:elevation="8dp"
-                android:translationZ="5dp"
                 app:civ_border_width="1.5dp"
                 app:civ_border_color="@color/md3_border_glow" />
 
@@ -99,9 +93,6 @@
                 android:contentDescription="Close"
                 android:background="@drawable/bg_icon_circle_dark"
                 android:padding="10dp"
-                android:elevation="8dp"
-                android:translationZ="5dp"
-                android:stateListAnimator="@animator/btn_shadow_animator"
                 app:tint="@color/md3_primary" />
 
         </LinearLayout>
@@ -118,9 +109,7 @@
             android:paddingEnd="14dp"
             android:background="@drawable/bg_option_row_dark"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="24dp"
@@ -153,16 +142,14 @@
             android:background="@drawable/bg_option_row_dark"
             android:visibility="gone"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_sort_by_size"
                 android:layout_marginEnd="12dp"
-                app:tint="#FFA500" />
+                app:tint="@color/warning_color" />
 
             <TextView
                 android:layout_width="0dp"
@@ -170,7 +157,7 @@
                 android:layout_weight="1"
                 android:text="Transfer Ownership"
                 android:textSize="15sp"
-                android:textColor="@color/text_white"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold" />
 
         </LinearLayout>
@@ -188,9 +175,7 @@
             android:background="@drawable/bg_option_row_dark"
             android:visibility="gone"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="24dp"
@@ -223,9 +208,7 @@
             android:background="@drawable/bg_option_row_dark"
             android:visibility="gone"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="24dp"
@@ -257,16 +240,14 @@
             android:background="@drawable/bg_danger_option_row"
             android:visibility="gone"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp">
+            android:focusable="true">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:src="@android:drawable/ic_menu_delete"
                 android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/md3_error" />
 
             <TextView
                 android:layout_width="0dp"

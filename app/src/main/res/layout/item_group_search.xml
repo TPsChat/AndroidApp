@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="6dp"
+    android:layout_marginStart="@dimen/spacing_xs"
+    android:layout_marginEnd="@dimen/spacing_xs"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:orientation="vertical"
     android:clickable="true"
     android:focusable="true"
@@ -26,8 +26,6 @@
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
         android:background="@drawable/bg_obsidian_card"
-        android:elevation="8dp"
-        android:translationZ="5dp"
         android:clipToPadding="false"
         android:clipChildren="false">
 
@@ -37,8 +35,6 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:src="@drawable/ic_group_avatar"
-            android:elevation="8dp"
-            android:translationZ="5dp"
             app:civ_border_color="@color/md3_border_glow"
             app:civ_border_width="1.5dp" />
 
@@ -104,9 +100,6 @@
             android:paddingEnd="18dp"
             android:background="@drawable/bg_new_message_button"
             android:backgroundTint="@null"
-            android:elevation="10dp"
-            android:translationZ="6dp"
-            android:stateListAnimator="@animator/btn_shadow_animator"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:visibility="gone" />

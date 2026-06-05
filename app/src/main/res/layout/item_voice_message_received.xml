@@ -11,8 +11,6 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:minHeight="52dp"
-    android:elevation="8dp"
-    android:translationZ="5dp"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -27,8 +25,6 @@
         android:contentDescription="Play voice message"
         android:padding="9dp"
         android:layout_marginEnd="12dp"
-        android:elevation="8dp"
-        android:translationZ="5dp"
         app:tint="@color/md3_primary" />
 
     <!-- Progress Bar -->

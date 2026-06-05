@@ -187,7 +187,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             // Update like button state
             if (comment.isLiked()) {
                 tvCommentLike.setText("Liked");
-                tvCommentLike.setTextColor(itemView.getContext().getColor(R.color.icon_like_active));
+                tvCommentLike.setTextColor(itemView.getContext().getColor(R.color.text_white));
             } else {
                 tvCommentLike.setText("Like");
                 tvCommentLike.setTextColor(itemView.getContext().getColor(R.color.text_secondary));
@@ -401,7 +401,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             // Update like button
             if (reply.isLiked()) {
                 tvReplyLike.setText("Liked");
-                tvReplyLike.setTextColor(replyView.getContext().getColor(R.color.icon_like_active));
+                tvReplyLike.setTextColor(replyView.getContext().getColor(R.color.text_white));
             } else {
                 tvReplyLike.setText("Like");
                 tvReplyLike.setTextColor(replyView.getContext().getColor(R.color.text_secondary));
@@ -435,7 +435,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             // Pattern to match @username (alphanumeric and underscore, 1-30 chars)
             Pattern mentionPattern = Pattern.compile("@([a-zA-Z0-9_]{1,30})");
             Matcher matcher = mentionPattern.matcher(text);
-            int mentionColor = 0xFF2d6bb3; // #2d6bb3
+            int mentionColor = context.getColor(R.color.text_white);
 
             while (matcher.find()) {
                 int start = matcher.start();
@@ -505,7 +505,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
             
             // Style: blue color and bold
             android.text.style.StyleSpan styleSpan = new android.text.style.StyleSpan(android.graphics.Typeface.BOLD);
-            android.text.style.ForegroundColorSpan colorSpan = new android.text.style.ForegroundColorSpan(0xFF2D6BB3); // Primary blue color
+            android.text.style.ForegroundColorSpan colorSpan = new android.text.style.ForegroundColorSpan(textView.getContext().getColor(R.color.text_white));
             
             spannable.setSpan(colorSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(styleSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

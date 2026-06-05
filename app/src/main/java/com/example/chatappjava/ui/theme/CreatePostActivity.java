@@ -656,7 +656,7 @@ public class CreatePostActivity extends AppCompatActivity {
             if (tvImageCount != null) {
                 tvImageCount.setText(selectedMedia.size() + " / " + MAX_IMAGES + " images");
                 if (selectedMedia.size() >= MAX_IMAGES) {
-                    tvImageCount.setTextColor(getResources().getColor(R.color.icon_like));
+                    tvImageCount.setTextColor(getResources().getColor(R.color.text_white));
                 } else {
                     tvImageCount.setTextColor(getResources().getColor(R.color.text_secondary));
                 }

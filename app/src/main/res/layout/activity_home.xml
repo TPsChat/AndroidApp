@@ -67,7 +67,7 @@
             android:padding="10dp"
             android:scaleType="centerInside"
             android:src="@drawable/ic_add"
-            app:tint="@color/text_white" />
+            app:tint="@color/icon_utility_dark" />
 
     </LinearLayout>
 

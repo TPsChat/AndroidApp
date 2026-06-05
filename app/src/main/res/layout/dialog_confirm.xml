@@ -17,9 +17,7 @@
         android:paddingEnd="20dp"
         android:paddingTop="22dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -72,10 +70,7 @@
                 android:background="@drawable/bg_reject_button_modern"
                 android:backgroundTint="@null"
                 android:paddingStart="18dp"
-                android:paddingEnd="18dp"
-                android:elevation="8dp"
-                android:translationZ="5dp"
-                android:stateListAnimator="@animator/btn_shadow_animator" />
+                android:paddingEnd="18dp" />
 
             <Space
                 android:layout_width="10dp"
@@ -94,10 +89,7 @@
                 android:background="@drawable/bg_new_message_button"
                 android:backgroundTint="@null"
                 android:paddingStart="22dp"
-                android:paddingEnd="22dp"
-                android:elevation="12dp"
-                android:translationZ="8dp"
-                android:stateListAnimator="@animator/btn_shadow_animator" />
+                android:paddingEnd="22dp" />
 
         </LinearLayout>
 

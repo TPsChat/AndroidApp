@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginTop="6dp"
-    android:layout_marginBottom="6dp"
+    android:layout_marginStart="@dimen/spacing_xs"
+    android:layout_marginEnd="@dimen/spacing_xs"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="vertical"
     android:clickable="true"
@@ -24,10 +24,8 @@
         android:paddingEnd="12dp"
         android:paddingTop="12dp"
         android:paddingBottom="12dp"
-        android:background="@drawable/bg_option_row_dark"
+        android:background="@drawable/bg_obsidian_card"
         android:gravity="center_vertical"
-        android:elevation="8dp"
-        android:translationZ="5dp"
         android:clipToPadding="false"
         android:clipChildren="false">
 
@@ -38,8 +36,6 @@
             android:layout_height="52dp"
             android:layout_marginEnd="14dp"
             android:src="@drawable/ic_profile_placeholder"
-            android:elevation="8dp"
-            android:translationZ="5dp"
             app:civ_border_width="1.5dp"
             app:civ_border_color="@color/md3_border_glow" />
 
@@ -62,7 +58,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="John Doe"
+                    android:text="Mateo Castillo"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/md3_on_surface"
@@ -74,8 +70,8 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:text="📹"
+                    android:layout_marginStart="@dimen/spacing_xs"
+                    android:text="VID"
                     android:textSize="15sp"
                     android:background="@drawable/bg_icon_circle_transparent" />
 
@@ -87,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginTop="6dp">
+                android:layout_marginTop="4dp">
 
                 <TextView
                     android:id="@+id/tv_call_status"
@@ -107,7 +103,7 @@
                     android:text="2:30"
                     android:textSize="13sp"
                     android:textColor="@color/md3_on_surface"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginStart="@dimen/spacing_xs" />
 
             </LinearLayout>
 
@@ -139,9 +135,6 @@
                 android:contentDescription="Call"
                 android:scaleType="centerInside"
                 android:padding="10dp"
-                android:elevation="10dp"
-                android:translationZ="6dp"
-                android:stateListAnimator="@animator/btn_shadow_animator"
                 app:tint="@color/md3_on_surface" />
 
         </LinearLayout>

@@ -17,9 +17,7 @@
         android:paddingEnd="18dp"
         android:paddingTop="20dp"
         android:paddingBottom="18dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:elevation="14dp"
-        android:translationZ="10dp">
+        android:background="@drawable/bg_obsidian_card">
 
         <!-- Title -->
         <TextView
@@ -47,9 +45,7 @@
             android:paddingEnd="14dp"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
-            android:background="@drawable/bg_option_row_dark"
-            android:elevation="8dp"
-            android:translationZ="5dp" />
+            android:background="@drawable/bg_option_row_dark" />
 
         <!-- Close Button -->
         <LinearLayout
@@ -65,10 +61,7 @@
             android:paddingEnd="18dp"
             android:background="@drawable/bg_reject_button_modern"
             android:clickable="true"
-            android:focusable="true"
-            android:elevation="8dp"
-            android:translationZ="5dp"
-            android:stateListAnimator="@animator/btn_shadow_animator">
+            android:focusable="true">
 
             <TextView
                 android:layout_width="wrap_content"

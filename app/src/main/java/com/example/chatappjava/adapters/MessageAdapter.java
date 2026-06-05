@@ -798,7 +798,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
 
         private void showQuickReactions(Context context, View anchor, Message message) {
-            String[] emojis = {"👍", "❤️", "😂", "😮", "😢", "🔥"};
+            String[] emojis = {"+1", "Luv", "Haha", "Wow", "Sad", "Fire"};
             android.widget.PopupMenu menu = new android.widget.PopupMenu(context, anchor);
             for (int i = 0; i < emojis.length; i++) {
                 menu.getMenu().add(0, 1000 + i, i, emojis[i]);
@@ -987,7 +987,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 } else if (container != null) {
                     android.widget.TextView empty = new android.widget.TextView(context);
                     empty.setText("No reactions");
-                    empty.setTextColor(0xFF888888);
+                    empty.setTextColor(android.graphics.Color.WHITE);
                     empty.setPadding(dp(context, 8), dp(context, 8), dp(context, 8), dp(context, 8));
                     container.addView(empty);
                 }
@@ -995,7 +995,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 if (container != null) {
                     android.widget.TextView empty = new android.widget.TextView(context);
                     empty.setText("No reactions");
-                    empty.setTextColor(0xFF888888);
+                    empty.setTextColor(android.graphics.Color.WHITE);
                     empty.setPadding(dp(context, 8), dp(context, 8), dp(context, 8), dp(context, 8));
                     container.addView(empty);
                 }
@@ -1091,16 +1091,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             int end = postLinkMatcher.end();
             String postId = postLinkMatcher.group(1);
             
-            // Use white color and bold style for post links
             android.text.style.StyleSpan styleSpan = new android.text.style.StyleSpan(android.graphics.Typeface.BOLD);
-            android.text.style.ForegroundColorSpan colorSpan = new android.text.style.ForegroundColorSpan(0xFFFFFFFF); // white color
-            
-            if (isSent) {
-                // On sent bubble (usually colored background), white text with bold
-                spannable.setSpan(colorSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else {
-                spannable.setSpan(colorSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
+            int linkColor = 0xFFFFFFFF;
+            android.text.style.ForegroundColorSpan colorSpan = new android.text.style.ForegroundColorSpan(linkColor);
+            spannable.setSpan(colorSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(styleSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             // Clickable span to open post detail
@@ -1175,13 +1169,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     String fileType = getFileTypeFromMime(mimeType);
                     String sizeStr = formatFileSize(fileSize);
                     
-                    return "📄 " + originalName + "\n" + fileType + " • " + sizeStr;
+                    return originalName + "\n" + fileType + " • " + sizeStr;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "📄 File";
+        return "File";
     }
     
     private static String[] parseFileDataFromMessage(Message message) {

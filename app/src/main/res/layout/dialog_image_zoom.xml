@@ -33,9 +33,6 @@
         android:focusable="true"
         android:src="@drawable/ic_close"
         android:contentDescription="Close"
-        android:elevation="14dp"
-        android:translationZ="10dp"
-        android:stateListAnimator="@animator/btn_shadow_animator"
         app:tint="@color/md3_primary" />
 
 </RelativeLayout>

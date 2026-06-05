@@ -27,8 +27,6 @@
         android:layout_marginEnd="18dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:elevation="12dp"
-        android:translationZ="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -41,9 +39,6 @@
             android:background="@drawable/bg_icon_circle_dark"
             android:padding="11dp"
             android:contentDescription="Back"
-            android:elevation="12dp"
-            android:translationZ="8dp"
-            android:stateListAnimator="@animator/btn_shadow_animator"
             app:tint="@color/md3_primary" />
 
         <TextView
@@ -66,17 +61,14 @@
             android:gravity="center"
             android:text="Create"
             android:textAllCaps="false"
-            android:textColor="@color/md3_on_surface"
+            android:textColor="@color/md3_on_primary"
             android:textSize="14sp"
             android:textStyle="bold"
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:clickable="true"
             android:focusable="true"
-            android:background="@drawable/bg_new_message_button"
-            android:elevation="12dp"
-            android:translationZ="8dp"
-            android:stateListAnimator="@animator/btn_shadow_animator" />
+            android:background="@drawable/bg_new_message_button" />
 
     </LinearLayout>
 
@@ -104,9 +96,7 @@
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:elevation="12dp"
-            android:translationZ="8dp">
+            android:paddingBottom="20dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -223,9 +213,7 @@
             android:paddingStart="18dp"
             android:paddingEnd="18dp"
             android:paddingTop="20dp"
-            android:paddingBottom="14dp"
-            android:elevation="12dp"
-            android:translationZ="8dp">
+            android:paddingBottom="14dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -250,12 +238,10 @@
                 android:layout_height="52dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:background="@drawable/bg_soft_inset"
+                android:background="@drawable/bg_glass_search"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
-                android:layout_marginBottom="12dp"
-                android:elevation="8dp"
-                android:translationZ="5dp">
+                android:layout_marginBottom="12dp">
 
                 <ImageView
                     android:layout_width="20dp"
