@@ -18,54 +18,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Header floating -->
-    <LinearLayout
+    <include
         android:id="@+id/header_card"
+        layout="@layout/component_flat_header"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="18dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:src="@drawable/ic_back"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:padding="11dp"
-            android:contentDescription="Back"
-            app:tint="@color/md3_primary" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="14dp"
-            android:text="Blocked Users"
-            android:textColor="@color/md3_on_surface"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:maxLines="1"
-            android:ellipsize="end" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Content Area -->
     <LinearLayout
         android:id="@+id/content_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="@dimen/margin_mobile"
-        android:layout_marginTop="@dimen/spacing_md"
-        android:layout_marginEnd="@dimen/margin_mobile"
-        android:layout_marginBottom="@dimen/spacing_md"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/header_card"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -90,51 +56,13 @@
                 android:visibility="gone"
                 android:indeterminateTint="@color/md3_primary" />
 
-            <!-- Empty State -->
-            <LinearLayout
+            <include
                 android:id="@+id/empty_state"
-                android:layout_width="match_parent"
+                layout="@layout/component_empty_state"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginStart="18dp"
-                android:layout_marginEnd="18dp"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:paddingStart="28dp"
-                android:paddingEnd="28dp"
-                android:paddingTop="34dp"
-                android:paddingBottom="34dp"
-                android:visibility="gone"
-                android:background="@drawable/bg_obsidian_card">
-
-                <ImageView
-                    android:layout_width="68dp"
-                    android:layout_height="68dp"
-                    android:src="@android:drawable/ic_menu_view"
-                    android:layout_marginBottom="14dp"
-                    android:padding="16dp"
-                    android:background="@drawable/bg_icon_circle_dark"
-                    app:tint="@color/md3_primary" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="No Blocked Users"
-                    android:textSize="21sp"
-                    android:textColor="@color/md3_on_surface"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="You haven't blocked anyone yet"
-                    android:textSize="14sp"
-                    android:textColor="@color/md3_on_surface_secondary"
-                    android:textAlignment="center"
-                    android:gravity="center" />
-
-            </LinearLayout>
+                android:visibility="gone" />
 
             <!-- List -->
             <androidx.recyclerview.widget.RecyclerView

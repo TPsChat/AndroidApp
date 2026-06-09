@@ -23,6 +23,9 @@ public class DatabaseManager {
     private static final String KEY_OVERRIDE_SERVER_PORT = "overrideServerPort";
     private static final String KEY_OVERRIDE_USE_HTTPS = "overrideUseHttps";
     private static final String KEY_OVERRIDE_USE_WSS = "overrideUseWss";
+    private static final String KEY_NOTIFY_PUSH = "notifyPushEnabled";
+    private static final String KEY_NOTIFY_SOUND = "notifySoundEnabled";
+    private static final String KEY_NOTIFY_VIBRATE = "notifyVibrateEnabled";
     
     private final DatabaseHelper dbHelper;
     private final Context context;
@@ -304,6 +307,38 @@ public class DatabaseManager {
         remove(KEY_OVERRIDE_SERVER_PORT);
         remove(KEY_OVERRIDE_USE_HTTPS);
         remove(KEY_OVERRIDE_USE_WSS);
+    }
+
+    // ===== Notification preferences =====
+
+    public boolean isPushNotificationsEnabled() {
+        return getBoolean(KEY_NOTIFY_PUSH, true);
+    }
+
+    public void setPushNotificationsEnabled(boolean enabled) {
+        putBoolean(KEY_NOTIFY_PUSH, enabled);
+    }
+
+    public boolean isSoundNotificationsEnabled() {
+        return getBoolean(KEY_NOTIFY_SOUND, true);
+    }
+
+    public void setSoundNotificationsEnabled(boolean enabled) {
+        putBoolean(KEY_NOTIFY_SOUND, enabled);
+    }
+
+    public boolean isVibrateNotificationsEnabled() {
+        return getBoolean(KEY_NOTIFY_VIBRATE, true);
+    }
+
+    public void setVibrateNotificationsEnabled(boolean enabled) {
+        putBoolean(KEY_NOTIFY_VIBRATE, enabled);
+    }
+
+    public void resetNotificationSettings() {
+        remove(KEY_NOTIFY_PUSH);
+        remove(KEY_NOTIFY_SOUND);
+        remove(KEY_NOTIFY_VIBRATE);
     }
 }
 

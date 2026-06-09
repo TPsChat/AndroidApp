@@ -92,7 +92,7 @@ public class PrivateChatActivity extends BaseChatActivity {
                         // Reset UI if this event corresponds to current call
                         if (currentCallId != null && currentCallId.equals(callId)) {
                             android.util.Log.d("PrivateChatActivity", "Call declined, resetting UI");
-                            Toast.makeText(PrivateChatActivity.this, "Call declined", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PrivateChatActivity.this, getString(R.string.msg_call_declined), Toast.LENGTH_SHORT).show();
                             com.example.chatappjava.network.SocketManager sm = com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
                             if (sm != null) sm.resetActiveCall();
                             currentCallId = null;
@@ -103,7 +103,7 @@ public class PrivateChatActivity extends BaseChatActivity {
                             boolean isCancelVisible = ivCancelCall != null && ivCancelCall.getVisibility() == View.VISIBLE;
                             if (isCancelVisible) {
                                 android.util.Log.w("PrivateChatActivity", "CallDeclined for different callId but UI shows calling. Forcing reset.");
-                                Toast.makeText(PrivateChatActivity.this, "Call declined", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PrivateChatActivity.this, getString(R.string.msg_call_declined), Toast.LENGTH_SHORT).show();
                                 com.example.chatappjava.network.SocketManager sm = com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
                                 if (sm != null) sm.resetActiveCall();
                                 currentCallId = null;
@@ -119,7 +119,7 @@ public class PrivateChatActivity extends BaseChatActivity {
                     runOnUiThread(() -> {
                         if (currentCallId != null && currentCallId.equals(callId) && !isJoiningCall) {
                             android.util.Log.d("PrivateChatActivity", "Call ended, resetting UI");
-                            Toast.makeText(PrivateChatActivity.this, "Call ended", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PrivateChatActivity.this, getString(R.string.msg_call_ended), Toast.LENGTH_SHORT).show();
                             com.example.chatappjava.network.SocketManager sm = com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
                             if (sm != null) sm.resetActiveCall();
                             currentCallId = null;
@@ -152,7 +152,7 @@ public class PrivateChatActivity extends BaseChatActivity {
                 public void onFailure(@NonNull okhttp3.Call call, java.io.IOException e) {
                     runOnUiThread(() -> {
                         android.util.Log.e("PrivateChatActivity", "Failed to cancel call", e);
-                        Toast.makeText(PrivateChatActivity.this, "Failed to cancel call", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PrivateChatActivity.this, getString(R.string.error_failed_to_cancel_call), Toast.LENGTH_SHORT).show();
                         isJoiningCall = false; // Reset flag on failure
                     });
                 }
@@ -161,10 +161,10 @@ public class PrivateChatActivity extends BaseChatActivity {
                 public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws java.io.IOException {
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-                            Toast.makeText(PrivateChatActivity.this, "Call cancelled", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PrivateChatActivity.this, getString(R.string.msg_call_cancelled), Toast.LENGTH_SHORT).show();
                         } else {
                             android.util.Log.e("PrivateChatActivity", "Failed to cancel call: " + response.code());
-                            Toast.makeText(PrivateChatActivity.this, "Failed to cancel call", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PrivateChatActivity.this, getString(R.string.error_failed_to_cancel_call), Toast.LENGTH_SHORT).show();
                         }
                         com.example.chatappjava.network.SocketManager sm = com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
                         if (sm != null) sm.resetActiveCall();
@@ -303,7 +303,7 @@ public class PrivateChatActivity extends BaseChatActivity {
     @Override
     protected void handleVideoCall() {
         if (currentChat == null) {
-            Toast.makeText(this, "Chat not loaded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_chat_not_loaded), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -339,14 +339,14 @@ public class PrivateChatActivity extends BaseChatActivity {
         }
         
         if (otherUserId == null) {
-            Toast.makeText(this, "Unable to get other user info", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_unable_to_get_other_user_info), Toast.LENGTH_SHORT).show();
             return;
         }
         
         // Initiate call
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Authentication required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_authentication_required), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -362,7 +362,7 @@ public class PrivateChatActivity extends BaseChatActivity {
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 runOnUiThread(() -> {
                     android.util.Log.e("PrivateChatActivity", "Failed to initiate call", e);
-                    Toast.makeText(PrivateChatActivity.this, "Failed to start call", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PrivateChatActivity.this, getString(R.string.error_failed_to_start_call), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -393,7 +393,7 @@ public class PrivateChatActivity extends BaseChatActivity {
                         }
                     } catch (org.json.JSONException e) {
                         android.util.Log.e("PrivateChatActivity", "Error parsing call response", e);
-                        Toast.makeText(PrivateChatActivity.this, "Error starting call", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PrivateChatActivity.this, getString(R.string.error_error_starting_call), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -405,7 +405,7 @@ public class PrivateChatActivity extends BaseChatActivity {
         android.util.Log.d("PrivateChatActivity", "showChatInfo: currentUserId = " + currentUserId);
         
         if (currentChat == null || !currentChat.isPrivateChat()) {
-            Toast.makeText(this, "Invalid chat", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_invalid_chat), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -442,7 +442,7 @@ public class PrivateChatActivity extends BaseChatActivity {
         if (otherUserId == null || otherUserId.equals(currentUserId)) {
             android.util.Log.e("PrivateChatActivity", "showChatInfo: Cannot determine other user ID. currentUserId: " + 
                 currentUserId + ", participantIds: " + (currentChat.getParticipantIds() != null ? currentChat.getParticipantIds().toString() : "null"));
-            Toast.makeText(this, "Cannot identify other user", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_identify_other_user), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -468,7 +468,7 @@ public class PrivateChatActivity extends BaseChatActivity {
     private void fetchAndShowUserProfile(String userId) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -477,7 +477,7 @@ public class PrivateChatActivity extends BaseChatActivity {
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     android.util.Log.e("PrivateChatActivity", "Failed to fetch user profile: " + e.getMessage());
-                    Toast.makeText(PrivateChatActivity.this, "Cannot load user information", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PrivateChatActivity.this, getString(R.string.error_cannot_load_user_information), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -509,23 +509,23 @@ public class PrivateChatActivity extends BaseChatActivity {
                                     startActivity(intent);
                                 } catch (Exception e) {
                                     android.util.Log.e("PrivateChatActivity", "Error opening profile: " + e.getMessage());
-                                    Toast.makeText(PrivateChatActivity.this, "Error opening profile", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PrivateChatActivity.this, getString(R.string.error_error_opening_profile), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } else {
                             runOnUiThread(() -> {
-                                Toast.makeText(PrivateChatActivity.this, "User information not found", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PrivateChatActivity.this, getString(R.string.error_user_information_not_found), Toast.LENGTH_SHORT).show();
                             });
                         }
                     } catch (Exception e) {
                         android.util.Log.e("PrivateChatActivity", "Error parsing user data: " + e.getMessage());
                         runOnUiThread(() -> {
-                            Toast.makeText(PrivateChatActivity.this, "Data processing error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PrivateChatActivity.this, getString(R.string.msg_data_processing_error), Toast.LENGTH_SHORT).show();
                         });
                     }
                 } else {
                     runOnUiThread(() -> {
-                        Toast.makeText(PrivateChatActivity.this, "Cannot load user information", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PrivateChatActivity.this, getString(R.string.error_cannot_load_user_information), Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -534,7 +534,7 @@ public class PrivateChatActivity extends BaseChatActivity {
     
     private void confirmDeleteChat() {
         if (currentChat == null) {
-            Toast.makeText(this, "Chat not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_chat_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -553,7 +553,7 @@ public class PrivateChatActivity extends BaseChatActivity {
     private void deleteChat() {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         apiClient.deleteChat(token, currentChat.getId(), new Callback() {
@@ -561,10 +561,10 @@ public class PrivateChatActivity extends BaseChatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
-                        Toast.makeText(PrivateChatActivity.this, "Chat deleted successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PrivateChatActivity.this, getString(R.string.success_chat_deleted_successfully), Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
-                        Toast.makeText(PrivateChatActivity.this, "Failed to delete chat", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PrivateChatActivity.this, getString(R.string.error_failed_to_delete_chat), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -572,7 +572,7 @@ public class PrivateChatActivity extends BaseChatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(PrivateChatActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PrivateChatActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -580,7 +580,7 @@ public class PrivateChatActivity extends BaseChatActivity {
     
     private void confirmUnfriend() {
         if (otherUser == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_user_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -597,14 +597,14 @@ public class PrivateChatActivity extends BaseChatActivity {
     }
     
     private void unfriendUser() {
-        Toast.makeText(this, "Unfriending...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_unfriending), Toast.LENGTH_SHORT).show();
         
         String token = databaseManager.getToken();
         String otherUserId = otherUser != null ? otherUser.getId() : 
                            (currentChat.getOtherParticipant() != null ? currentChat.getOtherParticipant().getId() : null);
         
         if (otherUserId == null) {
-            Toast.makeText(this, "User ID not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_user_id_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -613,10 +613,10 @@ public class PrivateChatActivity extends BaseChatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 runOnUiThread(() -> {
                     if (response.code() == 200) {
-                        Toast.makeText(PrivateChatActivity.this, "Unfriended successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PrivateChatActivity.this, getString(R.string.success_unfriended), Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
-                        Toast.makeText(PrivateChatActivity.this, "Failed to unfriend", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PrivateChatActivity.this, getString(R.string.error_unfriend), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -624,7 +624,7 @@ public class PrivateChatActivity extends BaseChatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(PrivateChatActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PrivateChatActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 });
             }
         });

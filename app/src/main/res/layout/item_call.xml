@@ -4,140 +4,127 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_xs"
-    android:layout_marginEnd="@dimen/spacing_xs"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:orientation="vertical"
+    android:background="@drawable/bg_list_row_divider"
     android:clickable="true"
-    android:focusable="true"
+    android:clipChildren="false"
     android:clipToPadding="false"
-    android:clipChildren="false">
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/list_row_min_height"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/margin_mobile"
+    android:paddingTop="@dimen/spacing_sm"
+    android:paddingEnd="@dimen/margin_mobile"
+    android:paddingBottom="@dimen/spacing_sm">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_call_avatar"
+        android:layout_width="@dimen/avatar_sm"
+        android:layout_height="@dimen/avatar_sm"
+        android:layout_marginEnd="@dimen/spacing_md"
+        android:contentDescription="@string/call_caller_avatar_cd"
+        android:src="@drawable/ic_profile_placeholder"
+        app:civ_border_color="@color/md3_border_subtle"
+        app:civ_border_width="@dimen/avatar_border_width_sm" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="86dp"
-        android:orientation="horizontal"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="12dp"
-        android:paddingBottom="12dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:gravity="center_vertical"
-        android:clipToPadding="false"
-        android:clipChildren="false">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <!-- Avatar -->
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_call_avatar"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_marginEnd="14dp"
-            android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_width="1.5dp"
-            app:civ_border_color="@color/md3_border_glow" />
-
-        <!-- Call Info -->
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <!-- Name and Call Type -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/tv_call_name"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Mateo Castillo"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
-                    android:maxLines="1"
-                    android:ellipsize="end" />
-
-                <TextView
-                    android:id="@+id/tv_call_type_icon"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:gravity="center"
-                    android:layout_marginStart="@dimen/spacing_xs"
-                    android:text="VID"
-                    android:textSize="15sp"
-                    android:background="@drawable/bg_icon_circle_transparent" />
-
-            </LinearLayout>
-
-            <!-- Status and Duration -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="4dp">
-
-                <TextView
-                    android:id="@+id/tv_call_status"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Completed"
-                    android:textSize="13sp"
-                    android:textColor="@color/md3_on_surface_secondary"
-                    android:maxLines="1"
-                    android:ellipsize="end" />
-
-                <TextView
-                    android:id="@+id/tv_call_duration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2:30"
-                    android:textSize="13sp"
-                    android:textColor="@color/md3_on_surface"
-                    android:layout_marginStart="@dimen/spacing_xs" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <!-- Time and Action -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="12dp"
-            android:gravity="center">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_call_time"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_call_name"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="14:30"
-                android:textSize="12sp"
-                android:textColor="@color/md3_on_surface_secondary"
-                android:layout_marginBottom="8dp" />
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:maxLines="1"
+                android:textColor="@color/md3_on_surface"
+                android:textSize="@dimen/text_body_large"
+                android:textStyle="bold"
+                tools:text="Mateo Castillo" />
 
-            <ImageButton
-                android:id="@+id/btn_call_action"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:background="@drawable/bg_send_circle_modern"
-                android:src="@drawable/ic_call"
-                android:contentDescription="Call"
-                android:scaleType="centerInside"
-                android:padding="10dp"
-                app:tint="@color/md3_on_surface" />
+            <TextView
+                android:id="@+id/tv_call_type_icon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="@dimen/spacing_xs"
+                android:background="@drawable/bg_icon_circle_transparent"
+                android:gravity="center"
+                android:importantForAccessibility="no"
+                android:textSize="@dimen/text_auth_subtitle"
+                tools:text="VID" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/list_item_margin"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_call_status"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:maxLines="1"
+                android:textColor="@color/md3_on_surface_secondary"
+                android:textSize="@dimen/text_banner"
+                tools:text="Completed" />
+
+            <TextView
+                android:id="@+id/tv_call_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_xs"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:textColor="@color/md3_on_surface"
+                android:textSize="@dimen/text_banner"
+                tools:text="2:30" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_sm"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_call_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_xs"
+            android:fontFamily="@font/plus_jakarta_sans"
+            android:textColor="@color/md3_on_surface_secondary"
+            android:textSize="@dimen/text_timestamp"
+            tools:text="14:30" />
+
+        <ImageButton
+            android:id="@+id/btn_call_action"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:background="@drawable/bg_send_circle_modern"
+            android:contentDescription="@string/video_call_description"
+            android:padding="@dimen/icon_button_inset"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_call"
+            app:tint="@color/md3_on_surface" />
 
     </LinearLayout>
 

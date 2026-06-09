@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatappjava.R;
@@ -18,6 +19,7 @@ import com.example.chatappjava.utils.AvatarManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,11 +50,12 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
         this.currentUserId = currentUserId;
     }
     
-    @SuppressLint("NotifyDataSetChanged")
     public void updateCalls(List<Call> newCallList) {
-        this.callList.clear();
-        this.callList.addAll(newCallList);
-        notifyDataSetChanged();
+        List<Call> incoming = newCallList != null ? new ArrayList<>(newCallList) : new ArrayList<>();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CallDiffCallback(callList, incoming));
+        callList.clear();
+        callList.addAll(incoming);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     @NonNull
@@ -121,7 +124,9 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
                 ivCallAvatar.setImageResource(R.drawable.ic_profile_placeholder);
             }
             
-            tvCallName.setText(call.getDisplayName(currentUserId));
+            String displayName = call.getDisplayName(currentUserId);
+            tvCallName.setText(displayName);
+            itemView.setContentDescription(context.getString(R.string.call_row_cd, displayName));
             tvCallTypeIcon.setText(call.getCallTypeIcon());
             tvCallStatus.setText(call.getStatusText());
 
@@ -199,8 +204,42 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
             }
             
             // Set content description
-            String callType = call.isVideoCall() ? "Video call" : "Audio call";
-            btnCallAction.setContentDescription(callType);
+            btnCallAction.setContentDescription(context.getString(
+                    call.isVideoCall() ? R.string.video_call_description : R.string.audio_call_description));
+        }
+    }
+
+    private static class CallDiffCallback extends DiffUtil.Callback {
+        private final List<Call> oldCalls;
+        private final List<Call> newCalls;
+
+        CallDiffCallback(List<Call> oldCalls, List<Call> newCalls) {
+            this.oldCalls = oldCalls;
+            this.newCalls = newCalls;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldCalls.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newCalls.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return Objects.equals(oldCalls.get(oldItemPosition).getCallId(), newCalls.get(newItemPosition).getCallId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            Call oldCall = oldCalls.get(oldItemPosition);
+            Call newCall = newCalls.get(newItemPosition);
+            return Objects.equals(oldCall.getStatus(), newCall.getStatus())
+                    && oldCall.getDuration() == newCall.getDuration()
+                    && oldCall.isVideoCall() == newCall.isVideoCall();
         }
     }
 }

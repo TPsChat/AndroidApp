@@ -64,7 +64,7 @@ public class BlockedUsersAdapter extends RecyclerView.Adapter<BlockedUsersAdapte
 
         void bind(User u) {
             tvName.setText(u.getDisplayName());
-            tvUsername.setText("@" + (u.getUsername() != null ? u.getUsername() : ""));
+            tvUsername.setText(itemView.getContext().getString(R.string.username_format, u.getUsername() != null ? u.getUsername() : ""));
             // tvStatus removed - not present in current layout
             String avatarUrl = u.getFullAvatarUrl();
             if (avatarUrl != null) {

@@ -141,12 +141,13 @@ public class LoginActivity extends AppCompatActivity {
     private void setAuthMode(boolean signUpMode, boolean animate) {
         boolean modeChanged = isSignUpMode != signUpMode;
         isSignUpMode = signUpMode;
+        boolean runMotion = shouldAnimate(animate && modeChanged);
 
-        if (animate && modeChanged) {
-            animateCopyChange(tvAuthTitle, signUpMode ? "Create Account" : "Welcome Back", 0L);
+        if (runMotion) {
+            animateCopyChange(tvAuthTitle,
+                    getString(signUpMode ? R.string.auth_title_sign_up : R.string.auth_title_sign_in), 0L);
             animateCopyChange(tvAuthSubtitle,
-                    signUpMode ? "Set up your profile and join the chat" : "Sign in to continue your conversations",
-                    35L);
+                    getString(signUpMode ? R.string.auth_subtitle_sign_up : R.string.auth_subtitle), 35L);
         } else {
             applyModeCopy(signUpMode);
         }
@@ -155,42 +156,60 @@ public class LoginActivity extends AppCompatActivity {
         int inactiveColor = ContextCompat.getColor(this, R.color.text_secondary);
         tvSignInTab.setTextColor(signUpMode ? inactiveColor : activeColor);
         tvRegister.setTextColor(signUpMode ? activeColor : inactiveColor);
+        updateAuthTabAccessibility(signUpMode);
 
         showLoginInlineError(null);
         showRegisterInlineError(null);
-        animateModeChrome(animate && modeChanged);
-        updateVisiblePanel(animate && modeChanged);
-        updateTabIndicator(animate && modeChanged);
+        animateModeChrome(runMotion);
+        updateVisiblePanel(runMotion);
+        updateTabIndicator(runMotion);
+    }
+
+    private boolean shouldAnimate(boolean requested) {
+        return com.example.chatappjava.utils.MotionUtils.shouldAnimate(this, requested);
     }
 
     private void applyModeCopy(boolean signUpMode) {
-        tvAuthTitle.setText(signUpMode ? "Create Account" : "Welcome Back");
-        tvAuthSubtitle.setText(signUpMode
-                ? "Set up your profile and join the chat"
-                : "Sign in to continue your conversations");
+        tvAuthTitle.setText(signUpMode ? R.string.auth_title_sign_up : R.string.auth_title_sign_in);
+        tvAuthSubtitle.setText(signUpMode ? R.string.auth_subtitle_sign_up : R.string.auth_subtitle);
         tvAuthTitle.setAlpha(1f);
         tvAuthSubtitle.setAlpha(1f);
         tvAuthTitle.setTranslationY(0f);
         tvAuthSubtitle.setTranslationY(0f);
     }
 
+    private void updateAuthTabAccessibility(boolean signUpMode) {
+        tvSignInTab.setContentDescription(getString(
+                signUpMode ? R.string.auth_tab_sign_in_cd : R.string.auth_tab_sign_in_selected_cd));
+        tvRegister.setContentDescription(getString(
+                signUpMode ? R.string.auth_tab_sign_up_selected_cd : R.string.auth_tab_sign_up_cd));
+        tvSignInTab.setSelected(!signUpMode);
+        tvRegister.setSelected(signUpMode);
+    }
+
     private void animateCopyChange(TextView textView, String newText, long delayMs) {
+        if (com.example.chatappjava.utils.MotionUtils.isMotionReduced(this)) {
+            textView.setText(newText);
+            textView.setAlpha(1f);
+            textView.setTranslationY(0f);
+            return;
+        }
         float travel = dp(12f);
         textView.animate().cancel();
         textView.animate()
                 .alpha(0f)
                 .translationY(-travel * 0.45f)
                 .setStartDelay(delayMs)
-                .setDuration(95L)
-                .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
+                .setDuration(120L)
+                .setInterpolator(com.example.chatappjava.utils.MotionUtils.getEaseOutInterpolator())
                 .withEndAction(() -> {
                     textView.setText(newText);
-                    textView.setTranslationY(travel);
+                    textView.setTranslationY(travel * 0.35f);
                     textView.animate()
                             .alpha(1f)
                             .translationY(0f)
-                            .setDuration(260L)
-                            .setInterpolator(new android.view.animation.OvershootInterpolator(0.8f))
+                            .setDuration(220L)
+                            .setInterpolator(com.example.chatappjava.utils.MotionUtils.getEaseOutInterpolator())
                             .start();
                 })
                 .start();
@@ -217,22 +236,22 @@ public class LoginActivity extends AppCompatActivity {
 
         authTopCluster.animate()
                 .translationY(topLift)
-                .setDuration(320L)
-                .setInterpolator(new android.view.animation.OvershootInterpolator(0.82f))
+                .setDuration(240L)
+                .setInterpolator(com.example.chatappjava.utils.MotionUtils.getEaseOutInterpolator())
                 .start();
 
         authFormStage.animate()
                 .translationY(formLift)
-                .setDuration(320L)
-                .setInterpolator(new android.view.animation.OvershootInterpolator(0.78f))
+                .setDuration(240L)
+                .setInterpolator(com.example.chatappjava.utils.MotionUtils.getEaseOutInterpolator())
                 .start();
 
         loginTitleTop.animate()
                 .scaleX(logoScale)
                 .scaleY(logoScale)
                 .rotation(logoRotation)
-                .setDuration(340L)
-                .setInterpolator(new android.view.animation.OvershootInterpolator(0.7f))
+                .setDuration(240L)
+                .setInterpolator(com.example.chatappjava.utils.MotionUtils.getEaseOutInterpolator())
                 .start();
     }
 
@@ -265,8 +284,8 @@ public class LoginActivity extends AppCompatActivity {
                 .translationY(0f)
                 .scaleX(1f)
                 .scaleY(1f)
-                .setDuration(300L)
-                .setInterpolator(new android.view.animation.OvershootInterpolator(0.78f))
+                .setDuration(240L)
+                .setInterpolator(com.example.chatappjava.utils.MotionUtils.getEaseOutInterpolator())
                 .start();
 
         if (outgoingPanel.getVisibility() == View.VISIBLE) {
@@ -276,7 +295,7 @@ public class LoginActivity extends AppCompatActivity {
                     .scaleX(0.975f)
                     .scaleY(0.975f)
                     .setDuration(180L)
-                    .setInterpolator(new android.view.animation.AccelerateDecelerateInterpolator())
+                    .setInterpolator(com.example.chatappjava.utils.MotionUtils.getEaseOutInterpolator())
                     .withEndAction(() -> {
                         outgoingPanel.setVisibility(View.GONE);
                         outgoingPanel.setAlpha(1f);
@@ -307,19 +326,12 @@ public class LoginActivity extends AppCompatActivity {
             float targetTranslation = isSignUpMode ? indicatorWidth : 0f;
             authTabIndicator.animate().cancel();
             if (animate) {
-                authTabIndicator.setScaleX(0.95f);
-                authTabIndicator.setAlpha(0.94f);
                 authTabIndicator.animate()
                         .translationX(targetTranslation)
-                        .scaleX(1.03f)
+                        .scaleX(1f)
                         .alpha(1f)
-                        .setDuration(310L)
-                        .setInterpolator(new android.view.animation.OvershootInterpolator(0.84f))
-                        .withEndAction(() -> authTabIndicator.animate()
-                                .scaleX(1f)
-                                .setDuration(120L)
-                                .setInterpolator(new android.view.animation.DecelerateInterpolator())
-                                .start())
+                        .setDuration(220L)
+                        .setInterpolator(com.example.chatappjava.utils.MotionUtils.getEaseOutInterpolator())
                         .start();
             } else {
                 authTabIndicator.setTranslationX(targetTranslation);
@@ -341,8 +353,8 @@ public class LoginActivity extends AppCompatActivity {
         android.widget.Button btnPos = dialogView.findViewById(R.id.btn_positive);
         android.widget.Button btnNeg = dialogView.findViewById(R.id.btn_negative);
 
-        tvTitle.setText("Forgot Password");
-        tvMsg.setText("Enter your email to receive a reset code.");
+        tvTitle.setText(getString(R.string.forgot_password_title));
+        tvMsg.setText(getString(R.string.forgot_password_message));
 
         // Replace message view with an email input field
         // Root view is a LinearLayout, get its first child (the inner LinearLayout with content)
@@ -371,7 +383,7 @@ public class LoginActivity extends AppCompatActivity {
             w.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
         }
         btnNeg.setOnClickListener(v -> dialog.dismiss());
-        btnPos.setText("Send Code");
+        btnPos.setText(getString(R.string.action_send_code));
         btnPos.setOnClickListener(v -> {
             String email = et.getText().toString().trim();
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -381,7 +393,7 @@ public class LoginActivity extends AppCompatActivity {
             }
             apiClient.requestPasswordReset(email, new okhttp3.Callback() {
                 @Override public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                    runOnUiThread(() -> android.widget.Toast.makeText(LoginActivity.this, "Failed: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> android.widget.Toast.makeText(LoginActivity.this, getString(R.string.error_failed_with_message, e.getMessage()), android.widget.Toast.LENGTH_SHORT).show());
                 }
                 @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                     final String body = response.body() != null ? response.body().string() : "";
@@ -395,7 +407,7 @@ public class LoginActivity extends AppCompatActivity {
                                 String msg = json.optString("message", "Failed to send reset code");
                                 android.widget.Toast.makeText(LoginActivity.this, msg, android.widget.Toast.LENGTH_SHORT).show();
                             } catch (Exception ex) {
-                                android.widget.Toast.makeText(LoginActivity.this, "Failed to send reset code", android.widget.Toast.LENGTH_SHORT).show();
+                                android.widget.Toast.makeText(LoginActivity.this, getString(R.string.error_failed_to_send_reset_code), android.widget.Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -422,8 +434,8 @@ public class LoginActivity extends AppCompatActivity {
         android.widget.TextView c6 = dialogView.findViewById(R.id.otp_c6);
         android.widget.Button btnResend = dialogView.findViewById(R.id.btn_resend_otp);
 
-        tvTitle.setText("Reset Password");
-        tvMsg.setText("Enter the 6-digit code sent to your email.");
+        tvTitle.setText(getString(R.string.reset_password_title));
+        tvMsg.setText(getString(R.string.reset_password_otp_message));
 
         androidx.appcompat.app.AlertDialog dialog = builder.setView(dialogView).create();
         if (dialog.getWindow() != null) {
@@ -434,16 +446,16 @@ public class LoginActivity extends AppCompatActivity {
         btnResend.setOnClickListener(v -> {
             apiClient.requestPasswordReset(email, new okhttp3.Callback() {
                 @Override public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                    runOnUiThread(() -> android.widget.Toast.makeText(LoginActivity.this, "Failed: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> android.widget.Toast.makeText(LoginActivity.this, getString(R.string.error_failed_with_message, e.getMessage()), android.widget.Toast.LENGTH_SHORT).show());
                 }
                 @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
                             hiddenOtp.setText("");
                             tvError.setVisibility(android.view.View.GONE);
-                            android.widget.Toast.makeText(LoginActivity.this, "OTP resent", android.widget.Toast.LENGTH_SHORT).show();
+                            android.widget.Toast.makeText(LoginActivity.this, getString(R.string.otp_resent), android.widget.Toast.LENGTH_SHORT).show();
                         } else {
-                            android.widget.Toast.makeText(LoginActivity.this, "Failed to resend OTP", android.widget.Toast.LENGTH_SHORT).show();
+                            android.widget.Toast.makeText(LoginActivity.this, getString(R.string.error_otp_resend), android.widget.Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -470,7 +482,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (code.length() == 6) {
                     apiClient.verifyPasswordResetOTP(email, code, new okhttp3.Callback() {
                         @Override public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                            runOnUiThread(() -> android.widget.Toast.makeText(LoginActivity.this, "Failed: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show());
+                            runOnUiThread(() -> android.widget.Toast.makeText(LoginActivity.this, getString(R.string.error_failed_with_message, e.getMessage()), android.widget.Toast.LENGTH_SHORT).show());
                         }
                         @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                             String body = response.body() != null ? response.body().string() : "";
@@ -482,11 +494,11 @@ public class LoginActivity extends AppCompatActivity {
                                     try {
                                         org.json.JSONObject json = new org.json.JSONObject(body);
                                         String msg = json.optString("message", "Invalid OTP");
-                                        tvError.setText("Invalid OTP");
+                                        tvError.setText(getString(R.string.otp_invalid));
                                         tvError.setVisibility(android.view.View.VISIBLE);
                                         hiddenOtp.setText("");
                                     } catch (Exception ex) {
-                                        tvError.setText("Invalid OTP");
+                                        tvError.setText(getString(R.string.otp_invalid));
                                         tvError.setVisibility(android.view.View.VISIBLE);
                                         hiddenOtp.setText("");
                                     }
@@ -505,7 +517,7 @@ public class LoginActivity extends AppCompatActivity {
                 long s = ms / 1000; long mm = s / 60; long ss = s % 60;
                 tvTimer.setText(String.format("%02d:%02d", mm, ss));
             }
-            public void onFinish() { tvTimer.setText("Expired. Request again."); }
+            public void onFinish() { tvTimer.setText(getString(R.string.otp_timer_expired_short)); }
         }.start();
 
         dialog.show();
@@ -531,7 +543,7 @@ public class LoginActivity extends AppCompatActivity {
         android.widget.Button btnPos = dialogView.findViewById(R.id.btn_positive);
         android.widget.Button btnNeg = dialogView.findViewById(R.id.btn_negative);
 
-        tvTitle.setText("Set New Password");
+        tvTitle.setText(getString(R.string.set_new_password_title));
         tvMsg.setText("");
 
         // Root view is a LinearLayout, get its first child (the inner LinearLayout with content)
@@ -577,7 +589,7 @@ public class LoginActivity extends AppCompatActivity {
             w.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
         }
         btnNeg.setOnClickListener(v -> dialog.dismiss());
-        btnPos.setText("Reset Password");
+        btnPos.setText(getString(R.string.action_reset_password));
         btnPos.setOnClickListener(v -> {
             String newPwd = etNew.getText().toString();
             String confirmPwd = etConfirm.getText().toString();
@@ -593,21 +605,21 @@ public class LoginActivity extends AppCompatActivity {
             }
             apiClient.confirmPasswordReset(email, verifiedOtp, newPwd, new okhttp3.Callback() {
                 @Override public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                    runOnUiThread(() -> android.widget.Toast.makeText(LoginActivity.this, "Failed: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> android.widget.Toast.makeText(LoginActivity.this, getString(R.string.error_failed_with_message, e.getMessage()), android.widget.Toast.LENGTH_SHORT).show());
                 }
                 @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                     String body = response.body() != null ? response.body().string() : "";
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
                             dialog.dismiss();
-                            android.widget.Toast.makeText(LoginActivity.this, "Password reset successful. Please log in.", android.widget.Toast.LENGTH_LONG).show();
+                            android.widget.Toast.makeText(LoginActivity.this, getString(R.string.success_password_reset_successful_please_log_in), android.widget.Toast.LENGTH_LONG).show();
                         } else {
                             try {
                                 org.json.JSONObject json = new org.json.JSONObject(body);
                                 String msg = json.optString("message", "Invalid code or expired");
                                 android.widget.Toast.makeText(LoginActivity.this, msg, android.widget.Toast.LENGTH_SHORT).show();
                             } catch (Exception ex) {
-                                android.widget.Toast.makeText(LoginActivity.this, "Invalid code or expired", android.widget.Toast.LENGTH_SHORT).show();
+                                android.widget.Toast.makeText(LoginActivity.this, getString(R.string.error_invalid_code_or_expired), android.widget.Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -716,7 +728,7 @@ public class LoginActivity extends AppCompatActivity {
                 // Check and prompt for battery optimization (for push notifications)
                 com.example.chatappjava.utils.BatteryOptimizationHelper.checkAndPromptBatteryOptimization(LoginActivity.this);
                 
-                Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.success_login_successful), Toast.LENGTH_SHORT).show();
                 navigateToMainActivity();
                 
             } else {
@@ -812,7 +824,7 @@ public class LoginActivity extends AppCompatActivity {
             if (message.toLowerCase().contains("password")) {
                 builder.setNeutralButton("Forgot Password?", (dialog, which) -> {
                     // TODO: Implement forgot password functionality
-                    Toast.makeText(this, "Forgot password feature coming soon!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.feature_forgot_password_feature_coming_soon), Toast.LENGTH_SHORT).show();
                 });
             }
         }
@@ -1033,7 +1045,7 @@ public class LoginActivity extends AppCompatActivity {
             apiClient.requestRegisterOTP(data, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Failed to resend OTP", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, getString(R.string.error_otp_resend), Toast.LENGTH_SHORT).show());
                 }
 
                 @Override
@@ -1043,15 +1055,15 @@ public class LoginActivity extends AppCompatActivity {
                             hiddenOtp.setText("");
                             tvError.setVisibility(View.GONE);
                             startRegisterDialogTimer(tvTimer);
-                            Toast.makeText(LoginActivity.this, "OTP resent", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, getString(R.string.otp_resent), Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(LoginActivity.this, "Failed to resend OTP", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, getString(R.string.error_otp_resend), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             });
         } catch (JSONException e) {
-            Toast.makeText(this, "Data Error. Please try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_data_error_please_try_again), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1059,7 +1071,7 @@ public class LoginActivity extends AppCompatActivity {
         if (registerCountDownTimer != null) {
             registerCountDownTimer.cancel();
         }
-        tvTimer.setText("01:00");
+        tvTimer.setText(getString(R.string.otp_timer_initial));
         registerCountDownTimer = new android.os.CountDownTimer(60_000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -1071,7 +1083,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                tvTimer.setText("Expired. Please request again.");
+                tvTimer.setText(getString(R.string.otp_expired));
             }
         }.start();
     }
@@ -1084,7 +1096,7 @@ public class LoginActivity extends AppCompatActivity {
             apiClient.verifyRegisterOTP(data, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, "Verification failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(LoginActivity.this, getString(R.string.error_verification, e.getMessage()), Toast.LENGTH_SHORT).show());
                 }
 
                 @Override
@@ -1112,7 +1124,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         } catch (JSONException e) {
-            Toast.makeText(this, "Data Error. Please try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_data_error_please_try_again), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1138,7 +1150,7 @@ public class LoginActivity extends AppCompatActivity {
             JSONObject jsonResponse = new JSONObject(responseBody);
 
             if (statusCode == 201) {
-                Toast.makeText(this, "Registration successful! Please sign in.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.success_registration_successful_please_sign_in), Toast.LENGTH_LONG).show();
                 etEmail.setText(etRegisterEmail.getText().toString().trim());
                 etPassword.setText("");
                 clearRegisterInputs();

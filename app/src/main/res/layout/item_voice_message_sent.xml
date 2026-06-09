@@ -6,28 +6,26 @@
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:background="@drawable/bg_message_sent"
-    android:paddingStart="12dp"
-    android:paddingEnd="14dp"
-    android:paddingTop="10dp"
-    android:paddingBottom="10dp"
-    android:minHeight="52dp"
+    android:paddingStart="@dimen/spacing_sm"
+    android:paddingEnd="@dimen/bubble_padding_h"
+    android:paddingTop="@dimen/bubble_padding_v"
+    android:paddingBottom="@dimen/bubble_padding_v"
+    android:minHeight="@dimen/touch_target_min"
     android:clipToPadding="false"
     android:clipChildren="false">
 
-    <!-- Play/Pause Button -->
     <ImageButton
         android:id="@+id/btn_voice_play"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
+        android:layout_width="@dimen/voice_play_button_size"
+        android:layout_height="@dimen/voice_play_button_size"
         android:background="@drawable/bg_icon_circle_dark"
-        android:src="@android:drawable/ic_media_play"
+        android:src="@drawable/ic_play"
         android:scaleType="centerInside"
-        android:contentDescription="Play voice message"
+        android:contentDescription="@string/play_voice_message_cd"
         android:padding="9dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="@dimen/spacing_sm"
         app:tint="@color/md3_primary" />
 
-    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progress_voice"
         style="?android:attr/progressBarStyleHorizontal"
@@ -37,16 +35,16 @@
         android:max="100"
         android:progress="0"
         android:progressTint="@color/md3_primary"
-        android:progressBackgroundTint="#33404A57"
-        android:layout_marginEnd="12dp" />
+        android:progressBackgroundTint="@color/md3_border_subtle"
+        android:layout_marginEnd="@dimen/spacing_sm" />
 
-    <!-- Duration/Time -->
     <TextView
         android:id="@+id/tv_voice_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0:00"
-        android:textSize="13sp"
+        android:fontFamily="@font/plus_jakarta_sans"
+        android:text="@string/voice_duration_placeholder"
+        android:textSize="@dimen/text_banner"
         android:textColor="@color/md3_on_surface"
         android:textStyle="bold" />
 

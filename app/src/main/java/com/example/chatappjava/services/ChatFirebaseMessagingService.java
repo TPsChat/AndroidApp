@@ -20,6 +20,7 @@ import com.example.chatappjava.ui.theme.HomeActivity;
 import com.example.chatappjava.ui.theme.PostDetailActivity;
 import com.example.chatappjava.ui.theme.PrivateChatActivity;
 import com.example.chatappjava.network.ApiClient;
+import com.example.chatappjava.utils.DatabaseManager;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
@@ -314,16 +315,40 @@ public class ChatFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void showNotification(String title, String body, PendingIntent pendingIntent) {
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        
+        DatabaseManager databaseManager = new DatabaseManager(this);
+        if (!databaseManager.isPushNotificationsEnabled()) {
+            return;
+        }
+
+        boolean soundEnabled = databaseManager.isSoundNotificationsEnabled();
+        boolean vibrateEnabled = databaseManager.isVibrateNotificationsEnabled();
+
+        int defaults = NotificationCompat.DEFAULT_LIGHTS;
+        if (soundEnabled) {
+            defaults |= NotificationCompat.DEFAULT_SOUND;
+        }
+        if (vibrateEnabled) {
+            defaults |= NotificationCompat.DEFAULT_VIBRATE;
+        }
+
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification) // You may need to create this icon
+            .setSmallIcon(R.drawable.ic_notification)
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
-            .setSound(defaultSoundUri)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setDefaults(NotificationCompat.DEFAULT_ALL);
+            .setDefaults(defaults);
+
+        if (soundEnabled) {
+            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            notificationBuilder.setSound(defaultSoundUri);
+        } else {
+            notificationBuilder.setSound(null);
+        }
+
+        if (!vibrateEnabled) {
+            notificationBuilder.setVibrate(null);
+        }
 
         if (pendingIntent != null) {
             notificationBuilder.setContentIntent(pendingIntent);

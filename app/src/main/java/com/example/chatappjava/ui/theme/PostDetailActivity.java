@@ -172,7 +172,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                 return;
             } else {
                 Log.e(TAG, "Failed to extract post ID from deep link: " + data.toString());
-                Toast.makeText(this, "Invalid post link", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_invalid_post_link), Toast.LENGTH_SHORT).show();
                 finish();
                 return;
             }
@@ -181,7 +181,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         // Get post from intent (normal navigation with full post object)
         String postJson = intent.getStringExtra("post");
         if (postJson == null) {
-            Toast.makeText(this, "Post data not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_post_not_found), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -190,7 +190,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             post = Post.fromJson(new JSONObject(postJson));
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing post JSON", e);
-            Toast.makeText(this, "Error loading post", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_load_post), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -224,7 +224,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                 loadPostById(postId);
             } else {
                 Log.e(TAG, "Failed to extract post ID from deep link in onNewIntent: " + data.toString());
-                Toast.makeText(this, "Invalid post link", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_invalid_post_link), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -269,7 +269,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
     private void loadPostById(String postId) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login to view post", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_login_to_view_post), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -296,7 +296,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                 runOnUiThread(() -> {
                     progressLoading.setVisibility(View.GONE);
                     llEmptyState.setVisibility(View.VISIBLE);
-                    Toast.makeText(PostDetailActivity.this, "Failed to load post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostDetailActivity.this, getString(R.string.error_load_post_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     // Stop refresh on error
                     if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
                         swipeRefreshLayout.setRefreshing(false);
@@ -324,7 +324,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "Error parsing post response", e);
-                        Toast.makeText(PostDetailActivity.this, "Error loading post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_load_post), Toast.LENGTH_SHORT).show();
                         llEmptyState.setVisibility(View.VISIBLE);
                     }
                 });
@@ -419,7 +419,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         // Media attachment
         if (ivAttachMedia != null) {
             ivAttachMedia.setOnClickListener(v -> {
-                Toast.makeText(this, "Media attachment coming soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.feature_media_attachment_soon), Toast.LENGTH_SHORT).show();
             });
         }
 
@@ -596,7 +596,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                 }
                 ivPostVideoPlay.setOnClickListener(v -> {
                     // TODO: Play video
-                    Toast.makeText(this, "Video playback coming soon", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.feature_video_playback_soon), Toast.LENGTH_SHORT).show();
                 });
             } else if ("image".equals(mediaType) || "gallery".equals(mediaType)) {
                 ivPostImage.setVisibility(View.VISIBLE);
@@ -652,11 +652,11 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         if (post.isLiked()) {
             ivLikeIcon.setImageResource(android.R.drawable.btn_star_big_on);
             ivLikeIcon.setColorFilter(getResources().getColor(R.color.icon_like));
-            tvLikeText.setText("Liked");
+            tvLikeText.setText(getString(R.string.post_liked));
         } else {
             ivLikeIcon.setImageResource(android.R.drawable.btn_star_big_off);
             ivLikeIcon.setColorFilter(getResources().getColor(R.color.icon_like));
-            tvLikeText.setText("Like");
+            tvLikeText.setText(getString(R.string.post_like));
         }
     }
 
@@ -725,7 +725,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         confirmBuilder.setPositiveButton("Delete", (dialog, which) -> {
             String token = databaseManager.getToken();
             if (token == null || token.isEmpty()) {
-                Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                 return;
             }
             
@@ -733,7 +733,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(PostDetailActivity.this, "Failed to delete post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_delete_post, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
                 
@@ -744,7 +744,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                         try {
                             JSONObject jsonResponse = new JSONObject(responseBody);
                             if (jsonResponse.getBoolean("success")) {
-                                Toast.makeText(PostDetailActivity.this, "Post deleted successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PostDetailActivity.this, getString(R.string.post_deleted_success), Toast.LENGTH_SHORT).show();
                                 // Close activity and return to previous screen
                                 finish();
                             } else {
@@ -752,7 +752,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                                 Toast.makeText(PostDetailActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(PostDetailActivity.this, "Error processing response", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostDetailActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -765,7 +765,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
     private void hidePost(Post post) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -773,7 +773,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(PostDetailActivity.this, "Failed to hide post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostDetailActivity.this, getString(R.string.error_hide_post, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -784,7 +784,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                     try {
                         JSONObject jsonResponse = new JSONObject(responseBody);
                         if (jsonResponse.getBoolean("success")) {
-                            Toast.makeText(PostDetailActivity.this, "Post hidden successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostDetailActivity.this, getString(R.string.post_hidden_success), Toast.LENGTH_SHORT).show();
                             // Close activity and return to previous screen
                             finish();
                         } else {
@@ -792,7 +792,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                             Toast.makeText(PostDetailActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        Toast.makeText(PostDetailActivity.this, "Error processing response", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -863,7 +863,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             btnSave.setOnClickListener(v -> {
                 String newContent = etEditContent != null ? etEditContent.getText().toString().trim() : "";
                 if (newContent.isEmpty()) {
-                    Toast.makeText(PostDetailActivity.this, "Content cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostDetailActivity.this, getString(R.string.error_content_empty), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 
@@ -883,7 +883,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
     private void updatePost(Post post, String newContent, String privacySetting) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -904,7 +904,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                 @Override
                 public void onFailure(@NonNull Call call, @NonNull IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(PostDetailActivity.this, "Failed to update post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_update_post, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
                 
@@ -921,19 +921,19 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                                 // Reload post to get updated data
                                 loadFullPost();
                                 
-                                Toast.makeText(PostDetailActivity.this, "Post updated successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PostDetailActivity.this, getString(R.string.success_post_updated), Toast.LENGTH_SHORT).show();
                             } else {
                                 String message = jsonResponse.optString("message", "Failed to update post");
                                 Toast.makeText(PostDetailActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(PostDetailActivity.this, "Error processing response", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostDetailActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             });
         } catch (JSONException e) {
-            Toast.makeText(this, "Error preparing update", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_prepare_update), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -950,7 +950,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
     private void toggleLike() {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -976,7 +976,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                         post.setLikesCount(post.getLikesCount() + 1);
                     }
                     updateLikeButton();
-                    Toast.makeText(PostDetailActivity.this, "Failed to like post", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostDetailActivity.this, getString(R.string.error_update_like), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -991,10 +991,10 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         tvLikesCount.setText(formatCount(post.getLikesCount()));
         if (post.isLiked()) {
             ivLikeIcon.setImageResource(android.R.drawable.btn_star_big_on);
-            tvLikeText.setText("Liked");
+            tvLikeText.setText(getString(R.string.post_liked));
         } else {
             ivLikeIcon.setImageResource(android.R.drawable.btn_star_big_off);
-            tvLikeText.setText("Like");
+            tvLikeText.setText(getString(R.string.post_like));
         }
     }
 
@@ -1013,7 +1013,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
 
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -1023,7 +1023,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 runOnUiThread(() -> {
                     Log.e(TAG, "Error loading comments: " + e.getMessage());
-                    Toast.makeText(PostDetailActivity.this, "Failed to load comments", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostDetailActivity.this, getString(R.string.error_load_comments), Toast.LENGTH_SHORT).show();
                     if (isInitialLoad) {
                         progressLoading.setVisibility(View.GONE);
                         llEmptyState.setVisibility(View.VISIBLE);
@@ -1111,7 +1111,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                                 }
                             } else {
                                 String message = jsonResponse.optString("message", "Unknown error");
-                                Toast.makeText(PostDetailActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PostDetailActivity.this, getString(R.string.error_with_message, message), Toast.LENGTH_SHORT).show();
                                 if (isInitialLoad) {
                                     llEmptyState.setVisibility(View.VISIBLE);
                                     rvComments.setVisibility(View.GONE);
@@ -1123,7 +1123,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                             }
                         } else {
                             Log.e(TAG, "Server error loading comments: " + response.code());
-                            Toast.makeText(PostDetailActivity.this, "Server error: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostDetailActivity.this, getString(R.string.error_server_with_code, response.code()), Toast.LENGTH_SHORT).show();
                             if (isInitialLoad) {
                                 llEmptyState.setVisibility(View.VISIBLE);
                                 rvComments.setVisibility(View.GONE);
@@ -1131,7 +1131,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "Error parsing comments JSON", e);
-                        Toast.makeText(PostDetailActivity.this, "Error parsing data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                         if (isInitialLoad) {
                             llEmptyState.setVisibility(View.VISIBLE);
                             rvComments.setVisibility(View.GONE);
@@ -1164,7 +1164,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
 
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -1205,7 +1205,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 runOnUiThread(() -> {
                     ivSendComment.setEnabled(true);
-                    Toast.makeText(PostDetailActivity.this, "Failed to post comment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostDetailActivity.this, getString(R.string.error_post_comment, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -1271,14 +1271,14 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                                 tvCommentsCount.setText(formatCount(post.getCommentsCount()) + " comments");
                             } else {
                                 String message = jsonResponse.optString("message", "Failed to post comment");
-                                Toast.makeText(PostDetailActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PostDetailActivity.this, getString(R.string.error_with_message, message), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(PostDetailActivity.this, "Server error: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostDetailActivity.this, getString(R.string.error_server_with_code, response.code()), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "Error parsing comment response", e);
-                        Toast.makeText(PostDetailActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -1309,7 +1309,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
     public void onLikeClick(Comment comment, int position) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -1331,7 +1331,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                         comment.setLiked(false);
                         comment.setLikesCount(Math.max(0, comment.getLikesCount() - 1));
                         commentAdapter.updateComment(position, comment);
-                        Toast.makeText(PostDetailActivity.this, "Failed to like comment", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_like_comment), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -1350,7 +1350,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                         comment.setLiked(true);
                         comment.setLikesCount(comment.getLikesCount() + 1);
                         commentAdapter.updateComment(position, comment);
-                        Toast.makeText(PostDetailActivity.this, "Failed to unlike comment", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_unlike_comment), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -1369,14 +1369,14 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
 
     @Override
     public void onAuthorClick(Comment comment) {
-        Toast.makeText(this, "Author: " + comment.getUsername(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.info_author, comment.getUsername()), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onReactionLongPress(Comment comment, int position, View view) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -1395,7 +1395,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                         comment.setLiked(false);
                         comment.setLikesCount(Math.max(0, comment.getLikesCount() - 1));
                         commentAdapter.updateComment(position, comment);
-                        Toast.makeText(PostDetailActivity.this, "Failed to add reaction", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_add_reaction), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -1403,13 +1403,13 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-                            Toast.makeText(PostDetailActivity.this, "Reacted with " + reactionType, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostDetailActivity.this, getString(R.string.reaction_added, reactionType), Toast.LENGTH_SHORT).show();
                         } else {
                             // Revert optimistic update
                             comment.setLiked(false);
                             comment.setLikesCount(Math.max(0, comment.getLikesCount() - 1));
                             commentAdapter.updateComment(position, comment);
-                            Toast.makeText(PostDetailActivity.this, "Failed to add reaction", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostDetailActivity.this, getString(R.string.error_add_reaction), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -1441,7 +1441,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         } else {
             String[] options = {"Report"};
             builder.setItems(options, (dialog, which) -> {
-                Toast.makeText(this, "Report feature coming soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.feature_report_soon), Toast.LENGTH_SHORT).show();
             });
         }
         builder.show();
@@ -1473,7 +1473,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             if (!newContent.isEmpty()) {
                 comment.setContent(newContent);
                 commentAdapter.updateComment(position, comment);
-                Toast.makeText(this, "Comment updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.comment_updated_success), Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -1482,7 +1482,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
 
     private void showReactionUsersDialog(Comment comment) {
         if (comment.getReactions() == null || comment.getReactions().isEmpty()) {
-            Toast.makeText(this, "No reactions yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.no_reactions_yet), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -1577,13 +1577,13 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         // Share to Story (hidden for now)
         optionShareToStory.setOnClickListener(v -> {
             dialog.dismiss();
-            Toast.makeText(this, "Share to Story coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.feature_share_story_soon), Toast.LENGTH_SHORT).show();
         });
         
         // Share to Group (hidden for now)
         optionShareToGroup.setOnClickListener(v -> {
             dialog.dismiss();
-            Toast.makeText(this, "Share to Group coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.feature_share_group_soon), Toast.LENGTH_SHORT).show();
         });
         
         // Copy Link
@@ -1632,7 +1632,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         android.content.ClipData clip = android.content.ClipData.newPlainText("Post Link", deepLinkUrl);
         clipboard.setPrimaryClip(clip);
         
-        Toast.makeText(this, "Post link copied. Click to open in app.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.success_post_link_copied), Toast.LENGTH_SHORT).show();
     }
     
     private void shareToExternalApps(Post post) {
@@ -1677,7 +1677,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                             @Override
                             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                                 runOnUiThread(() -> {
-                                    Toast.makeText(PostDetailActivity.this, "Failed to delete comment", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(PostDetailActivity.this, getString(R.string.error_delete_comment), Toast.LENGTH_SHORT).show();
                                 });
                             }
 
@@ -1689,9 +1689,9 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                                         commentAdapter.removeComment(position);
                                         post.setCommentsCount(Math.max(0, post.getCommentsCount() - 1));
                                         tvCommentsCount.setText(formatCount(post.getCommentsCount()) + " comments");
-                                        Toast.makeText(PostDetailActivity.this, "Comment deleted", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(PostDetailActivity.this, getString(R.string.msg_comment_deleted), Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(PostDetailActivity.this, "Failed to delete comment", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_delete_comment), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -1723,7 +1723,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         android.widget.Button btnClose = dialogView.findViewById(R.id.btn_close);
         
         if (tvTitle != null) {
-            tvTitle.setText("Tagged People");
+            tvTitle.setText(getString(R.string.dialog_tagged_users_title));
         }
         
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -1743,7 +1743,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                         startActivity(intent);
                         dialog.dismiss();
                     } catch (JSONException e) {
-                        Toast.makeText(PostDetailActivity.this, "Error opening profile", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_error_opening_profile), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -1911,7 +1911,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         // Load friends
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -1921,7 +1921,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(PostDetailActivity.this, "Failed to load friends", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostDetailActivity.this, getString(R.string.error_load_friends), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -1947,10 +1947,10 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                             }
                             tvNoFriends.setVisibility(filteredFriends.isEmpty() ? View.VISIBLE : View.GONE);
                         } else {
-                            Toast.makeText(PostDetailActivity.this, "Failed to load friends", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostDetailActivity.this, getString(R.string.error_load_friends), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        Toast.makeText(PostDetailActivity.this, "Error parsing friends", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostDetailActivity.this, getString(R.string.error_error_parsing_friends), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

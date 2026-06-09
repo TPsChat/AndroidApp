@@ -67,7 +67,7 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.FriendVi
 
         void bind(User user, OnFriendClickListener listener) {
             tvName.setText(user.getDisplayName());
-            tvSubtitle.setText("@" + user.getUsername());
+            tvSubtitle.setText(itemView.getContext().getString(R.string.username_format, user.getUsername()));
 
             String avatarUrl = user.getAvatar();
             if (avatarUrl != null && !avatarUrl.isEmpty()) {

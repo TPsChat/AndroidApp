@@ -21,6 +21,7 @@ import com.example.chatappjava.models.FriendRequest;
 import com.example.chatappjava.models.User;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.DatabaseManager;
+import com.example.chatappjava.utils.EmptyStateHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +39,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
 
     private RecyclerView rvFriendRequests;
     private ProgressBar progressBar;
-    private LinearLayout tvNoRequests;
+    private View tvNoRequests;
     private EditText etSearch;
     private View tabRequests;
     private View tabFriends;
@@ -80,8 +81,17 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
         rvFriendRequests = findViewById(R.id.rv_friend_requests);
         progressBar = findViewById(R.id.progress_bar);
         tvNoRequests = findViewById(R.id.tv_no_requests);
-        // Set up back button
+        EmptyStateHelper.bind(
+                tvNoRequests,
+                R.string.empty_friend_requests_title,
+                R.string.empty_friend_requests_subtitle,
+                R.drawable.ic_eye
+        );
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
+        TextView tvTitle = findViewById(R.id.tv_title);
+        if (tvTitle != null) {
+            tvTitle.setText(R.string.title_activity_friend_requests);
+        }
         etSearch = findViewById(R.id.et_search);
         // new views
         rvMyFriends = findViewById(R.id.rv_my_friends);
@@ -162,7 +172,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
         showLoading(true);
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -172,7 +182,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    Toast.makeText(FriendRequestActivity.this, "Failed to load friend requests: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FriendRequestActivity.this, getString(R.string.error_failed_with_message, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -217,7 +227,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
                             allMyFriends.clear();
                             allMyFriends.addAll(list);
                             if (friendsAdapter != null) friendsAdapter.setItems(myFriends);
-                            if (tvFriendsTitle != null) tvFriendsTitle.setText("Friends (" + myFriends.size() + ")");
+                            if (tvFriendsTitle != null) tvFriendsTitle.setText(getString(R.string.friends_count_title, myFriends.size()));
                         });
                     }
                 } catch (Exception ignored) {}
@@ -262,7 +272,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
                 updateUI();
 
             } else if (statusCode == 401) {
-                Toast.makeText(this, "Session expired. Please login again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.msg_session_expired_please_login_again), Toast.LENGTH_SHORT).show();
                 databaseManager.clearLoginInfo();
                 finish();
             } else {
@@ -271,7 +281,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error processing friend requests", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_processing_friend_requests), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -322,7 +332,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             }
         }
         friendsAdapter.setItems(filtered);
-        if (tvFriendsTitle != null) tvFriendsTitle.setText("Friends (" + filtered.size() + ")");
+        if (tvFriendsTitle != null) tvFriendsTitle.setText(getString(R.string.friends_count_title, filtered.size()));
     }
 
     private void showLoading(boolean show) {
@@ -348,7 +358,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
     @Override
     public void onUserClick(User user) {
         // TODO: Open user profile
-        Toast.makeText(this, "User profile: " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.info_user_profile, user.getDisplayName()), Toast.LENGTH_SHORT).show();
     }
 
     private void respondToFriendRequest(FriendRequest request, String action) {
@@ -357,7 +367,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
             showLoading(false);
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -366,7 +376,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    Toast.makeText(FriendRequestActivity.this, "Failed to " + action + " request: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FriendRequestActivity.this, getString(R.string.error_friend_request_action, action, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -406,7 +416,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
                 
                 // If request was already responded to, refresh the list instead of showing error
                 if (message.contains("already been responded to") || message.contains("already exists")) {
-                    Toast.makeText(this, "Request was already processed, refreshing...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.status_request_was_already_processed_refreshing), Toast.LENGTH_SHORT).show();
                     loadFriendRequests(); // Refresh the list
                 } else {
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
@@ -414,14 +424,14 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error processing response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void createChatAfterAccept(FriendRequest request) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -429,7 +439,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             // Get the other user (sender) to create chat with
             User otherUser = request.getSender();
             if (otherUser == null) {
-                Toast.makeText(this, "Error: Cannot find user info", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_error_cannot_find_user_info), Toast.LENGTH_SHORT).show();
                 return;
             }
             
@@ -445,7 +455,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
                         System.out.println("Failed to create chat: " + e.getMessage());
-                        Toast.makeText(FriendRequestActivity.this, "Friend added but failed to create chat", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(FriendRequestActivity.this, getString(R.string.error_friend_added_but_failed_to_create_chat), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -458,7 +468,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error creating chat data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_creating_chat_data), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -473,20 +483,20 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
                 JSONObject jsonResponse = new JSONObject(responseBody);
                 if (jsonResponse.optBoolean("success", false)) {
                     System.out.println("✅ Chat created successfully with " + otherUser.getDisplayName());
-                    Toast.makeText(this, "Chat created with " + otherUser.getDisplayName(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.chat_created_with, otherUser.getDisplayName()), Toast.LENGTH_SHORT).show();
                 } else {
                     System.out.println("❌ Chat creation failed: " + jsonResponse.optString("message", "Unknown error"));
-                    Toast.makeText(this, "Failed to create chat: " + jsonResponse.optString("message", "Unknown error"), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_create_chat_detail, jsonResponse.optString("message", getString(R.string.error_request_failed))), Toast.LENGTH_SHORT).show();
                 }
             } else {
                 System.out.println("❌ Chat creation failed with status: " + statusCode);
-                Toast.makeText(this, "Failed to create chat (Status: " + statusCode + ")", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_create_chat_status, statusCode), Toast.LENGTH_SHORT).show();
             }
             System.out.println("=== END CREATE CHAT RESPONSE ===");
         } catch (JSONException e) {
             e.printStackTrace();
             System.out.println("❌ Error parsing chat creation response: " + e.getMessage());
-            Toast.makeText(this, "Error parsing chat creation response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_parsing_chat_creation_response), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -496,7 +506,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
             showLoading(false);
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -505,7 +515,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    Toast.makeText(FriendRequestActivity.this, "Failed to cancel request: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FriendRequestActivity.this, getString(R.string.error_cancel_request_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -525,7 +535,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             JSONObject jsonResponse = new JSONObject(responseBody);
             
             if (statusCode == 200) {
-                Toast.makeText(this, "Friend request cancelled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.msg_friend_request_cancelled), Toast.LENGTH_SHORT).show();
                 
                 // Remove the request from the list
                 adapter.removeRequest(request);
@@ -540,7 +550,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error processing response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
         }
     }
 }

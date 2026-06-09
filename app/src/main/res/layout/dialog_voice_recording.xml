@@ -10,7 +10,7 @@
     android:paddingEnd="22dp"
     android:paddingTop="22dp"
     android:paddingBottom="20dp"
-    android:background="@drawable/bg_obsidian_card"
+    android:background="@drawable/bg_glass_panel"
     android:clipToPadding="false"
     android:clipChildren="false">
 
@@ -55,7 +55,7 @@
             android:layout_height="24dp"
             android:layout_centerInParent="true"
             android:src="@drawable/recording_indicator"
-            android:contentDescription="Recording" />
+            android:contentDescription="@string/recording_cd" />
 
     </RelativeLayout>
 
@@ -63,10 +63,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Recording"
-        android:textSize="13sp"
-        android:textColor="@color/md3_on_surface_secondary"
-        android:textStyle="bold"
+        android:text="@string/recording_label"
+        style="@style/AppLabelSmall"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="8dp" />
 
@@ -77,12 +75,10 @@
         android:layout_height="40dp"
         android:minWidth="88dp"
         android:gravity="center"
-        android:text="00:00"
-        android:textSize="18sp"
-        android:textColor="@color/md3_on_surface"
-        android:textStyle="bold"
+        android:text="@string/call_timer_placeholder"
+        style="@style/AppHeadlineSmall"
         android:background="@drawable/bg_soft_inset"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp" />
+        android:paddingStart="@dimen/dialog_padding_h"
+        android:paddingEnd="@dimen/dialog_padding_h" />
 
 </LinearLayout>

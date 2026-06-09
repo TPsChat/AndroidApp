@@ -80,7 +80,7 @@ public class GroupChatActivity extends BaseChatActivity {
                         boolean nowConnected = socketManager.isConnected();
                         android.util.Log.d("GroupChatActivity", "Socket connection after retry: " + nowConnected);
                         if (!nowConnected) {
-                            Toast.makeText(this, "Real-time updates may be delayed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getString(R.string.msg_real_time_updates_may_be_delayed), Toast.LENGTH_SHORT).show();
                         } else {
                             android.util.Log.d("GroupChatActivity", "Socket reconnected successfully");
                         }
@@ -115,7 +115,7 @@ public class GroupChatActivity extends BaseChatActivity {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
             android.util.Log.e("GroupChatActivity", "Cannot check for active call: no token");
-            Toast.makeText(this, "Authentication required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_authentication_required), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -202,13 +202,13 @@ public class GroupChatActivity extends BaseChatActivity {
         android.util.Log.d("GroupChatActivity", "Starting NEW group call");
         
         if (currentChat == null || currentChat.getId() == null) {
-            Toast.makeText(this, "Unable to start call: chat not loaded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_unable_to_start_call_chat_not_loaded), Toast.LENGTH_SHORT).show();
             return;
         }
 
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Authentication required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_authentication_required), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -242,7 +242,7 @@ public class GroupChatActivity extends BaseChatActivity {
             public void onFailure(@NonNull okhttp3.Call call, @NonNull java.io.IOException e) {
                 runOnUiThread(() -> {
                     android.util.Log.e("GroupChatActivity", "Failed to initiate call", e);
-                    Toast.makeText(GroupChatActivity.this, "Failed to start call", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupChatActivity.this, getString(R.string.error_failed_to_start_call), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -290,7 +290,7 @@ public class GroupChatActivity extends BaseChatActivity {
                         }
                     } catch (JSONException e) {
                         android.util.Log.e("GroupChatActivity", "Error parsing call response", e);
-                        Toast.makeText(GroupChatActivity.this, "Error starting call", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupChatActivity.this, getString(R.string.error_error_starting_call), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -475,7 +475,7 @@ public class GroupChatActivity extends BaseChatActivity {
             startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error opening group settings", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_opening_group_settings), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -581,7 +581,7 @@ public class GroupChatActivity extends BaseChatActivity {
                         startActivity(intent);
                     } catch (org.json.JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(this, "Error opening members list", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.error_error_opening_members_list), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNeutralButton("Change Avatar", (dialog, which) -> {
@@ -610,7 +610,7 @@ public class GroupChatActivity extends BaseChatActivity {
         // Update title
         TextView titleView = dialogView.findViewById(R.id.title);
         if (titleView != null) {
-            titleView.setText("Group Avatar - All members can change");
+            titleView.setText(getString(R.string.dialog_group_avatar_all_members));
         }
         
         // Set click listeners
@@ -689,20 +689,20 @@ public class GroupChatActivity extends BaseChatActivity {
     }
     
     private void removeAvatar() {
-        Toast.makeText(this, "Removing avatar...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_removing_avatar), Toast.LENGTH_SHORT).show();
         
         // For now, just show a message
         // In a real implementation, you would call an API to remove the avatar
-        Toast.makeText(this, "Remove avatar feature coming soon", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.feature_remove_avatar_feature_coming_soon), Toast.LENGTH_SHORT).show();
     }
     
     private void uploadGroupAvatar() {
         if (selectedImageUri == null || currentChat == null) {
-            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_no_image_selected), Toast.LENGTH_SHORT).show();
             return;
         }
         
-        Toast.makeText(this, "Uploading avatar...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_uploading_avatar), Toast.LENGTH_SHORT).show();
         
         try {
             // Convert URI to File
@@ -713,7 +713,7 @@ public class GroupChatActivity extends BaseChatActivity {
                 @Override
                 public void onFailure(Call call, java.io.IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(GroupChatActivity.this, "Failed to upload avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupChatActivity.this, getString(R.string.error_upload_avatar_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -737,17 +737,17 @@ public class GroupChatActivity extends BaseChatActivity {
                                     // Refresh the UI with new avatar
                                     updateUI();
                                     
-                                    Toast.makeText(GroupChatActivity.this, "Avatar updated successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(GroupChatActivity.this, getString(R.string.success_avatar_updated_successfully), Toast.LENGTH_SHORT).show();
                                     isChangingAvatar = false;
                                 } else {
-                                    Toast.makeText(GroupChatActivity.this, "Failed to upload avatar: " + jsonResponse.optString("message"), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(GroupChatActivity.this, getString(R.string.error_upload_avatar_detail, jsonResponse.optString("message")), Toast.LENGTH_LONG).show();
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Toast.makeText(GroupChatActivity.this, "Error processing response", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupChatActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(GroupChatActivity.this, "Failed to upload avatar: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatActivity.this, getString(R.string.error_failed_code, response.code()), Toast.LENGTH_SHORT).show();
                         }
                         isChangingAvatar = false;
                     });
@@ -755,7 +755,7 @@ public class GroupChatActivity extends BaseChatActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error preparing image for upload", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_image_for_upload), Toast.LENGTH_SHORT).show();
             isChangingAvatar = false;
         }
     }
@@ -790,7 +790,7 @@ public class GroupChatActivity extends BaseChatActivity {
             intent.putExtra("chat", currentChat.toJson().toString());
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error converting chat to JSON", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_converting_chat_to_json), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -806,7 +806,7 @@ public class GroupChatActivity extends BaseChatActivity {
             startActivity(intent);
         } catch (org.json.JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error opening members list", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_opening_members_list), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -822,7 +822,7 @@ public class GroupChatActivity extends BaseChatActivity {
     private void leaveGroup() {
         if (currentChat == null) return;
         
-        Toast.makeText(this, "Leaving group...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_leaving_group), Toast.LENGTH_SHORT).show();
         
         String token = databaseManager.getToken();
         apiClient.leaveGroup(token, currentChat.getId(), new Callback() {
@@ -840,7 +840,7 @@ public class GroupChatActivity extends BaseChatActivity {
                                 Toast.makeText(GroupChatActivity.this, message, Toast.LENGTH_LONG).show();
                             } else {
                                 // Normal leave
-                                Toast.makeText(GroupChatActivity.this, "Left group successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupChatActivity.this, getString(R.string.success_left_group_successfully), Toast.LENGTH_SHORT).show();
                             }
                             
                             // Add small delay to ensure server processing is complete
@@ -849,11 +849,11 @@ public class GroupChatActivity extends BaseChatActivity {
                             }, 500);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(GroupChatActivity.this, "Left group successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatActivity.this, getString(R.string.success_left_group_successfully), Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     } else {
-                        Toast.makeText(GroupChatActivity.this, "Failed to leave group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupChatActivity.this, getString(R.string.error_failed_to_leave_group), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -861,7 +861,7 @@ public class GroupChatActivity extends BaseChatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(GroupChatActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupChatActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -883,7 +883,7 @@ public class GroupChatActivity extends BaseChatActivity {
     private void deleteGroup() {
         if (currentChat == null) return;
         
-        Toast.makeText(this, "Deleting group...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_deleting_group), Toast.LENGTH_SHORT).show();
         
         String token = databaseManager.getToken();
         String groupId = currentChat.getGroupId();
@@ -895,10 +895,10 @@ public class GroupChatActivity extends BaseChatActivity {
                 public void onResponse(Call call, Response response) throws IOException {
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-                            Toast.makeText(GroupChatActivity.this, "Group deleted successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatActivity.this, getString(R.string.success_group_deleted_successfully), Toast.LENGTH_SHORT).show();
                             finish(); // Close the chat activity
                         } else {
-                            Toast.makeText(GroupChatActivity.this, "Failed to delete group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatActivity.this, getString(R.string.error_failed_to_delete_group), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -906,7 +906,7 @@ public class GroupChatActivity extends BaseChatActivity {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(GroupChatActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupChatActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                     });
                 }
             });
@@ -919,7 +919,7 @@ public class GroupChatActivity extends BaseChatActivity {
     
     private void findGroupByNameAndDelete(String token, String groupName) {
         if (groupName == null || groupName.isEmpty()) {
-            Toast.makeText(this, "Cannot find group", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_find_group), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -964,10 +964,10 @@ public class GroupChatActivity extends BaseChatActivity {
                                                     public void onResponse(Call call, Response response) throws IOException {
                                                         runOnUiThread(() -> {
                                                             if (response.isSuccessful()) {
-                                                                Toast.makeText(GroupChatActivity.this, "Group deleted successfully", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(GroupChatActivity.this, getString(R.string.success_group_deleted_successfully), Toast.LENGTH_SHORT).show();
                                                                 finish();
                                                             } else {
-                                                                Toast.makeText(GroupChatActivity.this, "Failed to delete group", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(GroupChatActivity.this, getString(R.string.error_failed_to_delete_group), Toast.LENGTH_SHORT).show();
                                                             }
                                                         });
                                                     }
@@ -975,7 +975,7 @@ public class GroupChatActivity extends BaseChatActivity {
                                                     @Override
                                                     public void onFailure(Call call, IOException e) {
                                                         runOnUiThread(() -> {
-                                                            Toast.makeText(GroupChatActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(GroupChatActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                                                         });
                                                     }
                                                 });
@@ -988,17 +988,17 @@ public class GroupChatActivity extends BaseChatActivity {
                         }
                         // If no exact match found, show error
                         runOnUiThread(() -> {
-                            Toast.makeText(GroupChatActivity.this, "Group not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatActivity.this, getString(R.string.error_group_not_found), Toast.LENGTH_SHORT).show();
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
                         runOnUiThread(() -> {
-                            Toast.makeText(GroupChatActivity.this, "Error finding group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatActivity.this, getString(R.string.error_error_finding_group), Toast.LENGTH_SHORT).show();
                         });
                     }
                 } else {
                     runOnUiThread(() -> {
-                        Toast.makeText(GroupChatActivity.this, "Failed to find group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupChatActivity.this, getString(R.string.error_failed_to_find_group), Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -1006,7 +1006,7 @@ public class GroupChatActivity extends BaseChatActivity {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(GroupChatActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupChatActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -1362,7 +1362,7 @@ public class GroupChatActivity extends BaseChatActivity {
             tvGroupCallNotificationText = findViewById(R.id.tv_group_call_notification_text);
             if (groupCallNotification == null) {
                 android.util.Log.e("GroupChatActivity", "Still null after reinit! View might not be in layout.");
-                Toast.makeText(this, "Notification view not found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_notification_view_not_found), Toast.LENGTH_SHORT).show();
                 return;
             }
             groupCallNotification.setOnClickListener(v -> joinActiveGroupCall());
@@ -1423,7 +1423,7 @@ public class GroupChatActivity extends BaseChatActivity {
         
         if (currentChat == null) {
             android.util.Log.e("GroupChatActivity", "Cannot join: currentChat is null");
-            Toast.makeText(this, "Chat not loaded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_chat_not_loaded), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -1569,7 +1569,7 @@ public class GroupChatActivity extends BaseChatActivity {
     private void updateGroupSettings(boolean isPublic) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -1579,18 +1579,18 @@ public class GroupChatActivity extends BaseChatActivity {
             settings.put("isPublic", isPublic);
             settingsData.put("settings", settings);
             
-            Toast.makeText(this, "Updating group settings...", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.status_updating_group_settings), Toast.LENGTH_SHORT).show();
             
             apiClient.updateGroupSettings(token, currentChat.getId(), settingsData, new okhttp3.Callback() {
                 @Override
                 public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-                            Toast.makeText(GroupChatActivity.this, "Group settings updated successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatActivity.this, getString(R.string.success_group_settings_updated_successfully), Toast.LENGTH_SHORT).show();
                             // Update local chat object
                             currentChat.setIsPublic(isPublic);
                         } else {
-                            Toast.makeText(GroupChatActivity.this, "Failed to update group settings", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupChatActivity.this, getString(R.string.error_failed_to_update_group_settings), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -1598,13 +1598,13 @@ public class GroupChatActivity extends BaseChatActivity {
                 @Override
                 public void onFailure(okhttp3.Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(GroupChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupChatActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
             });
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error preparing request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_request), Toast.LENGTH_SHORT).show();
         }
     }
     

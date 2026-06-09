@@ -79,9 +79,9 @@ public class ReactionUserAdapter extends RecyclerView.Adapter<ReactionUserAdapte
         // Set username (if available, otherwise show userId)
         if (user.username != null && !user.username.isEmpty()) {
             holder.tvUserName.setText(user.username);
-            holder.tvUserUsername.setText("@" + user.username);
+            holder.tvUserUsername.setText(holder.itemView.getContext().getString(R.string.username_format, user.username));
         } else {
-            holder.tvUserName.setText("User");
+            holder.tvUserName.setText(holder.itemView.getContext().getString(R.string.settings_default_user));
             holder.tvUserUsername.setText(user.userId != null ? user.userId.substring(0, Math.min(8, user.userId.length())) : "");
         }
         
@@ -117,16 +117,7 @@ public class ReactionUserAdapter extends RecyclerView.Adapter<ReactionUserAdapte
     }
 
     private String getReactionEmoji(String type) {
-        if (type == null) return "+1";
-        switch (type) {
-            case "like": return "+1";
-            case "love": return "Luv";
-            case "haha": return "Haha";
-            case "wow": return "Wow";
-            case "sad": return "Sad";
-            case "angry": return "Angry";
-            default: return "+1";
-        }
+        return com.example.chatappjava.utils.ReactionEmojis.fromType(type);
     }
 
     static class ReactionUserViewHolder extends RecyclerView.ViewHolder {

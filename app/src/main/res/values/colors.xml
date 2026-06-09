@@ -1,77 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Midnight Slate — see DESIGN.md for roles and contrast rules -->
+    <!-- Void Copper — see DESIGN.md. Legacy token names kept for layout/Java compat. -->
 
     <!-- Canvas & surfaces -->
-    <color name="palette_charcoal">#151A24</color>
-    <color name="neu_surface_sunken">#1C2230</color>
-    <color name="neu_surface_raised">#2A3142</color>
-    <color name="neu_highlight">#313A4D</color>
-    <color name="neu_shadow">#0A1018</color>
-    <color name="md3_surface_dim">#12171F</color>
-    <color name="md3_surface_container_highest">#3A4559</color>
-    <color name="md3_surface_variant">#253042</color>
+    <color name="palette_charcoal">#0B0D11</color>
+    <color name="neu_surface_sunken">#12161C</color>
+    <color name="neu_surface_raised">#1A2028</color>
+    <color name="neu_highlight">#222932</color>
+    <color name="neu_shadow">#06080C</color>
+    <color name="md3_surface_dim">#0E1116</color>
+    <color name="md3_surface_container_highest">#2B3340</color>
+    <color name="md3_surface_variant">#1E2733</color>
 
-    <!-- Ink (text on dark) — canonical hierarchy -->
-    <color name="ink_primary">#FFFFFF</color>
-    <color name="ink_muted">#8B95A8</color>
-    <color name="ink_whisper">#6B7589</color>
+    <!-- Ink -->
+    <color name="ink_primary">#F2F4F7</color>
+    <color name="ink_muted">#8A939F</color>
+    <color name="ink_whisper">#7F8996</color>
 
-    <!-- Accent: Azure Signal (legacy name palette_crimson kept for compat) -->
-    <color name="palette_crimson">#3B82F6</color>
-    <color name="palette_wine">#2563EB</color>
-    <color name="palette_blood">#1D4ED8</color>
-    <color name="brand_red_light">#60A5FA</color>
-    <color name="brand_red_glow">#333B82F6</color>
-    <color name="indicator_primary_fill_start">#333B82F6</color>
-    <color name="indicator_primary_fill_end">#223B82F6</color>
-    <color name="indicator_primary_stroke">#553B82F6</color>
-    <color name="indicator_error_fill">#33E05252</color>
-    <color name="indicator_error_stroke">#55E05252</color>
-    <color name="md3_primary_container">#1A2940</color>
-    <color name="secondary_light">#1E3A5F</color>
+    <!-- Accent: Copper Signal (legacy names palette_crimson / brand_red) -->
+    <color name="palette_crimson">#C8875A</color>
+    <color name="palette_wine">#A66D45</color>
+    <color name="palette_blood">#8F5A38</color>
+    <color name="brand_red_light">#E0A67E</color>
+    <color name="brand_red_glow">#33C8875A</color>
+    <color name="indicator_primary_fill_start">#33C8875A</color>
+    <color name="indicator_primary_fill_end">#22C8875A</color>
+    <color name="indicator_primary_stroke">#55C8875A</color>
+    <color name="indicator_error_fill">#33E05A5A</color>
+    <color name="indicator_error_stroke">#55E05A5A</color>
+    <color name="md3_primary_container">#2A2218</color>
+    <color name="secondary_light">#3A2E22</color>
 
-    <!-- Semantic status (not decorative accents) -->
-    <color name="danger">#E05252</color>
-    <color name="accept">#2DA87A</color>
+    <!-- Switch track (copper on, outline off) -->
+    <color name="switch_track_off">#334A5568</color>
+    <color name="switch_track_on">#55C8875A</color>
+
+    <!-- Semantic -->
+    <color name="danger">#E05A5A</color>
+    <color name="accept">#3DB88C</color>
     <color name="warning_color">#D4A054</color>
-    <color name="call_end">#C44040</color>
-    <color name="danger_surface">#2A1C1C</color>
+    <color name="call_end">#C44A4A</color>
+    <color name="danger_surface">#2A1818</color>
     <color name="danger_border">#4A2828</color>
-    <color name="md3_error_container">#2A1C1C</color>
+    <color name="md3_error_container">#2A1818</color>
 
     <!-- Chat bubbles -->
-    <color name="my_message_bg">#1E2A3D</color>
+    <color name="my_message_bg">#141C24</color>
     <color name="other_message_bg">@color/neu_surface_raised</color>
-    <color name="reply_message_bg">#253042</color>
+    <color name="reply_message_bg">#1E2733</color>
 
-    <!-- Borders & dividers -->
-    <color name="md3_border_subtle">#2E3748</color>
-    <color name="md3_outline_variant">#2E3748</color>
-    <color name="md3_outline">#4A5568</color>
-    <color name="border_highlight">#18FFFFFF</color>
+    <!-- Borders -->
+    <color name="md3_border_subtle">#2A323D</color>
+    <color name="md3_outline_variant">#2A323D</color>
+    <color name="md3_outline">#3D4654</color>
+    <color name="border_highlight">#14FFFFFF</color>
 
     <!-- Shadows & overlays -->
-    <color name="shadow_tint">#1A000000</color>
-    <color name="shadow_tint_subtle">#0D000000</color>
-    <color name="surface_overlay">#99151A24</color>
-    <color name="call_overlay_scrim">#CC151A24</color>
-    <color name="control_button_background">#66151A24</color>
-    <color name="semi_transparent_black">#66151A24</color>
-    <color name="md3_glass_fill">#CC1C2230</color>
-    <color name="md3_glass_nav">#E6151A24</color>
+    <color name="shadow_tint">#14000000</color>
+    <color name="shadow_tint_subtle">#0A000000</color>
+    <color name="surface_overlay">#990B0D11</color>
+    <color name="call_overlay_scrim">#CC0B0D11</color>
+    <color name="control_button_background">#660B0D11</color>
+    <color name="semi_transparent_black">#660B0D11</color>
+    <color name="md3_glass_fill">#FF12161C</color>
+    <color name="md3_glass_nav">#FF12161C</color>
 
-    <!-- Ripples & state tints -->
-    <color name="md3_ripple">#1A3B82F6</color>
-    <color name="danger_ripple">#1AE05252</color>
-    <color name="success_ripple">#1A2DA87A</color>
-    <color name="success_gradient_start">#2DA87A</color>
-    <color name="success_gradient_end">#248A66</color>
-    <color name="danger_gradient_start">#E05252</color>
-    <color name="danger_gradient_end">#C44040</color>
+    <!-- Ripples -->
+    <color name="md3_ripple">#1AC8875A</color>
+    <color name="danger_ripple">#1AE05A5A</color>
+    <color name="success_ripple">#1A3DB88C</color>
+    <color name="success_gradient_start">#3DB88C</color>
+    <color name="success_gradient_end">#2E9A74</color>
+    <color name="danger_gradient_start">#E05A5A</color>
+    <color name="danger_gradient_end">#C44A4A</color>
 
-    <!-- Video / call stage -->
-    <color name="video_stage">#0D1117</color>
+    <!-- Video / call -->
+    <color name="video_stage">#080A0E</color>
     <color name="video_stage_soft">@color/palette_charcoal</color>
 
     <!-- Text aliases -->
@@ -86,7 +90,7 @@
     <color name="white">@color/ink_primary</color>
     <color name="black">@color/palette_charcoal</color>
 
-    <!-- Legacy core aliases -->
+    <!-- Legacy core -->
     <color name="app_bg">@color/palette_charcoal</color>
     <color name="pending">@color/neu_surface_raised</color>
     <color name="dialog_bg">@color/neu_surface_sunken</color>
@@ -97,7 +101,7 @@
     <color name="md3_primary">@color/palette_crimson</color>
     <color name="md3_primary_dark">@color/palette_wine</color>
     <color name="md3_on_primary">@color/ink_primary</color>
-    <color name="md3_on_primary_container">#93C5FD</color>
+    <color name="md3_on_primary_container">#E0A67E</color>
 
     <color name="md3_background">@color/palette_charcoal</color>
     <color name="md3_surface">@color/neu_surface_raised</color>
@@ -128,7 +132,7 @@
     <color name="dialog_button_destructive_text">@color/ink_primary</color>
     <color name="dialog_button_accent_text">@color/palette_crimson</color>
 
-    <!-- App-level aliases -->
+    <!-- App aliases -->
     <color name="button_normal_bg">@color/palette_crimson</color>
     <color name="brand_red">@color/palette_crimson</color>
     <color name="primary_color">@color/palette_crimson</color>
@@ -210,7 +214,6 @@
     <color name="gray">@color/ink_muted</color>
     <color name="blue">@color/palette_crimson</color>
 
-    <!-- Unused Material template stubs (required by Android tooling) -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>

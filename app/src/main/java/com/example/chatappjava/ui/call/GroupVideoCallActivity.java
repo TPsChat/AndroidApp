@@ -151,7 +151,7 @@ public class GroupVideoCallActivity extends AppCompatActivity {
         groupName = getIntent().getStringExtra("groupName");
         
         if (callId == null || chatId == null) {
-            Toast.makeText(this, "Invalid call data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_invalid_call_data), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -217,7 +217,7 @@ public class GroupVideoCallActivity extends AppCompatActivity {
                 grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 initializeCall();
             } else {
-                Toast.makeText(this, "Permissions are required for video call", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_permissions_are_required_for_video_call), Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -241,7 +241,7 @@ public class GroupVideoCallActivity extends AppCompatActivity {
                 socketManager.joinCallRoom(callId);
             } else {
                 Log.e(TAG, "Cannot join call room: socketManager=" + (socketManager != null) + ", callId=" + callId);
-                Toast.makeText(this, "Failed to connect to call", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_failed_to_connect_to_call), Toast.LENGTH_SHORT).show();
                 finish();
                 return;
             }
@@ -280,7 +280,7 @@ public class GroupVideoCallActivity extends AppCompatActivity {
             Log.d(TAG, "Call initialized successfully");
         } catch (Exception e) {
             Log.e(TAG, "Critical error initializing call", e);
-            Toast.makeText(this, "Failed to initialize call: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_failed_with_message, e.getMessage()), Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -733,7 +733,7 @@ public class GroupVideoCallActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, "Error starting video capture", e);
             // Don't end call - continue without video
-            Toast.makeText(this, "Camera unavailable, continuing without video", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_camera_unavailable_continuing_without_video), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -900,7 +900,7 @@ public class GroupVideoCallActivity extends AppCompatActivity {
             Log.d(TAG, "Audio capture started successfully");
         } catch (Exception e) {
             Log.e(TAG, "Error starting audio capture", e);
-            Toast.makeText(this, "Failed to start audio capture: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_failed_with_message, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -1066,7 +1066,7 @@ public class GroupVideoCallActivity extends AppCompatActivity {
     
     private void showParticipantsListDialog() {
         if (participants == null || participants.isEmpty()) {
-            Toast.makeText(this, "No participants in call", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_no_participants_in_call), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -1085,7 +1085,7 @@ public class GroupVideoCallActivity extends AppCompatActivity {
         android.widget.Button btnClose = dialogView.findViewById(R.id.btn_close);
         
         if (tvTitle != null) {
-            tvTitle.setText("Participants (" + participants.size() + ")");
+            tvTitle.setText(getString(R.string.call_participants_title, participants.size()));
         }
         
         // Create adapter for participants list

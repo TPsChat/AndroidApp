@@ -261,7 +261,7 @@ public class CreatePostActivity extends AppCompatActivity {
                             // Single image selected
                             Uri uri = data.getData();
                             if (selectedMedia.size() >= MAX_IMAGES) {
-                                Toast.makeText(this, "Maximum " + MAX_IMAGES + " images allowed. Please remove some images first.", 
+                                Toast.makeText(this, getString(R.string.error_max_images, MAX_IMAGES), 
                                     Toast.LENGTH_LONG).show();
                             } else {
                                 addMediaItem(uri, "image");
@@ -303,11 +303,11 @@ public class CreatePostActivity extends AppCompatActivity {
         ivLocation.setOnClickListener(v -> openLocationPicker());
         ivEmoji.setOnClickListener(v -> {
             // TODO: Open emoji picker
-            Toast.makeText(this, "Emoji picker coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.feature_emoji_picker_coming_soon), Toast.LENGTH_SHORT).show();
         });
         ivMoreOptions.setOnClickListener(v -> {
             // TODO: Show more options (Poll, GIF, etc.)
-            Toast.makeText(this, "More options coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.feature_more_options_coming_soon), Toast.LENGTH_SHORT).show();
         });
     }
     
@@ -499,7 +499,7 @@ public class CreatePostActivity extends AppCompatActivity {
                 tvEmbeddedContent.setVisibility(View.VISIBLE);
                 Log.d(TAG, "Set content preview: " + (content.length() > 50 ? content.substring(0, 50) + "..." : content));
             } else {
-                tvEmbeddedContent.setText("Shared a post");
+                tvEmbeddedContent.setText(getString(R.string.post_shared_embedded));
                 tvEmbeddedContent.setVisibility(View.VISIBLE);
                 Log.d(TAG, "Content is empty, showing default text");
             }
@@ -775,7 +775,7 @@ public class CreatePostActivity extends AppCompatActivity {
         // Load friends
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -785,7 +785,7 @@ public class CreatePostActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(CreatePostActivity.this, "Failed to load friends", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreatePostActivity.this, getString(R.string.error_load_friends), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -811,10 +811,10 @@ public class CreatePostActivity extends AppCompatActivity {
                             }
                             tvNoFriends.setVisibility(filteredFriends.isEmpty() ? View.VISIBLE : View.GONE);
                         } else {
-                            Toast.makeText(CreatePostActivity.this, "Failed to load friends", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreatePostActivity.this, getString(R.string.error_load_friends), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        Toast.makeText(CreatePostActivity.this, "Error parsing friends", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreatePostActivity.this, getString(R.string.error_error_parsing_friends), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -825,7 +825,7 @@ public class CreatePostActivity extends AppCompatActivity {
     
     private void openLocationPicker() {
         // TODO: Open location picker
-        Toast.makeText(this, "Location picker coming soon", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.feature_location_picker_coming_soon), Toast.LENGTH_SHORT).show();
         // For now, set a mock location
         selectedLocation = "Current Location";
         updateLocationTagsVisibility();
@@ -869,13 +869,13 @@ public class CreatePostActivity extends AppCompatActivity {
     
     private void publishPost() {
         if (!hasContent) {
-            Toast.makeText(this, "Please add some content", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_add_some_content), Toast.LENGTH_SHORT).show();
             return;
         }
         
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -938,7 +938,7 @@ public class CreatePostActivity extends AppCompatActivity {
                         if (progressDialog != null && progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
-                        Toast.makeText(CreatePostActivity.this, "Failed to process image file", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreatePostActivity.this, getString(R.string.error_failed_to_process_image_file), Toast.LENGTH_SHORT).show();
                         btnPost.setEnabled(true);
                     });
                     return;
@@ -956,7 +956,7 @@ public class CreatePostActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                             }
                             Log.e(TAG, "Failed to upload image: " + e.getMessage());
-                            Toast.makeText(CreatePostActivity.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreatePostActivity.this, getString(R.string.error_failed_to_upload_image), Toast.LENGTH_SHORT).show();
                             btnPost.setEnabled(true);
                         });
                     }
@@ -993,7 +993,7 @@ public class CreatePostActivity extends AppCompatActivity {
                                             if (progressDialog != null && progressDialog.isShowing()) {
                                                 progressDialog.dismiss();
                                             }
-                                            Toast.makeText(CreatePostActivity.this, "Failed to upload images", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(CreatePostActivity.this, getString(R.string.error_failed_to_upload_images), Toast.LENGTH_SHORT).show();
                                             btnPost.setEnabled(true);
                                         } else {
                                             createPostWithData(token, content, uploadedImageUrls);
@@ -1007,7 +1007,7 @@ public class CreatePostActivity extends AppCompatActivity {
                                     if (progressDialog != null && progressDialog.isShowing()) {
                                         progressDialog.dismiss();
                                     }
-                                    Toast.makeText(CreatePostActivity.this, "Error processing upload response", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(CreatePostActivity.this, getString(R.string.error_error_processing_upload_response), Toast.LENGTH_SHORT).show();
                                     btnPost.setEnabled(true);
                                 });
                             }
@@ -1017,7 +1017,7 @@ public class CreatePostActivity extends AppCompatActivity {
                                 if (progressDialog != null && progressDialog.isShowing()) {
                                     progressDialog.dismiss();
                                 }
-                                Toast.makeText(CreatePostActivity.this, "Failed to upload image (Code: " + response.code() + ")", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CreatePostActivity.this, getString(R.string.error_upload_image_code, response.code()), Toast.LENGTH_SHORT).show();
                                 btnPost.setEnabled(true);
                             });
                         }
@@ -1030,7 +1030,7 @@ public class CreatePostActivity extends AppCompatActivity {
                     if (progressDialog != null && progressDialog.isShowing()) {
                         progressDialog.dismiss();
                     }
-                    Toast.makeText(CreatePostActivity.this, "Error processing image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreatePostActivity.this, getString(R.string.error_error_processing_image), Toast.LENGTH_SHORT).show();
                     btnPost.setEnabled(true);
                 });
                 return;
@@ -1103,7 +1103,7 @@ public class CreatePostActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                         }
                         Log.e(TAG, "Failed to create post: " + e.getMessage());
-                        Toast.makeText(CreatePostActivity.this, "Failed to publish post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreatePostActivity.this, getString(R.string.error_publish_post, e.getMessage()), Toast.LENGTH_SHORT).show();
                         btnPost.setEnabled(true);
                     });
                 }
@@ -1135,7 +1135,7 @@ public class CreatePostActivity extends AppCompatActivity {
                                     JSONObject jsonResponse = new JSONObject(finalResponseBody);
                                     
                                     if (jsonResponse.optBoolean("success", false)) {
-                                        Toast.makeText(CreatePostActivity.this, "Post published successfully", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(CreatePostActivity.this, getString(R.string.success_post_published_successfully), Toast.LENGTH_SHORT).show();
                                         setResult(RESULT_OK);
                                         finish();
                                     } else {
@@ -1145,13 +1145,13 @@ public class CreatePostActivity extends AppCompatActivity {
                                         btnPost.setEnabled(true);
                                     }
                                 } else {
-                                    Toast.makeText(CreatePostActivity.this, "Post published successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(CreatePostActivity.this, getString(R.string.success_post_published_successfully), Toast.LENGTH_SHORT).show();
                                     setResult(RESULT_OK);
                                     finish();
                                 }
                             } catch (JSONException e) {
                                 Log.e(TAG, "Error parsing post response: " + e.getMessage());
-                                Toast.makeText(CreatePostActivity.this, "Post published successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CreatePostActivity.this, getString(R.string.success_post_published_successfully), Toast.LENGTH_SHORT).show();
                                 setResult(RESULT_OK);
                                 finish();
                             }
@@ -1177,11 +1177,11 @@ public class CreatePostActivity extends AppCompatActivity {
                                     }
                                 } else {
                                     Log.e(TAG, "Post creation failed with code: " + responseCode + ", no response body");
-                                    Toast.makeText(CreatePostActivity.this, "Failed to publish post (Code: " + responseCode + ")", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(CreatePostActivity.this, getString(R.string.error_publish_post_code, responseCode), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (Exception e) {
                                 Log.e(TAG, "Error parsing error response: " + e.getMessage() + ", body: " + finalResponseBody);
-                                Toast.makeText(CreatePostActivity.this, "Failed to publish post (Code: " + responseCode + ")", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CreatePostActivity.this, getString(R.string.error_publish_post_code, responseCode), Toast.LENGTH_SHORT).show();
                             }
                             btnPost.setEnabled(true);
                         }
@@ -1194,7 +1194,7 @@ public class CreatePostActivity extends AppCompatActivity {
             if (progressDialog != null && progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            Toast.makeText(this, "Error preparing post data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_post_data), Toast.LENGTH_SHORT).show();
             btnPost.setEnabled(true);
         }
     }

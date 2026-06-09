@@ -18,21 +18,20 @@
         android:paddingEnd="20dp"
         android:paddingTop="22dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bg_obsidian_card">
+        android:background="@drawable/bg_glass_panel">
 
         <!-- Title -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Edit Post"
-            android:textSize="20sp"
-            android:textColor="@color/md3_on_surface"
-            android:textStyle="bold"
+            android:text="@string/dialog_edit_post_title"
+            android:textAppearance="@style/AppHeadlineSmall"
+            android:textColor="@color/text_primary"
             android:gravity="center"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="8dp"
-            android:paddingBottom="18dp" />
+            android:paddingBottom="@dimen/dialog_padding_h" />
 
         <!-- Content EditText -->
         <EditText
@@ -42,13 +41,13 @@
             android:minHeight="130dp"
             android:maxLines="10"
             android:inputType="textMultiLine|textCapSentences"
-            android:hint="What's on your mind?"
+            android:hint="@string/home_create_post_hint"
             android:gravity="top|start"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:paddingTop="14dp"
             android:paddingBottom="14dp"
-            android:layout_marginBottom="14dp"
+            android:layout_marginBottom="@dimen/spacing_md"
             android:background="@drawable/bg_soft_inset"
             android:textColor="@color/md3_on_surface"
             android:textColorHint="@color/md3_on_surface_secondary"
@@ -73,7 +72,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_view"
+                android:src="@drawable/ic_eye"
                 android:layout_marginEnd="12dp"
                 app:tint="@color/md3_primary" />
 
@@ -81,7 +80,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Privacy"
+                android:text="@string/post_privacy_label"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:textColor="@color/md3_on_surface" />
@@ -90,7 +89,7 @@
                 android:id="@+id/tv_edit_privacy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Public"
+                android:text="@string/post_privacy_public"
                 android:textSize="14sp"
                 android:textColor="@color/md3_on_surface_secondary"
                 android:layout_marginEnd="8dp" />
@@ -98,7 +97,7 @@
             <ImageView
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-                android:src="@android:drawable/ic_menu_more"
+                android:src="@drawable/ic_more"
                 app:tint="@color/md3_on_surface_secondary" />
 
         </LinearLayout>
@@ -122,11 +121,11 @@
             <LinearLayout
                 android:id="@+id/btn_cancel"
                 android:layout_width="0dp"
-                android:layout_height="46dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:background="@drawable/bg_reject_button_modern"
+                android:background="@style/DialogButton.Secondary"
                 android:clickable="true"
                 android:focusable="true"
                 android:layout_marginEnd="10dp">
@@ -134,7 +133,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cancel"
+                    android:text="@string/action_cancel"
                     android:textSize="15sp"
                     android:textColor="@color/dialog_button_secondary_text"
                     android:textStyle="bold" />
@@ -145,18 +144,18 @@
             <LinearLayout
                 android:id="@+id/btn_save"
                 android:layout_width="0dp"
-                android:layout_height="46dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:background="@drawable/bg_new_message_button"
+                android:background="@style/DialogButton.Filled"
                 android:clickable="true"
                 android:focusable="true">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Save"
+                    android:text="@string/action_save"
                     android:textSize="15sp"
                     android:textColor="@color/dialog_button_filled_text"
                     android:textStyle="bold" />

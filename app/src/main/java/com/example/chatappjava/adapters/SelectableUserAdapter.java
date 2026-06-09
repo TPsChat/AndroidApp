@@ -39,7 +39,7 @@ public class SelectableUserAdapter extends RecyclerView.Adapter<SelectableUserAd
     public void onBindViewHolder(@NonNull VH holder, int position) {
         User u = users.get(position);
         holder.tvName.setText(u.getDisplayName());
-        holder.tvUsername.setText("@" + u.getUsername());
+        holder.tvUsername.setText(holder.itemView.getContext().getString(R.string.username_format, u.getUsername()));
         
         // Load avatar - handle URL like other adapters
         if (u.getAvatar() != null && !u.getAvatar().isEmpty()) {

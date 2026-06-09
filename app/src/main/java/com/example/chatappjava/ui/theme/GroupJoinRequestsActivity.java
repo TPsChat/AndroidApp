@@ -3,6 +3,7 @@ package com.example.chatappjava.ui.theme;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.EditText;
 import android.text.TextWatcher;
 import android.text.Editable;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chatappjava.R;
 import com.example.chatappjava.adapters.MessageAdapter;
 import com.example.chatappjava.models.Chat;
 import com.example.chatappjava.models.User;
@@ -45,6 +47,10 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
         etSearch = findViewById(com.example.chatappjava.R.id.et_search);
         View ivBack = findViewById(com.example.chatappjava.R.id.iv_back);
         if (ivBack != null) ivBack.setOnClickListener(v -> finish());
+        TextView tvTitle = findViewById(com.example.chatappjava.R.id.tv_title);
+        if (tvTitle != null) {
+            tvTitle.setText(com.example.chatappjava.R.string.title_activity_group_join_requests);
+        }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MessageAdapter.RequestsAdapter(requests, new MessageAdapter.RequestsAdapter.ActionListener() {
             @Override
@@ -81,7 +87,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
     private void loadRequests() {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty() || currentChat == null) {
-            Toast.makeText(this, "Missing data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_missing_data), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -91,7 +97,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
             @Override public void onFailure(okhttp3.Call call, IOException e) {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(GroupJoinRequestsActivity.this, "Failed to load requests", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupJoinRequestsActivity.this, getString(R.string.error_failed_to_load_requests), Toast.LENGTH_SHORT).show();
                 });
             }
             @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
@@ -119,7 +125,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
                             Toast.makeText(GroupJoinRequestsActivity.this, json.optString("message", "Failed"), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        Toast.makeText(GroupJoinRequestsActivity.this, "Parse error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupJoinRequestsActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -154,7 +160,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
             String targetGroupId = currentChat.getGroupId() != null && !currentChat.getGroupId().isEmpty() ? currentChat.getGroupId() : currentChat.getId();
             apiClient.authenticatedPost("/api/groups/" + targetGroupId + "/join-requests/" + user.getId(), token, body, new okhttp3.Callback() {
                 @Override public void onFailure(okhttp3.Call call, IOException e) {
-                    runOnUiThread(() -> Toast.makeText(GroupJoinRequestsActivity.this, "Action failed", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(GroupJoinRequestsActivity.this, getString(R.string.error_action_failed), Toast.LENGTH_SHORT).show());
                 }
                 @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                     runOnUiThread(() -> {
@@ -162,7 +168,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
                             Toast.makeText(GroupJoinRequestsActivity.this, approve ? "Approved" : "Rejected", Toast.LENGTH_SHORT).show();
                             loadRequests();
                         } else {
-                            Toast.makeText(GroupJoinRequestsActivity.this, "Action failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupJoinRequestsActivity.this, getString(R.string.error_action_failed), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

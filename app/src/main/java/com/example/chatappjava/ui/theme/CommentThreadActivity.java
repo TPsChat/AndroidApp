@@ -97,7 +97,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
         // Get post from intent
         String postJson = getIntent().getStringExtra("post");
         if (postJson == null) {
-            Toast.makeText(this, "Post data not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_post_not_found), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -106,7 +106,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
             post = Post.fromJson(new JSONObject(postJson));
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing post JSON", e);
-            Toast.makeText(this, "Error loading post", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_load_post), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -184,7 +184,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
         if (ivAttachMedia != null) {
             ivAttachMedia.setOnClickListener(v -> {
                 // TODO: Open media picker
-                Toast.makeText(this, "Media attachment coming soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.feature_media_attachment_soon), Toast.LENGTH_SHORT).show();
             });
         }
 
@@ -256,7 +256,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
 
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -267,7 +267,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 runOnUiThread(() -> {
                     Log.e(TAG, "Error loading comments: " + e.getMessage());
-                    Toast.makeText(CommentThreadActivity.this, "Failed to load comments", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CommentThreadActivity.this, getString(R.string.error_load_comments), Toast.LENGTH_SHORT).show();
                     if (isInitialLoad) {
                         progressLoading.setVisibility(View.GONE);
                         llEmptyState.setVisibility(View.VISIBLE);
@@ -340,7 +340,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                                 }
                             } else {
                                 String message = jsonResponse.optString("message", "Unknown error");
-                                Toast.makeText(CommentThreadActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CommentThreadActivity.this, getString(R.string.error_with_message, message), Toast.LENGTH_SHORT).show();
                                 if (isInitialLoad) {
                                     llEmptyState.setVisibility(View.VISIBLE);
                                     rvComments.setVisibility(View.GONE);
@@ -348,7 +348,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                             }
                         } else {
                             Log.e(TAG, "Server error loading comments: " + response.code());
-                            Toast.makeText(CommentThreadActivity.this, "Server error: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CommentThreadActivity.this, getString(R.string.error_server, response.code()), Toast.LENGTH_SHORT).show();
                             if (isInitialLoad) {
                                 llEmptyState.setVisibility(View.VISIBLE);
                                 rvComments.setVisibility(View.GONE);
@@ -356,7 +356,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "Error parsing comments JSON", e);
-                        Toast.makeText(CommentThreadActivity.this, "Error parsing data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CommentThreadActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                         if (isInitialLoad) {
                             llEmptyState.setVisibility(View.VISIBLE);
                             rvComments.setVisibility(View.GONE);
@@ -393,7 +393,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
 
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -415,7 +415,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 runOnUiThread(() -> {
                     ivSendComment.setEnabled(true);
-                    Toast.makeText(CommentThreadActivity.this, "Failed to post comment: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CommentThreadActivity.this, getString(R.string.error_post_comment, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -493,14 +493,14 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                                     rvComments.setVisibility(View.VISIBLE);
                                 } else {
                                     String message = jsonResponse.optString("message", "Failed to post comment");
-                                    Toast.makeText(CommentThreadActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(CommentThreadActivity.this, getString(R.string.error_with_message, message), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(CommentThreadActivity.this, "Server error: " + response.code(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CommentThreadActivity.this, getString(R.string.error_server, response.code()), Toast.LENGTH_SHORT).show();
                             }
                     } catch (JSONException e) {
                         Log.e(TAG, "Error parsing comment response", e);
-                        Toast.makeText(CommentThreadActivity.this, "Error parsing response", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CommentThreadActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -531,7 +531,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
     public void onLikeClick(Comment comment, int position) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -553,7 +553,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                         comment.setLiked(false);
                         comment.setLikesCount(Math.max(0, comment.getLikesCount() - 1));
                         commentAdapter.updateComment(position, comment);
-                        Toast.makeText(CommentThreadActivity.this, "Failed to like comment", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CommentThreadActivity.this, getString(R.string.error_like_comment), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -572,7 +572,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                         comment.setLiked(true);
                         comment.setLikesCount(comment.getLikesCount() + 1);
                         commentAdapter.updateComment(position, comment);
-                        Toast.makeText(CommentThreadActivity.this, "Failed to unlike comment", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CommentThreadActivity.this, getString(R.string.error_unlike_comment), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -592,14 +592,14 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
     @Override
     public void onAuthorClick(Comment comment) {
         // TODO: Open author profile
-        Toast.makeText(this, "Author: " + comment.getUsername(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.info_author, comment.getUsername()), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onReactionLongPress(Comment comment, int position, View view) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -619,7 +619,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                         comment.setLiked(false);
                         comment.setLikesCount(Math.max(0, comment.getLikesCount() - 1));
                         commentAdapter.updateComment(position, comment);
-                        Toast.makeText(CommentThreadActivity.this, "Failed to add reaction", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CommentThreadActivity.this, getString(R.string.error_add_reaction), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -627,13 +627,13 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                 public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-                            Toast.makeText(CommentThreadActivity.this, "Reacted with " + reactionType, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CommentThreadActivity.this, getString(R.string.reaction_added, reactionType), Toast.LENGTH_SHORT).show();
                         } else {
                             // Revert optimistic update
                             comment.setLiked(false);
                             comment.setLikesCount(Math.max(0, comment.getLikesCount() - 1));
                             commentAdapter.updateComment(position, comment);
-                            Toast.makeText(CommentThreadActivity.this, "Failed to add reaction", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CommentThreadActivity.this, getString(R.string.error_add_reaction), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -681,7 +681,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
             // For non-owners, only show report option
             String[] options = {"Report"};
             builder.setItems(options, (dialog, which) -> {
-                Toast.makeText(this, "Report feature coming soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.feature_report_soon), Toast.LENGTH_SHORT).show();
             });
         }
         builder.show();
@@ -716,7 +716,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                 // TODO: Call API to update comment
                 comment.setContent(newContent);
                 commentAdapter.updateComment(position, comment);
-                Toast.makeText(this, "Comment updated", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.comment_updated_success), Toast.LENGTH_SHORT).show();
             }
         });
         builder.setNegativeButton("Cancel", null);
@@ -725,7 +725,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
 
     private void showReactionUsersDialog(Comment comment) {
         if (comment.getReactions() == null || comment.getReactions().isEmpty()) {
-            Toast.makeText(this, "No reactions yet", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.no_reactions_yet), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -795,7 +795,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                             @Override
                             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                                 runOnUiThread(() -> {
-                                    Toast.makeText(CommentThreadActivity.this, "Failed to delete comment", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(CommentThreadActivity.this, getString(R.string.error_delete_comment), Toast.LENGTH_SHORT).show();
                                 });
                             }
 
@@ -805,9 +805,9 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                                     if (response.isSuccessful()) {
                                         commentList.remove(position);
                                         commentAdapter.removeComment(position);
-                                        Toast.makeText(CommentThreadActivity.this, "Comment deleted", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(CommentThreadActivity.this, getString(R.string.msg_comment_deleted), Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(CommentThreadActivity.this, "Failed to delete comment", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(CommentThreadActivity.this, getString(R.string.error_delete_comment), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }

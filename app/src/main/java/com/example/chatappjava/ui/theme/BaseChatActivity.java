@@ -20,8 +20,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -190,8 +188,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     private ImageView ivRecordingIndicator;
     private View vPulseRing1;
     private View vPulseRing2;
-    private android.view.animation.Animation pulseRing1Animation;
-    private android.view.animation.Animation pulseRing2Animation;
     
     // Voice playback state
     private android.media.MediaPlayer currentVoicePlayer;
@@ -233,10 +229,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                         if (cameraBitmap != null) {
                             handleSelectedBitmap(cameraBitmap);
                         } else {
-                            Toast.makeText(this, "No photo captured", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getString(R.string.msg_no_photo_captured), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(this, "No photo captured", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.msg_no_photo_captured), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -297,7 +293,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     // Video call handling - can be overridden by subclasses
     protected void handleVideoCall() {
         // Video call feature removed - only UI button remains
-        Toast.makeText(this, "Video call feature is not available", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.msg_video_call_feature_is_not_available), Toast.LENGTH_SHORT).show();
     }
     
     private User getCurrentUser() {
@@ -378,7 +374,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (cameraIntent.resolveActivity(getPackageManager()) == null) {
-            Toast.makeText(this, "Cannot open camera", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_open_camera), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -390,7 +386,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             if (!cameraPhotoFile.exists()) {
                 boolean created = cameraPhotoFile.createNewFile();
                 if (!created) {
-                    Toast.makeText(this, "Failed to create camera file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_failed_to_create_camera_file), Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -404,7 +400,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             cameraLauncher.launch(cameraIntent);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, "Cannot prepare camera file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_prepare_camera_file), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -450,26 +446,26 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
             } else {
-                Toast.makeText(this, "Camera permission required to take photos", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_camera_permission_required_to_take_photos), Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_STORAGE_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openGallery();
             } else {
-                Toast.makeText(this, "Storage permission required to select images", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_storage_permission_required_to_select_images), Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == REQUEST_CODE_RECORD_AUDIO_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startRecording();
             } else {
-                Toast.makeText(this, "Microphone permission required to record voice messages", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_microphone_permission_required_to_record_voice_messages), Toast.LENGTH_SHORT).show();
             }
         }
     }
     
     protected void handleSelectedImage(Uri imageUri) {
         if (imageUri == null) {
-            Toast.makeText(this, "Cannot load image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_load_image), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -501,19 +497,19 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 uploadImageToServer(imageFile, imageUri);
             } else {
                 setUploadInProgress(false);
-                Toast.makeText(this, "Cannot read image file", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_cannot_read_image_file), Toast.LENGTH_SHORT).show();
             }
             
         } catch (Exception e) {
             e.printStackTrace();
             setUploadInProgress(false);
-            Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_processing_image), Toast.LENGTH_SHORT).show();
         }
     }
     
     protected void handleSelectedBitmap(android.graphics.Bitmap bitmap) {
         if (bitmap == null) {
-            Toast.makeText(this, "Cannot load image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_load_image), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -536,13 +532,13 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         } catch (Exception e) {
             e.printStackTrace();
             setUploadInProgress(false);
-            Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_processing_image), Toast.LENGTH_SHORT).show();
         }
     }
     
     protected void handleSelectedFile(Uri fileUri) {
         if (fileUri == null) {
-            Toast.makeText(this, "Cannot load file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_load_file), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -569,7 +565,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 // Check file size limit (50MB)
                 if (fileSize > 50 * 1024 * 1024) {
                     setUploadInProgress(false);
-                    Toast.makeText(this, "File size too large. Maximum 50MB allowed.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.msg_file_size_too_large_maximum_50mb_allowed), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 
@@ -580,13 +576,13 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 
             } else {
                 setUploadInProgress(false);
-                Toast.makeText(this, "Cannot read file information", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_cannot_read_file_information), Toast.LENGTH_SHORT).show();
             }
             
         } catch (Exception e) {
             e.printStackTrace();
             setUploadInProgress(false);
-            Toast.makeText(this, "Error processing file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_processing_file), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -598,7 +594,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (currentChat == null) {
             android.util.Log.e("BaseChatActivity", "uploadImageToServer: currentChat is null");
             setUploadInProgress(false);
-            Toast.makeText(this, "Chat not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_chat_not_available), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -606,7 +602,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (token == null || token.isEmpty()) {
             android.util.Log.e("BaseChatActivity", "uploadImageToServer: token is null or empty");
             setUploadInProgress(false);
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -629,18 +625,18 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                 if (!imageUrl.isEmpty()) {
                                     sendImageMessage(imageUrl, localUri);
                                 } else {
-                                    Toast.makeText(BaseChatActivity.this, "Failed to receive image URL from server", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(BaseChatActivity.this, getString(R.string.error_failed_to_receive_image_url_from_server), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 String errorMsg = jsonResponse.optString("message", "Upload failed");
                                 Toast.makeText(BaseChatActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(BaseChatActivity.this, "Upload failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BaseChatActivity.this, getString(R.string.error_upload_failed_code, response.code()), Toast.LENGTH_SHORT).show();
                         }
                     } catch (org.json.JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(BaseChatActivity.this, "Error processing server response", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                     } finally {
                         setUploadInProgress(false);
                     }
@@ -652,7 +648,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 android.util.Log.e("BaseChatActivity", "Upload failed: " + e.getMessage());
                 runOnUiThread(() -> {
                     setUploadInProgress(false);
-                    Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseChatActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -661,14 +657,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected void uploadFileToServer(Uri fileUri, String fileName, String mimeType, long fileSize) {
         if (currentChat == null) {
             setUploadInProgress(false);
-            Toast.makeText(this, "Chat not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_chat_not_available), Toast.LENGTH_SHORT).show();
             return;
         }
         
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
             setUploadInProgress(false);
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -697,7 +693,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
 
         if (fileToUpload == null) {
             setUploadInProgress(false);
-            Toast.makeText(this, "Unable to access selected file. Please try again.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_unable_to_access_selected_file_please_try_again), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -722,18 +718,18 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                 if (!fileUrl.isEmpty()) {
                                     sendFileMessage(fileUrl, serverFileName, originalName, serverMimeType, serverFileSize);
                                 } else {
-                                    Toast.makeText(BaseChatActivity.this, "Failed to receive file URL from server", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(BaseChatActivity.this, getString(R.string.error_failed_to_receive_file_url_from_server), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 String errorMsg = jsonResponse.optString("message", "Upload failed");
                                 Toast.makeText(BaseChatActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(BaseChatActivity.this, "Upload failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BaseChatActivity.this, getString(R.string.error_upload_failed_code, response.code()), Toast.LENGTH_SHORT).show();
                         }
                     } catch (org.json.JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(BaseChatActivity.this, "Error processing server response", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                     } finally {
                         setUploadInProgress(false);
                     }
@@ -745,7 +741,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 android.util.Log.e("BaseChatActivity", "File upload failed: " + e.getMessage());
                 runOnUiThread(() -> {
                     setUploadInProgress(false);
-                    Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseChatActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
         };
@@ -760,7 +756,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         String senderId = databaseManager.getUserId();
         
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -836,10 +832,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                 }
                             } catch (org.json.JSONException e) {
                                 e.printStackTrace();
-                                Toast.makeText(BaseChatActivity.this, "Error processing server response", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BaseChatActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(BaseChatActivity.this, "Failed to send file message: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BaseChatActivity.this, getString(R.string.error_send_file_code, response.code()), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -847,13 +843,13 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 @Override
                 public void onFailure(okhttp3.Call call, java.io.IOException e) {
                     android.util.Log.e("BaseChatActivity", "Send file message failed: " + e.getMessage());
-                    runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show());
                 }
             });
             
         } catch (org.json.JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error creating file message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_creating_file_message), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -864,7 +860,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         String senderId = databaseManager.getUserId();
         
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -925,27 +921,21 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                 org.json.JSONObject jsonResponse = new org.json.JSONObject(responseBody);
                                 if (jsonResponse.optBoolean("success", false)) {
                                     android.util.Log.d("BaseChatActivity", "Image message sent successfully");
-                                    Toast.makeText(BaseChatActivity.this, "Image sent successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(BaseChatActivity.this, getString(R.string.success_image_sent_successfully), Toast.LENGTH_SHORT).show();
                                     clearReplyState();
                                 } else {
-                                    // Remove from local list if failed
-                                    messages.remove(message);
-                                    messageAdapter.notifyDataSetChanged();
+                                    removeMessageAndNotify(message);
                                     String errorMsg = jsonResponse.optString("message", "Cannot send image");
                                     Toast.makeText(BaseChatActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                                 }
                             } catch (org.json.JSONException e) {
                                 e.printStackTrace();
-                                // Remove from local list if failed
-                                messages.remove(message);
-                                messageAdapter.notifyDataSetChanged();
-                                Toast.makeText(BaseChatActivity.this, "Error processing response", Toast.LENGTH_SHORT).show();
+                                removeMessageAndNotify(message);
+                                Toast.makeText(BaseChatActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            // Remove from local list if failed
-                            messages.remove(message);
-                            messageAdapter.notifyDataSetChanged();
-                            Toast.makeText(BaseChatActivity.this, "Cannot send image: " + response.code(), Toast.LENGTH_SHORT).show();
+                            removeMessageAndNotify(message);
+                            Toast.makeText(BaseChatActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -955,16 +945,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 public void onFailure(okhttp3.Call call, java.io.IOException e) {
                     android.util.Log.e("BaseChatActivity", "Send image message failed: " + e.getMessage());
                     runOnUiThread(() -> {
-                        // Remove from local list if failed
-                        messages.remove(message);
-                        messageAdapter.notifyDataSetChanged();
-                        Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        removeMessageAndNotify(message);
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
             });
         } catch (org.json.JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error preparing message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_message), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1032,7 +1020,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             
         } catch (Exception e) {
             Log.e("BaseChatActivity", "Failed to start recording", e);
-            Toast.makeText(this, "Failed to start recording: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_start_recording, e.getMessage()), Toast.LENGTH_SHORT).show();
             isRecording = false;
             recordingStarted = false;
             releaseRecorder();
@@ -1069,7 +1057,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             if (audioFile != null && audioFile.exists() && audioFile.length() > 0) {
                 long duration = audioFile.length() / 1000; // Rough estimate
                 if (audioFile.length() < 1000) { // Less than ~1KB is too short
-                    Toast.makeText(this, "Recording too short", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.msg_recording_too_short), Toast.LENGTH_SHORT).show();
                     if (audioFile.delete()) {
                         audioFile = null;
                     }
@@ -1080,7 +1068,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 uploadAndSendVoiceMessage(audioFile);
             } else {
                 if (recordingStarted) {
-                    Toast.makeText(this, "Recording failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_recording_failed), Toast.LENGTH_SHORT).show();
                 }
                 // Clean up file if it exists but is invalid
                 if (audioFile != null && audioFile.exists()) {
@@ -1104,7 +1092,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             }
         } catch (Exception e) {
             Log.e("BaseChatActivity", "Failed to stop recording", e);
-            Toast.makeText(this, "Failed to stop recording", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_failed_to_stop_recording), Toast.LENGTH_SHORT).show();
             releaseRecorder();
             isRecording = false;
             recordingStarted = false;
@@ -1171,31 +1159,15 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     }
     
     private void startRecordingAnimations() {
-        // Animate recording indicator
-        if (ivRecordingIndicator != null) {
-            android.view.animation.Animation indicatorAnimation = android.view.animation.AnimationUtils.loadAnimation(this, R.anim.recording_pulse);
-            if (indicatorAnimation != null) {
-                ivRecordingIndicator.startAnimation(indicatorAnimation);
-            }
+        if (com.example.chatappjava.utils.MotionUtils.isMotionReduced(this)) {
+            return;
         }
-        
-        // Animate pulse rings
+        com.example.chatappjava.utils.MotionUtils.playAnimation(this, ivRecordingIndicator, R.anim.recording_pulse);
         if (vPulseRing1 != null) {
-            pulseRing1Animation = android.view.animation.AnimationUtils.loadAnimation(this, R.anim.recording_pulse);
-            if (pulseRing1Animation != null) {
-                // Delay ring 1 slightly
-                pulseRing1Animation.setStartOffset(200);
-                vPulseRing1.startAnimation(pulseRing1Animation);
-            }
+            com.example.chatappjava.utils.MotionUtils.playAnimation(this, vPulseRing1, R.anim.recording_pulse);
         }
-        
         if (vPulseRing2 != null) {
-            pulseRing2Animation = android.view.animation.AnimationUtils.loadAnimation(this, R.anim.recording_pulse);
-            if (pulseRing2Animation != null) {
-                // Delay ring 2 more
-                pulseRing2Animation.setStartOffset(400);
-                vPulseRing2.startAnimation(pulseRing2Animation);
-            }
+            com.example.chatappjava.utils.MotionUtils.playAnimation(this, vPulseRing2, R.anim.recording_pulse);
         }
     }
     
@@ -1206,14 +1178,12 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         }
         
         // Stop pulse ring animations
-        if (vPulseRing1 != null && pulseRing1Animation != null) {
+        if (vPulseRing1 != null) {
             vPulseRing1.clearAnimation();
-            pulseRing1Animation = null;
         }
-        
-        if (vPulseRing2 != null && pulseRing2Animation != null) {
+
+        if (vPulseRing2 != null) {
             vPulseRing2.clearAnimation();
-            pulseRing2Animation = null;
         }
     }
     
@@ -1260,7 +1230,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -1290,12 +1260,12 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                     Toast.makeText(BaseChatActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(BaseChatActivity.this, "Failed to upload voice message: " + response.code(), 
+                                Toast.makeText(BaseChatActivity.this, getString(R.string.error_send_voice_code, response.code()), 
                                     Toast.LENGTH_SHORT).show();
                             }
                         } catch (org.json.JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(BaseChatActivity.this, "Error processing upload response", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BaseChatActivity.this, getString(R.string.error_error_processing_upload_response), Toast.LENGTH_SHORT).show();
                         } finally {
                             setUploadInProgress(false);
                         }
@@ -1306,7 +1276,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 public void onFailure(okhttp3.Call call, java.io.IOException e) {
                     runOnUiThread(() -> {
                         setUploadInProgress(false);
-                        Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
             });
@@ -1319,7 +1289,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         String senderId = databaseManager.getUserId();
         
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -1390,10 +1360,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                 }
                             } catch (org.json.JSONException e) {
                                 e.printStackTrace();
-                                Toast.makeText(BaseChatActivity.this, "Error processing server response", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BaseChatActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(BaseChatActivity.this, "Failed to send voice message: " + response.code(), 
+                            Toast.makeText(BaseChatActivity.this, getString(R.string.error_send_voice_code, response.code()), 
                                 Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -1402,24 +1372,20 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 @Override
                 public void onFailure(okhttp3.Call call, java.io.IOException e) {
                     android.util.Log.e("BaseChatActivity", "Send voice message failed: " + e.getMessage());
-                    runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), 
-                        Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show());
                 }
             });
             
         } catch (org.json.JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error creating voice message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_creating_voice_message), Toast.LENGTH_SHORT).show();
         }
     }
 
     // Emoji picker handling
     protected void showEmojiPicker() {
-        // Inflate custom dialog layout (layout defines design completely)
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_emoji_picker, null);
-
-        // Wire up static emoji clicks declared via android:onClick in XML
-        dialogView.findViewsWithText(new java.util.ArrayList<>(), "", View.FIND_VIEWS_WITH_CONTENT_DESCRIPTION);
+        wireEmojiAccessibility(dialogView);
 
         // Create dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -1432,6 +1398,23 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             w.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
         }
         emojiDialog.show();
+    }
+
+    private void wireEmojiAccessibility(View dialogView) {
+        View grid = dialogView.findViewById(R.id.emoji_grid);
+        if (!(grid instanceof android.view.ViewGroup)) {
+            return;
+        }
+        android.view.ViewGroup viewGroup = (android.view.ViewGroup) grid;
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            if (child instanceof TextView) {
+                CharSequence emoji = ((TextView) child).getText();
+                if (emoji != null && emoji.length() > 0) {
+                    child.setContentDescription(getString(R.string.emoji_insert_cd, emoji));
+                }
+            }
+        }
     }
 
     public void onEmojiClicked(View v) {
@@ -1777,7 +1760,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 loadLastSummarizedTimestamp();
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Error loading chat data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_load_chat), Toast.LENGTH_SHORT).show();
                 finish();
                 return;
             }
@@ -1874,8 +1857,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (ivVideoCall != null) {
             // Video call button is now available for both private and group chats
             ivVideoCall.setOnClickListener(v -> {
-                Animation scaleAnimation = AnimationUtils.loadAnimation(this, R.anim.button_scale);
-                v.startAnimation(scaleAnimation);
+                com.example.chatappjava.utils.MotionUtils.playPressScale(this, v);
                 new Handler(Looper.getMainLooper()).postDelayed(this::handleVideoCall, 150);
             });
         }
@@ -2266,10 +2248,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(BaseChatActivity.this, "Error parsing messages", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BaseChatActivity.this, getString(R.string.error_error_parsing_messages), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(BaseChatActivity.this, "Failed to load messages: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.error_load_messages_code, response.code()), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -2856,10 +2838,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(BaseChatActivity.this, "Error processing response", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BaseChatActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(BaseChatActivity.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.error_code, response.code()), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -2868,7 +2850,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     loadingDialog.dismiss();
-                    Toast.makeText(BaseChatActivity.this, "Connection error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BaseChatActivity.this, getString(R.string.error_connection_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -3088,23 +3070,23 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         String senderId = databaseManager.getUserId();
 
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (currentChat == null) {
-            Toast.makeText(this, "Chat not available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_chat_not_available), Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Prevent sending if blocked in private chat
         if (!currentChat.isGroupChat()) {
             if (isBlockedByMe) {
-                Toast.makeText(this, "You blocked this user. Unblock to continue.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.msg_you_blocked_this_user_unblock_to_continue), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (hasBlockedMe) {
-                Toast.makeText(this, "You cannot message this user", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.msg_you_cannot_message_this_user), Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -3252,7 +3234,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                         if (messagePosition < messages.size()) {
                             messageAdapter.notifyItemChanged(messagePosition);
                         }
-                        Toast.makeText(BaseChatActivity.this, "No connection. Message will be sent when network is available.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.msg_no_connection_message_will_be_sent_when_network_is_available), Toast.LENGTH_LONG).show();
                     });
                 }
             });
@@ -3261,7 +3243,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             // Save as pending
             finalMessage.setId(null);
             messageRepository.saveMessage(finalMessage);
-            Toast.makeText(this, "Error preparing message. Will retry later.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_message_will_retry_later), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -3619,7 +3601,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             // Highlight the message briefly
             highlightMessage(position);
         } else {
-            Toast.makeText(this, "Message not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_message_not_found), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -3631,11 +3613,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (holder != null) {
             View messageView = holder.itemView;
             
-            // Create highlight animation
-            Animation highlightAnimation = AnimationUtils.loadAnimation(this, R.anim.message_highlight);
-            messageView.startAnimation(highlightAnimation);
-            
-            // Remove highlight after animation
+            com.example.chatappjava.utils.MotionUtils.playAnimation(this, messageView, R.anim.message_highlight);
             new Handler(Looper.getMainLooper()).postDelayed(messageView::clearAnimation, 1000);
         }
     }
@@ -3836,7 +3814,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     @Override
     public void onMessageClick(Message message) {
         // Common message click handling
-        Toast.makeText(this, "Message clicked: " + message.getContent(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.debug_message_clicked, message.getContent()), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -4131,6 +4109,16 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         return -1;
     }
 
+    private void removeMessageAndNotify(Message message) {
+        int idx = messages.indexOf(message);
+        if (idx >= 0) {
+            messages.remove(idx);
+            if (messageAdapter != null) {
+                messageAdapter.notifyItemRemoved(idx);
+            }
+        }
+    }
+
     private int findLocalPlaceholderIndex(Message incoming) {
         if (incoming == null) return -1;
         String currentUserId = databaseManager != null ? databaseManager.getUserId() : null;
@@ -4208,7 +4196,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(android.content.Context.CLIPBOARD_SERVICE);
             android.content.ClipData clip = android.content.ClipData.newPlainText("message", message.getContent());
             clipboard.setPrimaryClip(clip);
-            Toast.makeText(this, "Message copied", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_message_copied), Toast.LENGTH_SHORT).show();
             if (currentDialog != null) currentDialog.dismiss();
         });
         
@@ -4252,7 +4240,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                     android.util.Log.d("BaseChatActivity", "Opening ProfileViewActivity with senderId: " + senderId);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(this, "Sender information not available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.msg_sender_information_not_available), Toast.LENGTH_SHORT).show();
                 }
                 if (currentDialog != null) currentDialog.dismiss();
             });
@@ -4287,13 +4275,24 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         builder.setCancelable(true);
         AlertDialog dlg = builder.create();
 
-        if (title != null) title.setText("React");
-        for (int id : emojiIds) {
-            View v = dialogView.findViewById(id);
+        if (title != null) title.setText(R.string.reaction_picker_title);
+        int[] reactionCd = new int[]{
+                R.string.reaction_like_cd,
+                R.string.reaction_love_cd,
+                R.string.reaction_haha_cd,
+                R.string.reaction_wow_cd,
+                R.string.reaction_sad_cd,
+                R.string.reaction_fire_cd
+        };
+        for (int i = 0; i < emojiIds.length; i++) {
+            View v = dialogView.findViewById(emojiIds[i]);
             if (v instanceof TextView) {
+                TextView tv = (TextView) v;
+                tv.setContentDescription(getString(reactionCd[i]));
+                tv.setText(com.example.chatappjava.utils.ReactionEmojis.MESSAGE_PICKER[i]);
                 v.setOnClickListener(x -> {
                     try {
-                        CharSequence emoji = ((TextView) v).getText();
+                        CharSequence emoji = tv.getText();
                         if (emoji != null) onReactClick(message, emoji.toString());
                     } catch (Exception ignored) {}
                     dlg.dismiss();
@@ -4402,7 +4401,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         apiClient.editMessage(token, message.getId(), newContent, new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, "Failed to edit message", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, getString(R.string.message_edit_failed), Toast.LENGTH_SHORT).show());
             }
 
             @SuppressLint("NotifyDataSetChanged")
@@ -4416,16 +4415,19 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                             if (json.optBoolean("success", false)) {
                                 message.setContent(newContent);
                                 message.setEdited(true);
-                                messageAdapter.notifyDataSetChanged();
-                                Toast.makeText(BaseChatActivity.this, "Message edited", Toast.LENGTH_SHORT).show();
+                                int idx = indexOfMessageById(message.getId());
+                                if (idx >= 0) {
+                                    messageAdapter.notifyItemChanged(idx);
+                                }
+                                Toast.makeText(BaseChatActivity.this, getString(R.string.message_edit_success), Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(BaseChatActivity.this, json.optString("message", "Failed to edit"), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(BaseChatActivity.this, json.optString("message", getString(R.string.message_edit_failed)), Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception ex) {
-                            Toast.makeText(BaseChatActivity.this, "Edited but parse failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BaseChatActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(BaseChatActivity.this, "Failed to edit message: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.message_edit_failed), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -4435,10 +4437,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected void confirmDeleteForEveryone(Message message) {
         com.example.chatappjava.utils.DialogUtils.showConfirm(
             this,
-            "Delete for everyone",
-            "This will delete the message and attachments for all participants. Continue?",
-            "Delete",
-            "Cancel",
+            getString(R.string.dialog_delete_message_title),
+            getString(R.string.dialog_delete_message_body),
+            getString(R.string.dialog_option_delete),
+            getString(R.string.action_cancel),
             () -> deleteMessageForEveryone(message),
             null,
             false
@@ -4450,7 +4452,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         apiClient.deleteMessage(token, message.getId(), new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, "Failed to delete message", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, getString(R.string.message_delete_failed), Toast.LENGTH_SHORT).show());
             }
 
             @SuppressLint("NotifyDataSetChanged")
@@ -4471,9 +4473,9 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                         } else {
                             messageAdapter.notifyDataSetChanged();
                         }
-                        Toast.makeText(BaseChatActivity.this, "Message deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.message_delete_success), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(BaseChatActivity.this, "Failed to delete: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BaseChatActivity.this, getString(R.string.message_delete_failed), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -4683,13 +4685,13 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 if (messageId != null) {
                     updateVoiceMessagePlayState(messageId, false);
                 }
-                runOnUiThread(() -> Toast.makeText(this, "Failed to play voice message", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, getString(R.string.error_failed_to_play_voice_message), Toast.LENGTH_SHORT).show());
                 return true;
             });
             
         } catch (Exception e) {
             Log.e("BaseChatActivity", "Failed to play voice message", e);
-            runOnUiThread(() -> Toast.makeText(this, "Failed to play voice message: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            runOnUiThread(() -> Toast.makeText(this, getString(R.string.error_play_voice, e.getMessage()), Toast.LENGTH_SHORT).show());
             stopVoicePlayback(false);
         }
     }
@@ -4894,7 +4896,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 startDownload(fileUrl, originalName != null ? originalName : fileName);
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Cannot handle file", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_handle_file), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -4925,7 +4927,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         req.setDestinationInExternalFilesDir(this, Environment.DIRECTORY_DOWNLOADS, targetName);
 
         dm.enqueue(req);
-        Toast.makeText(this, "Downloading...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_downloading), Toast.LENGTH_SHORT).show();
     }
 
     private void openLocalFile(java.io.File file, String mimeType) {
@@ -4953,7 +4955,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(Intent.createChooser(intent, "Open with"));
             } catch (Exception ignored) {
-                Toast.makeText(this, "No app found to open this file", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.msg_no_app_found_to_open_this_file), Toast.LENGTH_SHORT).show();
             }
         }
     }

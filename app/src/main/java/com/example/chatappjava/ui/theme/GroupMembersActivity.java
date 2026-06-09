@@ -21,6 +21,7 @@ import com.example.chatappjava.models.User;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.AvatarManager;
 import com.example.chatappjava.utils.DatabaseManager;
+import com.example.chatappjava.utils.EmptyStateHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,6 +73,12 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
         rvMembers = findViewById(R.id.rv_members);
         etSearch = findViewById(R.id.et_search);
         emptyState = findViewById(R.id.empty_state);
+        EmptyStateHelper.bind(
+                emptyState,
+                R.string.empty_group_members_title,
+                R.string.empty_group_members_subtitle,
+                R.drawable.ic_group_empty
+        );
     }
     
     private void initData() {
@@ -90,7 +97,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                 currentChat = Chat.fromJson(chatJsonObj);
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Error loading chat data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_load_chat), Toast.LENGTH_SHORT).show();
                 finish();
                 return;
             }
@@ -152,18 +159,18 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
     private void fetchGroupMembers() {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         
-        Toast.makeText(this, "Loading members...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_loading_members), Toast.LENGTH_SHORT).show();
         
         apiClient.getGroupMembers(token, currentChat.getId(), new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(GroupMembersActivity.this, "Failed to load members: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupMembersActivity.this, getString(R.string.error_load_members, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -242,18 +249,18 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                     filterMembers(currentQuery);
                     
                     if (members.isEmpty()) {
-                        Toast.makeText(this, "No members found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.empty_group_members_title), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     String message = jsonResponse.optString("message", "Failed to load members");
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Failed to load members: " + statusCode, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_load_members_code, statusCode), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error parsing members data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_parsing_members_data), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -304,7 +311,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
 
         // Set member info
         tvMemberName.setText(member.getDisplayName());
-        tvMemberUsername.setText("@" + member.getUsername());
+        tvMemberUsername.setText(getString(R.string.username_format, member.getUsername()));
 
         // Load avatar
         String avatarUrl = member.getFullAvatarUrl();
@@ -393,7 +400,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                 startActivity(intent);
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Error opening profile", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_error_opening_profile), Toast.LENGTH_SHORT).show();
             }
             if (memberOptionsDialog != null) memberOptionsDialog.dismiss();
         });
@@ -428,7 +435,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
     }
     
     private void changeMemberRole(User member, String newRole) {
-        Toast.makeText(this, "Changing role...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_changing_role), Toast.LENGTH_SHORT).show();
         
         String token = databaseManager.getToken();
         try {
@@ -461,7 +468,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                Toast.makeText(GroupMembersActivity.this, "Parse error", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupMembersActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             try {
@@ -469,7 +476,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                                 String errorMessage = json.optString("message", "Failed to change role");
                                 Toast.makeText(GroupMembersActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
-                                Toast.makeText(GroupMembersActivity.this, "Failed to change role: " + response.code(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupMembersActivity.this, getString(R.string.error_change_role_code, response.code()), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -478,13 +485,13 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(GroupMembersActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupMembersActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
             });
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error preparing request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_request), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -502,7 +509,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
     }
 
     private void transferOwnership(User member) {
-        Toast.makeText(this, "Transferring ownership...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_transferring_ownership), Toast.LENGTH_SHORT).show();
         
         String token = databaseManager.getToken();
         try {
@@ -522,7 +529,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                                 JSONObject json = new JSONObject(responseBody);
                                 if (json.optBoolean("success", false)) {
                                     Toast.makeText(GroupMembersActivity.this, 
-                                        "Ownership transferred successfully", Toast.LENGTH_SHORT).show();
+                                        getString(R.string.success_ownership_transferred_successfully), Toast.LENGTH_SHORT).show();
                                     
                                     // Update local data - old owner becomes moderator, new owner becomes owner
                                     String currentUserId = databaseManager.getUserId();
@@ -548,7 +555,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                Toast.makeText(GroupMembersActivity.this, "Parse error", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupMembersActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             try {
@@ -556,7 +563,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                                 String errorMessage = json.optString("message", "Failed to transfer ownership");
                                 Toast.makeText(GroupMembersActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
-                                Toast.makeText(GroupMembersActivity.this, "Failed to transfer ownership: " + response.code(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupMembersActivity.this, getString(R.string.error_transfer_ownership_code, response.code()), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -565,13 +572,13 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(GroupMembersActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupMembersActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
             });
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error preparing request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_request), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -589,7 +596,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
     }
     
     private void removeMember(User member) {
-        Toast.makeText(this, "Removing member...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_removing_member), Toast.LENGTH_SHORT).show();
         
         // Debug logging
         android.util.Log.d("GroupMembersActivity", "Removing member: " + member.getDisplayName() + 
@@ -610,7 +617,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                     String responseBody = response.body().string();
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-                            Toast.makeText(GroupMembersActivity.this, "Member removed successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupMembersActivity.this, getString(R.string.success_member_removed_successfully), Toast.LENGTH_SHORT).show();
                             // Remove from local list
                             members.remove(member);
                             allMembers.remove(member);
@@ -638,13 +645,13 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(GroupMembersActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupMembersActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
             });
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error preparing request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_request), Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -81,7 +81,7 @@ public class TagUserAdapter extends RecyclerView.Adapter<TagUserAdapter.TagUserV
             tvDisplayName.setText(displayName);
             
             // Set username
-            tvUsername.setText("@" + user.getUsername());
+            tvUsername.setText(itemView.getContext().getString(R.string.username_format, user.getUsername()));
             
             // Set checkbox state
             cbSelect.setChecked(isSelected);

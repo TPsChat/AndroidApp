@@ -17,29 +17,31 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Top Floating Action Bar -->
+    <!-- Flat header -->
     <LinearLayout
         android:id="@+id/top_action_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginTop="18dp"
-        android:orientation="horizontal"
-        android:background="@android:color/transparent"
+        android:background="@drawable/bg_flat_header"
         android:gravity="center_vertical"
-        app:layout_constraintTop_toTopOf="parent"
+        android:minHeight="@dimen/header_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/margin_mobile"
+        android:paddingTop="@dimen/spacing_sm"
+        android:paddingEnd="@dimen/margin_mobile"
+        android:paddingBottom="@dimen/spacing_sm"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/iv_close"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
             android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_close"
-            android:contentDescription="Close"
-            android:padding="11dp"
+            android:contentDescription="@string/close_cd"
+            android:padding="@dimen/spacing_sm"
             app:tint="@color/md3_primary" />
 
         <!-- User Profile Info -->
@@ -49,13 +51,13 @@
             android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="@dimen/spacing_md"
             android:layout_marginEnd="12dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_user_avatar"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="@dimen/touch_target_min"
+                android:layout_height="@dimen/touch_target_min"
                 android:src="@drawable/ic_profile_placeholder"
                 app:civ_border_color="@color/md3_border_glow"
                 app:civ_border_width="1.5dp" />
@@ -65,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:text="User Name"
+                android:text="@string/settings_default_user"
                 android:textColor="@color/md3_on_surface"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -79,7 +81,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:minWidth="82dp"
-            android:text="Post"
+            android:text="@string/create_post_title"
             android:textAllCaps="false"
             android:fontFamily="@font/plus_jakarta_sans"
             android:textColor="@color/md3_on_primary"
@@ -99,10 +101,10 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         android:clipToPadding="false"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp"
+        android:paddingStart="@dimen/margin_mobile"
+        android:paddingEnd="@dimen/margin_mobile"
+        android:paddingTop="@dimen/spacing_md"
+        android:paddingBottom="@dimen/spacing_md"
         app:layout_constraintTop_toBottomOf="@id/top_action_bar"
         app:layout_constraintBottom_toTopOf="@id/bottom_toolbar"
         app:layout_constraintStart_toStartOf="parent"
@@ -120,16 +122,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="230dp"
-                android:background="@drawable/bg_obsidian_card"
-                android:hint="What's on your mind?"
+                android:background="@drawable/bg_soft_inset"
+                android:hint="@string/home_create_post_hint"
                 android:textColorHint="@color/md3_on_surface_secondary"
                 android:textColor="@color/md3_on_surface"
                 android:textSize="18sp"
                 android:lineSpacingMultiplier="1.3"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
+                android:paddingStart="@dimen/dialog_padding_h"
+                android:paddingEnd="@dimen/dialog_padding_h"
                 android:paddingTop="18dp"
-                android:paddingBottom="18dp"
+                android:paddingBottom="@dimen/dialog_padding_h"
                 android:gravity="top|start"
                 android:inputType="textCapSentences|textMultiLine"
                 android:scrollbars="vertical"
@@ -154,7 +156,7 @@
                 android:orientation="vertical"
                 android:visibility="gone"
                 android:layout_marginTop="12dp"
-                android:background="@drawable/bg_obsidian_card"
+                android:background="@drawable/bg_soft_inset"
                 android:paddingTop="14dp">
 
                 <TextView
@@ -164,7 +166,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="8dp"
-                    android:text="0 / 5 images"
+                    android:text="@string/preview_images_count"
                     android:textColor="@color/md3_on_surface_secondary"
                     android:textSize="12sp" />
 
@@ -214,7 +216,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginStart="12dp"
-                    android:text="Public"
+                    android:text="@string/post_privacy_public"
                     android:textColor="@color/md3_on_surface"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -239,7 +241,7 @@
                 android:paddingTop="12dp"
                 android:paddingBottom="12dp"
                 android:visibility="gone"
-                android:background="@drawable/bg_obsidian_card">
+                android:background="@drawable/bg_soft_inset">
 
                 <!-- Location Info -->
                 <LinearLayout
@@ -264,7 +266,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
-                        android:text="Location name"
+                        android:text="@string/create_post_location_placeholder"
                         android:textColor="@color/md3_on_surface"
                         android:textSize="14sp" />
 
@@ -274,7 +276,7 @@
                         android:layout_height="34dp"
                         android:background="@drawable/bg_icon_circle_dark"
                         android:src="@drawable/ic_close"
-                        android:contentDescription="Remove location"
+                        android:contentDescription="@string/remove_location_cd"
                         android:padding="9dp"
                         app:tint="@color/md3_secondary" />
 
@@ -303,7 +305,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="12dp"
-                        android:text="Tagged users"
+                        android:text="@string/create_post_tagged_users"
                         android:textColor="@color/md3_on_surface"
                         android:textSize="14sp" />
 
@@ -313,7 +315,7 @@
                         android:layout_height="34dp"
                         android:background="@drawable/bg_icon_circle_dark"
                         android:src="@drawable/ic_close"
-                        android:contentDescription="Remove tags"
+                        android:contentDescription="@string/remove_tags_cd"
                         android:padding="9dp"
                         app:tint="@color/md3_secondary" />
 
@@ -325,72 +327,71 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <!-- Bottom Floating Utility Toolbar -->
+    <!-- Flat composer toolbar -->
     <LinearLayout
         android:id="@+id/bottom_toolbar"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="14dp"
-        android:orientation="horizontal"
-        android:background="@android:color/transparent"
+        android:layout_height="@dimen/nav_bar_height"
+        android:background="@drawable/bg_glass_nav"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/margin_mobile"
+        android:paddingEnd="@dimen/margin_mobile"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
             android:id="@+id/iv_photo_video"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
             android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_image"
-            android:contentDescription="Add photo or video"
+            android:contentDescription="@string/add_photo_video_cd"
             android:padding="10dp"
             app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_tag_people"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
             android:layout_marginStart="10dp"
             android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_tag"
-            android:contentDescription="Tag people"
+            android:contentDescription="@string/tag_people_cd"
             android:padding="10dp"
             app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_location"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
             android:layout_marginStart="10dp"
             android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_location"
-            android:contentDescription="Add location"
+            android:contentDescription="@string/add_location_cd"
             android:padding="10dp"
             app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_emoji"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
             android:layout_marginStart="10dp"
             android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_emoji_smile"
-            android:contentDescription="Add emoji"
+            android:contentDescription="@string/add_emoji_cd"
             android:padding="10dp"
             app:tint="@color/md3_secondary" />
 
         <ImageButton
             android:id="@+id/iv_more_options"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
             android:layout_marginStart="10dp"
             android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_more"
-            android:contentDescription="More options"
+            android:contentDescription="@string/more_options_cd"
             android:padding="10dp"
             app:tint="@color/md3_secondary" />
 

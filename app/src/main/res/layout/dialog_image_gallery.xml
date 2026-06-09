@@ -4,7 +4,7 @@
     android:id="@+id/dialog_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#05070A"
+    android:background="@color/video_stage"
     android:clipChildren="false"
     android:clipToPadding="false">
 
@@ -21,14 +21,14 @@
         android:layout_height="46dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginTop="@dimen/screen_edge_inset"
+        android:layout_marginEnd="@dimen/screen_edge_inset"
         android:background="@drawable/bg_icon_circle_dark"
         android:padding="12dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_close"
-        android:contentDescription="Close"
+        android:contentDescription="@string/close_cd"
         app:tint="@color/md3_primary" />
 
     <!-- Image counter -->
@@ -42,11 +42,10 @@
         android:layout_marginBottom="24dp"
         android:gravity="center"
         android:background="@drawable/bg_soft_inset"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:text="1 / 5"
-        android:textColor="@color/md3_on_surface"
-        android:textSize="14sp"
+        android:paddingStart="@dimen/dialog_padding_h"
+        android:paddingEnd="@dimen/dialog_padding_h"
+        android:text="@string/preview_gallery_counter"
+        style="@style/AppBodyMedium"
         android:textStyle="bold"
         android:visibility="gone" />
 

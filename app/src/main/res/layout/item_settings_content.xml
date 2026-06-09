@@ -3,582 +3,333 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp"
+    android:clipChildren="false"
     android:clipToPadding="false"
-    android:clipChildren="false">
+    android:orientation="vertical">
 
-    <!-- Account Settings Section -->
+    <TextView
+        style="@style/AppSettingsSectionTitle"
+        android:text="@string/settings_account_section" />
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_option_row_dark"
-        android:padding="16dp"
-        android:clipToPadding="false"
-        android:clipChildren="false">
+        android:id="@+id/option_profile"
+        style="@style/AppListDividerRow">
+
+        <ImageView
+            style="@style/AppListDividerRowIcon"
+            android:src="@drawable/ic_tag"
+            app:tint="@color/md3_primary" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Account Settings"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/md3_on_surface"
-            android:layout_marginBottom="12dp" />
+            style="@style/AppListDividerRowLabel"
+            android:text="@string/settings_profile" />
 
-        <!-- Profile -->
-        <LinearLayout
-            android:id="@+id/option_profile"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/bg_soft_inset"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_marginBottom="8dp">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_tag"
-                app:tint="@color/md3_primary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Profile"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface" />
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_more"
-                app:tint="#7F8A99" />
-
-        </LinearLayout>
-
-        <!-- Change Password -->
-        <LinearLayout
-            android:id="@+id/option_change_password"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/bg_soft_inset"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_marginBottom="8dp">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_setting"
-                android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Change Password"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface" />
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_more"
-                app:tint="#7F8A99" />
-
-        </LinearLayout>
-
-        <!-- Logout -->
-        <LinearLayout
-            android:id="@+id/option_logout"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/bg_soft_inset"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_close"
-                android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Logout"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_white" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@android:drawable/ic_menu_more"
-                app:tint="@color/md3_primary" />
-
-        </LinearLayout>
+        <ImageView style="@style/AppListDividerRowChevron" />
 
     </LinearLayout>
 
-    <!-- Privacy & Security Section -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_option_row_dark"
-        android:padding="16dp">
+        android:id="@+id/option_change_password"
+        style="@style/AppListDividerRow">
+
+        <ImageView
+            style="@style/AppListDividerRowIcon"
+            android:src="@drawable/ic_setting"
+            app:tint="@color/md3_primary" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Privacy &amp; Security"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/md3_on_surface"
-            android:layout_marginBottom="12dp" />
+            style="@style/AppListDividerRowLabel"
+            android:text="@string/settings_change_password" />
 
-        <!-- Blocked Users -->
-        <LinearLayout
-            android:id="@+id/option_blocked_users"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/bg_soft_inset"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_marginBottom="8dp">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_close"
-                android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Blocked Users"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface" />
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_more"
-                app:tint="#7F8A99" />
-
-        </LinearLayout>
-
-        <!-- Delete Account -->
-        <LinearLayout
-            android:id="@+id/option_delete_account"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/bg_soft_inset"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_delete"
-                android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Delete Account"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_white" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@android:drawable/ic_menu_more"
-                app:tint="@color/md3_primary" />
-
-        </LinearLayout>
+        <ImageView style="@style/AppListDividerRowChevron" />
 
     </LinearLayout>
 
-    <!-- Notifications Section -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_option_row_dark"
-        android:padding="16dp">
+        android:id="@+id/option_logout"
+        style="@style/AppListDividerRow">
+
+        <ImageView
+            style="@style/AppListDividerRowIcon"
+            android:src="@drawable/ic_close"
+            app:tint="@color/md3_primary" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notifications"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/md3_on_surface"
-            android:layout_marginBottom="12dp" />
+            style="@style/AppListDividerRowLabelDanger"
+            android:text="@string/settings_logout" />
 
-        <!-- Push Notifications -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="12dp"
-                android:background="@drawable/bg_soft_inset"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Push Notifications"
-                    android:textSize="15sp"
-                    android:textColor="@color/md3_on_surface"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Receive notifications for new messages"
-                    android:textSize="12sp"
-                    android:textColor="@color/md3_on_surface_secondary"
-                    android:layout_marginTop="5dp" />
-
-            </LinearLayout>
-
-            <Switch
-                android:id="@+id/switch_push_notifications"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:checked="true"
-                android:thumbTint="@color/md3_primary"
-                android:trackTint="#44FF4D57" />
-
-        </LinearLayout>
-
-        <!-- Sound -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="12dp"
-                android:background="@drawable/bg_soft_inset"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sound"
-                    android:textSize="15sp"
-                    android:textColor="@color/md3_on_surface"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Play sound for notifications"
-                    android:textSize="12sp"
-                    android:textColor="@color/md3_on_surface_secondary"
-                    android:layout_marginTop="5dp" />
-
-            </LinearLayout>
-
-            <Switch
-                android:id="@+id/switch_sound"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:checked="true"
-                android:thumbTint="@color/md3_primary"
-                android:trackTint="#44FF4D57" />
-
-        </LinearLayout>
-
-        <!-- Vibrate -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="12dp"
-                android:background="@drawable/bg_soft_inset"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Vibrate"
-                    android:textSize="15sp"
-                    android:textColor="@color/md3_on_surface"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Vibrate for notifications"
-                    android:textSize="12sp"
-                    android:textColor="@color/md3_on_surface_secondary"
-                    android:layout_marginTop="5dp" />
-
-            </LinearLayout>
-
-            <Switch
-                android:id="@+id/switch_vibrate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:checked="true"
-                android:thumbTint="@color/md3_primary"
-                android:trackTint="#44FF4D57" />
-
-        </LinearLayout>
+        <ImageView style="@style/AppListDividerRowChevronDanger" />
 
     </LinearLayout>
 
-    <!-- Server Settings Section -->
+    <TextView
+        style="@style/AppSettingsSectionTitleSpaced"
+        android:text="@string/settings_privacy_section" />
+
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_option_row_dark"
-        android:padding="16dp">
+        android:id="@+id/option_blocked_users"
+        style="@style/AppListDividerRow">
+
+        <ImageView
+            style="@style/AppListDividerRowIcon"
+            android:src="@drawable/ic_close"
+            app:tint="@color/md3_primary" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Server Settings"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/md3_on_surface"
-            android:layout_marginBottom="12dp" />
+            style="@style/AppListDividerRowLabel"
+            android:text="@string/settings_blocked_users" />
 
-        <!-- Server Configuration -->
-        <LinearLayout
-            android:id="@+id/option_server_config"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/bg_soft_inset"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_marginBottom="8dp">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_preferences"
-                android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Server Configuration"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface" />
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_more"
-                app:tint="#7F8A99" />
-
-        </LinearLayout>
-
-        <!-- Reset Settings -->
-        <LinearLayout
-            android:id="@+id/option_reset_settings"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/bg_soft_inset"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_restore"
-                android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Reset Settings"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_white" />
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@android:drawable/ic_menu_more"
-                app:tint="@color/md3_primary" />
-
-        </LinearLayout>
+        <ImageView style="@style/AppListDividerRowChevron" />
 
     </LinearLayout>
 
-    <!-- About Section -->
+    <LinearLayout
+        android:id="@+id/option_delete_account"
+        style="@style/AppListDividerRow">
+
+        <ImageView
+            style="@style/AppListDividerRowIcon"
+            android:src="@drawable/ic_delete"
+            app:tint="@color/md3_primary" />
+
+        <TextView
+            style="@style/AppListDividerRowLabelDanger"
+            android:text="@string/settings_delete_account" />
+
+        <ImageView style="@style/AppListDividerRowChevronDanger" />
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/AppSettingsSectionTitleSpaced"
+        android:text="@string/settings_notifications_section" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_option_row_dark"
-        android:padding="16dp">
+        android:background="@drawable/bg_list_row_divider"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/option_row_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/margin_mobile"
+        android:paddingTop="@dimen/spacing_sm"
+        android:paddingEnd="@dimen/margin_mobile"
+        android:paddingBottom="@dimen/spacing_sm">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="About"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@color/md3_on_surface"
-            android:layout_marginBottom="12dp" />
-
-        <!-- App Version -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:background="@drawable/bg_soft_inset"
-            android:layout_marginBottom="8dp">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_info"
-                android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="App Version"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface" />
-
-            <TextView
-                android:id="@+id/tv_app_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1.0.0"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface_secondary" />
-
-        </LinearLayout>
-
-        <!-- Help & Support -->
-        <LinearLayout
-            android:id="@+id/option_help_support"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@drawable/bg_soft_inset"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_marginEnd="12dp"
-                android:src="@drawable/ic_help"
-                app:tint="@color/md3_primary" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Help &amp; Support"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="@string/settings_push_notifications"
                 android:textColor="@color/md3_on_surface"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_auth_subtitle"
                 android:textStyle="bold" />
 
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_more"
-                app:tint="#7F8A99" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_item_margin"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="@string/settings_push_notifications_desc"
+                android:textColor="@color/md3_on_surface_secondary"
+                android:textSize="@dimen/text_body_small" />
 
         </LinearLayout>
+
+        <Switch
+            android:id="@+id/switch_push_notifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:checked="true"
+            android:thumbTint="@color/md3_primary"
+            android:trackTint="@color/switch_track_selector" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_list_row_divider"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/option_row_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/margin_mobile"
+        android:paddingTop="@dimen/spacing_sm"
+        android:paddingEnd="@dimen/margin_mobile"
+        android:paddingBottom="@dimen/spacing_sm">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="@string/settings_sound"
+                android:textColor="@color/md3_on_surface"
+                android:textSize="@dimen/text_auth_subtitle"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_item_margin"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="@string/settings_sound_desc"
+                android:textColor="@color/md3_on_surface_secondary"
+                android:textSize="@dimen/text_body_small" />
+
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/switch_sound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:checked="true"
+            android:thumbTint="@color/md3_primary"
+            android:trackTint="@color/switch_track_selector" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_list_row_divider"
+        android:gravity="center_vertical"
+        android:minHeight="@dimen/option_row_height"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/margin_mobile"
+        android:paddingTop="@dimen/spacing_sm"
+        android:paddingEnd="@dimen/margin_mobile"
+        android:paddingBottom="@dimen/spacing_sm">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="@string/settings_vibrate"
+                android:textColor="@color/md3_on_surface"
+                android:textSize="@dimen/text_auth_subtitle"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/list_item_margin"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="@string/settings_vibrate_desc"
+                android:textColor="@color/md3_on_surface_secondary"
+                android:textSize="@dimen/text_body_small" />
+
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/switch_vibrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:checked="true"
+            android:thumbTint="@color/md3_primary"
+            android:trackTint="@color/switch_track_selector" />
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/AppSettingsSectionTitleSpaced"
+        android:text="@string/settings_server_section" />
+
+    <LinearLayout
+        android:id="@+id/option_server_config"
+        style="@style/AppListDividerRow">
+
+        <ImageView
+            style="@style/AppListDividerRowIcon"
+            android:src="@drawable/ic_preferences"
+            app:tint="@color/md3_primary" />
+
+        <TextView
+            style="@style/AppListDividerRowLabel"
+            android:text="@string/settings_server_config" />
+
+        <ImageView style="@style/AppListDividerRowChevron" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_reset_settings"
+        style="@style/AppListDividerRow">
+
+        <ImageView
+            style="@style/AppListDividerRowIcon"
+            android:src="@drawable/ic_restore"
+            app:tint="@color/md3_primary" />
+
+        <TextView
+            style="@style/AppListDividerRowLabelDanger"
+            android:text="@string/settings_reset" />
+
+        <ImageView style="@style/AppListDividerRowChevronDanger" />
+
+    </LinearLayout>
+
+    <TextView
+        style="@style/AppSettingsSectionTitleSpaced"
+        android:text="@string/settings_about_section" />
+
+    <LinearLayout style="@style/AppListDividerRow">
+
+        <ImageView
+            style="@style/AppListDividerRowIcon"
+            android:src="@drawable/ic_info"
+            app:tint="@color/md3_primary" />
+
+        <TextView
+            style="@style/AppListDividerRowLabel"
+            android:text="@string/settings_app_version" />
+
+        <TextView
+            android:id="@+id/tv_app_version"
+            style="@style/AppBodyMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_app_version_value"
+            android:textColor="@color/md3_on_surface_secondary"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_help_support"
+        style="@style/AppListDividerRow"
+        android:layout_marginBottom="@dimen/spacing_md">
+
+        <ImageView
+            style="@style/AppListDividerRowIcon"
+            android:src="@drawable/ic_help"
+            app:tint="@color/md3_primary" />
+
+        <TextView
+            style="@style/AppListDividerRowLabel"
+            android:text="@string/settings_help_support" />
+
+        <ImageView style="@style/AppListDividerRowChevron" />
 
     </LinearLayout>
 

@@ -4,78 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_xs"
-    android:layout_marginEnd="@dimen/spacing_xs"
-    android:layout_marginTop="4dp"
-    android:layout_marginBottom="4dp"
-    android:orientation="vertical"
+    android:background="@drawable/bg_list_row_divider"
     android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
+    android:clipChildren="false"
     android:clipToPadding="false"
-    android:clipChildren="false">
+    android:focusable="true"
+    android:gravity="center_vertical"
+    android:minHeight="@dimen/list_row_min_height"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/margin_mobile"
+    android:paddingTop="@dimen/spacing_sm"
+    android:paddingEnd="@dimen/margin_mobile"
+    android:paddingBottom="@dimen/spacing_sm">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_member_avatar"
+        android:layout_width="@dimen/avatar_sm"
+        android:layout_height="@dimen/avatar_sm"
+        android:src="@drawable/ic_profile_placeholder"
+        app:civ_border_color="@color/md3_border_subtle"
+        app:civ_border_width="@dimen/avatar_border_width_sm" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:minHeight="78dp"
-        android:background="@drawable/bg_obsidian_card"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:clipToPadding="false"
-        android:clipChildren="false">
+        android:layout_marginStart="@dimen/spacing_md"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_member_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_color="@color/md3_border_glow"
-            app:civ_border_width="1.5dp" />
-
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv_member_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:ellipsize="end"
+            android:fontFamily="@font/plus_jakarta_sans"
+            android:maxLines="1"
+            android:textColor="@color/md3_on_surface"
+            android:textSize="@dimen/text_body_large"
+            android:textStyle="bold"
+            tools:text="John Doe" />
 
-            <TextView
-                android:id="@+id/tv_member_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/md3_on_surface"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="John Doe" />
-
-            <TextView
-                android:id="@+id/tv_member_role"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:textColor="@color/md3_on_surface_secondary"
-                android:textSize="12sp"
-                android:textStyle="normal"
-                tools:text="Member" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:contentDescription="More options"
-            android:src="@android:drawable/ic_menu_more"
-            android:background="@drawable/bg_icon_circle_transparent"
-            android:padding="8dp"
-            app:tint="@color/md3_primary" />
+        <TextView
+            android:id="@+id/tv_member_role"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/list_item_margin"
+            android:fontFamily="@font/plus_jakarta_sans"
+            android:textColor="@color/md3_on_surface_secondary"
+            android:textSize="@dimen/text_body_small"
+            tools:text="Member" />
 
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="@dimen/touch_target_min"
+        android:layout_height="@dimen/touch_target_min"
+        android:background="@drawable/bg_icon_circle_transparent"
+        android:contentDescription="@string/more_options_cd"
+        android:padding="@dimen/spacing_xs"
+        android:src="@drawable/ic_more"
+        app:tint="@color/md3_on_surface_secondary" />
 
 </LinearLayout>

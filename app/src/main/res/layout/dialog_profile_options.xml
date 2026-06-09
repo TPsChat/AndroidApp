@@ -1,196 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="0dp"
-    android:soundEffectsEnabled="true"
     android:background="@android:color/transparent"
+    android:clipChildren="false"
     android:clipToPadding="false"
-    android:clipChildren="false">
+    android:orientation="vertical"
+    android:soundEffectsEnabled="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_glass_panel"
         android:orientation="vertical"
-        android:paddingStart="18dp"
-        android:paddingEnd="18dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="18dp"
-        android:background="@drawable/bg_obsidian_card">
+        android:paddingStart="@dimen/dialog_padding_h"
+        android:paddingTop="@dimen/dialog_padding_v"
+        android:paddingEnd="@dimen/dialog_padding_h"
+        android:paddingBottom="@dimen/dialog_padding_h">
 
-        <!-- Title -->
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Profile Options"
-            android:textSize="20sp"
-            android:textColor="@color/md3_on_surface"
-            android:textStyle="bold"
             android:gravity="center"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="18dp" />
+            android:paddingStart="@dimen/spacing_md"
+            android:paddingTop="@dimen/spacing_xs"
+            android:paddingEnd="@dimen/spacing_md"
+            android:paddingBottom="@dimen/dialog_padding_h"
+            android:text="@string/profile_options_title"
+            android:textAppearance="@style/AppHeadlineSmall"
+            android:textColor="@color/md3_on_surface" />
 
-        <!-- Send Message Option -->
         <LinearLayout
             android:id="@+id/option_send_message"
+            style="@style/AppOptionRow"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:background="@drawable/bg_option_row_dark"
-            android:clickable="true"
-            android:focusable="true">
+            android:layout_marginBottom="@dimen/chat_messages_margin_top"
+            android:contentDescription="@string/profile_send_message">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_send"
-                android:layout_marginEnd="12dp"
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:layout_marginEnd="@dimen/spacing_sm"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_send"
                 app:tint="@color/md3_primary" />
 
             <TextView
+                style="@style/AppBodyMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Send Message"
-                android:textSize="15sp"
+                android:text="@string/profile_send_message"
                 android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <!-- Add Friend Option -->
         <LinearLayout
             android:id="@+id/option_add_friend"
+            style="@style/AppOptionRow"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:background="@drawable/bg_option_row_dark"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true">
+            android:layout_marginBottom="@dimen/chat_messages_margin_top"
+            android:contentDescription="@string/profile_add_friend"
+            android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_input_add"
-                android:layout_marginEnd="12dp"
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:layout_marginEnd="@dimen/spacing_sm"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_add"
                 app:tint="@color/md3_primary" />
 
             <TextView
+                style="@style/AppBodyMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Add Friend"
-                android:textSize="15sp"
+                android:text="@string/profile_add_friend"
                 android:textColor="@color/md3_on_surface"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <!-- Unfriend Option -->
         <LinearLayout
             android:id="@+id/option_unfriend"
+            style="@style/AppOptionRow"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
+            android:layout_marginBottom="@dimen/chat_messages_margin_top"
             android:background="@drawable/bg_danger_option_row"
-            android:visibility="gone"
-            android:clickable="true"
-            android:focusable="true">
+            android:contentDescription="@string/profile_unfriend"
+            android:visibility="gone">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_delete"
-                android:layout_marginEnd="12dp"
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:layout_marginEnd="@dimen/spacing_sm"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_delete"
                 app:tint="@color/md3_error" />
 
             <TextView
+                style="@style/AppBodyMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Unfriend"
-                android:textSize="15sp"
+                android:text="@string/profile_unfriend"
                 android:textColor="@color/dialog_button_destructive_text"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <!-- Report Option -->
         <LinearLayout
             android:id="@+id/option_report"
+            style="@style/AppOptionRow"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
+            android:layout_marginBottom="@dimen/chat_messages_margin_top"
             android:background="@drawable/bg_danger_option_row"
-            android:clickable="true"
-            android:focusable="true">
+            android:contentDescription="@string/profile_report">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_dialog_alert"
-                android:layout_marginEnd="12dp"
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:layout_marginEnd="@dimen/spacing_sm"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_info"
                 app:tint="@color/md3_error" />
 
             <TextView
+                style="@style/AppBodyMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Report"
-                android:textSize="15sp"
+                android:text="@string/profile_report"
                 android:textColor="@color/dialog_button_destructive_text"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <!-- Block User Option -->
         <LinearLayout
             android:id="@+id/option_block_user"
+            style="@style/AppOptionRow"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
             android:background="@drawable/bg_danger_option_row"
-            android:clickable="true"
-            android:focusable="true">
+            android:contentDescription="@string/profile_block_user">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                android:layout_marginEnd="12dp"
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:layout_marginEnd="@dimen/spacing_sm"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_close"
                 app:tint="@color/md3_error" />
 
             <TextView
+                style="@style/AppBodyMedium"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Block User"
-                android:textSize="15sp"
+                android:text="@string/profile_block_user"
                 android:textColor="@color/dialog_button_secondary_text"
                 android:textStyle="bold" />
 

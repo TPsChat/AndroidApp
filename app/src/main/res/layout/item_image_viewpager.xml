@@ -2,17 +2,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#05070A"
+    android:background="@color/video_stage"
     android:clipToPadding="false"
     android:clipChildren="false">
 
-    <!-- Background overlay tối nhẹ -->
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000" />
+        android:background="@color/palette_charcoal" />
 
-    <!-- Zoom image with PhotoView -->
     <com.github.chrisbanes.photoview.PhotoView
         android:id="@+id/iv_zoom_image"
         android:layout_width="match_parent"
@@ -20,7 +18,7 @@
         android:layout_gravity="center"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:background="#05070A"
-        android:contentDescription="Zoomed image" />
+        android:background="@color/video_stage"
+        android:contentDescription="@string/zoomed_image_cd" />
 
 </FrameLayout>

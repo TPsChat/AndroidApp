@@ -69,6 +69,9 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
     private RecyclerView rvPosts;
     private PostAdapter postAdapter;
     private List<Post> postList;
+    private View feedEmptyState;
+    private TextView feedEmptyTitle;
+    private TextView feedEmptySubtitle;
     
     // UI Components - Bottom Nav
     private LinearLayout llTabFeed;
@@ -113,21 +116,40 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         ivNotifications = findViewById(R.id.iv_notifications);
         
         // Action Bar
-        ivProfileThumbnail = findViewById(R.id.iv_profile_thumbnail);
+        ivProfileThumbnail = findViewById(R.id.iv_post_profile_thumbnail);
         tvCreatePostHint = findViewById(R.id.tv_create_post_hint);
-        llLive = findViewById(R.id.ll_live);
-        llPhoto = findViewById(R.id.ll_photo);
-        llVideo = findViewById(R.id.ll_video);
+        llLive = findViewById(R.id.ll_live_post);
+        llPhoto = findViewById(R.id.ll_photo_post);
+        llVideo = findViewById(R.id.ll_video_post);
         
         // Posts
         swipeRefresh = findViewById(R.id.swipe_refresh);
         rvPosts = findViewById(R.id.rv_posts);
+        feedEmptyState = findViewById(R.id.feed_empty_state);
+        if (feedEmptyState != null) {
+            feedEmptyTitle = feedEmptyState.findViewById(R.id.tv_empty_title);
+            feedEmptySubtitle = feedEmptyState.findViewById(R.id.tv_empty_subtitle);
+            if (feedEmptyTitle != null) {
+                feedEmptyTitle.setText(R.string.feed_empty_title);
+            }
+            if (feedEmptySubtitle != null) {
+                feedEmptySubtitle.setText(R.string.feed_empty_subtitle);
+            }
+        }
         
         // Bottom Nav
         llTabFeed = findViewById(R.id.ll_tab_feed);
         llTabGroups = findViewById(R.id.ll_tab_groups);
         llTabWatch = findViewById(R.id.ll_tab_watch);
         llTabProfile = findViewById(R.id.ll_tab_profile);
+    }
+
+    private void updateFeedEmptyState() {
+        if (feedEmptyState == null) {
+            return;
+        }
+        boolean empty = postList == null || postList.isEmpty();
+        feedEmptyState.setVisibility(empty ? View.VISIBLE : View.GONE);
     }
     
     private void initializeServices() {
@@ -164,7 +186,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         });
         
         ivNotifications.setOnClickListener(v -> {
-            Toast.makeText(this, "Notifications coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.feature_notifications_soon), Toast.LENGTH_SHORT).show();
         });
         
         // Action Bar
@@ -179,17 +201,17 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         });
         
         llLive.setOnClickListener(v -> {
-            Toast.makeText(this, "Live streaming coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.feature_live_soon), Toast.LENGTH_SHORT).show();
         });
         
         llPhoto.setOnClickListener(v -> {
             // TODO: Open photo picker and create post
-            Toast.makeText(this, "Create photo post coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.feature_photo_post_soon), Toast.LENGTH_SHORT).show();
         });
         
         llVideo.setOnClickListener(v -> {
             // TODO: Open video picker and create post
-            Toast.makeText(this, "Create video post coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.feature_video_post_soon), Toast.LENGTH_SHORT).show();
         });
         
         // Bottom Nav
@@ -205,7 +227,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         });
         
         llTabWatch.setOnClickListener(v -> {
-            Toast.makeText(this, "Watch tab coming soon", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.feature_watch_tab_soon), Toast.LENGTH_SHORT).show();
         });
         
         llTabProfile.setOnClickListener(v -> {
@@ -296,7 +318,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
                 runOnUiThread(() -> {
                     Log.e(TAG, "Failed to load posts: " + e.getMessage());
-                    Toast.makeText(PostFeedActivity.this, "Error loading posts", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostFeedActivity.this, getString(R.string.error_load_posts), Toast.LENGTH_SHORT).show();
                     isLoading = false;
                     swipeRefresh.setRefreshing(false);
                 });
@@ -352,6 +374,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                                 }
                                 postList.addAll(newPosts);
                                 postAdapter.setPosts(postList);
+                                updateFeedEmptyState();
                                 
                                 // Check if there are more posts
                                 JSONObject pagination = data.optJSONObject("pagination");
@@ -376,11 +399,11 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                             databaseManager.clearLoginInfo();
                             redirectToLogin();
                         } else {
-                            Toast.makeText(PostFeedActivity.this, "Error loading posts (Code: " + response.code() + ")", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostFeedActivity.this, getString(R.string.error_load_posts_code, response.code()), Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "Error parsing posts response: " + e.getMessage());
-                        Toast.makeText(PostFeedActivity.this, "Error parsing posts", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostFeedActivity.this, getString(R.string.error_parse_posts), Toast.LENGTH_SHORT).show();
                     } finally {
                         isLoading = false;
                         swipeRefresh.setRefreshing(false);
@@ -408,6 +431,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             postList.addAll(cachedPosts);
             if (postAdapter != null) {
                 postAdapter.setPosts(postList);
+                updateFeedEmptyState();
             }
             Log.d(TAG, "Loaded " + cachedPosts.size() + " posts from cache");
         }
@@ -463,7 +487,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             startActivity(intent);
         } catch (JSONException e) {
             Log.e(TAG, "Error passing post data: " + e.getMessage());
-            Toast.makeText(this, "Error opening post", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_open_post), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -471,7 +495,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
     public void onLikeClick(Post post, int position) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -500,7 +524,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                         post.setLikesCount(post.getLikesCount() + 1);
                     }
                     postAdapter.updatePost(position, post);
-                    Toast.makeText(PostFeedActivity.this, "Failed to update like", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostFeedActivity.this, getString(R.string.error_update_like), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -521,7 +545,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                             databaseManager.clearLoginInfo();
                             redirectToLogin();
                         } else {
-                            Toast.makeText(PostFeedActivity.this, "Failed to update like", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostFeedActivity.this, getString(R.string.error_update_like), Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
@@ -557,7 +581,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             startActivity(intent);
         } catch (JSONException e) {
             Log.e(TAG, "Error passing post data: " + e.getMessage());
-            Toast.makeText(this, "Error opening comments", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_open_comments), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -568,7 +592,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             Log.d(TAG, "onShareClick called for post: " + (post != null ? post.getId() : "null"));
             if (post == null) {
                 Log.e(TAG, "Post is null!");
-                Toast.makeText(this, "Post data is missing", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_post_data_missing), Toast.LENGTH_SHORT).show();
                 return;
             }
             Log.d(TAG, "Calling showShareDialog");
@@ -576,7 +600,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             Log.d(TAG, "=== onShareClick END ===");
         } catch (Exception e) {
             Log.e(TAG, "Error in onShareClick: " + e.getMessage(), e);
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_with_message, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -605,7 +629,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             
             if (optionShareToFeed == null) {
                 Log.e(TAG, "option_share_to_feed view not found!");
-                Toast.makeText(this, "Error loading share dialog", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_load_share_dialog), Toast.LENGTH_SHORT).show();
                 return;
             }
             
@@ -626,13 +650,13 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             // Share to Story (hidden for now)
             optionShareToStory.setOnClickListener(v -> {
                 dialog.dismiss();
-                Toast.makeText(this, "Share to Story coming soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.feature_share_story_soon), Toast.LENGTH_SHORT).show();
             });
             
             // Share to Group (hidden for now)
             optionShareToGroup.setOnClickListener(v -> {
                 dialog.dismiss();
-                Toast.makeText(this, "Share to Group coming soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.feature_share_group_soon), Toast.LENGTH_SHORT).show();
             });
             
             // Copy Link
@@ -653,14 +677,14 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             Log.d(TAG, "Share dialog shown");
         } catch (Exception e) {
             Log.e(TAG, "Error showing share dialog: " + e.getMessage(), e);
-            Toast.makeText(this, "Error showing share options: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_share_options, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
     
     private void shareToFeed(Post post) {
         Log.d(TAG, "shareToFeed called for post: " + post.getId());
         if (post == null || post.getId() == null) {
-            Toast.makeText(this, "Cannot share: Post data is invalid", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_share_post_data_is_invalid), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -696,7 +720,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         android.content.ClipData clip = android.content.ClipData.newPlainText("Post Link", deepLinkUrl);
         clipboard.setPrimaryClip(clip);
         
-        Toast.makeText(this, "Post link copied. Click to open in app.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.success_post_link_copied), Toast.LENGTH_SHORT).show();
     }
     
     private void shareToExternalApps(Post post) {
@@ -828,7 +852,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         confirmBuilder.setPositiveButton("Delete", (dialog, which) -> {
             String token = databaseManager.getToken();
             if (token == null || token.isEmpty()) {
-                Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                 return;
             }
             
@@ -836,7 +860,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(PostFeedActivity.this, "Failed to delete post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostFeedActivity.this, getString(R.string.error_delete_post, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
                 
@@ -847,7 +871,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                         try {
                             JSONObject jsonResponse = new JSONObject(responseBody);
                             if (jsonResponse.getBoolean("success")) {
-                                Toast.makeText(PostFeedActivity.this, "Post deleted successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(PostFeedActivity.this, getString(R.string.post_deleted_success), Toast.LENGTH_SHORT).show();
                                 // Reload posts
                                 loadPosts(true);
                             } else {
@@ -855,7 +879,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                                 Toast.makeText(PostFeedActivity.this, message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(PostFeedActivity.this, "Error processing response", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostFeedActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -868,7 +892,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
     private void hidePost(Post post) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -876,7 +900,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(PostFeedActivity.this, "Failed to hide post: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PostFeedActivity.this, getString(R.string.error_hide_post, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -887,7 +911,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                     try {
                         JSONObject jsonResponse = new JSONObject(responseBody);
                         if (jsonResponse.getBoolean("success")) {
-                            Toast.makeText(PostFeedActivity.this, "Post hidden successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostFeedActivity.this, getString(R.string.post_hidden_success), Toast.LENGTH_SHORT).show();
                             // Remove post from cache
                             if (postRepository != null) {
                                 postRepository.deletePostById(post.getId());
@@ -903,7 +927,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                             Toast.makeText(PostFeedActivity.this, message, Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
-                        Toast.makeText(PostFeedActivity.this, "Error processing response", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostFeedActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -913,7 +937,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
     @Override
     public void onAuthorClick(Post post) {
         // TODO: Open author profile
-        Toast.makeText(this, "Author: " + post.getAuthorUsername(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.info_author, post.getAuthorUsername()), Toast.LENGTH_SHORT).show();
     }
     
     @Override
@@ -945,7 +969,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                             intent.putExtra("post", post.toJson().toString());
                             startActivity(intent);
                         } catch (JSONException e) {
-                            Toast.makeText(PostFeedActivity.this, "Error opening post", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PostFeedActivity.this, getString(R.string.error_open_post), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -979,7 +1003,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         Button btnClose = dialogView.findViewById(R.id.btn_close);
         
         if (tvTitle != null) {
-            tvTitle.setText("Tagged People");
+            tvTitle.setText(getString(R.string.dialog_tagged_users_title));
         }
         
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -999,7 +1023,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                         startActivity(intent);
                         dialog.dismiss();
                     } catch (JSONException e) {
-                        Toast.makeText(PostFeedActivity.this, "Error opening profile", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostFeedActivity.this, getString(R.string.error_error_opening_profile), Toast.LENGTH_SHORT).show();
                     }
                 }
             }

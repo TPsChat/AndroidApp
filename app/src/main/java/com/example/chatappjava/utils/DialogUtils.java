@@ -60,6 +60,7 @@ public final class DialogUtils {
         }
 
         dialog.show();
+        MotionUtils.animateDialogIn(context, view);
     }
 
     public static void showEditDialog(Context context,
@@ -135,7 +136,8 @@ public final class DialogUtils {
         }
 
         dialog.show();
-        
+        MotionUtils.animateDialogIn(context, view);
+
         // Focus on EditText and show keyboard
         editText.requestFocus();
         android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager) 

@@ -4,20 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_xs"
-    android:layout_marginTop="4dp"
-    android:layout_marginEnd="@dimen/spacing_xs"
-    android:layout_marginBottom="4dp"
     android:clickable="true"
     android:clipChildren="false"
     android:clipToPadding="false"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:focusable="true">
 
     <View
         android:id="@+id/view_active_indicator"
-        android:layout_width="4dp"
-        android:layout_height="32dp"
+        android:layout_width="@dimen/active_indicator_width"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical|start"
         android:background="@drawable/bg_active_chat_indicator"
         android:visibility="gone" />
@@ -25,34 +20,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_obsidian_card"
+        android:background="@drawable/bg_list_row_divider"
         android:gravity="center_vertical"
-        android:minHeight="80dp"
+        android:minHeight="@dimen/list_row_min_height"
         android:orientation="horizontal"
-        android:paddingStart="@dimen/spacing_md"
+        android:paddingStart="@dimen/margin_mobile"
         android:paddingTop="@dimen/spacing_sm"
-        android:paddingEnd="@dimen/spacing_md"
+        android:paddingEnd="@dimen/margin_mobile"
         android:paddingBottom="@dimen/spacing_sm">
 
         <RelativeLayout
-            android:layout_width="@dimen/avatar_md"
-            android:layout_height="@dimen/avatar_md"
+            android:layout_width="@dimen/avatar_sm"
+            android:layout_height="@dimen/avatar_sm"
             android:layout_marginEnd="@dimen/spacing_md"
             android:clipChildren="false"
             android:clipToPadding="false">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_chat_avatar"
-                android:layout_width="@dimen/avatar_md"
-                android:layout_height="@dimen/avatar_md"
+                android:layout_width="@dimen/avatar_sm"
+                android:layout_height="@dimen/avatar_sm"
                 android:src="@drawable/ic_profile_placeholder"
-                app:civ_border_color="@color/md3_border_glow"
-                app:civ_border_width="2dp" />
+                app:civ_border_color="@color/md3_border_subtle"
+                app:civ_border_width="@dimen/avatar_border_width_sm" />
 
             <View
                 android:id="@+id/view_online_dot"
-                android:layout_width="14dp"
-                android:layout_height="14dp"
+                android:layout_width="@dimen/online_dot_size"
+                android:layout_height="@dimen/online_dot_size"
                 android:layout_alignEnd="@id/iv_chat_avatar"
                 android:layout_alignBottom="@id/iv_chat_avatar"
                 android:background="@drawable/bg_online_dot"
@@ -91,9 +86,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:fontFamily="@font/plus_jakarta_sans"
-                    android:textColor="@color/text_white"
-                    android:textSize="@dimen/text_label_small"
-                    android:textStyle="bold"
+                    android:textColor="@color/md3_on_surface_secondary"
+                    android:textSize="@dimen/text_timestamp"
                     tools:text="12:35" />
 
             </RelativeLayout>
@@ -101,7 +95,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp">
+                android:layout_marginTop="2dp">
 
                 <TextView
                     android:id="@+id/tv_last_message"
@@ -120,14 +114,15 @@
                 <TextView
                     android:id="@+id/tv_unread_count"
                     android:layout_width="wrap_content"
-                    android:layout_height="24dp"
+                    android:layout_height="@dimen/badge_min_width"
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/bg_badge_red_modern"
                     android:fontFamily="@font/plus_jakarta_sans"
                     android:gravity="center"
-                    android:minWidth="24dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
+                    android:importantForAccessibility="no"
+                    android:minWidth="@dimen/badge_min_width"
+                    android:paddingStart="@dimen/badge_padding_h"
+                    android:paddingEnd="@dimen/badge_padding_h"
                     android:textColor="@color/md3_on_primary"
                     android:textSize="@dimen/text_label_small"
                     android:textStyle="bold"

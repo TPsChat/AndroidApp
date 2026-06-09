@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:background="@drawable/bg_obsidian_card"
+    android:background="@drawable/bg_glass_panel"
     android:paddingStart="10dp"
     android:paddingEnd="10dp"
     android:paddingTop="8dp"
@@ -15,84 +15,84 @@
     <!-- Like -->
     <TextView
         android:id="@+id/tv_reaction_like_picker"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
-    android:text="+1"
-    android:textSize="12sp"
+        android:layout_width="@dimen/reaction_picker_cell"
+        android:layout_height="@dimen/reaction_picker_cell"
+    android:text="@string/emoji_reaction_like"
+    android:textSize="26sp"
     android:gravity="center"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/bg_icon_circle_transparent"
-    android:contentDescription="Like" />
+    android:contentDescription="@string/reaction_like_cd" />
 
     <!-- Love -->
     <TextView
         android:id="@+id/tv_reaction_love_picker"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="@dimen/reaction_picker_cell"
+        android:layout_height="@dimen/reaction_picker_cell"
         android:layout_marginStart="4dp"
-    android:text="Luv"
-    android:textSize="12sp"
+    android:text="@string/emoji_reaction_love"
+    android:textSize="26sp"
     android:gravity="center"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/bg_icon_circle_transparent"
-    android:contentDescription="Love" />
+    android:contentDescription="@string/reaction_love_cd" />
 
     <!-- Haha -->
     <TextView
         android:id="@+id/tv_reaction_haha_picker"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="@dimen/reaction_picker_cell"
+        android:layout_height="@dimen/reaction_picker_cell"
         android:layout_marginStart="4dp"
-    android:text="Haha"
-    android:textSize="12sp"
+    android:text="@string/emoji_reaction_haha"
+    android:textSize="26sp"
     android:gravity="center"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/bg_icon_circle_transparent"
-    android:contentDescription="Haha" />
+    android:contentDescription="@string/reaction_haha_cd" />
 
     <!-- Wow -->
     <TextView
         android:id="@+id/tv_reaction_wow_picker"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="@dimen/reaction_picker_cell"
+        android:layout_height="@dimen/reaction_picker_cell"
         android:layout_marginStart="4dp"
-    android:text="Wow"
-    android:textSize="12sp"
+    android:text="@string/emoji_reaction_wow"
+    android:textSize="26sp"
     android:gravity="center"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/bg_icon_circle_transparent"
-    android:contentDescription="Wow" />
+    android:contentDescription="@string/reaction_wow_cd" />
 
     <!-- Sad -->
     <TextView
         android:id="@+id/tv_reaction_sad_picker"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="@dimen/reaction_picker_cell"
+        android:layout_height="@dimen/reaction_picker_cell"
         android:layout_marginStart="4dp"
-    android:text="Sad"
-    android:textSize="12sp"
+    android:text="@string/emoji_reaction_sad"
+    android:textSize="26sp"
     android:gravity="center"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/bg_icon_circle_transparent"
-    android:contentDescription="Sad" />
+    android:contentDescription="@string/reaction_sad_cd" />
 
     <!-- Angry -->
     <TextView
         android:id="@+id/tv_reaction_angry_picker"
-        android:layout_width="46dp"
-        android:layout_height="46dp"
+        android:layout_width="@dimen/reaction_picker_cell"
+        android:layout_height="@dimen/reaction_picker_cell"
         android:layout_marginStart="4dp"
-    android:text="Angry"
-    android:textSize="12sp"
+    android:text="@string/emoji_reaction_angry"
+    android:textSize="26sp"
     android:gravity="center"
     android:clickable="true"
     android:focusable="true"
     android:background="@drawable/bg_icon_circle_transparent"
-    android:contentDescription="Angry" />
+    android:contentDescription="@string/reaction_angry_cd" />
 
 </LinearLayout>

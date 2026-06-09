@@ -72,7 +72,7 @@ public class MentionSuggestionAdapter extends RecyclerView.Adapter<MentionSugges
             tvMentionDisplayName.setText(displayName);
             
             // Set username with @ prefix
-            tvMentionUsername.setText("@" + user.getUsername());
+            tvMentionUsername.setText(itemView.getContext().getString(R.string.username_format, user.getUsername()));
             
             // Load avatar
             if (user.getAvatar() != null && !user.getAvatar().isEmpty()) {

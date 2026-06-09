@@ -100,7 +100,7 @@ public class PostGalleryAdapter extends RecyclerView.Adapter<PostGalleryAdapter.
                     overlay.setVisibility(View.VISIBLE);
                     android.widget.TextView tvCount = overlay.findViewById(R.id.tv_more_count);
                     if (tvCount != null) {
-                        tvCount.setText("+" + (imageUrls.size() - 6));
+                        tvCount.setText(itemView.getContext().getString(R.string.gallery_more_count, imageUrls.size() - 6));
                     }
                 }
             } else {

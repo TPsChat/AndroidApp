@@ -35,6 +35,7 @@ import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.AvatarManager;
 import com.example.chatappjava.utils.DatabaseManager;
 import com.example.chatappjava.utils.ConversationRepository;
+import com.example.chatappjava.utils.MotionUtils;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.example.chatappjava.config.ServerConfig;
@@ -125,6 +126,9 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     private com.example.chatappjava.network.SocketManager.MessageListener homeMessageListener;
     private android.content.BroadcastReceiver blockedChangedReceiver;
     private android.content.BroadcastReceiver authErrorReceiver;
+    private View homeEmptyState;
+    private TextView homeEmptyTitle;
+    private TextView homeEmptySubtitle;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,6 +225,55 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         // User Profile Components
         ivUserAvatar = findViewById(R.id.iv_user_avatar);
         tvUserName = findViewById(R.id.tv_user_name);
+        homeEmptyState = findViewById(R.id.home_empty_state);
+        if (homeEmptyState != null) {
+            homeEmptyTitle = homeEmptyState.findViewById(R.id.tv_empty_title);
+            homeEmptySubtitle = homeEmptyState.findViewById(R.id.tv_empty_subtitle);
+        }
+    }
+
+    private void updateHomeEmptyState() {
+        if (homeEmptyState == null || rvChatList == null) {
+            return;
+        }
+        RecyclerView.Adapter<?> adapter = rvChatList.getAdapter();
+        int count = adapter != null ? adapter.getItemCount() : 0;
+        boolean show = count == 0 && currentTab != 4 && currentTab != 5;
+        if (!show) {
+            homeEmptyState.setVisibility(View.GONE);
+            return;
+        }
+        boolean wasVisible = homeEmptyState.getVisibility() == View.VISIBLE;
+        int titleRes;
+        int subtitleRes;
+        switch (currentTab) {
+            case 1:
+                titleRes = R.string.home_groups_empty_title;
+                subtitleRes = R.string.home_groups_empty_subtitle;
+                break;
+            case 2:
+                titleRes = R.string.home_calls_empty_title;
+                subtitleRes = R.string.home_calls_empty_subtitle;
+                break;
+            case 3:
+                titleRes = R.string.feed_empty_title;
+                subtitleRes = R.string.feed_empty_subtitle;
+                break;
+            default:
+                titleRes = R.string.home_chats_empty_title;
+                subtitleRes = R.string.home_chats_empty_subtitle;
+                break;
+        }
+        if (homeEmptyTitle != null) {
+            homeEmptyTitle.setText(titleRes);
+        }
+        if (homeEmptySubtitle != null) {
+            homeEmptySubtitle.setText(subtitleRes);
+        }
+        homeEmptyState.setVisibility(View.VISIBLE);
+        if (!wasVisible) {
+            MotionUtils.revealView(this, homeEmptyState);
+        }
     }
     
     private void initializeServices() {
@@ -382,7 +435,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             llLivePost.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(HomeActivity.this, "Live streaming coming soon", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, getString(R.string.feature_live_soon), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -417,7 +470,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     startActivity(intent);
                 } catch (org.json.JSONException e) {
                     android.util.Log.e(TAG, "Error passing post data: " + e.getMessage());
-                    android.widget.Toast.makeText(HomeActivity.this, "Error opening post", android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_open_post), android.widget.Toast.LENGTH_SHORT).show();
                 }
             }
             
@@ -425,7 +478,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             public void onLikeClick(com.example.chatappjava.models.Post post, int position) {
                 String token = databaseManager.getToken();
                 if (token == null || token.isEmpty()) {
-                    Toast.makeText(HomeActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 
@@ -510,7 +563,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     startActivity(intent);
                 } catch (JSONException e) {
                     Log.e(TAG, "Error passing post data: " + e.getMessage());
-                    Toast.makeText(HomeActivity.this, "Error opening comments", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, getString(R.string.error_open_comments), Toast.LENGTH_SHORT).show();
                 }
             }
             
@@ -545,7 +598,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     
                     if (optionShareToFeed == null) {
                         android.util.Log.e(TAG, "option_share_to_feed view not found!");
-                        android.widget.Toast.makeText(HomeActivity.this, "Error loading share dialog", android.widget.Toast.LENGTH_SHORT).show();
+                        android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_load_share_dialog), android.widget.Toast.LENGTH_SHORT).show();
                         return;
                     }
                     
@@ -566,13 +619,13 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     // Share to Story (hidden for now)
                     optionShareToStory.setOnClickListener(v -> {
                         dialog.dismiss();
-                        android.widget.Toast.makeText(HomeActivity.this, "Share to Story coming soon", android.widget.Toast.LENGTH_SHORT).show();
+                        android.widget.Toast.makeText(HomeActivity.this, getString(R.string.feature_share_story_soon), android.widget.Toast.LENGTH_SHORT).show();
                     });
                     
                     // Share to Group (hidden for now)
                     optionShareToGroup.setOnClickListener(v -> {
                         dialog.dismiss();
-                        android.widget.Toast.makeText(HomeActivity.this, "Share to Group coming soon", android.widget.Toast.LENGTH_SHORT).show();
+                        android.widget.Toast.makeText(HomeActivity.this, getString(R.string.feature_share_group_soon), android.widget.Toast.LENGTH_SHORT).show();
                     });
                     
                     // Copy Link
@@ -593,14 +646,14 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     android.util.Log.d(TAG, "Share dialog shown");
                 } catch (Exception e) {
                     android.util.Log.e(TAG, "Error showing share dialog: " + e.getMessage(), e);
-                    android.widget.Toast.makeText(HomeActivity.this, "Error showing share options: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_share_options, e.getMessage()), android.widget.Toast.LENGTH_SHORT).show();
                 }
             }
             
             private void shareToFeed(com.example.chatappjava.models.Post post) {
                 android.util.Log.d(TAG, "shareToFeed called for post: " + post.getId());
                 if (post == null || post.getId() == null) {
-                    android.widget.Toast.makeText(HomeActivity.this, "Cannot share: Post data is invalid", android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_cannot_share_post_data_is_invalid), android.widget.Toast.LENGTH_SHORT).show();
                     return;
                 }
                 
@@ -636,7 +689,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 android.content.ClipData clip = android.content.ClipData.newPlainText("Post Link", deepLinkUrl);
                 clipboard.setPrimaryClip(clip);
                 
-                android.widget.Toast.makeText(HomeActivity.this, "Post link copied. Click to open in app.", android.widget.Toast.LENGTH_SHORT).show();
+                android.widget.Toast.makeText(HomeActivity.this, getString(R.string.success_post_link_copied), android.widget.Toast.LENGTH_SHORT).show();
             }
             
             private void shareToExternalApps(com.example.chatappjava.models.Post post) {
@@ -733,7 +786,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 confirmBuilder.setPositiveButton("Delete", (dialog, which) -> {
                     String token = databaseManager.getToken();
                     if (token == null || token.isEmpty()) {
-                        android.widget.Toast.makeText(HomeActivity.this, "Please login again", android.widget.Toast.LENGTH_SHORT).show();
+                        android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_please_login_again), android.widget.Toast.LENGTH_SHORT).show();
                         return;
                     }
                     
@@ -741,7 +794,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                         @Override
                         public void onFailure(okhttp3.Call call, java.io.IOException e) {
                             runOnUiThread(() -> {
-                                android.widget.Toast.makeText(HomeActivity.this, "Failed to delete post: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                                android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_delete_post, e.getMessage()), android.widget.Toast.LENGTH_SHORT).show();
                             });
                         }
                         
@@ -752,7 +805,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                                 try {
                                     org.json.JSONObject jsonResponse = new org.json.JSONObject(responseBody);
                                     if (jsonResponse.getBoolean("success")) {
-                                        android.widget.Toast.makeText(HomeActivity.this, "Post deleted successfully", android.widget.Toast.LENGTH_SHORT).show();
+                                        android.widget.Toast.makeText(HomeActivity.this, getString(R.string.post_deleted_success), android.widget.Toast.LENGTH_SHORT).show();
                                         // Reload posts
                                         if (currentTab == 3) {
                                             loadPosts(true);
@@ -762,7 +815,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                                         android.widget.Toast.makeText(HomeActivity.this, message, android.widget.Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (org.json.JSONException e) {
-                                    android.widget.Toast.makeText(HomeActivity.this, "Error processing response", android.widget.Toast.LENGTH_SHORT).show();
+                                    android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_request_failed), android.widget.Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -775,7 +828,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             private void hidePost(com.example.chatappjava.models.Post post) {
                 String token = databaseManager.getToken();
                 if (token == null || token.isEmpty()) {
-                    android.widget.Toast.makeText(HomeActivity.this, "Please login again", android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_please_login_again), android.widget.Toast.LENGTH_SHORT).show();
                     return;
                 }
                 
@@ -783,7 +836,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     @Override
                     public void onFailure(okhttp3.Call call, java.io.IOException e) {
                         runOnUiThread(() -> {
-                            android.widget.Toast.makeText(HomeActivity.this, "Failed to hide post: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                            android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_hide_post, e.getMessage()), android.widget.Toast.LENGTH_SHORT).show();
                         });
                     }
                     
@@ -794,7 +847,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                             try {
                                 org.json.JSONObject jsonResponse = new org.json.JSONObject(responseBody);
                                 if (jsonResponse.getBoolean("success")) {
-                                    android.widget.Toast.makeText(HomeActivity.this, "Post hidden successfully", android.widget.Toast.LENGTH_SHORT).show();
+                                    android.widget.Toast.makeText(HomeActivity.this, getString(R.string.post_hidden_success), android.widget.Toast.LENGTH_SHORT).show();
                                     // Remove post from cache
                                     if (postRepository != null) {
                                         postRepository.deletePostById(post.getId());
@@ -810,7 +863,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                                     android.widget.Toast.makeText(HomeActivity.this, message, android.widget.Toast.LENGTH_SHORT).show();
                                 }
                             } catch (org.json.JSONException e) {
-                                android.widget.Toast.makeText(HomeActivity.this, "Error processing response", android.widget.Toast.LENGTH_SHORT).show();
+                                android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_request_failed), android.widget.Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -880,7 +933,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     btnSave.setOnClickListener(v -> {
                         String newContent = etEditContent != null ? etEditContent.getText().toString().trim() : "";
                         if (newContent.isEmpty()) {
-                            android.widget.Toast.makeText(HomeActivity.this, "Content cannot be empty", android.widget.Toast.LENGTH_SHORT).show();
+                            android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_content_empty), android.widget.Toast.LENGTH_SHORT).show();
                             return;
                         }
                         
@@ -900,7 +953,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             private void updatePost(com.example.chatappjava.models.Post post, String newContent, String privacySetting) {
                 String token = databaseManager.getToken();
                 if (token == null || token.isEmpty()) {
-                    android.widget.Toast.makeText(HomeActivity.this, "Please login again", android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_please_login_again), android.widget.Toast.LENGTH_SHORT).show();
                     return;
                 }
                 
@@ -921,7 +974,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                         @Override
                         public void onFailure(okhttp3.Call call, java.io.IOException e) {
                             runOnUiThread(() -> {
-                                android.widget.Toast.makeText(HomeActivity.this, "Failed to update post: " + e.getMessage(), android.widget.Toast.LENGTH_SHORT).show();
+                                android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_update_post, e.getMessage()), android.widget.Toast.LENGTH_SHORT).show();
                             });
                         }
                         
@@ -940,19 +993,19 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                                             loadPosts(true);
                                         }
                                         
-                                        android.widget.Toast.makeText(HomeActivity.this, "Post updated successfully", android.widget.Toast.LENGTH_SHORT).show();
+                                        android.widget.Toast.makeText(HomeActivity.this, getString(R.string.success_post_updated), android.widget.Toast.LENGTH_SHORT).show();
                                     } else {
                                         String message = jsonResponse.optString("message", "Failed to update post");
                                         android.widget.Toast.makeText(HomeActivity.this, message, android.widget.Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (org.json.JSONException e) {
-                                    android.widget.Toast.makeText(HomeActivity.this, "Error processing response", android.widget.Toast.LENGTH_SHORT).show();
+                                    android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_request_failed), android.widget.Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
                     });
                 } catch (org.json.JSONException e) {
-                    android.widget.Toast.makeText(HomeActivity.this, "Error preparing update", android.widget.Toast.LENGTH_SHORT).show();
+                    android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_prepare_update), android.widget.Toast.LENGTH_SHORT).show();
                 }
             }
             
@@ -1014,7 +1067,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 android.widget.Button btnClose = dialogView.findViewById(com.example.chatappjava.R.id.btn_close);
                 
                 if (tvTitle != null) {
-                    tvTitle.setText("Tagged People");
+                    tvTitle.setText(getString(R.string.dialog_tagged_users_title));
                 }
                 
                 androidx.recyclerview.widget.LinearLayoutManager layoutManager = new androidx.recyclerview.widget.LinearLayoutManager(HomeActivity.this);
@@ -1034,7 +1087,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                                 startActivity(intent);
                                 dialog.dismiss();
                             } catch (org.json.JSONException e) {
-                                android.widget.Toast.makeText(HomeActivity.this, "Error opening profile", android.widget.Toast.LENGTH_SHORT).show();
+                                android.widget.Toast.makeText(HomeActivity.this, getString(R.string.error_error_opening_profile), android.widget.Toast.LENGTH_SHORT).show();
                             }
                         }
                     }
@@ -1054,7 +1107,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             
             @Override
             public void onLivePostClick() {
-                Toast.makeText(HomeActivity.this, "Live streaming coming soon", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, getString(R.string.feature_live_soon), Toast.LENGTH_SHORT).show();
             }
             
             @Override
@@ -1210,7 +1263,8 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 case 5: titleRes = R.string.home_title_settings; break;
                 default: titleRes = R.string.home_title_chats; break;
             }
-            tvUserName.setText(titleRes);
+            final int resolvedTitleRes = titleRes;
+            MotionUtils.crossfadeText(this, tvUserName, () -> tvUserName.setText(resolvedTitleRes));
         }
         
         // Update RecyclerView constraints and padding for different tabs using ConstraintSet
@@ -1337,6 +1391,20 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 rvChatList.setAdapter(settingsAdapter);
                 break;
         }
+        MotionUtils.pulseTabIcon(this, getTabIconView(tabIndex));
+        MotionUtils.crossfadePanel(this, chatListCard);
+        updateHomeEmptyState();
+    }
+
+    private ImageView getTabIconView(int tabIndex) {
+        switch (tabIndex) {
+            case 1: return ivGroups;
+            case 2: return ivCalls;
+            case 3: return ivPosts;
+            case 4: return ivNotifications;
+            case 5: return ivSettings;
+            default: return ivChats;
+        }
     }
 
     private void applyChatsFilter() {
@@ -1350,6 +1418,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             }
         }
         chatAdapter.updateChats(privates);
+        updateHomeEmptyState();
     }
     
     private void applyGroupsFilter() {
@@ -1364,6 +1433,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         }
         System.out.println("HomeActivity: Groups filter result: " + groups.size() + " groups");
         chatAdapter.updateChats(groups);
+        updateHomeEmptyState();
     }
     
     private void loadCallHistory() {
@@ -1378,6 +1448,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             this.callList = cachedCalls;
             if (callAdapter != null) {
                 callAdapter.updateCalls(cachedCalls);
+                updateHomeEmptyState();
                 System.out.println("HomeActivity: Loaded " + cachedCalls.size() + " calls from database");
             }
             // Stop refresh spinner if we have cached data
@@ -1411,6 +1482,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                             callList = cachedCalls;
                             if (callAdapter != null) {
                                 callAdapter.updateCalls(cachedCalls);
+                updateHomeEmptyState();
                             }
                         }
                     }
@@ -1472,6 +1544,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     this.callList = calls;
                     if (callAdapter != null) {
                         callAdapter.updateCalls(calls);
+                        updateHomeEmptyState();
                         System.out.println("HomeActivity: Updated call adapter with " + calls.size() + " calls");
                     } else {
                         System.out.println("HomeActivity: Call adapter is null, cannot update calls");
@@ -1782,6 +1855,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                                     System.out.println("HomeActivity: Saved " + newPosts.size() + " new posts to database");
                                     
                                     postAdapter.setPosts(postList);
+                updateHomeEmptyState();
 
                                     // Show notification
                                     String message = newPosts.size() == 1
@@ -1854,6 +1928,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                             postList = cachedPosts;
                             if (postAdapter != null) {
                                 postAdapter.setPosts(postList);
+                updateHomeEmptyState();
                             }
                         }
                     }
@@ -1957,6 +2032,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                                 }
                                 
                                 postAdapter.setPosts(postList);
+                updateHomeEmptyState();
                                 
                                 // Mark that posts have been loaded from server
                                 postsLoadedFromServer = true;
@@ -1996,6 +2072,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             postList.addAll(cachedPosts);
             if (postAdapter != null) {
                 postAdapter.setPosts(postList);
+                updateHomeEmptyState();
             }
             System.out.println("HomeActivity: Loaded " + cachedPosts.size() + " posts from cache");
         }
@@ -2009,7 +2086,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         // Force refresh avatars on manual reload
         avatarManager.forceRefreshAvatars();
         
-        Toast.makeText(this, "Reloading...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_reloading), Toast.LENGTH_SHORT).show();
     }
 
     private void redirectToLogin() {
@@ -2031,22 +2108,22 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 () -> {
                     String token = databaseManager.getToken();
                     if (token == null || token.isEmpty()) {
-                        Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     new ApiClient().deleteChat(token, chat.getId(), new okhttp3.Callback() {
                         @Override
                         public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                            runOnUiThread(() -> Toast.makeText(HomeActivity.this, "Failed to delete chat", Toast.LENGTH_SHORT).show());
+                            runOnUiThread(() -> Toast.makeText(HomeActivity.this, getString(R.string.error_failed_to_delete_chat), Toast.LENGTH_SHORT).show());
                         }
                         @Override
                         public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                             runOnUiThread(() -> {
                                 if (response.code() == 200) {
-                                    Toast.makeText(HomeActivity.this, "Chat deleted", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HomeActivity.this, getString(R.string.msg_chat_deleted), Toast.LENGTH_SHORT).show();
                                     reloadHome();
                                 } else {
-                                    Toast.makeText(HomeActivity.this, "Delete chat failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HomeActivity.this, getString(R.string.error_delete_chat_failed), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -2059,7 +2136,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
 
     private void confirmUnfriend(Chat chat) {
         if (!chat.isPrivateChat()) {
-            Toast.makeText(this, "Unfriend applies to private chats", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_unfriend_applies_to_private_chats), Toast.LENGTH_SHORT).show();
             return;
         }
         com.example.chatappjava.utils.DialogUtils.showConfirm(
@@ -2071,7 +2148,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 () -> {
                     String token = databaseManager.getToken();
                     if (token == null || token.isEmpty()) {
-                        Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     String otherUserId = null;
@@ -2087,23 +2164,23 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                         }
                     }
                     if (otherUserId == null || otherUserId.isEmpty()) {
-                        Toast.makeText(this, "Cannot determine user to unfriend", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.error_cannot_determine_user_to_unfriend), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     new ApiClient().unfriendUser(token, otherUserId, new okhttp3.Callback() {
                         @Override
                         public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                            runOnUiThread(() -> Toast.makeText(HomeActivity.this, "Failed to unfriend", Toast.LENGTH_SHORT).show());
+                            runOnUiThread(() -> Toast.makeText(HomeActivity.this, getString(R.string.error_unfriend), Toast.LENGTH_SHORT).show());
                         }
                         @Override
                         public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                             runOnUiThread(() -> {
                                 if (response.code() == 200) {
-                                    Toast.makeText(HomeActivity.this, "Unfriended successfully", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HomeActivity.this, getString(R.string.success_unfriended), Toast.LENGTH_SHORT).show();
                                     // Do not remove chat; just reload to reflect state
                                     reloadHome();
                                 } else {
-                                    Toast.makeText(HomeActivity.this, "Unfriend failed", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(HomeActivity.this, getString(R.string.error_unfriend_failed), Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -2192,7 +2269,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                             }
                         }
                         
-                        Toast.makeText(HomeActivity.this, "You have been removed from " + chatName, Toast.LENGTH_LONG).show();
+                        Toast.makeText(HomeActivity.this, getString(R.string.msg_removed_from_group, chatName), Toast.LENGTH_LONG).show();
                         // Refresh chat list from server
                         loadChats();
                     });
@@ -2239,6 +2316,9 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     
     @Override
     protected void onDestroy() {
+        if (settingsAdapter != null) {
+            settingsAdapter.onDestroy();
+        }
         super.onDestroy();
         // Clean up socket listeners to prevent memory leaks
         com.example.chatappjava.network.SocketManager socketManager = 
@@ -2336,6 +2416,14 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         if (tvFriendRequestsTitle != null) {
             String baseTitle = "Friends";
             tvFriendRequestsTitle.setText(baseTitle + " (" + totalCount + ")");
+        }
+        if (llFriendRequests != null) {
+            if (pendingReceivedCount > 0) {
+                llFriendRequests.setContentDescription(
+                        getString(R.string.home_friend_requests_count_cd, pendingReceivedCount));
+            } else {
+                llFriendRequests.setContentDescription(getString(R.string.home_friend_requests_cd));
+            }
         }
         if (pendingReceivedCount > 0) {
             tvFriendRequestCount.setText(String.valueOf(pendingReceivedCount));
@@ -2651,11 +2739,11 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     }
     
     private void addMembers(Chat chat) {
-        Toast.makeText(this, "Add members feature coming soon", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.feature_add_members_feature_coming_soon), Toast.LENGTH_SHORT).show();
     }
     
     private void removeMembers(Chat chat) {
-        Toast.makeText(this, "Remove members feature coming soon", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.feature_remove_members_feature_coming_soon), Toast.LENGTH_SHORT).show();
     }
     
     private void confirmLeaveGroup(Chat chat) {
@@ -2672,7 +2760,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     }
     
     private void leaveGroup(Chat chat) {
-        Toast.makeText(this, "Leaving group...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_leaving_group), Toast.LENGTH_SHORT).show();
         
         String token = databaseManager.getToken();
         apiClient.leaveGroup(token, chat.getId(), new okhttp3.Callback() {
@@ -2704,7 +2792,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                                 if (conversationRepository != null) {
                                     conversationRepository.deleteConversation(chat.getId());
                                 }
-                                Toast.makeText(HomeActivity.this, "Left group successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(HomeActivity.this, getString(R.string.success_left_group_successfully), Toast.LENGTH_SHORT).show();
                             }
                             
                             // Remove from current list and refresh UI
@@ -2723,11 +2811,11 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                             }, 500);
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(HomeActivity.this, "Left group successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(HomeActivity.this, getString(R.string.success_left_group_successfully), Toast.LENGTH_SHORT).show();
                             loadChats();
                         }
                     } else {
-                        Toast.makeText(HomeActivity.this, "Failed to leave group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, getString(R.string.error_failed_to_leave_group), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -2735,7 +2823,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(HomeActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -2755,7 +2843,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     }
     
     private void deleteGroup(Chat chat) {
-        Toast.makeText(this, "Deleting group...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_deleting_group), Toast.LENGTH_SHORT).show();
         
         String token = databaseManager.getToken();
         String groupId = chat.getGroupId();
@@ -2789,10 +2877,10 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                             }
                         }
                         
-                        Toast.makeText(HomeActivity.this, "Group deleted successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, getString(R.string.success_group_deleted_successfully), Toast.LENGTH_SHORT).show();
                         loadChats(); // Refresh chat list from server
                     } else {
-                        Toast.makeText(HomeActivity.this, "Failed to delete group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, getString(R.string.error_failed_to_delete_group), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -2800,7 +2888,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(HomeActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 });
             }
         };
@@ -2837,7 +2925,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             startActivity(intent);
         } catch (org.json.JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error opening chat", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_opening_chat), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -2850,7 +2938,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 startActivity(intent);
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Error opening profile", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_error_opening_profile), Toast.LENGTH_SHORT).show();
             }
         } else if (chat.isGroupChat()) {
             // For group chat, show group info
@@ -2863,7 +2951,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     .setPositiveButton("OK", null)
                     .show();
         } else {
-            Toast.makeText(this, "No chat information available", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_no_chat_information_available), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -2957,7 +3045,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     startActivity(intent);
                 } catch (org.json.JSONException e) {
                     e.printStackTrace();
-                    Toast.makeText(this, "Error opening join requests", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_error_opening_join_requests), Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -3104,7 +3192,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     
     private void confirmBlockUser(Chat chat) {
         if (chat.getOtherParticipant() == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_user_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -3126,25 +3214,25 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     private void blockUser(String userId) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
         apiClient.blockUser(token, userId, "block", new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                runOnUiThread(() -> Toast.makeText(HomeActivity.this, "Failed to block user", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(HomeActivity.this, getString(R.string.error_failed_to_block_user), Toast.LENGTH_SHORT).show());
             }
             
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
-                        Toast.makeText(HomeActivity.this, "User blocked successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, getString(R.string.success_user_blocked_successfully), Toast.LENGTH_SHORT).show();
                         // Reload chats to reflect the change
                         loadChats();
                     } else {
-                        Toast.makeText(HomeActivity.this, "Failed to block user: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, getString(R.string.error_block_user_code, response.code()), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -3196,7 +3284,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         }
         
         if (targetChat == null) {
-            Toast.makeText(this, "Chat not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_chat_not_found), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -3215,7 +3303,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             startActivity(intent);
         } catch (org.json.JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error initiating call", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_initiating_call), Toast.LENGTH_SHORT).show();
         }
     }
     

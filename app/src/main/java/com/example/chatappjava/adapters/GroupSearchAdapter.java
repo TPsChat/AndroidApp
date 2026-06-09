@@ -39,15 +39,58 @@ public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.
     public void setOnGroupClickListener(OnGroupClickListener listener) {
         this.listener = listener;
     }
-    @SuppressLint("NotifyDataSetChanged")
-    public void setDiscoverMode(boolean discover) { this.discoverMode = discover; notifyDataSetChanged(); }
-    @SuppressLint("NotifyDataSetChanged")
-    public void setForwardMode(boolean forward) { this.forwardMode = forward; notifyDataSetChanged(); }
-    
-    @SuppressLint("NotifyDataSetChanged")
+    public void setDiscoverMode(boolean discover) {
+        if (this.discoverMode == discover) {
+            return;
+        }
+        this.discoverMode = discover;
+        int count = getItemCount();
+        if (count > 0) {
+            notifyItemRangeChanged(0, count);
+        }
+    }
+
+    public void setForwardMode(boolean forward) {
+        if (this.forwardMode == forward) {
+            return;
+        }
+        this.forwardMode = forward;
+        int count = getItemCount();
+        if (count > 0) {
+            notifyItemRangeChanged(0, count);
+        }
+    }
+
     public void updateGroups(List<Chat> newGroups) {
-        this.groups = newGroups;
-        notifyDataSetChanged();
+        if (newGroups == null) {
+            newGroups = new java.util.ArrayList<>();
+        }
+        int oldSize = groups != null ? groups.size() : 0;
+        groups = newGroups;
+        int newSize = groups.size();
+        if (oldSize > newSize) {
+            notifyItemRangeRemoved(newSize, oldSize - newSize);
+        }
+        if (newSize > oldSize) {
+            notifyItemRangeInserted(oldSize, newSize - oldSize);
+        }
+        int overlap = Math.min(oldSize, newSize);
+        if (overlap > 0) {
+            notifyItemRangeChanged(0, overlap);
+        }
+    }
+
+    public void notifyGroupItemChanged(Chat group) {
+        if (groups == null || group == null || group.getId() == null) {
+            return;
+        }
+        for (int i = 0; i < groups.size(); i++) {
+            Chat item = groups.get(i);
+            if (item != null && group.getId().equals(item.getId())) {
+                notifyItemChanged(i);
+                return;
+            }
+        }
     }
     
     @NonNull
@@ -107,7 +150,7 @@ public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.
             } else {
                 if (tvMemberCount != null) {
                     tvMemberCount.setVisibility(View.VISIBLE);
-                    tvMemberCount.setText(group.getParticipantCount() + " members");
+                    tvMemberCount.setText(context.getString(R.string.group_members_count, group.getParticipantCount()));
                 }
             }
             
@@ -116,7 +159,7 @@ public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.
                 if (group.getLastMessage() != null && !group.getLastMessage().isEmpty()) {
                     tvLastMessage.setText(group.getLastMessage());
                 } else {
-                    tvLastMessage.setText("No messages yet");
+                    tvLastMessage.setText(R.string.group_no_messages_yet);
                 }
             }
             
@@ -154,19 +197,19 @@ public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.
                 android.util.Log.d("GroupSearchAdapter", "Group " + group.getName() + " joinRequestStatus: " + joinStatus + ", isPublic: " + group.isPublicGroup());
 
                 if (joinStatus != null && joinStatus.equals("pending")) {
-                    btnAction.setText("Cancel");
+                    btnAction.setText(R.string.group_action_cancel);
                     btnAction.setEnabled(true);
                     btnAction.setBackground(ContextCompat.getDrawable(context, R.drawable.bg_reject_button_modern));
                     btnAction.setTextColor(ContextCompat.getColor(context, R.color.text_white));
                     android.util.Log.d("GroupSearchAdapter", "Set button to Cancel Request (red)");
                 } else if (group.isPublicGroup()) {
-                    btnAction.setText("Join");
+                    btnAction.setText(R.string.group_action_join);
                     btnAction.setEnabled(true);
                     btnAction.setBackground(ContextCompat.getDrawable(context, R.drawable.bg_button_normal_ripple));
                     btnAction.setTextColor(ContextCompat.getColor(context, R.color.md3_on_primary));
                     android.util.Log.d("GroupSearchAdapter", "Set button to Join (blue)");
                 } else {
-                    btnAction.setText("Request");
+                    btnAction.setText(R.string.group_action_request);
                     btnAction.setEnabled(true);
                     btnAction.setBackground(ContextCompat.getDrawable(context, R.drawable.bg_button_normal_ripple));
                     btnAction.setTextColor(ContextCompat.getColor(context, R.color.md3_on_primary));
@@ -181,7 +224,7 @@ public class GroupSearchAdapter extends RecyclerView.Adapter<GroupSearchAdapter.
             } else if (forwardMode && btnAction != null) {
                 // Forward mode on My Groups tab: show a Forward button
                 btnAction.setVisibility(View.VISIBLE);
-                btnAction.setText("FORWARD");
+                btnAction.setText(R.string.group_action_forward);
                 btnAction.setEnabled(true);
                 btnAction.setBackground(ContextCompat.getDrawable(context, R.drawable.bg_button_normal_ripple));
                 btnAction.setTextColor(ContextCompat.getColor(context, R.color.md3_on_primary));

@@ -158,7 +158,7 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
         remoteUserAvatar = getIntent().getStringExtra("remoteUserAvatar");
         
         if (callId == null || chatId == null) {
-            Toast.makeText(this, "Invalid call data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_invalid_call_data), Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -284,7 +284,7 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
                 grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 initializeCall();
             } else {
-                Toast.makeText(this, "Permissions are required for video call", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_permissions_are_required_for_video_call), Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -308,7 +308,7 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
                 socketManager.joinCallRoom(callId);
             } else {
                 Log.e(TAG, "Cannot join call room: socketManager=" + (socketManager != null) + ", callId=" + callId);
-                Toast.makeText(this, "Failed to connect to call", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_failed_to_connect_to_call), Toast.LENGTH_SHORT).show();
                 finish();
                 return;
             }
@@ -350,7 +350,7 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
             Log.d(TAG, "Call initialized successfully");
         } catch (Exception e) {
             Log.e(TAG, "Critical error initializing call", e);
-            Toast.makeText(this, "Failed to initialize call: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.error_failed_with_message, e.getMessage()), Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -564,7 +564,7 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
                     if (isCallActive && remoteParticipant != null && remoteParticipant.getUserId() != null && 
                         remoteParticipant.getUserId().equals(userId)) {
                         Log.d(TAG, "Remote user left call: " + userId);
-                        Toast.makeText(this, "Other user left the call", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.msg_other_user_left_the_call), Toast.LENGTH_SHORT).show();
                         endCall();
                     } else {
                         Log.d(TAG, "user_left_call: ignoring (not remote user or call not active)");
@@ -592,7 +592,7 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
                     // CRITICAL: Only end call if it's actually the current call and call is active
                     if (isCallActive && callId != null && callId.equals(declinedCallId)) {
                         Log.d(TAG, "Call declined by remote user: " + declinedCallId);
-                        Toast.makeText(this, "Call declined", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.msg_call_declined), Toast.LENGTH_SHORT).show();
                         endCall();
                     } else {
                         Log.d(TAG, "call_declined: ignoring (not current call or call not active)");
@@ -620,7 +620,7 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
                     // CRITICAL: Only end call if it's actually the current call and call is active
                     if (isCallActive && callId != null && callId.equals(endedCallId)) {
                         Log.d(TAG, "Call ended: " + endedCallId);
-                        Toast.makeText(this, "Call ended", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.msg_call_ended), Toast.LENGTH_SHORT).show();
                         endCall();
                     } else {
                         Log.d(TAG, "call_ended: ignoring (not current call or call not active)");
@@ -793,7 +793,7 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(TAG, "Error starting video capture", e);
             // Don't end call - continue without video
-            Toast.makeText(this, "Camera unavailable, continuing without video", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_camera_unavailable_continuing_without_video), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -961,7 +961,7 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
             Log.d(TAG, "Audio capture started successfully");
         } catch (Exception e) {
             Log.e(TAG, "Error starting audio capture", e);
-            Toast.makeText(this, "Failed to start audio capture: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_failed_with_message, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
     

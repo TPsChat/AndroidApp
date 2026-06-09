@@ -16,6 +16,7 @@ import com.example.chatappjava.R;
 import com.example.chatappjava.models.User;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.DatabaseManager;
+import com.example.chatappjava.utils.EmptyStateHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -62,7 +63,13 @@ public class BlockedUsersActivity extends AppCompatActivity {
         rvBlocked = findViewById(R.id.rv_blocked);
         progressBar = findViewById(R.id.progress_bar);
         emptyState = findViewById(R.id.empty_state);
-        tvTitle.setText("Blocked Users");
+        tvTitle.setText(R.string.title_activity_blocked_users);
+        EmptyStateHelper.bind(
+                emptyState,
+                R.string.empty_blocked_users_title,
+                R.string.empty_blocked_users_subtitle,
+                R.drawable.ic_eye
+        );
     }
 
     private void setupRecycler() {
@@ -78,7 +85,7 @@ public class BlockedUsersActivity extends AppCompatActivity {
     private void loadBlockedUsers() {
         String token = sharedPrefs.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -88,7 +95,7 @@ public class BlockedUsersActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(BlockedUsersActivity.this, "Failed to load", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BlockedUsersActivity.this, getString(R.string.error_failed_to_load), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -100,7 +107,7 @@ public class BlockedUsersActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.GONE);
                     try {
                         if (!response.isSuccessful()) {
-                            Toast.makeText(BlockedUsersActivity.this, "Failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BlockedUsersActivity.this, getString(R.string.error_failed_code, response.code()), Toast.LENGTH_SHORT).show();
                             return;
                         }
                         JSONObject json = new JSONObject(body);
@@ -113,7 +120,7 @@ public class BlockedUsersActivity extends AppCompatActivity {
                         adapter.notifyDataSetChanged();
                         emptyState.setVisibility(blockedUsers.isEmpty() ? View.VISIBLE : View.GONE);
                     } catch (Exception e) {
-                        Toast.makeText(BlockedUsersActivity.this, "Parse error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BlockedUsersActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -123,13 +130,13 @@ public class BlockedUsersActivity extends AppCompatActivity {
     private void onUnblockClick(User user) {
         String token = sharedPrefs.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         apiClient.blockUser(token, user.getId(), "unblock", new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> Toast.makeText(BlockedUsersActivity.this, "Network error", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(BlockedUsersActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show());
             }
 
             @SuppressLint("NotifyDataSetChanged")
@@ -140,12 +147,12 @@ public class BlockedUsersActivity extends AppCompatActivity {
                         blockedUsers.remove(user);
                         adapter.notifyDataSetChanged();
                         emptyState.setVisibility(blockedUsers.isEmpty() ? View.VISIBLE : View.GONE);
-                        Toast.makeText(BlockedUsersActivity.this, "Unblocked", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BlockedUsersActivity.this, getString(R.string.msg_unblocked), Toast.LENGTH_SHORT).show();
                         // Notify home to refresh blocked list and chats
                         android.content.Intent intent = new android.content.Intent("com.example.chatappjava.ACTION_BLOCKED_USERS_CHANGED");
                         sendBroadcast(intent);
                     } else {
-                        Toast.makeText(BlockedUsersActivity.this, "Failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(BlockedUsersActivity.this, getString(R.string.error_failed_code, response.code()), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

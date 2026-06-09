@@ -143,7 +143,7 @@ public class ProfileActivity extends AppCompatActivity {
                         intent.putExtra("post", post.toJson().toString());
                         startActivity(intent);
                     } catch (JSONException e) {
-                        Toast.makeText(ProfileActivity.this, "Error opening post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, getString(R.string.error_open_post), Toast.LENGTH_SHORT).show();
                     }
                 }
                 
@@ -151,13 +151,13 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onLikeClick(com.example.chatappjava.models.Post post, int position) {
                     String token = databaseManager.getToken();
                     if (token == null || token.isEmpty()) {
-                        Toast.makeText(ProfileActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     apiClient.toggleLikePost(token, post.getId(), new okhttp3.Callback() {
                         @Override
                         public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                            runOnUiThread(() -> Toast.makeText(ProfileActivity.this, "Failed to like post", Toast.LENGTH_SHORT).show());
+                            runOnUiThread(() -> Toast.makeText(ProfileActivity.this, getString(R.string.error_update_like), Toast.LENGTH_SHORT).show());
                         }
                         
                         @Override
@@ -184,18 +184,18 @@ public class ProfileActivity extends AppCompatActivity {
                         intent.putExtra("post", post.toJson().toString());
                         startActivity(intent);
                     } catch (JSONException e) {
-                        Toast.makeText(ProfileActivity.this, "Error opening post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, getString(R.string.error_open_post), Toast.LENGTH_SHORT).show();
                     }
                 }
                 
                 @Override
                 public void onShareClick(com.example.chatappjava.models.Post post) {
-                    Toast.makeText(ProfileActivity.this, "Share feature", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, getString(R.string.msg_share_feature), Toast.LENGTH_SHORT).show();
                 }
                 
                 @Override
                 public void onPostMenuClick(com.example.chatappjava.models.Post post) {
-                    Toast.makeText(ProfileActivity.this, "Post options", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, getString(R.string.dialog_post_options_title), Toast.LENGTH_SHORT).show();
                 }
                 
                 @Override
@@ -232,7 +232,7 @@ public class ProfileActivity extends AppCompatActivity {
                                         intent.putExtra("post", post.toJson().toString());
                                         startActivity(intent);
                                     } catch (JSONException e) {
-                                        Toast.makeText(ProfileActivity.this, "Error opening post", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProfileActivity.this, getString(R.string.error_open_post), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -242,7 +242,7 @@ public class ProfileActivity extends AppCompatActivity {
                 
                 @Override
                 public void onTaggedUsersClick(com.example.chatappjava.models.Post post) {
-                    Toast.makeText(ProfileActivity.this, "Tagged users", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, getString(R.string.create_post_tagged_users), Toast.LENGTH_SHORT).show();
                 }
             });
             rvPosts.setAdapter(postAdapter);
@@ -269,7 +269,7 @@ public class ProfileActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (tvNoFriends != null) {
                         tvNoFriends.setVisibility(View.VISIBLE);
-                        tvNoFriends.setText("Failed to load friends");
+                        tvNoFriends.setText(getString(R.string.error_load_friends_failed));
                     }
                 });
             }
@@ -282,7 +282,7 @@ public class ProfileActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             if (tvNoFriends != null) {
                                 tvNoFriends.setVisibility(View.VISIBLE);
-                                tvNoFriends.setText("No friends to show");
+                                tvNoFriends.setText(getString(R.string.empty_friends_title));
                             }
                         });
                         return;
@@ -306,7 +306,7 @@ public class ProfileActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         if (tvNoFriends != null) {
                             tvNoFriends.setVisibility(View.VISIBLE);
-                            tvNoFriends.setText("Failed to parse friends");
+                            tvNoFriends.setText(getString(R.string.error_parse_friends));
                         }
                     });
                 }
@@ -328,7 +328,7 @@ public class ProfileActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (tvNoPosts != null) {
                         tvNoPosts.setVisibility(View.VISIBLE);
-                        tvNoPosts.setText("Failed to load posts");
+                        tvNoPosts.setText(getString(R.string.error_load_posts_failed));
                     }
                 });
             }
@@ -341,7 +341,7 @@ public class ProfileActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             if (tvNoPosts != null) {
                                 tvNoPosts.setVisibility(View.VISIBLE);
-                                tvNoPosts.setText("No posts to show");
+                                tvNoPosts.setText(getString(R.string.empty_posts_title));
                             }
                         });
                         return;
@@ -367,7 +367,7 @@ public class ProfileActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         if (tvNoPosts != null) {
                             tvNoPosts.setVisibility(View.VISIBLE);
-                            tvNoPosts.setText("Failed to parse posts");
+                            tvNoPosts.setText(getString(R.string.error_parse_posts));
                         }
                     });
                 }
@@ -390,7 +390,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 civAvatar.setImageURI(selectedImageUri);
                                 hasChanges = true;
                                 updateSaveButtonVisibility();
-                                Toast.makeText(ProfileActivity.this, "Avatar selected. Click save to upload.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProfileActivity.this, getString(R.string.msg_avatar_selected_click_save_to_upload), Toast.LENGTH_SHORT).show();
                             }
                         }
                     } else if (result.getResultCode() == ImagePicker.RESULT_ERROR) {
@@ -530,7 +530,7 @@ public class ProfileActivity extends AppCompatActivity {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
             showLoading(false);
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -540,7 +540,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    Toast.makeText(ProfileActivity.this, "Failed to load profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileActivity.this, getString(R.string.error_load_profile, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -569,7 +569,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error processing profile data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_processing_profile_data), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -626,7 +626,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         if (currentUser == null || currentUser.getAvatar() == null || currentUser.getAvatar().isEmpty()) {
-            Toast.makeText(this, "No avatar to display", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_no_avatar_to_display), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -666,7 +666,7 @@ public class ProfileActivity extends AppCompatActivity {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
             showLoading(false);
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -696,7 +696,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
                         showLoading(false);
-                        Toast.makeText(ProfileActivity.this, "Failed to upload avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, getString(R.string.error_upload_avatar_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -718,11 +718,11 @@ public class ProfileActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 e.printStackTrace();
                                 showLoading(false);
-                                Toast.makeText(ProfileActivity.this, "Error processing avatar response", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProfileActivity.this, getString(R.string.error_error_processing_avatar_response), Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             showLoading(false);
-                            Toast.makeText(ProfileActivity.this, "Failed to upload avatar", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileActivity.this, getString(R.string.error_failed_to_upload_avatar), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -730,7 +730,7 @@ public class ProfileActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
             showLoading(false);
-            Toast.makeText(this, "Error preparing avatar for upload", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_avatar_for_upload), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -744,7 +744,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
                         showLoading(false);
-                        Toast.makeText(ProfileActivity.this, "Failed to remove avatar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, getString(R.string.error_remove_avatar, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -760,7 +760,7 @@ public class ProfileActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
             showLoading(false);
-            Toast.makeText(this, "Error preparing avatar removal", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_avatar_removal), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -807,7 +807,7 @@ public class ProfileActivity extends AppCompatActivity {
                 // Validate phone number if not empty
                 if (!newPhoneNumber.isEmpty() && !isValidPhoneNumber(newPhoneNumber)) {
                     showLoading(false);
-                    Toast.makeText(this, "Please enter a valid phone number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_please_enter_a_valid_phone_number), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 profile.put("phoneNumber", newPhoneNumber);
@@ -829,7 +829,7 @@ public class ProfileActivity extends AppCompatActivity {
             // Check if there are any changes to send
             if (profileData.length() == 0 && selectedImageUri == null) {
                 showLoading(false);
-                Toast.makeText(this, "No changes to save", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.msg_no_changes_to_save), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -838,7 +838,7 @@ public class ProfileActivity extends AppCompatActivity {
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
                         showLoading(false);
-                        Toast.makeText(ProfileActivity.this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileActivity.this, getString(R.string.error_update_profile, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -855,7 +855,7 @@ public class ProfileActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
             showLoading(false);
-            Toast.makeText(this, "Error preparing profile data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_profile_data), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -878,14 +878,14 @@ public class ProfileActivity extends AppCompatActivity {
                 
                 hasChanges = false;
                 updateSaveButtonVisibility();
-                Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.success_profile_updated_successfully), Toast.LENGTH_SHORT).show();
             } else {
                 String message = jsonResponse.optString("message", "Failed to update profile");
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error processing response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -970,7 +970,7 @@ public class ProfileActivity extends AppCompatActivity {
                     civAvatar.setImageResource(R.drawable.circle_background);
                     hasChanges = true;
                     updateSaveButtonVisibility();
-                    Toast.makeText(this, "Avatar will be removed when you save", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.msg_avatar_will_be_removed_when_you_save), Toast.LENGTH_SHORT).show();
                 })
                 .setNegativeButton("Cancel", null)
                 .show();

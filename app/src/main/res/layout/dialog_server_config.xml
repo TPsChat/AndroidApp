@@ -17,17 +17,16 @@
         android:paddingEnd="20dp"
         android:paddingTop="22dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bg_obsidian_card">
+        android:background="@drawable/bg_glass_panel">
 
         <!-- Title -->
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Server Configuration"
-            android:textSize="20sp"
-            android:textColor="@color/md3_on_surface"
-            android:textStyle="bold"
+            android:text="@string/dialog_server_config_title"
+            android:textAppearance="@style/AppHeadlineSmall"
+            android:textColor="@color/text_primary"
             android:gravity="center"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
@@ -38,72 +37,54 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Server IP"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/md3_on_surface"
+            android:text="@string/dialog_server_ip"
+            style="@style/AppLabelSmall"
+            android:textColor="@color/text_primary"
             android:layout_marginBottom="8dp" />
 
         <EditText
             android:id="@+id/et_server_ip"
+            style="@style/AppInputField"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="wrap_content"
             android:inputType="text"
-            android:hint="Enter server IP address"
-            android:textSize="15sp"
-            android:textColor="@color/md3_on_surface"
+            android:hint="@string/hint_server_ip"
             android:textColorHint="@color/md3_on_surface_secondary"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_soft_inset"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:textCursorDrawable="@null"
-            android:layout_marginBottom="14dp" />
+            android:layout_marginBottom="@dimen/spacing_md" />
 
         <!-- Server Port -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Server Port"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/md3_on_surface"
+            android:text="@string/dialog_server_port"
+            style="@style/AppLabelSmall"
+            android:textColor="@color/text_primary"
             android:layout_marginBottom="8dp" />
 
         <EditText
             android:id="@+id/et_server_port"
+            style="@style/AppInputField"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="wrap_content"
             android:inputType="number"
-            android:hint="Enter server port"
-            android:textSize="15sp"
-            android:textColor="@color/md3_on_surface"
+            android:hint="@string/hint_server_port"
             android:textColorHint="@color/md3_on_surface_secondary"
-            android:gravity="center_vertical"
-            android:background="@drawable/bg_soft_inset"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
             android:textCursorDrawable="@null"
-            android:layout_marginBottom="14dp" />
+            android:layout_marginBottom="@dimen/spacing_md" />
 
         <!-- Use HTTPS -->
         <LinearLayout
+            style="@style/AppOptionRow"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="14dp"
-            android:paddingEnd="10dp"
-            android:background="@drawable/bg_option_row_dark"
             android:layout_marginBottom="10dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Use HTTPS"
-                android:textSize="15sp"
-                android:textColor="@color/md3_on_surface"
+                android:text="@string/dialog_use_https"
+                style="@style/AppBodyLarge"
                 android:textStyle="bold" />
 
             <CheckBox
@@ -116,22 +97,16 @@
 
         <!-- Use WSS -->
         <LinearLayout
+            style="@style/AppOptionRow"
             android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="14dp"
-            android:paddingEnd="10dp"
-            android:background="@drawable/bg_option_row_dark"
-            android:layout_marginBottom="18dp">
+            android:layout_marginBottom="@dimen/screen_edge_inset">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Use WSS (WebSocket Secure)"
-                android:textSize="15sp"
-                android:textColor="@color/md3_on_surface"
+                android:text="@string/dialog_use_wss"
+                style="@style/AppBodyLarge"
                 android:textStyle="bold" />
 
             <CheckBox
@@ -152,31 +127,29 @@
             <Button
                 android:id="@+id/btn_cancel_server_config"
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:minWidth="92dp"
-                android:text="Cancel"
+                android:text="@string/action_cancel"
                 android:textAllCaps="false"
                 android:textColor="@color/dialog_button_secondary_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:background="@drawable/bg_reject_button_modern"
-                android:backgroundTint="@null"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
+                style="@style/DialogButton.Secondary"
+                android:paddingStart="@dimen/dialog_padding_h"
+                android:paddingEnd="@dimen/dialog_padding_h"
                 android:layout_marginEnd="10dp" />
 
             <Button
                 android:id="@+id/btn_save_server_config"
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:minWidth="92dp"
-                android:text="Save"
+                android:text="@string/action_save"
                 android:textAllCaps="false"
                 android:textColor="@color/dialog_button_filled_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:background="@drawable/bg_new_message_button"
-                android:backgroundTint="@null"
+                style="@style/DialogButton.Filled"
                 android:paddingStart="22dp"
                 android:paddingEnd="22dp" />
 

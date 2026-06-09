@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListUpdateCallback;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatappjava.R;
@@ -22,6 +24,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -68,11 +71,40 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
     
     public void setPosts(List<Post> newPosts) {
-        this.posts.clear();
-        if (newPosts != null) {
-            this.posts.addAll(newPosts);
-        }
-        notifyDataSetChanged();
+        List<Post> incoming = newPosts != null ? new ArrayList<>(newPosts) : new ArrayList<>();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(posts, incoming));
+        posts.clear();
+        posts.addAll(incoming);
+        diffResult.dispatchUpdatesTo(createOffsetUpdateCallback());
+    }
+
+    private int postOffset() {
+        return createPostBarListener != null ? 1 : 0;
+    }
+
+    private ListUpdateCallback createOffsetUpdateCallback() {
+        final int offset = postOffset();
+        return new ListUpdateCallback() {
+            @Override
+            public void onInserted(int position, int count) {
+                notifyItemRangeInserted(position + offset, count);
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+                notifyItemRangeRemoved(position + offset, count);
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+                notifyItemMoved(fromPosition + offset, toPosition + offset);
+            }
+
+            @Override
+            public void onChanged(int position, int count, Object payload) {
+                notifyItemRangeChanged(position + offset, count, payload);
+            }
+        };
     }
     
     public void addPosts(List<Post> newPosts) {
@@ -275,27 +307,24 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             
             // Set author info
             tvPostUsername.setText(post.getAuthorUsername());
+            itemView.setContentDescription(
+                    context.getString(R.string.post_row_cd, post.getAuthorUsername()));
             
             // Set tagged users display: "User with A, B, ..."
             List<com.example.chatappjava.models.User> taggedUsers = post.getTaggedUsers();
             if (taggedUsers != null && !taggedUsers.isEmpty()) {
-                StringBuilder tagsText = new StringBuilder();
-                tagsText.append("with "); // "with" in English
+                StringBuilder names = new StringBuilder();
                 for (int i = 0; i < taggedUsers.size(); i++) {
                     if (i > 0) {
-                        if (i == taggedUsers.size() - 1) {
-                            tagsText.append(" and "); // "and" in English
-                        } else {
-                            tagsText.append(", ");
-                        }
+                        names.append(i == taggedUsers.size() - 1 ? " and " : ", ");
                     }
                     String displayName = taggedUsers.get(i).getUsername();
                     if (taggedUsers.get(i).getFirstName() != null && !taggedUsers.get(i).getFirstName().isEmpty()) {
                         displayName = taggedUsers.get(i).getFirstName();
                     }
-                    tagsText.append(displayName);
+                    names.append(displayName);
                 }
-                tvPostTaggedUsers.setText(tagsText.toString());
+                tvPostTaggedUsers.setText(context.getString(R.string.post_tagged_with, names.toString()));
                 tvPostTaggedUsers.setVisibility(View.VISIBLE);
                 
                 // Make tagged users clickable
@@ -449,7 +478,7 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                             // Remove maxLines restriction to show full content
                             tvEmbeddedContent.setMaxLines(Integer.MAX_VALUE);
                         } else {
-                            tvEmbeddedContent.setText("Shared a post");
+                            tvEmbeddedContent.setText(itemView.getContext().getString(R.string.post_shared_embedded));
                             tvEmbeddedContent.setVisibility(View.VISIBLE);
                         }
                     }
@@ -521,19 +550,30 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             
             // Set interaction counts
-            tvLikesCount.setText(formatCount(post.getLikesCount()));
-            tvCommentsCount.setText(formatCount(post.getCommentsCount()) + " comments");
-            tvSharesCount.setText(formatCount(post.getSharesCount()) + " shares");
-            
+            String likesLabel = formatCount(post.getLikesCount());
+            String commentsLabel = formatCount(post.getCommentsCount());
+            String sharesLabel = formatCount(post.getSharesCount());
+            tvLikesCount.setText(likesLabel);
+            tvCommentsCount.setText(context.getString(R.string.post_comments_count, commentsLabel));
+            tvSharesCount.setText(context.getString(R.string.post_shares_count, sharesLabel));
+            if (llLikesSummary != null) {
+                llLikesSummary.setContentDescription(
+                        context.getString(R.string.post_likes_summary_cd, likesLabel));
+            }
+            tvCommentsCount.setContentDescription(
+                    context.getString(R.string.post_comments_summary_cd, commentsLabel));
+            tvSharesCount.setContentDescription(
+                    context.getString(R.string.post_shares_summary_cd, sharesLabel));
+
             // Update like button state
             if (post.isLiked()) {
-                ivLikeIcon.setImageResource(android.R.drawable.btn_star_big_on);
+                ivLikeIcon.setImageResource(R.drawable.ic_emoji_smile);
                 ivLikeIcon.setColorFilter(context.getResources().getColor(R.color.icon_like));
-                tvLikeText.setText("Liked");
+                tvLikeText.setText(R.string.post_liked);
             } else {
-                ivLikeIcon.setImageResource(android.R.drawable.btn_star_big_off);
-                ivLikeIcon.setColorFilter(context.getResources().getColor(R.color.icon_like));
-                tvLikeText.setText("Like");
+                ivLikeIcon.setImageResource(R.drawable.ic_emoji_smile);
+                ivLikeIcon.setColorFilter(context.getResources().getColor(R.color.md3_on_surface_secondary));
+                tvLikeText.setText(R.string.post_like);
             }
             
             // Set click listeners
@@ -678,6 +718,43 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ds.setUnderlineText(false);
             }
         };
+    }
+
+    private static class PostDiffCallback extends DiffUtil.Callback {
+        private final List<Post> oldPosts;
+        private final List<Post> newPosts;
+
+        PostDiffCallback(List<Post> oldPosts, List<Post> newPosts) {
+            this.oldPosts = oldPosts;
+            this.newPosts = newPosts;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldPosts.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newPosts.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return Objects.equals(oldPosts.get(oldItemPosition).getId(), newPosts.get(newItemPosition).getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            Post oldPost = oldPosts.get(oldItemPosition);
+            Post newPost = newPosts.get(newItemPosition);
+            return Objects.equals(oldPost.getContent(), newPost.getContent())
+                    && oldPost.getLikesCount() == newPost.getLikesCount()
+                    && oldPost.getCommentsCount() == newPost.getCommentsCount()
+                    && oldPost.getSharesCount() == newPost.getSharesCount()
+                    && oldPost.isLiked() == newPost.isLiked()
+                    && Objects.equals(oldPost.getAuthorUsername(), newPost.getAuthorUsername());
+        }
     }
 }
 

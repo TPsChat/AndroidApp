@@ -93,7 +93,7 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
     private void loadFriends() {
         String token = sharedPrefs.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -103,7 +103,7 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     progressBar.setVisibility(View.GONE);
-                    Toast.makeText(CreateGroupActivity.this, "Failed to load friends", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateGroupActivity.this, getString(R.string.error_load_friends), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -128,7 +128,7 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
                             adapter.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
-                        Toast.makeText(CreateGroupActivity.this, "Parse error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateGroupActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -159,17 +159,17 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
         String name = etGroupName.getText().toString().trim();
         String desc = etDescription.getText().toString().trim();
         if (name.isEmpty()) {
-            Toast.makeText(this, "Group name is required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_group_name_required), Toast.LENGTH_SHORT).show();
             return;
         }
         if (selectedUserIds.size() < 2) { // at least 2 others + creator = 3
-            Toast.makeText(this, "Select at least 2 friends", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_select_two_friends), Toast.LENGTH_SHORT).show();
             return;
         }
 
         String token = sharedPrefs.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -182,7 +182,7 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
                         progressBar.setVisibility(View.GONE);
-                        Toast.makeText(CreateGroupActivity.this, "Failed to create group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(CreateGroupActivity.this, getString(R.string.error_create_group), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -194,14 +194,14 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
                         try {
                             JSONObject json = new JSONObject(body);
                             if ((response.code() == 200 || response.code() == 201) && json.optBoolean("success", false)) {
-                                Toast.makeText(CreateGroupActivity.this, "Group created", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CreateGroupActivity.this, getString(R.string.group_created_success), Toast.LENGTH_SHORT).show();
                                 finish();
                             } else {
                                 String msg = json.optString("message", "Create group failed");
                                 Toast.makeText(CreateGroupActivity.this, msg, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            Toast.makeText(CreateGroupActivity.this, "Parse error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateGroupActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

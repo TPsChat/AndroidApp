@@ -10,7 +10,8 @@
         android:id="@+id/bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.12"
+        android:alpha="0.08"
+        android:importantForAccessibility="no"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +46,6 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
 
-                <!-- Top Cluster -->
                 <LinearLayout
                     android:id="@+id/auth_top_cluster"
                     android:layout_width="match_parent"
@@ -55,53 +55,51 @@
 
                     <ImageView
                         android:id="@+id/login_title_top"
-                        android:layout_width="104dp"
-                        android:layout_height="104dp"
+                        android:layout_width="@dimen/auth_logo_size"
+                        android:layout_height="@dimen/auth_logo_size"
                         android:background="@drawable/bg_icon_circle_dark"
-                        android:contentDescription="App Icon"
-                        android:padding="16dp"
+                        android:contentDescription="@string/auth_app_icon_cd"
+                        android:padding="@dimen/auth_logo_padding"
                         android:src="@mipmap/ic_launcher_round" />
 
                     <TextView
                         android:id="@+id/tv_auth_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="18dp"
+                        android:layout_marginTop="@dimen/auth_title_margin_top"
                         android:fontFamily="@font/plus_jakarta_sans"
-                        android:text="Welcome Back"
-                        android:textColor="@color/md3_on_surface"
-                        android:textSize="30sp"
-                        android:textStyle="bold" />
+                        android:text="@string/auth_title_sign_in"
+                        android:textAppearance="@style/MidnightHeadlineLarge"
+                        android:textColor="@color/md3_on_surface" />
 
                     <TextView
                         android:id="@+id/tv_auth_subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="@dimen/auth_subtitle_margin_top"
                         android:fontFamily="@font/plus_jakarta_sans"
                         android:gravity="center"
-                        android:text="Sign in to continue your conversations"
-                        android:textColor="@color/md3_on_surface_secondary"
-                        android:textSize="15sp" />
+                        android:text="@string/auth_subtitle"
+                        android:textAppearance="@style/MidnightBodyMedium"
+                        android:textColor="@color/md3_on_surface_secondary" />
 
-                    <!-- Sign In / Sign Up Switch -->
                     <FrameLayout
                         android:id="@+id/auth_switch_container"
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginTop="26dp"
+                        android:layout_height="@dimen/auth_switch_height"
+                        android:layout_marginTop="@dimen/auth_switch_margin_top"
                         android:background="@drawable/bg_soft_inset"
-                        android:padding="6dp">
+                        android:padding="@dimen/auth_switch_inner_padding">
 
                         <View
                             android:id="@+id/auth_tab_indicator"
                             android:layout_width="1dp"
-                            android:layout_height="48dp"
-                            android:background="@drawable/bg_new_message_button" />
+                            android:layout_height="@dimen/auth_tab_height"
+                            android:background="@drawable/bg_filter_pill_active" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="48dp"
+                            android:layout_height="@dimen/auth_tab_height"
                             android:orientation="horizontal">
 
                             <TextView
@@ -113,10 +111,10 @@
                                 android:focusable="true"
                                 android:fontFamily="@font/plus_jakarta_sans"
                                 android:gravity="center"
-                                android:minHeight="48dp"
-                                android:text="Sign In"
+                                android:minHeight="@dimen/auth_tab_height"
+                                android:text="@string/auth_sign_in_tab"
                                 android:textColor="@color/md3_on_surface"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_body_large"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -128,10 +126,10 @@
                                 android:focusable="true"
                                 android:fontFamily="@font/plus_jakarta_sans"
                                 android:gravity="center"
-                                android:minHeight="48dp"
-                                android:text="Sign Up"
+                                android:minHeight="@dimen/auth_tab_height"
+                                android:text="@string/auth_sign_up_tab"
                                 android:textColor="@color/md3_on_surface_secondary"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_body_large"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
@@ -140,267 +138,226 @@
 
                 </LinearLayout>
 
-                <!-- Form Stage -->
                 <FrameLayout
                     android:id="@+id/auth_form_stage"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:minHeight="520dp">
+                    android:layout_marginTop="@dimen/auth_form_margin_top"
+                    android:background="@drawable/bg_soft_inset"
+                    android:minHeight="@dimen/auth_form_min_height"
+                    android:paddingStart="@dimen/auth_card_padding_h"
+                    android:paddingTop="@dimen/auth_card_padding_v"
+                    android:paddingEnd="@dimen/auth_card_padding_h"
+                    android:paddingBottom="@dimen/auth_card_padding_v">
 
-                    <!-- Login Panel -->
                     <LinearLayout
                         android:id="@+id/login_panel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_obsidian_card"
-                        android:orientation="vertical"
-                        android:paddingStart="22dp"
-                        android:paddingTop="24dp"
-                        android:paddingEnd="22dp"
-                        android:paddingBottom="24dp">
+                        android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tv_label_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Email"
-                            android:textColor="@color/md3_on_surface"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
+                            android:labelFor="@+id/et_email"
+                            android:text="@string/label_email"
+                            android:textAppearance="@style/MidnightLabelSmall"
+                            android:textColor="@color/md3_on_surface" />
 
                         <EditText
                             android:id="@+id/et_email"
+                            style="@style/MidnightInputField"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/bg_soft_inset"
+                            android:layout_height="@dimen/input_field_height"
+                            android:layout_marginTop="@dimen/spacing_xs"
                             android:gravity="center_vertical"
-                            android:hint="Enter your email"
+                            android:hint="@string/hint_enter_email"
                             android:imeOptions="actionNext"
                             android:inputType="textEmailAddress"
-                            android:paddingStart="18dp"
-                            android:paddingEnd="18dp"
-                            android:textColor="@color/md3_on_surface"
-                            android:textColorHint="@color/md3_on_surface_secondary"
-                            android:textCursorDrawable="@null"
-                            android:textSize="15sp" />
+                            android:textCursorDrawable="@null" />
 
                         <TextView
+                            android:id="@+id/tv_label_password"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="18dp"
-                            android:text="Password"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:labelFor="@+id/et_password"
+                            android:text="@string/label_password"
                             android:textColor="@color/md3_on_surface"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/et_password"
+                            style="@style/MidnightInputField"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/bg_soft_inset"
+                            android:layout_height="@dimen/input_field_height"
+                            android:layout_marginTop="@dimen/spacing_xs"
                             android:drawableEnd="@drawable/ic_eye_off"
-                            android:drawablePadding="12dp"
+                            android:drawablePadding="@dimen/spacing_sm"
                             android:gravity="center_vertical"
-                            android:hint="Enter your password"
+                            android:hint="@string/hint_enter_password"
                             android:imeOptions="actionDone"
                             android:inputType="textPassword"
-                            android:paddingStart="18dp"
-                            android:paddingEnd="18dp"
-                            android:textColor="@color/md3_on_surface"
-                            android:textColorHint="@color/md3_on_surface_secondary"
-                            android:textCursorDrawable="@null"
-                            android:textSize="15sp" />
+                            android:textCursorDrawable="@null" />
 
                         <TextView
                             android:id="@+id/tv_forgot_password"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
-                            android:layout_marginTop="12dp"
+                            android:layout_marginTop="@dimen/spacing_sm"
                             android:clickable="true"
                             android:focusable="true"
                             android:gravity="center_vertical"
-                            android:minHeight="40dp"
-                            android:text="Forgot Password?"
-                            android:textColor="@color/text_white"
-                            android:textSize="14sp"
+                            android:minHeight="@dimen/touch_target_min"
+                            android:text="@string/forgot_password"
+                            android:textColor="@color/text_accent"
+                            android:textSize="@dimen/text_body_medium"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tv_login_error"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:accessibilityLiveRegion="polite"
                             android:text=""
-                            android:textColor="@color/text_white"
-                            android:textSize="12sp"
+                            android:textColor="@color/danger"
+                            android:textSize="@dimen/text_body_small"
                             android:visibility="gone" />
 
                         <Button
                             android:id="@+id/btn_login"
+                            style="@style/MidnightPrimaryButton"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:layout_marginTop="20dp"
-                            android:background="@drawable/bg_new_message_button"
-                            android:backgroundTint="@null"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="Sign In"
-                            android:textAllCaps="false"
-                            android:fontFamily="@font/plus_jakarta_sans"
-                            android:textColor="@color/md3_on_primary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dialog_padding_v"
+                            android:text="@string/btn_sign_in" />
 
                     </LinearLayout>
 
-                    <!-- Register Panel -->
                     <LinearLayout
                         android:id="@+id/register_panel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_obsidian_card"
                         android:orientation="vertical"
-                        android:paddingStart="22dp"
-                        android:paddingTop="24dp"
-                        android:paddingEnd="22dp"
-                        android:paddingBottom="24dp"
                         android:visibility="gone">
 
                         <TextView
+                            android:id="@+id/tv_label_username"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Username"
+                            android:labelFor="@+id/et_username"
+                            android:text="@string/label_username"
                             android:textColor="@color/md3_on_surface"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/et_username"
+                            style="@style/MidnightInputField"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/bg_soft_inset"
+                            android:layout_height="@dimen/input_field_height"
+                            android:layout_marginTop="@dimen/spacing_xs"
                             android:gravity="center_vertical"
-                            android:hint="Choose a username"
+                            android:hint="@string/hint_choose_username"
                             android:imeOptions="actionNext"
                             android:inputType="text"
-                            android:paddingStart="18dp"
-                            android:paddingEnd="18dp"
-                            android:textColor="@color/md3_on_surface"
-                            android:textColorHint="@color/md3_on_surface_secondary"
-                            android:textCursorDrawable="@null"
-                            android:textSize="15sp" />
+                            android:textCursorDrawable="@null" />
 
                         <TextView
+                            android:id="@+id/tv_label_register_email"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Email"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:labelFor="@+id/et_register_email"
+                            android:text="@string/label_email"
                             android:textColor="@color/md3_on_surface"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/et_register_email"
+                            style="@style/MidnightInputField"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/bg_soft_inset"
+                            android:layout_height="@dimen/input_field_height"
+                            android:layout_marginTop="@dimen/spacing_xs"
                             android:gravity="center_vertical"
-                            android:hint="Enter your email"
+                            android:hint="@string/hint_enter_email"
                             android:imeOptions="actionNext"
                             android:inputType="textEmailAddress"
-                            android:paddingStart="18dp"
-                            android:paddingEnd="18dp"
-                            android:textColor="@color/md3_on_surface"
-                            android:textColorHint="@color/md3_on_surface_secondary"
-                            android:textCursorDrawable="@null"
-                            android:textSize="15sp" />
+                            android:textCursorDrawable="@null" />
 
                         <TextView
+                            android:id="@+id/tv_label_register_password"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Password"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:labelFor="@+id/et_register_password"
+                            android:text="@string/label_password"
                             android:textColor="@color/md3_on_surface"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/et_register_password"
+                            style="@style/MidnightInputField"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/bg_soft_inset"
+                            android:layout_height="@dimen/input_field_height"
+                            android:layout_marginTop="@dimen/spacing_xs"
                             android:drawableEnd="@drawable/ic_eye_off"
-                            android:drawablePadding="12dp"
+                            android:drawablePadding="@dimen/spacing_sm"
                             android:gravity="center_vertical"
-                            android:hint="Create a password"
+                            android:hint="@string/hint_create_password"
                             android:imeOptions="actionNext"
                             android:inputType="textPassword"
-                            android:paddingStart="18dp"
-                            android:paddingEnd="18dp"
-                            android:textColor="@color/md3_on_surface"
-                            android:textColorHint="@color/md3_on_surface_secondary"
-                            android:textCursorDrawable="@null"
-                            android:textSize="15sp" />
+                            android:textCursorDrawable="@null" />
 
                         <TextView
+                            android:id="@+id/tv_label_confirm_password"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:text="Confirm Password"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:labelFor="@+id/et_confirm_password"
+                            android:text="@string/label_confirm_password"
                             android:textColor="@color/md3_on_surface"
-                            android:textSize="15sp"
+                            android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 
                         <EditText
                             android:id="@+id/et_confirm_password"
+                            style="@style/MidnightInputField"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@drawable/bg_soft_inset"
+                            android:layout_height="@dimen/input_field_height"
+                            android:layout_marginTop="@dimen/spacing_xs"
                             android:drawableEnd="@drawable/ic_eye_off"
-                            android:drawablePadding="12dp"
+                            android:drawablePadding="@dimen/spacing_sm"
                             android:gravity="center_vertical"
-                            android:hint="Confirm your password"
+                            android:hint="@string/hint_confirm_password_field"
                             android:imeOptions="actionDone"
                             android:inputType="textPassword"
-                            android:paddingStart="18dp"
-                            android:paddingEnd="18dp"
-                            android:textColor="@color/md3_on_surface"
-                            android:textColorHint="@color/md3_on_surface_secondary"
-                            android:textCursorDrawable="@null"
-                            android:textSize="15sp" />
+                            android:textCursorDrawable="@null" />
 
                         <TextView
                             android:id="@+id/tv_register_error"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="12dp"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:accessibilityLiveRegion="polite"
                             android:text=""
-                            android:textColor="@color/text_white"
-                            android:textSize="12sp"
+                            android:textColor="@color/danger"
+                            android:textSize="@dimen/text_body_small"
                             android:visibility="gone" />
 
                         <Button
                             android:id="@+id/btn_register"
+                            style="@style/MidnightPrimaryButton"
                             android:layout_width="match_parent"
-                            android:layout_height="56dp"
-                            android:layout_marginTop="20dp"
-                            android:background="@drawable/bg_new_message_button"
-                            android:backgroundTint="@null"
-                            android:insetTop="0dp"
-                            android:insetBottom="0dp"
-                            android:text="Sign Up"
-                            android:textAllCaps="false"
-                            android:fontFamily="@font/plus_jakarta_sans"
-                            android:textColor="@color/md3_on_primary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dialog_padding_v"
+                            android:text="@string/btn_sign_up" />
 
                     </LinearLayout>
 

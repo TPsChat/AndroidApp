@@ -6,10 +6,10 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    android:paddingStart="6dp"
-    android:paddingEnd="6dp"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
+    android:paddingStart="@dimen/spacing_xs"
+    android:paddingEnd="@dimen/spacing_xs"
+    android:paddingTop="@dimen/list_item_margin"
+    android:paddingBottom="@dimen/list_item_margin"
     android:clipChildren="false"
     android:clipToPadding="false">
 
@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="end"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="@dimen/list_item_margin"
         android:visibility="gone"
         android:clipChildren="false"
         android:clipToPadding="false">
@@ -33,28 +33,28 @@
             android:clipChildren="false"
             android:clipToPadding="false">
 
-            <!-- Reply preview for sent message -->
             <LinearLayout
                 android:id="@+id/ll_sent_reply_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="260dp"
+                android:maxWidth="@dimen/message_reply_max_width"
                 android:orientation="vertical"
                 android:background="@drawable/bg_message_reply_sent"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:layout_marginBottom="4dp"
+                android:paddingStart="@dimen/chat_messages_margin_top"
+                android:paddingEnd="@dimen/chat_messages_margin_top"
+                android:paddingTop="@dimen/spacing_xs"
+                android:paddingBottom="@dimen/spacing_xs"
+                android:layout_marginBottom="@dimen/list_item_margin"
                 android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/iv_sent_reply_thumb"
-                    android:layout_width="82dp"
-                    android:layout_height="54dp"
+                    android:layout_width="@dimen/reply_thumb_width"
+                    android:layout_height="@dimen/reply_thumb_height"
                     android:scaleType="centerCrop"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="@dimen/spacing_xs"
                     android:background="@drawable/bg_soft_inset"
+                    android:importantForAccessibility="no"
                     android:visibility="gone"
                     tools:src="@drawable/ic_profile_placeholder" />
 
@@ -62,9 +62,10 @@
                     android:id="@+id/tv_sent_reply_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:textColor="@color/md3_on_surface"
                     android:textStyle="bold"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_body_small"
                     tools:text="Alice" />
 
                 <TextView
@@ -74,8 +75,9 @@
                     android:maxWidth="230dp"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:textColor="@color/md3_on_surface"
-                    android:textSize="12sp"
+                    android:fontFamily="@font/plus_jakarta_sans"
+                    android:textColor="@color/md3_on_surface_variant"
+                    android:textSize="@dimen/text_body_small"
                     android:lineSpacingExtra="2dp"
                     tools:text="Previous message content preview" />
 
@@ -92,23 +94,22 @@
                     android:id="@+id/tv_sent_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="270dp"
+                    android:maxWidth="@dimen/message_bubble_max_width"
                     android:background="@drawable/bg_message_sent"
-                    android:paddingStart="14dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="14dp"
-                    android:paddingBottom="22dp"
-                    android:text="This is a sent message"
+                    android:paddingStart="@dimen/bubble_padding_h"
+                    android:paddingTop="@dimen/bubble_padding_v"
+                    android:paddingEnd="@dimen/bubble_padding_h"
+                    android:paddingBottom="@dimen/bubble_timestamp_padding_bottom"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:textColor="@color/md3_on_surface"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:lineSpacingExtra="3dp"
                     tools:text="This is a sent message" />
 
-                <!-- Overlay reactions badge at bottom-end of bubble -->
                 <ImageView
                     android:id="@+id/iv_sent_reaction_image"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="@dimen/reaction_badge_size"
+                    android:layout_height="@dimen/reaction_badge_size"
                     android:layout_gravity="bottom|end"
                     android:layout_marginEnd="2dp"
                     android:translationX="4dp"
@@ -123,7 +124,6 @@
 
             </FrameLayout>
 
-            <!-- Voice Message Container (Sent) -->
             <include
                 android:id="@+id/ll_sent_voice_message"
                 layout="@layout/item_voice_message_sent"
@@ -131,13 +131,13 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
-            <!-- Edited label for sent message -->
             <TextView
                 android:id="@+id/tv_sent_edited"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="(edited)"
+                android:layout_marginTop="@dimen/list_item_margin"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="@string/message_edited"
                 android:textSize="@dimen/text_timestamp"
                 android:textColor="@color/md3_on_surface_secondary"
                 android:visibility="gone" />
@@ -146,8 +146,8 @@
                 android:id="@+id/fl_sent_image_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="@dimen/list_item_margin"
+                android:layout_marginBottom="@dimen/list_item_margin"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:visibility="gone">
@@ -170,8 +170,8 @@
 
                 <ImageView
                     android:id="@+id/iv_sent_image_reaction"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="@dimen/reaction_badge_size"
+                    android:layout_height="@dimen/reaction_badge_size"
                     android:layout_gravity="bottom|end"
                     android:layout_marginEnd="2dp"
                     android:translationX="4dp"
@@ -189,9 +189,9 @@
                 android:id="@+id/tv_sent_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="6dp"
-                android:text="10:30 AM"
+                android:layout_marginTop="@dimen/list_item_margin"
+                android:layout_marginEnd="@dimen/spacing_xs"
+                android:fontFamily="@font/plus_jakarta_sans"
                 android:textSize="@dimen/text_timestamp"
                 android:textColor="@color/md3_on_surface_secondary"
                 tools:text="10:30 AM" />
@@ -207,21 +207,22 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="start"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="@dimen/list_item_margin"
         android:visibility="gone"
         android:clipChildren="false"
         android:clipToPadding="false">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_sender_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/message_avatar_sm"
+            android:layout_height="@dimen/message_avatar_sm"
             android:layout_marginStart="2dp"
             android:layout_marginEnd="7dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/list_item_margin"
             android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_width="1.2dp"
-            app:civ_border_color="@color/md3_border_glow" />
+            android:contentDescription="@string/open_profile_cd"
+            app:civ_border_width="@dimen/avatar_border_width_sm"
+            app:civ_border_color="@color/md3_border_subtle" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -231,28 +232,28 @@
             android:clipChildren="false"
             android:clipToPadding="false">
 
-            <!-- Reply preview for received message -->
             <LinearLayout
                 android:id="@+id/ll_received_reply_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="260dp"
+                android:maxWidth="@dimen/message_reply_max_width"
                 android:orientation="vertical"
                 android:background="@drawable/bg_message_reply_received"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
-                android:layout_marginBottom="4dp"
+                android:paddingStart="@dimen/chat_messages_margin_top"
+                android:paddingEnd="@dimen/chat_messages_margin_top"
+                android:paddingTop="@dimen/spacing_xs"
+                android:paddingBottom="@dimen/spacing_xs"
+                android:layout_marginBottom="@dimen/list_item_margin"
                 android:visibility="gone">
 
                 <ImageView
                     android:id="@+id/iv_received_reply_thumb"
-                    android:layout_width="82dp"
-                    android:layout_height="54dp"
+                    android:layout_width="@dimen/reply_thumb_width"
+                    android:layout_height="@dimen/reply_thumb_height"
                     android:scaleType="centerCrop"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="@dimen/spacing_xs"
                     android:background="@drawable/bg_soft_inset"
+                    android:importantForAccessibility="no"
                     android:visibility="gone"
                     tools:src="@drawable/ic_profile_placeholder" />
 
@@ -260,9 +261,10 @@
                     android:id="@+id/tv_received_reply_author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:textColor="@color/md3_on_surface"
                     android:textStyle="bold"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/text_body_small"
                     tools:text="Bob" />
 
                 <TextView
@@ -272,8 +274,9 @@
                     android:maxWidth="230dp"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:textColor="@color/md3_on_surface"
-                    android:textSize="12sp"
+                    android:fontFamily="@font/plus_jakarta_sans"
+                    android:textColor="@color/md3_on_surface_variant"
+                    android:textSize="@dimen/text_body_small"
                     android:lineSpacingExtra="2dp"
                     tools:text="Previous message content preview" />
 
@@ -283,10 +286,11 @@
                 android:id="@+id/tv_sender_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/md3_on_surface_secondary"
-                android:textSize="12sp"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:textColor="@color/md3_primary"
+                android:textSize="@dimen/text_body_small"
                 android:textStyle="bold"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="@dimen/list_item_margin"
                 android:layout_marginBottom="3dp"
                 android:visibility="gone"
                 tools:text="Alice" />
@@ -302,23 +306,22 @@
                     android:id="@+id/tv_received_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:maxWidth="270dp"
+                    android:maxWidth="@dimen/message_bubble_max_width"
                     android:background="@drawable/bg_message_received"
-                    android:paddingStart="14dp"
-                    android:paddingTop="12dp"
-                    android:paddingEnd="14dp"
-                    android:paddingBottom="22dp"
-                    android:text="This is a received message"
+                    android:paddingStart="@dimen/bubble_padding_h"
+                    android:paddingTop="@dimen/bubble_padding_v"
+                    android:paddingEnd="@dimen/bubble_padding_h"
+                    android:paddingBottom="@dimen/bubble_timestamp_padding_bottom"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:textColor="@color/md3_on_surface"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/text_body_medium"
                     android:lineSpacingExtra="3dp"
                     tools:text="This is a received message" />
 
-                <!-- Overlay reactions badge at bottom-end of bubble -->
                 <ImageView
                     android:id="@+id/iv_received_reaction_image"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="@dimen/reaction_badge_size"
+                    android:layout_height="@dimen/reaction_badge_size"
                     android:layout_gravity="bottom|end"
                     android:layout_marginEnd="2dp"
                     android:translationX="4dp"
@@ -333,7 +336,6 @@
 
             </FrameLayout>
 
-            <!-- Voice Message Container (Received) -->
             <include
                 android:id="@+id/ll_received_voice_message"
                 layout="@layout/item_voice_message_received"
@@ -341,14 +343,14 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone" />
 
-            <!-- Edited label for received message -->
             <TextView
                 android:id="@+id/tv_received_edited"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="6dp"
-                android:text="(edited)"
+                android:layout_marginTop="@dimen/list_item_margin"
+                android:layout_marginStart="@dimen/spacing_xs"
+                android:fontFamily="@font/plus_jakarta_sans"
+                android:text="@string/message_edited"
                 android:textSize="@dimen/text_timestamp"
                 android:textColor="@color/md3_on_surface_secondary"
                 android:visibility="gone" />
@@ -357,8 +359,8 @@
                 android:id="@+id/fl_received_image_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="@dimen/list_item_margin"
+                android:layout_marginBottom="@dimen/list_item_margin"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:visibility="gone">
@@ -381,8 +383,8 @@
 
                 <ImageView
                     android:id="@+id/iv_received_image_reaction"
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="@dimen/reaction_badge_size"
+                    android:layout_height="@dimen/reaction_badge_size"
                     android:layout_gravity="bottom|end"
                     android:layout_marginEnd="2dp"
                     android:translationX="4dp"
@@ -400,9 +402,9 @@
                 android:id="@+id/tv_received_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginStart="6dp"
-                android:text="10:30 AM"
+                android:layout_marginTop="@dimen/list_item_margin"
+                android:layout_marginStart="@dimen/spacing_xs"
+                android:fontFamily="@font/plus_jakarta_sans"
                 android:textSize="@dimen/text_timestamp"
                 android:textColor="@color/md3_on_surface_secondary"
                 tools:text="10:30 AM" />

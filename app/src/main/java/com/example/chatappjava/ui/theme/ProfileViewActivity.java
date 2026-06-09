@@ -104,7 +104,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         intent.putExtra("post", post.toJson().toString());
                         startActivity(intent);
                     } catch (JSONException e) {
-                        Toast.makeText(ProfileViewActivity.this, "Error opening post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_open_post), Toast.LENGTH_SHORT).show();
                     }
                 }
                 
@@ -112,13 +112,13 @@ public class ProfileViewActivity extends AppCompatActivity {
                 public void onLikeClick(com.example.chatappjava.models.Post post, int position) {
                     String token = databaseManager.getToken();
                     if (token == null || token.isEmpty()) {
-                        Toast.makeText(ProfileViewActivity.this, "Please login again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     apiClient.toggleLikePost(token, post.getId(), new okhttp3.Callback() {
                         @Override
                         public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                            runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, "Failed to like post", Toast.LENGTH_SHORT).show());
+                            runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, getString(R.string.error_update_like), Toast.LENGTH_SHORT).show());
                         }
                         
                         @Override
@@ -145,18 +145,18 @@ public class ProfileViewActivity extends AppCompatActivity {
                         intent.putExtra("post", post.toJson().toString());
                         startActivity(intent);
                     } catch (JSONException e) {
-                        Toast.makeText(ProfileViewActivity.this, "Error opening post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_open_post), Toast.LENGTH_SHORT).show();
                     }
                 }
                 
                 @Override
                 public void onShareClick(com.example.chatappjava.models.Post post) {
-                    Toast.makeText(ProfileViewActivity.this, "Share feature", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileViewActivity.this, getString(R.string.msg_share_feature), Toast.LENGTH_SHORT).show();
                 }
                 
                 @Override
                 public void onPostMenuClick(com.example.chatappjava.models.Post post) {
-                    Toast.makeText(ProfileViewActivity.this, "Post options", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileViewActivity.this, getString(R.string.dialog_post_options_title), Toast.LENGTH_SHORT).show();
                 }
                 
                 @Override
@@ -167,7 +167,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         intent.putExtra("user", post.getAuthorId());
                         startActivity(intent);
                     } catch (Exception e) {
-                        Toast.makeText(ProfileViewActivity.this, "Error opening profile", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_error_opening_profile), Toast.LENGTH_SHORT).show();
                     }
                 }
                 
@@ -200,7 +200,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                                         intent.putExtra("post", post.toJson().toString());
                                         startActivity(intent);
                                     } catch (JSONException e) {
-                                        Toast.makeText(ProfileViewActivity.this, "Error opening post", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_open_post), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             }
@@ -210,7 +210,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                 
                 @Override
                 public void onTaggedUsersClick(com.example.chatappjava.models.Post post) {
-                    Toast.makeText(ProfileViewActivity.this, "Tagged users", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileViewActivity.this, getString(R.string.create_post_tagged_users), Toast.LENGTH_SHORT).show();
                 }
             });
             rvPosts.setAdapter(postAdapter);
@@ -261,7 +261,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                     return;
                 } else {
                     android.util.Log.e("ProfileViewActivity", "Error loading user from Intent: " + e.getMessage(), e);
-                    Toast.makeText(this, "Error loading user data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_error_loading_user_data), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
@@ -271,7 +271,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             String username = intent.getStringExtra("username");
             fetchUserByUsername(username);
         } else {
-            Toast.makeText(this, "No user data provided", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_no_user_data_provided), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -287,12 +287,12 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     private void performBlockUser() {
         if (otherUser == null) {
-            Toast.makeText(this, "No user to block", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_no_user_to_block), Toast.LENGTH_SHORT).show();
             return;
         }
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -300,7 +300,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         apiClient.blockUser(token, otherUser.getId(), action, new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, "Network error", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show());
             }
 
             @Override
@@ -398,7 +398,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             android.util.Log.e("ProfileViewActivity", "Cannot load posts: userId is null or empty");
             if (tvNoPosts != null) {
                 tvNoPosts.setVisibility(View.VISIBLE);
-                tvNoPosts.setText("User ID not available");
+                tvNoPosts.setText(getString(R.string.error_user_id_unavailable));
             }
             return;
         }
@@ -410,7 +410,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (tvNoPosts != null) {
                         tvNoPosts.setVisibility(View.VISIBLE);
-                        tvNoPosts.setText("Failed to load posts");
+                        tvNoPosts.setText(getString(R.string.error_load_posts_failed));
                     }
                 });
             }
@@ -424,7 +424,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             if (tvNoPosts != null) {
                                 tvNoPosts.setVisibility(View.VISIBLE);
-                                tvNoPosts.setText("No posts to show");
+                                tvNoPosts.setText(getString(R.string.empty_posts_title));
                             }
                         });
                         return;
@@ -438,7 +438,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                             runOnUiThread(() -> {
                                 if (tvNoPosts != null) {
                                     tvNoPosts.setVisibility(View.VISIBLE);
-                                    tvNoPosts.setText("No posts to show");
+                                    tvNoPosts.setText(getString(R.string.empty_posts_title));
                                 }
                             });
                             return;
@@ -465,7 +465,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             if (tvNoPosts != null) {
                                 tvNoPosts.setVisibility(View.VISIBLE);
-                                tvNoPosts.setText("No posts to show");
+                                tvNoPosts.setText(getString(R.string.empty_posts_title));
                             }
                         });
                     }
@@ -474,7 +474,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         if (tvNoPosts != null) {
                             tvNoPosts.setVisibility(View.VISIBLE);
-                            tvNoPosts.setText("Failed to parse posts: " + e.getMessage());
+                            tvNoPosts.setText(getString(R.string.error_parse_posts_detail, e.getMessage()));
                         }
                     });
                 }
@@ -493,7 +493,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (tvNoFriends != null) {
                         tvNoFriends.setVisibility(View.VISIBLE);
-                        tvNoFriends.setText("Failed to load friends");
+                        tvNoFriends.setText(getString(R.string.error_load_friends_failed));
                     }
                 });
             }
@@ -506,7 +506,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             if (tvNoFriends != null) {
                                 tvNoFriends.setVisibility(View.VISIBLE);
-                                tvNoFriends.setText("No friends to show");
+                                tvNoFriends.setText(getString(R.string.empty_friends_title));
                             }
                         });
                         return;
@@ -528,7 +528,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         if (tvNoFriends != null) {
                             tvNoFriends.setVisibility(View.VISIBLE);
-                            tvNoFriends.setText("Failed to parse friends");
+                            tvNoFriends.setText(getString(R.string.error_parse_friends));
                         }
                     });
                 }
@@ -538,7 +538,7 @@ public class ProfileViewActivity extends AppCompatActivity {
     
     private void showAvatarZoom() {
         if (otherUser == null || otherUser.getAvatar() == null || otherUser.getAvatar().isEmpty()) {
-            Toast.makeText(this, "No avatar to display", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_no_avatar_to_display), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -653,7 +653,7 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     private void showReportDialog() {
         if (otherUser == null) {
-            Toast.makeText(this, "No user to report", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.msg_no_user_to_report), Toast.LENGTH_SHORT).show();
             return;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -674,11 +674,11 @@ public class ProfileViewActivity extends AppCompatActivity {
         builder.setPositiveButton("Send", (dialog, which) -> {
             String content = input.getText().toString().trim();
             if (content.isEmpty()) {
-                Toast.makeText(this, "Please enter report content", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_please_enter_report_content), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (!isWithinWordLimit(content, 100)) {
-                Toast.makeText(this, "Report must be at most 100 words", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.msg_report_must_be_at_most_100_words), Toast.LENGTH_SHORT).show();
                 return;
             }
             submitReport(content);
@@ -701,22 +701,22 @@ public class ProfileViewActivity extends AppCompatActivity {
     private void submitReport(String content) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         apiClient.reportUser(token, otherUser.getId(), content, new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, "Failed to send report", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, getString(R.string.error_failed_to_send_report), Toast.LENGTH_SHORT).show());
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
-                        Toast.makeText(ProfileViewActivity.this, "Report sent", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.msg_report_sent), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(ProfileViewActivity.this, "Report failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_report_failed), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -841,7 +841,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                     View child = group.getChildAt(i);
                     if (child instanceof android.widget.TextView) {
                         android.widget.TextView tv = (android.widget.TextView) child;
-                        tv.setText("Pending");
+                        tv.setText(getString(R.string.status_pending));
                         break;
                     }
                 }
@@ -855,7 +855,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         try {
             String token = databaseManager.getToken();
             if (token == null || token.isEmpty()) {
-                Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                 return;
             }
             if (otherUser == null) return;
@@ -866,7 +866,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             apiClient.sendFriendRequest(token, requestData, new okhttp3.Callback() {
                 @Override
                 public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                    runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, "Failed to send friend request", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, getString(R.string.error_failed_to_send_friend_request), Toast.LENGTH_SHORT).show());
                 }
 
                 @Override
@@ -874,7 +874,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                     String body = response.body() != null ? response.body().string() : "";
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-                            Toast.makeText(ProfileViewActivity.this, "Friend request sent", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileViewActivity.this, getString(R.string.msg_friend_request_sent), Toast.LENGTH_SHORT).show();
                         } else {
                             String message = "Unable to send request";
                             try {
@@ -893,24 +893,24 @@ public class ProfileViewActivity extends AppCompatActivity {
         if (otherUser == null) return;
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         apiClient.unfriendUser(token, otherUser.getId(), new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, "Failed to unfriend", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(ProfileViewActivity.this, getString(R.string.error_unfriend), Toast.LENGTH_SHORT).show());
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
-                        Toast.makeText(ProfileViewActivity.this, "Unfriended successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.success_unfriended), Toast.LENGTH_SHORT).show();
                         // Update UI state locally
                         if (otherUser != null) otherUser.setFriend(false);
                     } else {
-                        Toast.makeText(ProfileViewActivity.this, "Failed to unfriend", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_unfriend), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -927,7 +927,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(okhttp3.Call call, java.io.IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(ProfileViewActivity.this, "Failed to load chats", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_failed_to_load_chats), Toast.LENGTH_SHORT).show();
                     });
                 }
                 
@@ -993,7 +993,7 @@ public class ProfileViewActivity extends AppCompatActivity {
         // Create a new private chat on the server
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Not logged in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_not_logged_in), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -1002,7 +1002,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(ProfileViewActivity.this, "Failed to create chat", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileViewActivity.this, getString(R.string.error_create_chat_generic), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -1028,18 +1028,18 @@ public class ProfileViewActivity extends AppCompatActivity {
                             });
                         } else {
                             runOnUiThread(() -> {
-                                Toast.makeText(ProfileViewActivity.this, "Failed to create chat", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProfileViewActivity.this, getString(R.string.error_create_chat_generic), Toast.LENGTH_SHORT).show();
                             });
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         runOnUiThread(() -> {
-                            Toast.makeText(ProfileViewActivity.this, "Error creating chat", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileViewActivity.this, getString(R.string.error_error_creating_chat), Toast.LENGTH_SHORT).show();
                         });
                     }
                 } else {
                     runOnUiThread(() -> {
-                        Toast.makeText(ProfileViewActivity.this, "Failed to create chat", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_create_chat_generic), Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -1059,13 +1059,13 @@ public class ProfileViewActivity extends AppCompatActivity {
     
     private void fetchUserById(String userId) {
         if (userId == null || userId.isEmpty()) {
-            Toast.makeText(this, "Invalid user ID", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_invalid_user_id), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -1074,7 +1074,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(ProfileViewActivity.this, "Failed to load user", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileViewActivity.this, getString(R.string.error_failed_to_load_user), Toast.LENGTH_SHORT).show();
                     finish();
                 });
             }
@@ -1090,7 +1090,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         if (data == null) {
                             android.util.Log.e("ProfileViewActivity", "Response data is null");
                             runOnUiThread(() -> {
-                                Toast.makeText(ProfileViewActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProfileViewActivity.this, getString(R.string.error_user_not_found), Toast.LENGTH_SHORT).show();
                                 finish();
                             });
                             return;
@@ -1105,7 +1105,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                         if (userData == null) {
                             android.util.Log.e("ProfileViewActivity", "Cannot find user data in response");
                             runOnUiThread(() -> {
-                                Toast.makeText(ProfileViewActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ProfileViewActivity.this, getString(R.string.error_user_not_found), Toast.LENGTH_SHORT).show();
                                 finish();
                             });
                             return;
@@ -1130,7 +1130,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                             } catch (JSONException e) {
                                 android.util.Log.e("ProfileViewActivity", "Error parsing user from JSON: " + e.getMessage(), e);
                                 runOnUiThread(() -> {
-                                    Toast.makeText(ProfileViewActivity.this, "Error parsing user data", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(ProfileViewActivity.this, getString(R.string.error_error_parsing_user_data), Toast.LENGTH_SHORT).show();
                                     finish();
                                 });
                             }
@@ -1138,14 +1138,14 @@ public class ProfileViewActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         android.util.Log.e("ProfileViewActivity", "Error parsing user data: " + e.getMessage(), e);
                         runOnUiThread(() -> {
-                            Toast.makeText(ProfileViewActivity.this, "Error loading user", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileViewActivity.this, getString(R.string.error_error_loading_user), Toast.LENGTH_SHORT).show();
                             finish();
                         });
                     }
                 } else {
                     android.util.Log.e("ProfileViewActivity", "Failed to fetch user by ID: " + response.code());
                     runOnUiThread(() -> {
-                        Toast.makeText(ProfileViewActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_user_not_found), Toast.LENGTH_SHORT).show();
                         finish();
                     });
                 }
@@ -1232,13 +1232,13 @@ public class ProfileViewActivity extends AppCompatActivity {
 
     private void fetchUserByUsername(String username) {
         if (username == null || username.isEmpty()) {
-            Toast.makeText(this, "Invalid username", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_invalid_username), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -1248,7 +1248,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(ProfileViewActivity.this, "Failed to load user", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ProfileViewActivity.this, getString(R.string.error_failed_to_load_user), Toast.LENGTH_SHORT).show();
                     finish();
                 });
             }
@@ -1257,7 +1257,7 @@ public class ProfileViewActivity extends AppCompatActivity {
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                 if (!response.isSuccessful()) {
                     runOnUiThread(() -> {
-                        Toast.makeText(ProfileViewActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_user_not_found), Toast.LENGTH_SHORT).show();
                         finish();
                     });
                     return;
@@ -1275,7 +1275,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                     }
                     if (arr == null || arr.length() == 0) {
                         runOnUiThread(() -> {
-                            Toast.makeText(ProfileViewActivity.this, "User not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ProfileViewActivity.this, getString(R.string.error_user_not_found), Toast.LENGTH_SHORT).show();
                             finish();
                         });
                         return;
@@ -1293,7 +1293,7 @@ public class ProfileViewActivity extends AppCompatActivity {
                     runOnUiThread(() -> loadUserData());
                 } catch (Exception e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(ProfileViewActivity.this, "Error parsing user", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this, getString(R.string.error_error_parsing_user), Toast.LENGTH_SHORT).show();
                         finish();
                     });
                 }

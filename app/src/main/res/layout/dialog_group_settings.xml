@@ -17,13 +17,13 @@
         android:paddingEnd="20dp"
         android:paddingTop="22dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bg_obsidian_card">
+        android:background="@drawable/bg_glass_panel">
 
         <!-- Title -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Group Settings"
+            android:text="@string/group_settings_title"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/md3_on_surface"
@@ -39,13 +39,13 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:text="Group Name"
+            android:text="@string/group_name_placeholder"
             android:textSize="15sp"
             android:textStyle="bold"
             android:textColor="@color/md3_on_surface"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:layout_marginBottom="14dp"
+            android:layout_marginBottom="@dimen/spacing_md"
             android:background="@drawable/bg_soft_inset"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -73,15 +73,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Public Group"
-                    android:textSize="15sp"
-                    android:textColor="@color/md3_on_surface"
+                    android:text="@string/group_public_label"
+                    style="@style/AppBodyLarge"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Anyone can join this group"
+                    android:text="@string/group_public_desc"
                     android:textSize="12sp"
                     android:textColor="@color/md3_on_surface_secondary"
                     android:layout_marginTop="4dp" />
@@ -94,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:thumbTint="@color/md3_primary"
-                android:trackTint="#33404D5A" />
+                android:trackTint="@color/switch_track_selector" />
 
         </LinearLayout>
 
@@ -102,13 +101,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="When enabled, anyone can find and join this group. When disabled, only invited members can join."
+            android:text="@string/group_public_help"
             android:textSize="12sp"
             android:textColor="@color/md3_on_surface_secondary"
             android:lineSpacingExtra="3dp"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
-            android:layout_marginBottom="18dp" />
+            android:layout_marginBottom="@dimen/screen_edge_inset" />
 
         <!-- Buttons -->
         <LinearLayout
@@ -120,31 +119,29 @@
             <Button
                 android:id="@+id/btn_cancel"
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:minWidth="92dp"
-                android:text="Cancel"
+                android:text="@string/action_cancel"
                 android:textAllCaps="false"
                 android:textColor="@color/dialog_button_secondary_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:background="@drawable/bg_reject_button_modern"
-                android:backgroundTint="@null"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
+                style="@style/DialogButton.Secondary"
+                android:paddingStart="@dimen/dialog_padding_h"
+                android:paddingEnd="@dimen/dialog_padding_h"
                 android:layout_marginEnd="10dp" />
 
             <Button
                 android:id="@+id/btn_save"
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:minWidth="92dp"
-                android:text="Save"
+                android:text="@string/action_save"
                 android:textAllCaps="false"
                 android:textColor="@color/dialog_button_filled_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:background="@drawable/bg_new_message_button"
-                android:backgroundTint="@null"
+                style="@style/DialogButton.Filled"
                 android:paddingStart="22dp"
                 android:paddingEnd="22dp" />
 

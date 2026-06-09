@@ -186,10 +186,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
             // Update like button state
             if (comment.isLiked()) {
-                tvCommentLike.setText("Liked");
+                tvCommentLike.setText(itemView.getContext().getString(R.string.post_liked));
                 tvCommentLike.setTextColor(itemView.getContext().getColor(R.color.text_white));
             } else {
-                tvCommentLike.setText("Like");
+                tvCommentLike.setText(itemView.getContext().getString(R.string.post_like));
                 tvCommentLike.setTextColor(itemView.getContext().getColor(R.color.text_secondary));
             }
 
@@ -319,7 +319,12 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                         // Show "View X replies" button only if there are more replies than displayed
                         int displayedCount = comment.getReplies().size();
                         if (repliesCount > displayedCount) {
-                            tvViewReplies.setText("View " + (repliesCount - displayedCount) + " more " + ((repliesCount - displayedCount) == 1 ? "reply" : "replies"));
+                            int moreReplies = repliesCount - displayedCount;
+                            if (moreReplies == 1) {
+                                tvViewReplies.setText(itemView.getContext().getString(R.string.comment_view_more_replies_one, moreReplies));
+                            } else {
+                                tvViewReplies.setText(itemView.getContext().getString(R.string.comment_view_more_replies_many, moreReplies));
+                            }
                             tvViewReplies.setVisibility(View.VISIBLE);
                         } else {
                             tvViewReplies.setVisibility(View.GONE);
@@ -327,7 +332,11 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
                     } else {
                         // Show "View replies" button if replies exist but not loaded
                         if (repliesCount > 0) {
-                            tvViewReplies.setText("View " + repliesCount + " " + (repliesCount == 1 ? "reply" : "replies"));
+                            if (repliesCount == 1) {
+                                tvViewReplies.setText(itemView.getContext().getString(R.string.comment_view_replies_one, repliesCount));
+                            } else {
+                                tvViewReplies.setText(itemView.getContext().getString(R.string.comment_view_replies_many, repliesCount));
+                            }
                             tvViewReplies.setVisibility(View.VISIBLE);
                         }
                         llRepliesList.setVisibility(View.GONE);
@@ -400,10 +409,10 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
             // Update like button
             if (reply.isLiked()) {
-                tvReplyLike.setText("Liked");
+                tvReplyLike.setText(replyView.getContext().getString(R.string.post_liked));
                 tvReplyLike.setTextColor(replyView.getContext().getColor(R.color.text_white));
             } else {
-                tvReplyLike.setText("Like");
+                tvReplyLike.setText(replyView.getContext().getString(R.string.post_like));
                 tvReplyLike.setTextColor(replyView.getContext().getColor(R.color.text_secondary));
             }
 

@@ -179,7 +179,7 @@ public class RingingActivity extends AppCompatActivity {
                                 } else {
                                     // Call has ended or been declined
                                     Log.d(TAG, "Call is no longer active (status: " + status + "), closing activity");
-                                    Toast.makeText(RingingActivity.this, "Call has ended", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RingingActivity.this, getString(R.string.msg_call_has_ended), Toast.LENGTH_SHORT).show();
                                     
                                     // Clear activeCallId
                                     com.example.chatappjava.network.SocketManager sm = 
@@ -193,7 +193,7 @@ public class RingingActivity extends AppCompatActivity {
                             } else {
                                 // No data, call might not exist
                                 Log.w(TAG, "Call not found or no data returned");
-                                Toast.makeText(RingingActivity.this, "Call not found", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RingingActivity.this, getString(R.string.error_call_not_found), Toast.LENGTH_SHORT).show();
                                 
                                 // Clear activeCallId
                                 com.example.chatappjava.network.SocketManager sm = 
@@ -293,9 +293,9 @@ public class RingingActivity extends AppCompatActivity {
         
         // Set call type
         if ("audio".equals(callType)) {
-            tvCallType.setText("Incoming Audio Call");
+            tvCallType.setText(getString(R.string.call_incoming_audio));
         } else {
-            tvCallType.setText("Incoming Video Call");
+            tvCallType.setText(getString(R.string.call_incoming_video));
         }
     }
     
@@ -395,7 +395,7 @@ public class RingingActivity extends AppCompatActivity {
     
     @SuppressLint("SetTextI18n")
     private void setupIncomingCall() {
-        tvCallerStatus.setText("is calling you...");
+        tvCallerStatus.setText(getString(R.string.call_is_calling_you));
         // Swipe gesture is always visible for incoming calls
         outgoingCallInfo.setVisibility(View.GONE);
         
@@ -427,9 +427,9 @@ public class RingingActivity extends AppCompatActivity {
     
     @SuppressLint("SetTextI18n")
     private void setupOutgoingCall() {
-        tvCallerStatus.setText("Calling...");
+        tvCallerStatus.setText(getString(R.string.call_status_calling));
         outgoingCallInfo.setVisibility(View.VISIBLE);
-        tvRingingStatus.setText("Ringing");
+        tvRingingStatus.setText(getString(R.string.call_status_ringing));
         
         // Mark active call to avoid duplicate handling across screens
         com.example.chatappjava.network.SocketManager sm = com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
@@ -467,7 +467,7 @@ public class RingingActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         if (RingingActivity.this.callId != null && RingingActivity.this.callId.equals(callId)) {
                             Log.d(TAG, "Call declined by other party");
-                            Toast.makeText(RingingActivity.this, "Call declined", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RingingActivity.this, getString(R.string.msg_call_declined), Toast.LENGTH_SHORT).show();
                             
                             // Clear activeCallId
                             com.example.chatappjava.network.SocketManager sm = 
@@ -487,7 +487,7 @@ public class RingingActivity extends AppCompatActivity {
                     runOnUiThread(() -> {
                         if (RingingActivity.this.callId != null && RingingActivity.this.callId.equals(callId)) {
                             Log.d(TAG, "Call ended by other party");
-                            Toast.makeText(RingingActivity.this, "Call ended", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RingingActivity.this, getString(R.string.msg_call_ended), Toast.LENGTH_SHORT).show();
                             
                             // Clear activeCallId
                             com.example.chatappjava.network.SocketManager sm = 
@@ -511,15 +511,19 @@ public class RingingActivity extends AppCompatActivity {
     }
     
     private void startRingingAnimations() {
-        // Avatar pulse animation
-        avatarPulseAnimation = AnimationUtils.loadAnimation(this, R.anim.avatar_pulse);
-        ivCallerAvatar.startAnimation(avatarPulseAnimation);
+        if (com.example.chatappjava.utils.MotionUtils.isMotionReduced(this)) {
+            return;
+        }
+        com.example.chatappjava.utils.MotionUtils.playAnimation(this, ivCallerAvatar, R.anim.avatar_pulse);
         
         // Ripple animations
         startRippleAnimations();
     }
     
     private void startRippleAnimations() {
+        if (com.example.chatappjava.utils.MotionUtils.isMotionReduced(this)) {
+            return;
+        }
         // Create ripple animations with staggered timing
         ObjectAnimator ripple1ScaleX = ObjectAnimator.ofFloat(ripple1, "scaleX", 0.5f, 1.5f);
         ObjectAnimator ripple1ScaleY = ObjectAnimator.ofFloat(ripple1, "scaleY", 0.5f, 1.5f);
@@ -581,7 +585,7 @@ public class RingingActivity extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             if (!isCallActive) {
                 // Simulate call answered
-                tvRingingStatus.setText("Connected");
+                tvRingingStatus.setText(getString(R.string.call_connected));
                 new Handler(Looper.getMainLooper()).postDelayed(() -> {
                     if (!isCallActive) {
                         acceptCall();

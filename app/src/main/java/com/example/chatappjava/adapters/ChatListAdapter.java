@@ -8,12 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatappjava.R;
 import com.example.chatappjava.models.Chat;
 import com.example.chatappjava.utils.AvatarManager;
 import de.hdodenhof.circleimageview.CircleImageView;
 import java.util.List;
+import java.util.Objects;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatViewHolder> {
     
@@ -81,7 +83,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
                 tvLastMessage.setText(chat.getLastMessage());
                 tvLastMessage.setVisibility(View.VISIBLE);
             } else {
-                tvLastMessage.setText("No messages yet");
+                tvLastMessage.setText(R.string.chat_empty_title);
                 tvLastMessage.setVisibility(View.VISIBLE);
             }
             
@@ -144,6 +146,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
                 ivChatAvatar.setImageResource(placeholderResId);
             }
             
+            String rowDescription = context.getString(R.string.chat_row_cd, chat.getDisplayName());
+            if (chat.hasUnreadMessages()) {
+                rowDescription += context.getString(R.string.chat_row_unread_cd, chat.getUnreadCount());
+            }
+            itemView.setContentDescription(rowDescription);
+
             // Set click listeners
             itemView.setOnClickListener(v -> {
                 if (listener != null) {
@@ -161,30 +169,49 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
         }
     }
     
-    @SuppressLint("NotifyDataSetChanged")
     public void updateChats(List<Chat> newChats) {
-        // Only update if data actually changed (size or content) to prevent unnecessary reloads
-        boolean shouldUpdate = false;
-        
-        if (chats == null || chats.size() != newChats.size()) {
-            shouldUpdate = true;
-        } else {
-            // Compare by IDs to check if content changed
-            for (int i = 0; i < chats.size(); i++) {
-                if (i >= newChats.size() || 
-                    !chats.get(i).getId().equals(newChats.get(i).getId())) {
-                    shouldUpdate = true;
-                    break;
-                }
-            }
+        if (newChats == null) {
+            newChats = new java.util.ArrayList<>();
         }
-        
-        if (shouldUpdate) {
-            this.chats = newChats;
-            notifyDataSetChanged();
-        } else {
-            // Data unchanged, skip update to prevent flickering
-            android.util.Log.d("ChatListAdapter", "Chat list unchanged, skipping update");
+        final List<Chat> oldChats = chats != null ? chats : new java.util.ArrayList<>();
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ChatDiffCallback(oldChats, newChats));
+        this.chats = newChats;
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    private static class ChatDiffCallback extends DiffUtil.Callback {
+        private final List<Chat> oldChats;
+        private final List<Chat> newChats;
+
+        ChatDiffCallback(List<Chat> oldChats, List<Chat> newChats) {
+            this.oldChats = oldChats;
+            this.newChats = newChats;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldChats.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newChats.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return Objects.equals(oldChats.get(oldItemPosition).getId(), newChats.get(newItemPosition).getId());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            Chat oldChat = oldChats.get(oldItemPosition);
+            Chat newChat = newChats.get(newItemPosition);
+            return Objects.equals(oldChat.getDisplayName(), newChat.getDisplayName())
+                    && Objects.equals(oldChat.getLastMessage(), newChat.getLastMessage())
+                    && oldChat.getLastMessageTime() == newChat.getLastMessageTime()
+                    && oldChat.getUnreadCount() == newChat.getUnreadCount()
+                    && oldChat.isGroupChat() == newChat.isGroupChat();
         }
     }
 }

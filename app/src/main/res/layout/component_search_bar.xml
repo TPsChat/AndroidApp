@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        style="@style/AppSearchBar"
+        android:layout_height="@dimen/search_bar_height"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/spacing_md"
+        android:paddingEnd="@dimen/spacing_md">
+
+        <ImageView
+            android:id="@+id/iv_search_icon"
+            android:layout_width="@dimen/icon_search"
+            android:layout_height="@dimen/icon_search"
+            android:layout_marginEnd="@dimen/spacing_sm"
+            android:contentDescription="@string/search_icon_description"
+            android:src="@drawable/ic_search"
+            app:tint="@color/md3_secondary" />
+
+        <TextView
+            android:id="@+id/tv_search_hint"
+            style="@style/AppBodyMedium"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/search_hint"
+            android:textColor="@color/md3_on_surface_secondary"
+            tools:text="Search" />
+
+    </LinearLayout>
+
+</merge>

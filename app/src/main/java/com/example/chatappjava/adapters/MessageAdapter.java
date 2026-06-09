@@ -805,7 +805,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
 
         private void showQuickReactions(Context context, View anchor, Message message) {
-            String[] emojis = {"+1", "Luv", "Haha", "Wow", "Sad", "Fire"};
+            String[] emojis = com.example.chatappjava.utils.ReactionEmojis.MESSAGE_PICKER;
             android.widget.PopupMenu menu = new android.widget.PopupMenu(context, anchor);
             for (int i = 0; i < emojis.length; i++) {
                 menu.getMenu().add(0, 1000 + i, i, emojis[i]);
@@ -851,14 +851,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 .setCancelable(true)
                 .create();
 
-            if (title != null) title.setText("React");
-            for (int id : emojiIds) {
-                android.view.View v = dialogView.findViewById(id);
+            if (title != null) title.setText(context.getString(R.string.reaction_picker_title));
+            for (int i = 0; i < emojiIds.length; i++) {
+                android.view.View v = dialogView.findViewById(emojiIds[i]);
                 if (v instanceof android.widget.TextView) {
+                    android.widget.TextView tv = (android.widget.TextView) v;
+                    tv.setText(com.example.chatappjava.utils.ReactionEmojis.MESSAGE_PICKER[i]);
+                    tv.setContentDescription(context.getString(
+                            com.example.chatappjava.utils.ReactionEmojis.accessibilityLabelForEmoji(
+                                    context, com.example.chatappjava.utils.ReactionEmojis.MESSAGE_PICKER[i])));
                     v.setOnClickListener(x -> {
                         try {
-                            CharSequence emoji = ((android.widget.TextView) v).getText();
-                            if (emoji != null && listener != null) listener.onReactClick(message, emoji.toString());
+                            CharSequence emoji = tv.getText();
+                            if (emoji != null && listener != null) {
+                                listener.onReactClick(message, emoji.toString());
+                            }
                         } catch (Exception ignored2) {}
                         dlg.dismiss();
                     });
@@ -903,7 +910,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         private void updateReactionIcon(ImageView badgeView, Message message, Context context) {
             if (badgeView == null) return;
             message.ensureReactionSummaryFromRaw();
-            String topEmoji = message.getTopReactionEmoji();
+            String topEmoji = com.example.chatappjava.utils.ReactionEmojis.normalize(message.getTopReactionEmoji());
             if (topEmoji.isEmpty()) {
                 Object tag = badgeView.getTag();
                 if (tag == null && badgeView.getVisibility() != View.VISIBLE) {
@@ -959,7 +966,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             android.widget.LinearLayout container = dialogView.findViewById(com.example.chatappjava.R.id.container_reactions);
             android.view.View btnClose = dialogView.findViewById(com.example.chatappjava.R.id.btn_close);
 
-            if (tvTitle != null) tvTitle.setText("Reactions");
+            if (tvTitle != null) tvTitle.setText(context.getString(R.string.dialog_reactions_title));
 
             // Build rows from reactions
             try {
@@ -968,7 +975,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     org.json.JSONArray arr = new org.json.JSONArray(raw);
                     for (int i = 0; i < arr.length(); i++) {
                         org.json.JSONObject r = arr.getJSONObject(i);
-                        String emoji = r.optString("emoji", "");
+                        String emoji = com.example.chatappjava.utils.ReactionEmojis.normalize(r.optString("emoji", ""));
                         org.json.JSONObject userObj = r.optJSONObject("user");
                         String uname = userObj != null ? userObj.optString("username", "Unknown") : "Unknown";
 
@@ -994,7 +1001,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     }
                 } else if (container != null) {
                     android.widget.TextView empty = new android.widget.TextView(context);
-                    empty.setText("No reactions");
+                    empty.setText(context.getString(R.string.no_reactions_yet));
                     empty.setTextColor(android.graphics.Color.WHITE);
                     empty.setPadding(dp(context, 8), dp(context, 8), dp(context, 8), dp(context, 8));
                     container.addView(empty);
@@ -1002,7 +1009,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             } catch (Exception e) {
                 if (container != null) {
                     android.widget.TextView empty = new android.widget.TextView(context);
-                    empty.setText("No reactions");
+                    empty.setText(context.getString(R.string.no_reactions_yet));
                     empty.setTextColor(android.graphics.Color.WHITE);
                     empty.setPadding(dp(context, 8), dp(context, 8), dp(context, 8), dp(context, 8));
                     container.addView(empty);

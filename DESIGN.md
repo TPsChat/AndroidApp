@@ -1,27 +1,27 @@
 ---
-name: ChatApp — Midnight Slate
-description: Dark-premium Android chat client with cool slate surfaces and a single azure accent.
+name: ChatApp — Void Copper
+description: Dark-premium Android chat client with void canvas, warm-tinted surfaces, and a single copper accent.
 colors:
-  canvas-deep: "#151A24"
-  surface-sunken: "#1C2230"
-  surface-raised: "#2A3142"
-  surface-high: "#313A4D"
-  surface-highest: "#3A4559"
-  bubble-sent: "#1E2A3D"
-  bubble-received: "#2A3142"
-  bubble-reply: "#253042"
-  azure-signal: "#3B82F6"
-  azure-deep: "#2563EB"
-  azure-soft: "#60A5FA"
-  ink-primary: "#FFFFFF"
-  ink-muted: "#8B95A8"
-  ink-whisper: "#6B7589"
-  border-subtle: "#2E3748"
-  border-outline: "#4A5568"
-  danger-rose: "#E05252"
-  success-green: "#2DA87A"
+  canvas-void: "#0B0D11"
+  surface-sunken: "#12161C"
+  surface-raised: "#1A2028"
+  surface-high: "#222932"
+  surface-highest: "#2B3340"
+  bubble-sent: "#141C24"
+  bubble-received: "#1A2028"
+  bubble-reply: "#1E2733"
+  copper-signal: "#C8875A"
+  copper-deep: "#A66D45"
+  copper-soft: "#E0A67E"
+  ink-primary: "#F2F4F7"
+  ink-muted: "#8A939F"
+  ink-whisper: "#7F8996"
+  border-subtle: "#2A323D"
+  border-outline: "#3D4654"
+  danger-rose: "#E05A5A"
+  success-green: "#3DB88C"
   warning-amber: "#D4A054"
-  video-stage: "#0D1117"
+  video-stage: "#080A0E"
 typography:
   display:
     fontFamily: "Plus Jakarta Sans, sans-serif"
@@ -54,12 +54,12 @@ typography:
     fontFamily: "Plus Jakarta Sans, sans-serif"
     fontSize: "12sp"
     fontWeight: 700
-    letterSpacing: "0.03em"
+    letterSpacing: "0.02em"
 rounded:
-  sm: "8dp"
-  md: "16dp"
-  lg: "24dp"
-  xl: "32dp"
+  sm: "6dp"
+  md: "12dp"
+  lg: "20dp"
+  xl: "28dp"
   pill: "999dp"
 spacing:
   xs: "8dp"
@@ -71,13 +71,13 @@ spacing:
   screen-margin: "20dp"
 components:
   button-primary:
-    backgroundColor: "{colors.azure-signal}"
+    backgroundColor: "{colors.copper-signal}"
     textColor: "{colors.ink-primary}"
     rounded: "{rounded.pill}"
     padding: "12dp 24dp"
     height: "52dp"
   button-primary-pressed:
-    backgroundColor: "{colors.azure-deep}"
+    backgroundColor: "{colors.copper-deep}"
     textColor: "{colors.ink-primary}"
     rounded: "{rounded.pill}"
   button-secondary:
@@ -101,158 +101,222 @@ components:
   input-search:
     backgroundColor: "{colors.surface-sunken}"
     textColor: "{colors.ink-primary}"
-    rounded: "{rounded.pill}"
+    rounded: "{rounded.md}"
     height: "48dp"
-  filter-pill-active:
-    backgroundColor: "{colors.azure-signal}"
+  input-field:
+    backgroundColor: "{colors.surface-sunken}"
     textColor: "{colors.ink-primary}"
+    rounded: "{rounded.md}"
+    height: "52dp"
+  filter-pill-active:
+    backgroundColor: "{colors.copper-signal}"
+    textColor: "{colors.ink-primary}"
+    rounded: "{rounded.pill}"
+  filter-pill-inactive:
+    backgroundColor: "{colors.surface-raised}"
+    textColor: "{colors.ink-muted}"
     rounded: "{rounded.pill}"
 ---
 
-# Design System: ChatApp — Midnight Slate
+# Design System: ChatApp — Void Copper
 
 ## 1. Overview
 
-**Creative North Star: "The Focused Night Console"**
+**Creative North Star: "The Private Evening Terminal"**
 
-A dark-premium Android communication surface built for low-light, frequent use. The interface reads like a calm control room at night: deep slate canvas, layered surfaces that whisper depth, white type with disciplined hierarchy, and one azure accent that marks action without shouting. Chat bubbles, call controls, and feed cards share the same material language so the app feels like one instrument, not a stack of screens pasted together.
+A dark communication surface for frequent, low-light use. Deep void canvas, warm-tinted neutral surfaces, crisp white type, and one copper accent that marks action without Messenger-blue fatigue. Chat bubbles, call controls, and feed rows share one flat material language: tone steps, hairline borders, no floating glass chrome.
 
-This system explicitly rejects Facebook/Messenger brightness, AI-slop purple gradients, decorative glassmorphism, and flat gray-on-gray chat clones with no readable secondary text. Density is balanced: chat lists are efficient; auth and ringing screens breathe.
+Rejects: Facebook/Messenger brightness, AI-slop purple gradients, decorative glassmorphism, legacy Midnight Slate azure + pill nav.
 
 **Key Characteristics:**
-- Cool slate neutral family (`#151A24` → `#3A4559`) with clear surface steps
-- Single accent: Azure Signal (`#3B82F6`) for CTAs, active tabs, primary icons
-- Plus Jakarta Sans across all UI; weight-driven hierarchy, sentence case
-- Tonal elevation via offset layer-lists and 1dp borders, not heavy drop shadows
-- Message bubbles use asymmetric corner radii (24dp with 4dp tail corner)
-- Touch targets ≥44dp on primary controls; WCAG AA contrast on dark surfaces
+- Void canvas `#0B0D11` with warm-tinted surface steps
+- Single accent: Copper Signal `#C8875A`
+- Plus Jakarta Sans; weight-driven hierarchy; sentence case
+- Flat edge-to-edge dock navigation with top hairline
+- Divider-based lists (not card-per-row)
+- Message bubbles: 20dp radius, 6dp tail corner
+- Touch targets ≥48dp; WCAG AA on dark surfaces
+- User-facing copy in `strings.xml`; accessibility labels on all icon controls
+- Reduced motion respected via `MotionUtils.isMotionReduced()`
 
-## 2. Colors: The Midnight Slate Palette
+**Responsive posture:** Phone-first (`values/`). Narrow phones (`values-w360dp/`) tighten nav tab padding. Tablets (`values-sw600dp/`) widen screen margins (32dp), bubble max width (360dp), and cap home content at 640dp.
 
-Cool-leaning slate neutrals carry depth; azure marks the single accent lane. No warm beige, no pure black, no second accent color.
+## 2. Colors
+
+Warm void neutrals carry depth; copper is the only decorative accent.
 
 ### Primary
-- **Azure Signal** (`#3B82F6`): Primary buttons, active tab indicator, send circle, focus rings, active icons, filter pill selected state.
-- **Azure Deep** (`#2563EB`): Pressed primary state, gradient end on primary buttons.
-- **Azure Soft** (`#60A5FA`): OTP filled ring, light accent highlights on dark surfaces.
+- **Copper Signal** `#C8875A` (`palette_crimson`, `md3_primary`): Primary buttons, active tabs, send, focus rings, switch track on.
+- **Copper Deep** `#A66D45` (`palette_wine`, `md3_primary_dark`): Pressed primary, gradient end.
+- **Copper Soft** `#E0A67E` (`brand_red_light`): OTP ring filled, light highlights.
 
 ### Neutral
-- **Canvas Deep** (`#151A24`): App background, status bar, navigation bar, video overlay scrim base.
-- **Surface Sunken** (`#1C2230`): Dialog background, input insets, search field fill, lowest elevation containers.
-- **Surface Raised** (`#2A3142`): Cards, list rows, received message bubbles, dialog secondary buttons.
-- **Surface High** (`#313A4D`): Elevated containers, tertiary backgrounds.
-- **Surface Highest** (`#3A4559`): Top elevation tier for modals and emphasis panels.
-- **Whisper Border** (`#2E3748`): 1dp structural borders on bubbles, cards, inputs.
-- **Outline Steel** (`#4A5568`): Stronger dividers, OTP empty ring, disabled outlines.
+- **Canvas Void** `#0B0D11` (`palette_charcoal`, `app_bg`): App background, status bar, nav bar.
+- **Surface Sunken** `#12161C` (`neu_surface_sunken`): Dialogs, inputs, dock nav.
+- **Surface Raised** `#1A2028` (`neu_surface_raised`): List highlight, received bubbles, secondary buttons.
+- **Surface High** `#222932` (`neu_highlight`): Elevated panels.
+- **Surface Highest** `#2B3340` (`md3_surface_container_highest`): Modals, emphasis.
+- **Border Subtle** `#2A323D` (`md3_border_subtle`): Hairlines, bubble strokes, switch track off tint.
+- **Border Outline** `#3D4654` (`md3_outline`): Strong dividers, disabled outlines.
 
-### Semantic (status only, not accent)
-- **Danger Rose** (`#E05252`): Decline call, destructive actions, error text, love reaction.
-- **Success Green** (`#2DA87A`): Accept call, confirm actions, success indicators.
-- **Warning Amber** (`#D4A054`): Warning states only.
+### Semantic (status only)
+- **Danger Rose** `#E05A5A` (`danger`, `call_decline`)
+- **Success Green** `#3DB88C` (`accept`, `call_accept`)
+- **Warning Amber** `#D4A054` (`warning_color`)
 
-### Text on dark
-- **Ink Primary** (`#FFFFFF`): Headlines, body, message text, button labels on dark surfaces.
-- **Ink Muted** (`#8B95A8`): Timestamps, metadata, secondary labels, inactive utility copy. Must pass 4.5:1 on `#151A24` and `#2A3142`.
-- **Ink Whisper** (`#6B7589`): Hints, placeholders, disabled tertiary copy.
+### Text
+- **Ink Primary** `#F2F4F7` (`ink_primary`, `text_primary`)
+- **Ink Muted** `#8A939F` (`ink_muted`): Timestamps, metadata (≥4.5:1 on void and raised)
+- **Ink Whisper** `#7F8996` (`ink_whisper`, `text_hint`): Hints, placeholders, inactive nav icons (≥4.5:1 on void and sunken)
 
-### Chat-specific
-- **Bubble Sent** (`#1E2A3D`): Outgoing message background (`my_message_bg`).
-- **Bubble Received** (`#2A3142`): Incoming message background (`other_message_bg`).
-- **Bubble Reply** (`#253042`): Reply quote blocks inside received messages.
+### Chat
+- **Bubble Sent** `#141C24` (`my_message_bg`)
+- **Bubble Received** `#1A2028` (`other_message_bg`)
+- **Bubble Reply** `#1E2733` (`reply_message_bg`)
 
-**The One Accent Rule.** Azure appears on ≤10% of any screen surface area. Its scarcity is the point. Status colors (green/red) are never used as decorative accents.
+**The One Accent Rule.** Copper appears on ≤10% of any screen. Green and red are status-only, never decorative accents.
 
 ## 3. Typography
 
-**Display / Headline / Body Font:** Plus Jakarta Sans (weights 400, 500, 600, 700)
+**Display / Body Font:** Plus Jakarta Sans (`@font/plus_jakarta_sans`), weights 400–700.
 
-**Character:** Confident and tight on headlines; relaxed on body. No serif. No all-caps headlines. Sentence case for labels and buttons.
+**Character:** Confident and readable in low light. Weight contrast before size shrink. Sentence case everywhere; no all-caps body or button labels.
 
 ### Hierarchy
-- **Display** (Bold 700, 28sp, line-height 1.1): Screen titles (login hero, settings header).
-- **Headline** (Bold 700, 22sp, line-height 1.2): Section headers, dialog titles.
-- **Title** (SemiBold 600, 20sp, line-height 1.25): Card titles, chat names in list.
-- **Body Large** (Regular 400, 16sp, line-height 1.5): Primary reading text, post content.
-- **Body** (Regular 400, 14sp, line-height 1.5): Message text, form fields, list previews.
-- **Label** (Bold 700, 12sp, letter-spacing 0.03em): Badges, tab labels, timestamps when emphasized.
 
-**The Weight-Not-Size Rule.** Secondary hierarchy uses Ink Muted color and Medium (500) weight before shrinking below 14sp. Never rely on 10sp gray alone for essential information.
+| Style (`styles.xml`) | Role | Size | Weight | Use |
+|----------------------|------|------|--------|-----|
+| `AppHeadlineLarge` | Display | 28sp | 700 | Auth titles, major headers |
+| `AppHeadlineMedium` | Headline | 22sp | 700 | Dialog titles, screen titles |
+| `AppHeadlineSmall` | Title | 20sp | 700 | Section headers, empty states |
+| `AppBodyLarge` | Body Large | 16sp | 400 | Form fields, list labels |
+| `AppBodyMedium` | Body | 14sp | 400 | Message text, previews |
+| `AppBodySmall` / `AppCaptionMuted` | Caption | 12sp | 400 | Timestamps, metadata |
+| `AppLabelSmall` | Label | 12sp | 700 | Badges, emphasized labels |
+| `AppBannerText` | Banner | 13sp | 700 | Inline banners |
+
+**The Weight-Not-Size Rule.** Secondary hierarchy uses Ink Muted and Medium weight before dropping below 14sp.
+
+Legacy `Midnight*` style names alias to `App*` for backward compatibility. Do not use Midnight Slate visual values.
 
 ## 4. Elevation
 
-This system uses **tonal layering**, not Material drop shadows. Depth is conveyed by surface color steps (`sunken` → `raised` → `high`), 1dp `border-subtle` strokes, and offset layer-list shadows tinted to the canvas hue (`#0D000000` at 5% opacity).
+Tonal layering only. No drop shadows on list rows.
 
-Raised cards and bubbles use a 2dp bottom-right offset shadow layer before the fill layer. Video call stage uses `#0D1117` full-bleed with semi-transparent control scrims (`#66151A24`).
+Depth comes from surface step (`void` → `sunken` → `raised` → `high`) plus 1dp hairline borders (`border-subtle`). Bubbles and primary buttons may use a 1dp offset tint (`shadow_tint_subtle` `#0A000000`). Video stage is full-bleed `#080A0E`.
 
-**The Flat-Canvas Rule.** The app background stays at Canvas Deep. Elevated elements rise through surface tokens; do not add arbitrary box-shadow on every list row.
-
-### Shadow Vocabulary
-- **Shadow Tint Subtle** (`#0D000000`, 2dp offset): Message bubbles, neu-raised cards.
-- **Shadow Tint** (`#1A000000`, 2dp offset): Pills and buttons with azure glow underlay (`#1A3B82F6`).
+**The Flat-Canvas Rule.** The app background stays Canvas Void. Elevated elements rise through surface tokens, not blur or floating pills.
 
 ## 5. Components
 
 ### Buttons
-- **Shape:** Pill radius (999dp). Min height 52dp. Horizontal padding 24dp.
-- **Primary:** Azure gradient `#3B82F6` → `#2563EB` at 135°, white label, no all-caps.
-- **Pressed:** Background shifts to Azure Deep; tactile 1dp translateY on active state.
-- **Secondary / Ghost:** Surface Raised fill, 1dp Whisper Border, Ink Primary text.
-- **Danger:** Gradient `#E05252` → `#C44040`, white text. Used for decline, delete, destructive dialog actions.
+- **Shape:** Pill (`radius_pill` 999dp), 52dp min height (`AppPrimaryButton`, `input_field_height`).
+- **Primary:** Solid copper (`bg_button_normal_ripple`), Ink Primary text, copper ripple.
+- **Pressed:** Copper Deep via drawable state; `MotionUtils.applyPressScale()` on key surfaces.
+- **Secondary:** Surface Raised + `border-subtle` outline (`bg_neu_raised`).
+- **Danger:** Rose gradient (`bg_button_danger_selected_ripple`), 52dp, for delete/decline.
 
 ### Message Bubbles
-- **Sent:** Bubble Sent fill, Whisper Border stroke, asymmetric corners (24dp with 4dp bottom-right tail).
-- **Received:** Bubble Received fill, same corner logic mirrored (4dp bottom-left tail).
-- **Reply inset:** Bubble Reply fill inside parent bubble, 12dp inner radius.
-- **Text:** 14sp Body, Ink Primary. Timestamps: 10–11sp, Ink Muted.
+- **Shape:** 20dp radius (`radius_lg`), 6dp tail (`bubble_tail_radius`). Sent: tail bottom-right; received: tail bottom-left.
+- **Drawables:** `bg_message_sent`, `bg_message_received`, `bg_message_reply_*`.
+- **Max width:** 280dp phone, 360dp tablet (`message_bubble_max_width`).
 
 ### Inputs / Search
-- **Style:** Surface Sunken fill, pill radius, 48dp min height, 1dp Whisper Border.
-- **Focus:** Border shifts to Azure Signal; no floating labels.
-- **Hint:** Ink Whisper; must remain readable (not decorative gray).
+- **Search:** Surface Sunken (`bg_glass_search`), 48dp height, 12dp radius. Focus: copper border (`border_focus`).
+- **Form fields:** `AppInputField` on `bg_soft_inset`, 52dp, Ink Whisper hints.
 
-### Filter Pills / Tabs
-- **Inactive:** Transparent or Surface Raised, Ink Muted text.
-- **Active:** Azure gradient fill, Ink Primary text, md3 ripple underlay.
-- **Tab bar:** 64dp height; icons use `icon_active` (azure) vs `icon_inactive` (`#6B7589`).
-
-### Dialogs
-- **Background:** Surface Sunken (`dialog_bg`).
-- **Title:** Headline 22sp Bold, Ink Primary.
-- **Body:** Body 14sp, Ink Muted for secondary lines.
-- **Actions:** Filled primary right, secondary pill left, danger gradient for destructive.
-
-### Call UI
-- **Stage:** Video Stage `#0D1117` full screen.
-- **Accept:** Success Green circle gradient.
-- **Decline:** Danger Rose circle gradient.
-- **Controls:** Semi-transparent scrim buttons, 44dp minimum touch target.
-
-### Cards / List Rows
-- **Corner Style:** 24dp (`radius_lg`) on containers; 16dp on inner elements.
-- **Background:** Surface Raised.
-- **Border:** 1dp Whisper Border when elevation alone is insufficient.
-- **Padding:** 16dp horizontal gutter, 12–16dp vertical rhythm.
+### Switches
+- Track: `switch_track_selector` (copper on `#55C8875A`, off `#334A5568`).
+- Persisted via `DatabaseManager` + `NotificationSettingsHelper`; FCM respects push/sound/vibrate flags.
 
 ### Navigation
-- **Bottom tabs:** Home, Feed, Search, Profile. Active icon azure; inactive `#6B7589`.
-- **Header:** 56dp height, Canvas Deep background, Ink Primary title.
+- **Flat dock:** Full width, Surface Sunken (`bg_glass_nav`), 1dp top border, 56dp height (`nav_bar_height`).
+- **Tabs:** 48dp touch (`nav_tab_height`). Active: copper icon; inactive: Ink Whisper.
+- **Flat header:** `AppFlatHeader` + `component_back_button` + `AppToolbarTitle` on inner screens.
+
+### Lists
+- Rows on void canvas; `divider_height` 1dp hairline (`bg_list_row_divider`).
+- Row min height 72dp (`list_row_min_height`). No nested cards per row.
+
+### Dialogs
+- Surface Sunken (`bg_glass_panel`), 20dp corner radius. Headline 22sp bold.
+- Confirm flows via `DialogUtils.showConfirm()`. Entrance: `MotionUtils` modal duration (280ms) unless reduced motion.
+
+### Call UI
+- Video stage full bleed (`video_stage`). Accept green circle, decline rose circle. 48dp controls on scrim (`call_overlay_scrim`).
+
+### Empty states
+- `component_empty_state`: title (`AppHeadlineSmall`), subtitle (`AppBodyMedium` muted), optional icon.
+- Bind with `EmptyStateHelper.bind(root, titleRes, subtitleRes, iconRes)` or `bindAndReveal()` for motion.
+
+### Reusable layout components (`res/layout/component_*.xml`)
+
+| Component | Use when |
+|-----------|----------|
+| `component_back_button` | Any screen toolbar needs a 48dp back affordance (`iv_back`) |
+| `component_flat_header` | Simple title screen: back + `tv_title` inside `AppFlatHeader` |
+| `component_empty_state` | List/feed has zero items |
+| `component_search_bar` | Tappable search affordance (hint row, not editable field) |
+| `component_create_post_bar` | Feed composer strip with avatar, hint, and post actions |
+
+### Reusable styles (`res/values/styles.xml`)
+
+| Style | Use when |
+|-------|----------|
+| `AppFlatHeader` | Full-width flat toolbar container |
+| `AppBackButton` | Back icon sizing, circle background, 48dp target |
+| `AppToolbarTitle` | Single-line screen title beside back button |
+| `AppSettingsSectionTitle` / `AppSettingsSectionTitleSpaced` | Settings section headings |
+| `AppListDividerRow` + icon/label/chevron variants | Divider list rows (settings, options) |
+| `AppOptionRow` | Dialog option rows on raised surface |
+| `AppInputField` | Auth and settings text inputs |
+| `AppPrimaryButton` | Primary CTA buttons |
+| `AppSearchBar` | Search container background and height |
+
+### Motion (`MotionUtils`, `res/anim/`, `res/interpolator/`)
+
+| Duration token | Ms | Use |
+|----------------|-----|-----|
+| `anim_duration_press` | 120 | Button press, tab pulse |
+| `anim_duration_fast` | 150 | Fades out, panel crossfade |
+| `anim_duration_normal` | 220 | Text swap, empty reveal |
+| `anim_duration_modal` | 280 | Dialog entrance |
+| `anim_duration_highlight` | 320 | Scroll-to-message highlight |
+
+Easing: `ease_out_quart` (`PathInterpolator` 0.25, 1, 0.5, 1). No bounce or elastic.
+
+**Reduced motion:** `MotionUtils.isMotionReduced()` checks animator/transition duration scale. Decorative loops (ringing pulse, recording pulse) skip when reduced. Content stays visible; animations never gate visibility.
+
+**Wired surfaces:** login tab switch, home dock tabs + title + empty states, confirm dialogs, chat message highlight, video call press, voice recording indicator.
+
+### Production helpers (hardening)
+
+| Helper | Role |
+|--------|------|
+| `EmptyStateHelper` | Bind empty state copy and icons |
+| `MotionUtils` | Duration, easing, reduced motion, press scale, reveals |
+| `NotificationSettingsHelper` | Sync settings toggles with `DatabaseManager` |
+| `DialogUtils` | Consistent confirm/cancel dialogs |
+
+All user-visible strings belong in `res/values/strings.xml`. Icon-only controls require `contentDescription` string resources.
 
 ## 6. Do's and Don'ts
 
-### Do:
-- **Do** use Canvas Deep (`#151A24`) as the universal app background. Never pure `#000000`.
-- **Do** keep one azure accent. Primary actions, active tabs, and focus rings only.
-- **Do** separate sent (`#1E2A3D`) and received (`#2A3142`) bubbles by surface step, not by accent color.
-- **Do** use Ink Muted (`#8B95A8`) for timestamps and metadata so hierarchy survives on dark bg.
-- **Do** maintain 44dp minimum touch targets on composer send, call accept/decline, and primary buttons.
-- **Do** use Plus Jakarta Sans with weight contrast (700 display, 400 body, 500 card titles).
-- **Do** tint shadows toward the canvas hue. Never pure black at high opacity on dark surfaces.
+### Do
+- **Do** use Canvas Void as universal background.
+- **Do** keep one copper accent for primary actions, active tabs, and focus rings.
+- **Do** use divider lists on home, search, settings, and friend requests.
+- **Do** use Ink Muted for timestamps and metadata; Ink Whisper only where contrast passes on its surface.
+- **Do** maintain 48dp touch targets on primary controls (`touch_target_min`).
+- **Do** respect reduced motion and keep content visible without animation gates.
+- **Do** externalize copy and accessibility labels to `strings.xml`.
 
-### Don't:
+### Don't
 - **Don't** use Facebook/Messenger bright blue chrome or cluttered feed density.
-- **Don't** use AI slop: purple/blue neon gradients, decorative glassmorphism, gradient text, side-stripe accent borders, identical icon+heading+card grids, hero-metric blocks.
-- **Don't** flatten all text to `#FFFFFF` without secondary Ink Muted. That kills hierarchy and fails WCAG intent for metadata.
-- **Don't** add a second accent color. Green and red are status-only.
-- **Don't** use glass blur as default decoration. `bg_glass_search` is a tinted fill with border, not frosted glass chrome.
-- **Don't** gate content visibility on entrance animations. Reduced motion must show content immediately.
-- **Don't** use all-caps for headlines or button labels. Sentence case only.
+- **Don't** use AI slop: purple neon gradients, decorative glassmorphism, gradient text, side-stripe borders, identical card grids, hero-metric blocks.
+- **Don't** use floating glass pill navigation (legacy Midnight Slate).
+- **Don't** wrap every list row in a card.
+- **Don't** use azure/blue as accent.
+- **Don't** flatten all text to Ink Primary without muted hierarchy.
+- **Don't** gate content visibility on entrance animations.
+- **Don't** hardcode user-facing strings or `contentDescription` literals in layouts or Java.

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@drawable/bg_chat_screen_dark">
+    android:background="@drawable/bg_chat_screen_dark"
+    android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/bg"
@@ -13,684 +13,62 @@
         android:layout_height="0dp"
         android:alpha="0.12"
         android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Header floating -->
     <LinearLayout
         android:id="@+id/header_card"
+        style="@style/AppFlatHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginTop="18dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:src="@drawable/ic_back"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:padding="11dp"
-            android:contentDescription="Back"
-            app:tint="@color/md3_primary" />
+        <include layout="@layout/component_back_button" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_md"
             android:layout_weight="1"
-            android:layout_marginStart="14dp"
-            android:orientation="vertical"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
+                style="@style/AppToolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Settings"
-                android:textColor="@color/md3_on_surface"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:text="@string/settings_title" />
 
             <TextView
                 android:id="@+id/tv_user_name"
+                style="@style/AppCaptionMuted"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:textColor="@color/md3_on_surface_secondary"
-                android:textSize="13sp"
+                android:layout_marginTop="@dimen/list_item_margin"
                 tools:text="John Doe" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Scrollable Content -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="14dp"
+        android:layout_marginBottom="@dimen/spacing_md"
         android:clipToPadding="false"
         android:overScrollMode="never"
-        app:layout_constraintTop_toBottomOf="@id/header_card"
-        app:layout_constraintStart_toStartOf="parent"
+        android:paddingStart="@dimen/margin_mobile"
+        android:paddingEnd="@dimen/margin_mobile"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_card">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="8dp">
-
-            <!-- Account Settings Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:orientation="vertical"
-                android:background="@drawable/bg_obsidian_card"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="18dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Account Settings"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
-                    android:layout_marginBottom="14dp" />
-
-                <!-- Profile -->
-                <LinearLayout
-                    android:id="@+id/option_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:background="@drawable/bg_option_row_dark"
-                    android:layout_marginBottom="10dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginEnd="12dp"
-                        android:src="@drawable/ic_tag"
-                        app:tint="@color/md3_primary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Profile"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
-
-                </LinearLayout>
-
-                <!-- Change Password -->
-                <LinearLayout
-                    android:id="@+id/option_change_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:background="@drawable/bg_option_row_dark"
-                    android:layout_marginBottom="10dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_setting"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_primary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Change Password"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
-
-                </LinearLayout>
-
-                <!-- Logout -->
-                <LinearLayout
-                    android:id="@+id/option_logout"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:background="@drawable/bg_danger_option_row"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_close"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_error" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Logout"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_white" />
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@android:drawable/ic_menu_more"
-                        app:tint="@color/md3_error" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Privacy & Security Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:orientation="vertical"
-                android:background="@drawable/bg_obsidian_card"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="18dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Privacy &amp; Security"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
-                    android:layout_marginBottom="14dp" />
-
-                <!-- Blocked Users -->
-                <LinearLayout
-                    android:id="@+id/option_blocked_users"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:background="@drawable/bg_option_row_dark"
-                    android:layout_marginBottom="10dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_close"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_primary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Blocked Users"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
-
-                </LinearLayout>
-
-                <!-- Delete Account -->
-                <LinearLayout
-                    android:id="@+id/option_delete_account"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:background="@drawable/bg_danger_option_row"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_delete"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_error" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Delete Account"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_white" />
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@android:drawable/ic_menu_more"
-                        app:tint="@color/md3_error" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Notifications Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:orientation="vertical"
-                android:background="@drawable/bg_obsidian_card"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="18dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Notifications"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
-                    android:layout_marginBottom="14dp" />
-
-                <!-- Push Notifications -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="64dp"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="14dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:background="@drawable/bg_option_row_dark"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Push Notifications"
-                            android:textSize="15sp"
-                            android:textColor="@color/md3_on_surface"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Receive notifications for new messages"
-                            android:textSize="12sp"
-                            android:textColor="@color/md3_on_surface_secondary"
-                            android:layout_marginTop="4dp" />
-
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/switch_push_notifications"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:checked="true"
-                        android:thumbTint="@color/md3_primary"
-                        android:trackTint="#33404D5A" />
-
-                </LinearLayout>
-
-                <!-- Sound -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="64dp"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="14dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:background="@drawable/bg_option_row_dark"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Sound"
-                            android:textSize="15sp"
-                            android:textColor="@color/md3_on_surface"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Play sound for notifications"
-                            android:textSize="12sp"
-                            android:textColor="@color/md3_on_surface_secondary"
-                            android:layout_marginTop="4dp" />
-
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/switch_sound"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:checked="true"
-                        android:thumbTint="@color/md3_primary"
-                        android:trackTint="#33404D5A" />
-
-                </LinearLayout>
-
-                <!-- Vibrate -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:minHeight="64dp"
-                        android:paddingStart="14dp"
-                        android:paddingEnd="14dp"
-                        android:paddingTop="10dp"
-                        android:paddingBottom="10dp"
-                        android:background="@drawable/bg_option_row_dark"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Vibrate"
-                            android:textSize="15sp"
-                            android:textColor="@color/md3_on_surface"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Vibrate for notifications"
-                            android:textSize="12sp"
-                            android:textColor="@color/md3_on_surface_secondary"
-                            android:layout_marginTop="4dp" />
-
-                    </LinearLayout>
-
-                    <Switch
-                        android:id="@+id/switch_vibrate"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:checked="true"
-                        android:thumbTint="@color/md3_primary"
-                        android:trackTint="#33404D5A" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Server Settings Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:orientation="vertical"
-                android:background="@drawable/bg_obsidian_card"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="18dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Server Settings"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
-                    android:layout_marginBottom="14dp" />
-
-                <!-- Server Configuration -->
-                <LinearLayout
-                    android:id="@+id/option_server_config"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:background="@drawable/bg_option_row_dark"
-                    android:layout_marginBottom="10dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_preferences"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_primary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Server Configuration"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
-
-                </LinearLayout>
-
-                <!-- Reset Settings -->
-                <LinearLayout
-                    android:id="@+id/option_reset_settings"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:background="@drawable/bg_danger_option_row"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_restore"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_error" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Reset Settings"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_white" />
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:src="@android:drawable/ic_menu_more"
-                        app:tint="@color/md3_error" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- About Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical"
-                android:background="@drawable/bg_obsidian_card"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp"
-                android:paddingTop="20dp"
-                android:paddingBottom="18dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="About"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
-                    android:layout_marginBottom="14dp" />
-
-                <!-- App Version -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:background="@drawable/bg_option_row_dark"
-                    android:layout_marginBottom="10dp">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:src="@drawable/ic_info"
-                        android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_primary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="App Version"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
-
-                    <TextView
-                        android:id="@+id/tv_app_version"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1.0.0"
-                        android:textSize="14sp"
-                        android:textColor="@color/md3_on_surface_secondary" />
-
-                </LinearLayout>
-
-                <!-- Help & Support -->
-                <LinearLayout
-                    android:id="@+id/option_help_support"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@drawable/bg_option_row_dark"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_marginEnd="12dp"
-                        android:src="@drawable/ic_help"
-                        app:tint="@color/md3_primary" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Help &amp; Support"
-                        android:textColor="@color/md3_on_surface"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
+        <include layout="@layout/item_settings_content" />
 
     </androidx.core.widget.NestedScrollView>
 

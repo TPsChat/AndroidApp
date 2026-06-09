@@ -4,7 +4,7 @@
     android:id="@+id/dialog_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#05070A"
+    android:background="@color/video_stage"
     android:clipChildren="false"
     android:clipToPadding="false">
 
@@ -16,7 +16,7 @@
         android:layout_centerInParent="true"
         android:scaleType="centerInside"
         android:adjustViewBounds="true"
-        android:contentDescription="Zoomed image" />
+        android:contentDescription="@string/zoomed_image_cd" />
 
     <!-- Close button floating -->
     <ImageView
@@ -25,14 +25,14 @@
         android:layout_height="46dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="18dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginTop="@dimen/screen_edge_inset"
+        android:layout_marginEnd="@dimen/screen_edge_inset"
         android:background="@drawable/bg_icon_circle_dark"
         android:padding="12dp"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_close"
-        android:contentDescription="Close"
+        android:contentDescription="@string/close_cd"
         app:tint="@color/md3_primary" />
 
 </RelativeLayout>

@@ -141,7 +141,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                         startActivity(intent);
                     } catch (JSONException e) {
                         e.printStackTrace();
-                        Toast.makeText(SearchActivity.this, "Error opening post", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, getString(R.string.error_open_post), Toast.LENGTH_SHORT).show();
                     }
                 }
                 
@@ -173,7 +173,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 loadCurrentGroupMembers();
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Error loading chat data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_load_chat), Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -472,7 +472,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                         
                         if (filterDate != null) {
                             filterDate.setSelected(true);
-                            filterDate.setText("Date: " + filterDateFrom + " - " + filterDateTo);
+                            filterDate.setText(getString(R.string.search_filter_date_range, filterDateFrom, filterDateTo));
                         }
                         performSearchWithCurrentQuery();
                     },
@@ -567,7 +567,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
         if (filterHashtag != null) filterHashtag.setSelected(false);
         if (filterDate != null) {
             filterDate.setSelected(false);
-            filterDate.setText("Date Range");
+            filterDate.setText(getString(R.string.search_filter_date));
         }
     }
     
@@ -701,7 +701,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             showLoading(true);
             String token = sharedPrefsManager.getToken();
             if (token == null) {
-                Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                 finish();
                 return;
             }
@@ -713,7 +713,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
         
         String token = sharedPrefsManager.getToken();
         if (token == null) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -733,7 +733,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                     @Override
                     public void run() {
                         showLoading(false);
-                        Toast.makeText(SearchActivity.this, "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, getString(R.string.error_search_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -762,7 +762,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    Toast.makeText(SearchActivity.this, "Failed to search groups: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this, getString(R.string.error_group_search_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -804,18 +804,18 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                     groupResults.addAll(results);
                     applyGroupFilterWithCurrentQuery();
                 } else {
-                    Toast.makeText(this, "Group search failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_group_search), Toast.LENGTH_SHORT).show();
                 }
             } else if (statusCode == 401) {
-                Toast.makeText(this, "Session expired", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_session_expired), Toast.LENGTH_SHORT).show();
                 sharedPrefsManager.clearLoginInfo();
                 finish();
             } else {
-                Toast.makeText(this, "Failed to search groups", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_group_search), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error parsing search results", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_parse_search_results), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -832,23 +832,19 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 // Server returns: { "success": true, "data": { "users": [...] } }
                 JSONObject data = jsonResponse.getJSONObject("data");
                 JSONArray usersArray = data.getJSONArray("users");
-                searchResults.clear();
-                
+                java.util.ArrayList<User> users = new java.util.ArrayList<>();
                 for (int i = 0; i < usersArray.length(); i++) {
                     JSONObject userJson = usersArray.getJSONObject(i);
                     User user = User.fromJsonStatic(userJson);
-                    
-                    // Don't include current user in search results
                     if (!user.getId().equals(sharedPrefsManager.getUserId())) {
-                        searchResults.add(user);
+                        users.add(user);
                     }
                 }
-                
-                userAdapter.notifyDataSetChanged();
+                replaceUserSearchResults(users);
                 updateResultsVisibility();
                 
             } else if (statusCode == 401) {
-                Toast.makeText(this, "Session expired. Please login again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_session_expired), Toast.LENGTH_SHORT).show();
                 sharedPrefsManager.clearLoginInfo();
                 // Redirect to login
                 Intent intent = new Intent(this, LoginActivity.class);
@@ -863,7 +859,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error processing search results", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_process_search), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -872,7 +868,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
         
         String token = sharedPrefsManager.getToken();
         if (token == null) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -889,7 +885,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                         @Override
                         public void run() {
                             showLoading(false);
-                            Toast.makeText(SearchActivity.this, "Failed to create chat: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, getString(R.string.error_create_chat, e.getMessage()), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -910,7 +906,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             
         } catch (JSONException e) {
             showLoading(false);
-            Toast.makeText(this, "Error creating chat request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_create_chat_request), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -919,7 +915,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             JSONObject jsonResponse = new JSONObject(responseBody);
             
             if (statusCode == 200 || statusCode == 201) {
-                Toast.makeText(this, "Chat created with " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.chat_created_with, user.getDisplayName()), Toast.LENGTH_SHORT).show();
                 
                 // Open private chat activity
                 Intent intent = new Intent(this, PrivateChatActivity.class);
@@ -940,13 +936,13 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             }
             
         } catch (JSONException e) {
-            Toast.makeText(this, "Error processing response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
         }
     }
     
     private void showUserProfile(User user) {
         // TODO: Implement user profile view
-        Toast.makeText(this, "Profile: " + user.getDisplayName() + "\nEmail: " + user.getEmail(), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, getString(R.string.info_profile_detail, user.getDisplayName(), user.getEmail()), Toast.LENGTH_LONG).show();
     }
     
     
@@ -977,8 +973,17 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             } else {
                 tvSearchHint.setVisibility(View.GONE);
                 tvNoResults.setVisibility(View.VISIBLE);
-                String searchType = isSearchingPosts ? "posts" : (isSearchingGroups ? (isDiscoverGroups ? "public groups" : "your groups") : "users");
-                tvNoResultsTitle.setText("No " + searchType + " found for \"" + searchQuery + "\"");
+                String searchType;
+                if (isSearchingPosts) {
+                    searchType = getString(R.string.search_type_posts);
+                } else if (isSearchingGroups) {
+                    searchType = isDiscoverGroups
+                            ? getString(R.string.search_type_public_groups)
+                            : getString(R.string.search_type_your_groups);
+                } else {
+                    searchType = getString(R.string.search_type_users);
+                }
+                tvNoResultsTitle.setText(getString(R.string.search_no_results_for, searchType, searchQuery));
             }
             rvSearchResults.setVisibility(View.GONE);
         } else {
@@ -988,19 +993,47 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
         }
     }
     
-    @SuppressLint("NotifyDataSetChanged")
     private void clearSearchResults() {
         if (isSearchingPosts) {
+            int oldSize = postResults.size();
             postResults.clear();
-            if (postSearchAdapter != null) postSearchAdapter.notifyDataSetChanged();
+            if (postSearchAdapter != null && oldSize > 0) {
+                postSearchAdapter.notifyItemRangeRemoved(0, oldSize);
+            }
         } else if (isSearchingGroups) {
+            int oldSize = groupResults.size();
             groupResults.clear();
-            if (groupAdapter != null) groupAdapter.notifyDataSetChanged();
+            if (groupAdapter != null && oldSize > 0) {
+                groupAdapter.notifyItemRangeRemoved(0, oldSize);
+            }
         } else {
+            int oldSize = searchResults.size();
             searchResults.clear();
-            if (userAdapter != null) userAdapter.notifyDataSetChanged();
+            if (userAdapter != null && oldSize > 0) {
+                userAdapter.notifyItemRangeRemoved(0, oldSize);
+            }
         }
         updateResultsVisibility();
+    }
+
+    private void replaceUserSearchResults(java.util.List<User> users) {
+        int oldSize = searchResults.size();
+        searchResults.clear();
+        searchResults.addAll(users);
+        if (userAdapter == null) {
+            return;
+        }
+        int newSize = searchResults.size();
+        if (oldSize > newSize) {
+            userAdapter.notifyItemRangeRemoved(newSize, oldSize - newSize);
+        }
+        if (newSize > oldSize) {
+            userAdapter.notifyItemRangeInserted(oldSize, newSize - oldSize);
+        }
+        int overlap = Math.min(oldSize, newSize);
+        if (overlap > 0) {
+            userAdapter.notifyItemRangeChanged(0, overlap);
+        }
     }
 
     // UserSearchAdapter.OnUserClickListener implementations
@@ -1020,7 +1053,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
         showLoading(true);
         String token = sharedPrefsManager.getToken();
         if (token == null) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -1035,7 +1068,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
                         showLoading(false);
-                        Toast.makeText(SearchActivity.this, "Failed to create chat: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, getString(R.string.error_create_chat, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -1051,7 +1084,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
 
         } catch (JSONException e) {
             showLoading(false);
-            Toast.makeText(this, "Error creating chat request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_create_chat_request), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1075,7 +1108,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
-            Toast.makeText(this, "Error processing response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1098,13 +1131,13 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
     public void onRespondFriendRequest(User user, boolean accept) {
         String token = sharedPrefsManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         // We need friendRequestId, included from search response
         String requestId = user.getFriendRequestId();
         if (requestId == null || requestId.isEmpty()) {
-            Toast.makeText(this, "No friend request found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_no_friend_request), Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -1113,7 +1146,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             apiClient.respondToFriendRequest(token, requestId, accept ? "accept" : "reject", new okhttp3.Callback() {
                 @Override
                 public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                    runOnUiThread(() -> Toast.makeText(SearchActivity.this, "Failed to respond request", Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(SearchActivity.this, getString(R.string.error_respond_request), Toast.LENGTH_SHORT).show());
                 }
                 @Override
                 public void onResponse(okhttp3.Call call, okhttp3.Response response) {
@@ -1124,7 +1157,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                             String q = etSearch.getText().toString().trim();
                             if (q.length() >= 2) performSearch(q);
                         } else {
-                            Toast.makeText(SearchActivity.this, "Action failed", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, getString(R.string.error_action_failed), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -1136,7 +1169,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
         try {
             String token = sharedPrefsManager.getToken();
             if (token == null || token.isEmpty()) {
-                Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -1147,7 +1180,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(SearchActivity.this, "Failed to send friend request: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, getString(R.string.error_friend_request, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -1161,7 +1194,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             });
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error creating friend request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_create_friend_request), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -1174,28 +1207,28 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             JSONObject jsonResponse = new JSONObject(responseBody);
             
             if (statusCode == 200 || statusCode == 201) {
-                Toast.makeText(this, "Friend request sent to " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.friend_request_sent_to, user.getDisplayName()), Toast.LENGTH_SHORT).show();
             } else {
                 String message = jsonResponse.optString("message", "Failed to send friend request");
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error processing response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
         }
     }
     
     private void addMemberToGroup(User user) {
         if (currentChat == null) {
-            Toast.makeText(this, "Error: No group selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_no_group_selected), Toast.LENGTH_SHORT).show();
             return;
         }
         
-        Toast.makeText(this, "Adding " + user.getDisplayName() + " to group...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.adding_member, user.getDisplayName()), Toast.LENGTH_SHORT).show();
         
         String token = sharedPrefsManager.getToken();
         if (token == null) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -1210,7 +1243,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(SearchActivity.this, "Failed to add member: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, getString(R.string.error_add_member, e.getMessage()), Toast.LENGTH_SHORT).show();
                     });
                 }
 
@@ -1224,7 +1257,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             });
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error preparing member data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_prepare_member), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1240,7 +1273,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 }
                 updateResultsVisibility();
             } else if (statusCode == 401) {
-                Toast.makeText(this, "Session expired", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_session_expired), Toast.LENGTH_SHORT).show();
                 sharedPrefsManager.clearLoginInfo();
                 finish();
             } else {
@@ -1253,14 +1286,14 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Toast.makeText(this, "Error processing add member response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_add_member_response), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void loadUserGroups() {
         String token = sharedPrefsManager.getToken();
         if (token == null) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -1273,7 +1306,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    Toast.makeText(SearchActivity.this, "Failed to load groups: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this, getString(R.string.error_load_groups_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -1313,22 +1346,22 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 }
             } else if (statusCode == 401) {
-                Toast.makeText(this, "Session expired", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_session_expired), Toast.LENGTH_SHORT).show();
                 sharedPrefsManager.clearLoginInfo();
                 finish();
             } else {
-                Toast.makeText(this, "Failed to load groups", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_load_groups), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error parsing groups response", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_parse_groups), Toast.LENGTH_SHORT).show();
         }
     }
     
     private void loadDiscoverGroups() {
         String token = sharedPrefsManager.getToken();
         if (token == null) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -1338,7 +1371,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    Toast.makeText(SearchActivity.this, "Failed to load discover groups: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this, getString(R.string.error_load_discover_groups, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
 
@@ -1384,18 +1417,18 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                     // Apply current query filter after data loaded
                     applyGroupFilterWithCurrentQuery();
                 } else {
-                    Toast.makeText(this, "Failed to load groups", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_load_groups), Toast.LENGTH_SHORT).show();
                 }
             } else if (statusCode == 401) {
-                Toast.makeText(this, "Session expired", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_session_expired), Toast.LENGTH_SHORT).show();
                 sharedPrefsManager.clearLoginInfo();
                 finish();
             } else {
-                Toast.makeText(this, "Failed to load groups", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_load_groups), Toast.LENGTH_SHORT).show();
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error parsing groups", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_parse_groups), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1404,7 +1437,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
         if (isDiscoverGroups) {
             String token = sharedPrefsManager.getToken();
             if (token == null || token.isEmpty()) {
-                Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
                 return;
             }
             
@@ -1419,7 +1452,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 // Join directly
                 apiClient.joinGroup(token, group.getId(), new okhttp3.Callback() {
                     @Override public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                        runOnUiThread(() -> Toast.makeText(SearchActivity.this, "Join failed", Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(SearchActivity.this, getString(R.string.join_group_failed), Toast.LENGTH_SHORT).show());
                     }
                     @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                         String body = response.body().string();
@@ -1427,7 +1460,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                             try {
                                 org.json.JSONObject json = new org.json.JSONObject(body);
                                 if (response.code() == 200 && json.optBoolean("success", false)) {
-                                    Toast.makeText(SearchActivity.this, "Joined group", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SearchActivity.this, getString(R.string.join_group_success), Toast.LENGTH_SHORT).show();
                                     // Move group from discover to hidden (no longer eligible)
                                     groupResults.remove(group);
                                     groupAdapter.updateGroups(groupResults);
@@ -1436,7 +1469,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                                     Toast.makeText(SearchActivity.this, json.optString("message", "Join failed"), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (org.json.JSONException e) {
-                                Toast.makeText(SearchActivity.this, "Join failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SearchActivity.this, getString(R.string.join_group_failed), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -1445,7 +1478,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 // Request to join
                 apiClient.requestJoinGroup(token, group.getId(), new okhttp3.Callback() {
                     @Override public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                        runOnUiThread(() -> Toast.makeText(SearchActivity.this, "Request failed", Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(SearchActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show());
                     }
                     @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                         String body = response.body().string();
@@ -1453,7 +1486,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                             try {
                                 org.json.JSONObject json = new org.json.JSONObject(body);
                                 if ((response.code() == 200 || response.code() == 201) && json.optBoolean("success", false)) {
-                                    Toast.makeText(SearchActivity.this, "Requested to join", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SearchActivity.this, getString(R.string.join_request_sent), Toast.LENGTH_SHORT).show();
                                     // Update the object's joinRequestStatus so adapter shows "Cancel Request"
                                     group.setJoinRequestStatus("pending");
                                     applyGroupFilterWithCurrentQuery();
@@ -1461,7 +1494,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                                     Toast.makeText(SearchActivity.this, json.optString("message", "Request failed"), Toast.LENGTH_SHORT).show();
                                 }
                             } catch (org.json.JSONException e) {
-                                Toast.makeText(SearchActivity.this, "Request failed", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SearchActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -1481,7 +1514,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error opening group chat", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_open_group_chat), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -1497,7 +1530,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    Toast.makeText(SearchActivity.this, "Search failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this, getString(R.string.error_search_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -1571,7 +1604,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                     Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
                 }
             } else if (statusCode == 401) {
-                Toast.makeText(this, "Session expired. Please login again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_session_expired), Toast.LENGTH_SHORT).show();
                 sharedPrefsManager.clearLoginInfo();
                 Intent intent = new Intent(this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -1589,12 +1622,12 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             }
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error processing search results", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_process_search), Toast.LENGTH_SHORT).show();
         }
     }
     
     private void cancelJoinRequest(Chat group, String token) {
-        Toast.makeText(this, "Cancelling join request...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.join_request_cancelling), Toast.LENGTH_SHORT).show();
         
         // Call API to cancel join request
         apiClient.cancelJoinRequest(token, group.getId(), new okhttp3.Callback() {
@@ -1602,7 +1635,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
                 runOnUiThread(() -> {
                     android.util.Log.e("SearchActivity", "Cancel request failed: " + e.getMessage());
-                    Toast.makeText(SearchActivity.this, "Failed to cancel request: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SearchActivity.this, getString(R.string.error_cancel_request_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
             
@@ -1615,16 +1648,16 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                     try {
                         org.json.JSONObject json = new org.json.JSONObject(body);
                         if (response.code() == 200 && json.optBoolean("success", false)) {
-                            Toast.makeText(SearchActivity.this, "Join request cancelled", Toast.LENGTH_SHORT).show();
-                            // Update the object's joinRequestStatus to remove pending status
-                            group.setJoinRequestStatus(null); // Clear the status completely
-                            // Refresh the adapter to update UI
-                            groupAdapter.notifyDataSetChanged();
+                            Toast.makeText(SearchActivity.this, getString(R.string.join_request_cancelled), Toast.LENGTH_SHORT).show();
+                            group.setJoinRequestStatus(null);
+                            if (groupAdapter != null) {
+                                groupAdapter.notifyGroupItemChanged(group);
+                            }
                             updateResultsVisibility();
                         } else if (response.code() == 404 || response.code() == 405) {
                             // Server doesn't support DELETE for join requests, try alternative approach
                             android.util.Log.d("SearchActivity", "Server doesn't support DELETE, trying alternative");
-                            Toast.makeText(SearchActivity.this, "Server doesn't support cancel request yet", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this, getString(R.string.error_cancel_not_supported), Toast.LENGTH_SHORT).show();
                             // For now, just update UI locally
                             group.setJoinRequestStatus(null);
                             groupAdapter.notifyDataSetChanged();
@@ -1636,7 +1669,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                         }
                     } catch (org.json.JSONException e) {
                         android.util.Log.e("SearchActivity", "Error parsing cancel response: " + e.getMessage());
-                        Toast.makeText(SearchActivity.this, "Failed to cancel request", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchActivity.this, getString(R.string.error_cancel_join_request), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

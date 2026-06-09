@@ -18,35 +18,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Header floating -->
     <LinearLayout
         android:id="@+id/header_card"
+        style="@style/AppFlatHeader"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginTop="18dp"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:src="@drawable/ic_back"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:padding="11dp"
-            android:contentDescription="Back"
-            app:tint="@color/md3_primary" />
+        <include layout="@layout/component_back_button" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="@dimen/spacing_md"
             android:orientation="vertical"
             android:gravity="center_vertical">
 
@@ -56,9 +43,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textAppearance="@style/MidnightScreenTitle"
                 android:textColor="@color/md3_on_surface"
-                android:textSize="22sp"
-                android:textStyle="bold"
                 tools:text="My Awesome Group" />
 
             <TextView
@@ -74,14 +60,14 @@
 
     </LinearLayout>
 
-    <!-- Search floating -->
+    <!-- Inset search below flat header -->
     <LinearLayout
         android:id="@+id/search_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="@dimen/margin_mobile"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:layout_marginEnd="@dimen/margin_mobile"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/header_card"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,10 +75,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:layout_height="@dimen/search_bar_height"
             android:background="@drawable/bg_glass_search"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingStart="16dp"
             android:paddingEnd="16dp">
 
@@ -108,7 +94,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:hint="Search members..."
+                android:hint="@string/search_members_hint"
                 android:textSize="15sp"
                 android:textColor="@color/md3_on_surface"
                 android:textColorHint="@color/md3_on_surface_secondary"
@@ -126,10 +112,7 @@
         android:id="@+id/members_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="@dimen/spacing_sm"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/search_card"
         app:layout_constraintStart_toStartOf="parent"
@@ -151,51 +134,15 @@
 
     </LinearLayout>
 
-    <!-- Empty State -->
-    <LinearLayout
+    <include
         android:id="@+id/empty_state"
-        android:layout_width="0dp"
+        layout="@layout/component_empty_state"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="28dp"
-        android:orientation="vertical"
-        android:gravity="center"
         android:visibility="gone"
-        android:paddingStart="28dp"
-        android:paddingEnd="28dp"
-        android:paddingTop="34dp"
-        android:paddingBottom="34dp"
-        android:background="@drawable/bg_obsidian_card"
         app:layout_constraintTop_toTopOf="@id/members_card"
         app:layout_constraintBottom_toBottomOf="@id/members_card"
         app:layout_constraintStart_toStartOf="@id/members_card"
-        app:layout_constraintEnd_toEndOf="@id/members_card">
-
-        <ImageView
-            android:layout_width="68dp"
-            android:layout_height="68dp"
-            android:src="@drawable/ic_group_empty"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:padding="16dp"
-            android:layout_marginBottom="14dp"
-            app:tint="@color/md3_primary" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No members found"
-            android:textColor="@color/md3_on_surface"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add members to get started"
-            android:textColor="@color/md3_on_surface_secondary"
-            android:textSize="14sp" />
-
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="@id/members_card" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

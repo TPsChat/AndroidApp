@@ -17,16 +17,15 @@
         android:paddingEnd="20dp"
         android:paddingTop="22dp"
         android:paddingBottom="20dp"
-        android:background="@drawable/bg_obsidian_card">
+        android:background="@drawable/bg_glass_panel">
 
         <!-- Title -->
         <TextView
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            android:text="@string/dialog_title_placeholder"
+            android:textAppearance="@style/AppHeadlineSmall"
             android:textColor="@color/md3_on_surface"
             android:gravity="center"
             android:paddingStart="16dp"
@@ -39,9 +38,8 @@
             android:id="@+id/tv_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Message"
-            android:textSize="15sp"
-            android:textColor="@color/md3_on_surface"
+            android:text="@string/dialog_message_placeholder"
+            style="@style/AppBodyLarge"
             android:gravity="center"
             android:lineSpacingExtra="4dp"
             android:paddingStart="10dp"
@@ -60,17 +58,16 @@
             <Button
                 android:id="@+id/btn_negative"
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:minWidth="92dp"
-                android:text="Cancel"
+                android:text="@string/action_cancel"
                 android:textAllCaps="false"
                 android:textColor="@color/dialog_button_secondary_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:background="@drawable/bg_reject_button_modern"
-                android:backgroundTint="@null"
-                android:paddingStart="18dp"
-                android:paddingEnd="18dp" />
+                style="@style/DialogButton.Secondary"
+                android:paddingStart="@dimen/dialog_padding_h"
+                android:paddingEnd="@dimen/dialog_padding_h" />
 
             <Space
                 android:layout_width="10dp"
@@ -79,15 +76,14 @@
             <Button
                 android:id="@+id/btn_positive"
                 android:layout_width="wrap_content"
-                android:layout_height="42dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:minWidth="92dp"
-                android:text="OK"
+                android:text="@string/action_ok"
                 android:textAllCaps="false"
                 android:textColor="@color/dialog_button_filled_text"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:background="@drawable/bg_new_message_button"
-                android:backgroundTint="@null"
+                style="@style/DialogButton.Filled"
                 android:paddingStart="22dp"
                 android:paddingEnd="22dp" />
 

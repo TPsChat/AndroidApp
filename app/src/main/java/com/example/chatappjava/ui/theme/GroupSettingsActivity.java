@@ -87,7 +87,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
                         if (imageFile != null) {
                             uploadGroupAvatar(imageFile);
                         } else {
-                            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getString(R.string.error_failed_to_save_image), Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -100,7 +100,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
                 if (f != null) {
                     uploadGroupAvatar(f);
                 } else {
-                    Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.error_failed_to_load_image), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -126,7 +126,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
                 currentChat = Chat.fromJson(chatJsonObj);
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(this, "Error loading chat data", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_load_chat), Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
@@ -156,7 +156,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
         // Add click listener for disabled switch to show permission message
         switchPublic.setOnClickListener(v -> {
             if (!switchPublic.isEnabled()) {
-                Toast.makeText(this, "Only group creator and admins can change privacy settings", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.msg_only_group_creator_and_admins_can_change_privacy_settings), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -362,9 +362,9 @@ public class GroupSettingsActivity extends AppCompatActivity {
         TextView tvPrivacyDescription = findViewById(R.id.tv_privacy_description);
         if (tvPrivacyDescription != null) {
             if (hasManagementPermissions) {
-                tvPrivacyDescription.setText("When enabled, anyone can find and join this group. When disabled, only invited members can join.");
+                tvPrivacyDescription.setText(getString(R.string.group_public_help));
             } else {
-                tvPrivacyDescription.setText("Only group creator and admins can change privacy settings.");
+                tvPrivacyDescription.setText(getString(R.string.group_privacy_admin_only));
                 tvPrivacyDescription.setTextColor(getResources().getColor(com.example.chatappjava.R.color.text_white));
             }
         }
@@ -468,8 +468,8 @@ public class GroupSettingsActivity extends AppCompatActivity {
 
         tvName.setText(currentChat.getName());
         tvMembers.setText(currentChat.getParticipantCount() + " members");
-        tvCreated.setText("Created: " + (currentChat.getCreatedAt() != 0 ? new java.util.Date(currentChat.getCreatedAt()).toString() : "Unknown"));
-        tvGroupId.setText("ID: " + currentChat.getId());
+        tvCreated.setText(getString(R.string.group_created_label, currentChat.getCreatedAt() != 0 ? new java.util.Date(currentChat.getCreatedAt()).toString() : getString(R.string.group_created_unknown_short)));
+        tvGroupId.setText(getString(R.string.group_id_label, currentChat.getId()));
 
         // Avatar
         String avatarUrl = currentChat.getFullAvatarUrl();
@@ -488,7 +488,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
             android.content.ClipboardManager cm = (android.content.ClipboardManager) getSystemService(android.content.Context.CLIPBOARD_SERVICE);
             android.content.ClipData clip = android.content.ClipData.newPlainText("Group ID", currentChat.getId());
             cm.setPrimaryClip(clip);
-            Toast.makeText(this, "Copied group ID", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.success_copied_group_id), Toast.LENGTH_SHORT).show();
         });
 
         btnClose.setOnClickListener(v -> {
@@ -514,7 +514,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
             startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error opening contact selection", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_opening_contact_selection), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -527,7 +527,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
             startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error opening members list", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_opening_members_list), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -538,7 +538,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
             startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error opening join requests", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_opening_join_requests), Toast.LENGTH_SHORT).show();
         }
     }
     
@@ -554,7 +554,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
     private void leaveGroup() {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         apiClient.leaveGroup(token, currentChat.getId(), new Callback() {
@@ -562,17 +562,17 @@ public class GroupSettingsActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) {
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
-                        Toast.makeText(GroupSettingsActivity.this, "Left group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupSettingsActivity.this, getString(R.string.success_left_group), Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
-                        Toast.makeText(GroupSettingsActivity.this, "Failed to leave group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_failed_to_leave_group), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> Toast.makeText(GroupSettingsActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show());
             }
         });
     }
@@ -593,7 +593,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
     private void deleteGroup() {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -606,17 +606,17 @@ public class GroupSettingsActivity extends AppCompatActivity {
                 public void onResponse(Call call, Response response) {
                     runOnUiThread(() -> {
                         if (response.isSuccessful()) {
-                            Toast.makeText(GroupSettingsActivity.this, "Group deleted", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupSettingsActivity.this, getString(R.string.msg_group_deleted), Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
-                            Toast.makeText(GroupSettingsActivity.this, "Failed to delete group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_failed_to_delete_group), Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
 
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    runOnUiThread(() -> Toast.makeText(GroupSettingsActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    runOnUiThread(() -> Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show());
                 }
             });
         } else {
@@ -624,14 +624,14 @@ public class GroupSettingsActivity extends AppCompatActivity {
             if (currentChat != null) {
                 findGroupByNameAndDelete(token, currentChat.getName());
             } else {
-                Toast.makeText(this, "Cannot find group", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, getString(R.string.error_cannot_find_group), Toast.LENGTH_SHORT).show();
             }
         }
     }
     
     private void findGroupByNameAndDelete(String token, String groupName) {
         if (groupName == null || groupName.isEmpty()) {
-            Toast.makeText(this, "Cannot find group", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_cannot_find_group), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -676,10 +676,10 @@ public class GroupSettingsActivity extends AppCompatActivity {
                                                     public void onResponse(Call call, Response response) {
                                                         runOnUiThread(() -> {
                                                             if (response.isSuccessful()) {
-                                                                Toast.makeText(GroupSettingsActivity.this, "Group deleted", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(GroupSettingsActivity.this, getString(R.string.msg_group_deleted), Toast.LENGTH_SHORT).show();
                                                                 finish();
                                                             } else {
-                                                                Toast.makeText(GroupSettingsActivity.this, "Failed to delete group", Toast.LENGTH_SHORT).show();
+                                                                Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_failed_to_delete_group), Toast.LENGTH_SHORT).show();
                                                             }
                                                         });
                                                     }
@@ -687,7 +687,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onFailure(Call call, IOException e) {
                                                         runOnUiThread(() -> {
-                                                            Toast.makeText(GroupSettingsActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                                                         });
                                                     }
                                                 });
@@ -700,17 +700,17 @@ public class GroupSettingsActivity extends AppCompatActivity {
                         }
                         // If no exact match found, show error
                         runOnUiThread(() -> {
-                            Toast.makeText(GroupSettingsActivity.this, "Group not found", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_group_not_found), Toast.LENGTH_SHORT).show();
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
                         runOnUiThread(() -> {
-                            Toast.makeText(GroupSettingsActivity.this, "Error finding group", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_error_finding_group), Toast.LENGTH_SHORT).show();
                         });
                     }
                 } else {
                     runOnUiThread(() -> {
-                        Toast.makeText(GroupSettingsActivity.this, "Failed to find group", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_failed_to_find_group), Toast.LENGTH_SHORT).show();
                     });
                 }
             }
@@ -718,7 +718,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(GroupSettingsActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -727,7 +727,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
     private void updateGroupSettings(boolean isPublic) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
         
@@ -760,7 +760,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        Toast.makeText(GroupSettingsActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                         // Revert switch state safely
                         switchPublic.setChecked(!isPublic);
                         // Reset flag after update
@@ -770,7 +770,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
             });
         } catch (JSONException e) {
             e.printStackTrace();
-            Toast.makeText(this, "Error preparing request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_error_preparing_request), Toast.LENGTH_SHORT).show();
             // Revert switch state safely
             switchPublic.setChecked(!isPublic);
             // Reset flag after update
@@ -839,7 +839,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
         // Update title
         TextView titleView = dialogView.findViewById(R.id.title);
         if (titleView != null) {
-            titleView.setText("Change Group Avatar");
+            titleView.setText(getString(R.string.dialog_change_group_avatar_title));
         }
         
         // Hide file upload option for avatar change
@@ -887,10 +887,10 @@ public class GroupSettingsActivity extends AppCompatActivity {
     private void uploadGroupAvatar(File imageFile) {
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             return;
         }
-        Toast.makeText(this, "Uploading avatar...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.status_uploading_avatar), Toast.LENGTH_SHORT).show();
         apiClient.uploadGroupAvatar(token, currentChat.getId(), imageFile, new Callback() {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -903,15 +903,15 @@ public class GroupSettingsActivity extends AppCompatActivity {
                                 String avatarUrl = jsonResponse.getJSONObject("data").getString("avatarUrl");
                                 // Update current chat with new avatar URL
                                 currentChat.setAvatar(avatarUrl);
-                                Toast.makeText(GroupSettingsActivity.this, "Avatar updated successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupSettingsActivity.this, getString(R.string.success_avatar_updated_successfully), Toast.LENGTH_SHORT).show();
                                 // Refresh chat data from server
                                 refreshCurrentChatFromServer();
                             } else {
-                                Toast.makeText(GroupSettingsActivity.this, "Failed to upload avatar: " + jsonResponse.optString("message", "Unknown error"), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_upload_avatar_detail, jsonResponse.optString("message", getString(R.string.error_request_failed))), Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(GroupSettingsActivity.this, "Avatar updated", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupSettingsActivity.this, getString(R.string.msg_avatar_updated), Toast.LENGTH_SHORT).show();
                             // Still refresh even if parsing fails
                             refreshCurrentChatFromServer();
                         }
@@ -921,7 +921,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
                             String errorMsg = jsonResponse.optString("message", "Failed to upload avatar");
                             Toast.makeText(GroupSettingsActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
-                            Toast.makeText(GroupSettingsActivity.this, "Failed to upload avatar", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_failed_to_upload_avatar), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -929,7 +929,7 @@ public class GroupSettingsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call call, IOException e) {
-                runOnUiThread(() -> Toast.makeText(GroupSettingsActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(GroupSettingsActivity.this, getString(R.string.error_network_detail, e.getMessage()), Toast.LENGTH_SHORT).show());
             }
         });
     }

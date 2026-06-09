@@ -3,17 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_xs"
-    android:layout_marginTop="4dp"
-    android:layout_marginEnd="@dimen/spacing_xs"
-    android:layout_marginBottom="4dp"
     android:clipChildren="false"
     android:clipToPadding="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="210dp"
-        android:background="@drawable/bg_obsidian_card"
+        android:background="@drawable/bg_soft_inset"
         android:clipChildren="false"
         android:clipToPadding="false">
 
@@ -43,16 +39,17 @@
                     android:layout_width="112dp"
                     android:layout_height="112dp"
                     android:src="@drawable/ic_profile_placeholder"
-                    app:civ_border_color="@color/md3_border_glow"
-                    app:civ_border_width="2dp" />
+                    app:civ_border_color="@color/md3_border_subtle"
+                    app:civ_border_width="@dimen/avatar_border_width" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Camera Off"
-                    android:textColor="@color/text_muted"
-                    android:textSize="13sp"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:fontFamily="@font/plus_jakarta_sans"
+                    android:text="@string/call_camera_off"
+                    android:textColor="@color/md3_on_surface_secondary"
+                    android:textSize="@dimen/text_banner"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -62,7 +59,7 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_gravity="top|end"
-                android:layout_margin="10dp"
+                android:layout_margin="@dimen/spacing_sm"
                 android:background="@drawable/bg_icon_circle_dark"
                 android:padding="8dp"
                 android:src="@drawable/ic_signal"
@@ -76,8 +73,8 @@
                 android:background="@drawable/gradient_overlay"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingStart="12dp"
-                android:paddingEnd="10dp">
+                android:paddingStart="@dimen/spacing_sm"
+                android:paddingEnd="@dimen/spacing_sm">
 
                 <TextView
                     android:id="@+id/tv_participant_name"
@@ -85,10 +82,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ellipsize="end"
+                    android:fontFamily="@font/plus_jakarta_sans"
                     android:maxLines="1"
-                    android:text="User Name"
-                    android:textColor="@color/text_white"
-                    android:textSize="14sp"
+                    android:text="@string/settings_default_user"
+                    android:textColor="@color/md3_on_surface"
+                    android:textSize="@dimen/text_body_medium"
                     android:textStyle="bold" />
 
                 <ImageView

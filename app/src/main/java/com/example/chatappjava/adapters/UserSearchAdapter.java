@@ -84,7 +84,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Us
             tvDisplayName.setText(user.getDisplayName());
             
             if (!user.getUsername().equals(user.getDisplayName())) {
-                tvUsername.setText("@" + user.getUsername());
+                tvUsername.setText(itemView.getContext().getString(R.string.username_format, user.getUsername()));
                 tvUsername.setVisibility(View.VISIBLE);
             } else {
                 tvUsername.setVisibility(View.GONE);
@@ -121,7 +121,7 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Us
             
             if ("forward".equals(mode)) {
                 // Forward mode: show single Forward button
-                btnAddFriend.setText("Forward");
+                btnAddFriend.setText(itemView.getContext().getString(R.string.group_action_forward));
                 btnAddFriend.setVisibility(View.VISIBLE);
                 btnAddFriend.setEnabled(true);
                 btnAddFriend.setAlpha(1.0f);
@@ -130,13 +130,13 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Us
                 boolean isAlreadyMember = currentGroupMemberIds != null && currentGroupMemberIds.contains(user.getId());
                 
                 if (isAlreadyMember) {
-                    btnAddFriend.setText("Already a Member");
+                    btnAddFriend.setText(itemView.getContext().getString(R.string.user_search_already_member));
                     btnAddFriend.setVisibility(View.VISIBLE);
                     btnAddFriend.setEnabled(false);
                     btnAddFriend.setAlpha(0.6f);
                     btnSecondary.setVisibility(View.GONE);
                 } else {
-                    btnAddFriend.setText("Add to Group");
+                    btnAddFriend.setText(itemView.getContext().getString(R.string.user_search_add_to_group));
                     btnAddFriend.setVisibility(View.VISIBLE);
                     btnAddFriend.setEnabled(true);
                     btnAddFriend.setAlpha(1.0f);
@@ -144,31 +144,31 @@ public class UserSearchAdapter extends RecyclerView.Adapter<UserSearchAdapter.Us
                 }
             } else {
                 if (user.isFriend()) {
-                    btnAddFriend.setText("Chat");
+                    btnAddFriend.setText(itemView.getContext().getString(R.string.user_search_chat));
                     btnAddFriend.setVisibility(View.VISIBLE);
                     btnAddFriend.setEnabled(true);
                     btnAddFriend.setAlpha(1.0f);
                     btnSecondary.setVisibility(View.GONE);
                 } else if ("received".equals(frStatus)) {
-                    btnAddFriend.setText("Accept");
+                    btnAddFriend.setText(itemView.getContext().getString(R.string.action_accept));
                     btnAddFriend.setVisibility(View.VISIBLE);
                     btnAddFriend.setEnabled(true);
                     btnAddFriend.setAlpha(1.0f);
-                    btnSecondary.setText("Reject");
+                    btnSecondary.setText(itemView.getContext().getString(R.string.action_reject));
                     btnSecondary.setVisibility(View.VISIBLE);
                 } else if ("sent".equals(frStatus) || "pending".equals(frStatus)) {
-                    btnAddFriend.setText("Pending");
+                    btnAddFriend.setText(itemView.getContext().getString(R.string.status_pending));
                     btnAddFriend.setVisibility(View.VISIBLE);
                     btnAddFriend.setEnabled(false);
                     btnAddFriend.setAlpha(0.6f);
-                    btnSecondary.setText("Chat");
+                    btnSecondary.setText(itemView.getContext().getString(R.string.user_search_chat));
                     btnSecondary.setVisibility(View.VISIBLE);
                 } else {
-                    btnAddFriend.setText("Chat");
+                    btnAddFriend.setText(itemView.getContext().getString(R.string.user_search_chat));
                     btnAddFriend.setVisibility(View.VISIBLE);
                     btnAddFriend.setEnabled(true);
                     btnAddFriend.setAlpha(1.0f);
-                    btnSecondary.setText("Add Friend");
+                    btnSecondary.setText(itemView.getContext().getString(R.string.user_search_add_friend));
                     btnSecondary.setVisibility(View.VISIBLE);
                 }
             }
