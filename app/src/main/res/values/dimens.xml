@@ -28,4 +28,11 @@
     <dimen name="nav_bar_height">64dp</dimen>
     <dimen name="search_bar_height">48dp</dimen>
     <dimen name="header_height">56dp</dimen>
+    <dimen name="touch_target_min">48dp</dimen>
+    <dimen name="chat_screen_margin">@dimen/margin_mobile</dimen>
+    <dimen name="text_timestamp">12sp</dimen>
+    <dimen name="chat_messages_margin_top">10dp</dimen>
+    <dimen name="chat_input_margin_bottom">14dp</dimen>
+    <dimen name="chat_scroll_chip_margin">14dp</dimen>
+    <dimen name="send_button_size">48dp</dimen>
 </resources>

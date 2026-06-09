@@ -13,19 +13,19 @@
         android:layout_height="0dp"
         android:alpha="0.12"
         android:scaleType="centerCrop"
+        android:importantForAccessibility="no"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Header floating, không có bar nền -->
     <LinearLayout
         android:id="@+id/header_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginStart="@dimen/chat_screen_margin"
+        android:layout_marginEnd="@dimen/chat_screen_margin"
+        android:layout_marginTop="@dimen/chat_screen_margin"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
@@ -34,20 +34,21 @@
 
         <ImageView
             android:id="@+id/iv_back"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:padding="11dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:padding="12dp"
             android:src="@drawable/ic_back"
             android:background="@drawable/bg_icon_circle_dark"
-            android:contentDescription="Back"
+            android:contentDescription="@string/back_button_description"
             app:tint="@color/md3_primary" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_profile"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="12dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_marginStart="@dimen/spacing_sm"
             android:src="@android:drawable/ic_menu_view"
+            android:contentDescription="@string/open_profile_cd"
             app:civ_border_color="@color/md3_border_glow"
             app:civ_border_width="1.5dp" />
 
@@ -55,79 +56,85 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="@dimen/spacing_sm"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_chat_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/henry_arthur_name"
+                android:text="@string/username"
                 android:textColor="@color/md3_on_surface"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_body_large"
                 android:textStyle="bold"
                 android:maxLines="1"
-                android:ellipsize="end" />
+                android:ellipsize="end"
+                tools:text="Contact name" />
 
             <TextView
+                android:id="@+id/tv_chat_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Typing..."
+                android:text="@string/chat_status_direct"
                 android:textColor="@color/md3_on_surface_secondary"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp" />
+                android:textSize="@dimen/text_label_small"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:visibility="gone"
+                tools:visibility="visible" />
 
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/iv_video_call"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_marginEnd="@dimen/spacing_xs"
             android:background="@drawable/bg_icon_circle_dark"
             android:contentDescription="@string/video_call_description"
             android:src="@drawable/ic_video_call"
-            android:padding="10dp"
+            android:padding="12dp"
             android:scaleType="centerInside"
             app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_cancel_call"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_marginEnd="@dimen/spacing_xs"
             android:background="@drawable/bg_icon_circle_dark"
-            android:contentDescription="Cancel call"
+            android:contentDescription="@string/cancel_call_description"
             android:src="@drawable/ic_decline_call"
-            android:padding="10dp"
+            android:padding="12dp"
             android:scaleType="centerInside"
             android:visibility="gone"
             app:tint="@color/md3_primary" />
 
         <ImageButton
             android:id="@+id/iv_more"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
             android:background="@drawable/bg_icon_circle_dark"
             android:contentDescription="@string/more_options_description"
             android:src="@drawable/ic_more_feedback"
-            android:padding="10dp"
+            android:padding="12dp"
             app:tint="@color/md3_secondary" />
 
     </LinearLayout>
 
-    <!-- Offline Indicator -->
     <LinearLayout
         android:id="@+id/offline_indicator"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="18dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="@dimen/chat_screen_margin"
+        android:layout_marginTop="@dimen/spacing_xs"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="12dp"
+        android:padding="@dimen/spacing_sm"
         android:visibility="gone"
         android:background="@drawable/bg_indicator_error"
+        android:contentDescription="@string/offline_connection_description"
         app:layout_constraintTop_toBottomOf="@id/header_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -135,34 +142,35 @@
         <ImageView
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/spacing_xs"
             android:src="@android:drawable/ic_dialog_alert"
+            android:importantForAccessibility="no"
             app:tint="@color/md3_primary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No Internet Connection"
+            android:text="@string/offline_connection_title"
             android:textColor="@color/md3_on_surface"
             android:textSize="13sp"
             android:textStyle="bold" />
 
     </LinearLayout>
 
-    <!-- Summarize Button -->
     <LinearLayout
         android:id="@+id/summarize_indicator"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="18dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="@dimen/chat_screen_margin"
+        android:layout_marginTop="@dimen/spacing_xs"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="12dp"
+        android:padding="@dimen/spacing_sm"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/bg_indicator_primary"
+        android:contentDescription="@string/summarize_chat_description"
         app:layout_constraintTop_toBottomOf="@id/offline_indicator"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -170,34 +178,35 @@
         <ImageView
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/spacing_xs"
             android:src="@android:drawable/ic_menu_sort_by_size"
+            android:importantForAccessibility="no"
             app:tint="@color/md3_on_surface" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Summarize Chat"
+            android:text="@string/summarize_chat_title"
             android:textColor="@color/md3_on_surface"
             android:textSize="13sp"
             android:textStyle="bold" />
 
     </LinearLayout>
 
-    <!-- Group Call Active Notification -->
     <LinearLayout
         android:id="@+id/group_call_notification"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="18dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="@dimen/chat_screen_margin"
+        android:layout_marginTop="@dimen/spacing_xs"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="12dp"
+        android:padding="@dimen/spacing_sm"
         android:visibility="gone"
         android:clickable="true"
         android:focusable="true"
         android:background="@drawable/bg_indicator_primary"
+        android:contentDescription="@string/group_call_notification_description"
         app:layout_constraintTop_toBottomOf="@id/summarize_indicator"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -205,8 +214,9 @@
         <ImageView
             android:layout_width="18dp"
             android:layout_height="18dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/spacing_xs"
             android:src="@drawable/ic_video_call"
+            android:importantForAccessibility="no"
             app:tint="@color/md3_on_surface" />
 
         <TextView
@@ -214,7 +224,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Group video call in progress"
+            android:text="@string/group_call_in_progress"
             android:textColor="@color/md3_on_surface"
             android:textSize="13sp"
             android:textStyle="bold" />
@@ -222,9 +232,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="TAP TO JOIN"
+            android:text="@string/tap_to_join"
             android:textColor="@color/md3_on_surface"
-            android:textSize="11sp"
+            android:textSize="@dimen/text_label_small"
             android:textStyle="bold"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
@@ -234,14 +244,13 @@
 
     </LinearLayout>
 
-    <!-- Messages Area -->
     <LinearLayout
         android:id="@+id/messages_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="@dimen/spacing_sm"
+        android:layout_marginTop="@dimen/chat_messages_margin_top"
+        android:layout_marginBottom="@dimen/spacing_xs"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/group_call_notification"
         app:layout_constraintBottom_toTopOf="@id/reply_bar"
@@ -268,22 +277,64 @@
                 android:paddingBottom="10dp"
                 android:scrollbars="none" />
 
+            <LinearLayout
+                android:id="@+id/tv_messages_empty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/spacing_lg"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chat_empty_title"
+                    android:textColor="@color/md3_on_surface"
+                    android:textSize="@dimen/text_headline_small"
+                    android:textStyle="bold"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_xs"
+                    android:text="@string/chat_empty_subtitle"
+                    android:textColor="@color/md3_on_surface_secondary"
+                    android:textSize="@dimen/text_body_medium"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_scroll_to_bottom"
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="bottom|end"
-                android:layout_margin="14dp"
-                android:text="↓ Tin nhắn mới"
+                android:layout_margin="@dimen/chat_scroll_chip_margin"
+                android:minWidth="@dimen/touch_target_min"
+                android:minHeight="@dimen/touch_target_min"
+                android:text="@string/scroll_to_new_messages"
                 android:textColor="@color/md3_on_surface"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_label_small"
                 android:textAllCaps="false"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:background="@drawable/bg_new_message_button"
+                android:paddingStart="@dimen/chat_scroll_chip_margin"
+                android:paddingEnd="@dimen/chat_scroll_chip_margin"
+                android:background="@drawable/bg_chat_chip"
+                android:contentDescription="@string/scroll_to_bottom_description"
+                android:visibility="gone" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:visibility="gone"
-                android:minWidth="0dp"
-                android:minHeight="0dp" />
+                android:indeterminateTint="@color/md3_primary"
+                android:contentDescription="@string/uploading_file" />
 
         </FrameLayout>
 
@@ -291,43 +342,44 @@
             android:id="@+id/typing_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="@dimen/spacing_sm"
             android:layout_marginBottom="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
+            android:paddingStart="@dimen/spacing_sm"
+            android:paddingEnd="@dimen/spacing_sm"
+            android:paddingTop="@dimen/spacing_xs"
+            android:paddingBottom="@dimen/spacing_xs"
             android:visibility="gone"
-            android:background="@drawable/bg_new_message_button">
+            android:background="@drawable/bg_chat_chip"
+            android:contentDescription="@string/chat_status_typing">
 
             <ProgressBar
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginEnd="@dimen/spacing_xs"
+                android:importantForAccessibility="no" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Typing..."
-                android:textColor="@color/md3_on_primary"
+                android:text="@string/chat_status_typing"
+                android:textColor="@color/md3_on_surface_secondary"
                 android:textSize="13sp" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Reply Bar -->
     <LinearLayout
         android:id="@+id/reply_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="18dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginHorizontal="@dimen/chat_screen_margin"
+        android:layout_marginBottom="@dimen/spacing_xs"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:padding="12dp"
+        android:padding="@dimen/spacing_sm"
         android:background="@drawable/bg_reply_bar_dark"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
@@ -335,25 +387,21 @@
         app:layout_constraintBottom_toTopOf="@id/message_input_card"
         app:layout_constraintTop_toBottomOf="@id/messages_card">
 
-        <View
-            android:layout_width="3dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/bg_reply_line" />
-
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@drawable/bg_message_reply_received"
+            android:padding="@dimen/spacing_xs">
 
             <TextView
                 android:id="@+id/tv_reply_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_label_small"
                 android:textStyle="bold"
-                android:textColor="@color/text_white"
+                android:textColor="@color/text_accent"
                 tools:text="Alice" />
 
             <TextView
@@ -362,33 +410,32 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:textSize="12sp"
-                android:textColor="@color/md3_on_surface"
+                android:textSize="@dimen/text_label_small"
+                android:textColor="@color/md3_on_surface_secondary"
                 tools:text="Previous message content preview" />
 
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/iv_reply_close"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_marginStart="@dimen/spacing_xs"
             android:background="@drawable/bg_icon_circle_dark"
-            android:contentDescription="Close reply"
+            android:contentDescription="@string/close_reply_description"
             android:src="@drawable/ic_close"
-            android:padding="9dp"
+            android:padding="12dp"
             app:tint="@color/md3_secondary" />
 
     </LinearLayout>
 
-    <!-- Message Input floating -->
-    <!-- Message Input floating -->
     <LinearLayout
         android:id="@+id/message_input_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="14dp"
+        android:layout_marginStart="@dimen/chat_screen_margin"
+        android:layout_marginEnd="@dimen/chat_screen_margin"
+        android:layout_marginBottom="@dimen/chat_input_margin_bottom"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -401,25 +448,24 @@
             android:gravity="center_vertical"
             android:background="@android:color/transparent">
 
-            <!-- Ô nhập tin nhắn dạng pill có đổ bóng -->
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="56dp"
+                android:layout_height="@dimen/touch_target_min"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
+                android:paddingStart="@dimen/spacing_xs"
+                android:paddingEnd="@dimen/spacing_xs"
                 android:background="@drawable/bg_soft_inset">
 
                 <ImageButton
                     android:id="@+id/iv_sticker"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="@dimen/touch_target_min"
+                    android:layout_height="@dimen/touch_target_min"
                     android:background="@drawable/bg_icon_circle_transparent"
                     android:contentDescription="@string/send_sticker_description"
                     android:src="@drawable/ic_emoji_smile"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     app:tint="@color/md3_primary" />
 
                 <EditText
@@ -429,46 +475,44 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical"
-                    android:hint="Type a message"
+                    android:hint="@string/message_hint"
                     android:inputType="textCapSentences|textMultiLine"
                     android:maxLines="4"
                     android:minHeight="40dp"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp"
+                    android:paddingStart="@dimen/spacing_xs"
+                    android:paddingEnd="@dimen/spacing_xs"
                     android:textColor="@color/md3_on_surface"
                     android:textColorHint="@color/md3_on_surface_secondary"
                     android:textCursorDrawable="@null"
-                    android:textSize="14sp" />
+                    android:textSize="@dimen/text_body_medium" />
 
                 <ImageButton
                     android:id="@+id/iv_attach"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="@dimen/touch_target_min"
+                    android:layout_height="@dimen/touch_target_min"
                     android:background="@drawable/bg_icon_circle_transparent"
                     android:contentDescription="@string/attach_file_description"
                     android:src="@android:drawable/ic_menu_gallery"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     app:tint="@color/md3_primary" />
 
-                <!-- Nút mic nằm bên trong -->
                 <ImageButton
                     android:id="@+id/record_audio_button"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="@dimen/touch_target_min"
+                    android:layout_height="@dimen/touch_target_min"
                     android:background="@drawable/bg_icon_circle_transparent"
                     android:contentDescription="@string/record_audio_description"
                     android:src="@drawable/ic_mic_voice"
-                    android:padding="8dp"
+                    android:padding="12dp"
                     app:tint="@color/md3_primary" />
 
             </LinearLayout>
 
-            <!-- Nút send nằm bên ngoài -->
             <ImageButton
                 android:id="@+id/iv_send"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="10dp"
+                android:layout_width="@dimen/send_button_size"
+                android:layout_height="@dimen/send_button_size"
+                android:layout_marginStart="@dimen/chat_messages_margin_top"
                 android:background="@drawable/bg_send_circle_modern"
                 android:contentDescription="@string/send_message_description"
                 android:src="@drawable/ic_send"

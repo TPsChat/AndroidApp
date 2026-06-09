@@ -329,6 +329,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         View container = itemView.findViewById(R.id.fl_sent_image_container);
                         if (container != null) container.setVisibility(View.VISIBLE);
                         ivSentImage.setVisibility(View.VISIBLE);
+                        ivSentImage.setContentDescription(context.getString(R.string.image_message_sent_description));
                         // Set dynamic image size
                         setImageSize(ivSentImage, context);
                         // Load image using Picasso
@@ -545,6 +546,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         View container = itemView.findViewById(R.id.fl_received_image_container);
                         if (container != null) container.setVisibility(View.VISIBLE);
                         ivReceivedImage.setVisibility(View.VISIBLE);
+                        String senderLabel = message.getSenderDisplayName();
+                        if (senderLabel == null || senderLabel.isEmpty()) {
+                            senderLabel = context.getString(R.string.username);
+                        }
+                        ivReceivedImage.setContentDescription(
+                            context.getString(R.string.image_message_received_description, senderLabel));
                         // Set dynamic image size
                         setImageSize(ivReceivedImage, context);
                         // Load image using Picasso
@@ -914,6 +921,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 badgeView.setImageBitmap(bmp);
                 badgeView.setTag(topEmoji);
                 badgeView.setVisibility(View.VISIBLE);
+                badgeView.setContentDescription(context.getString(R.string.reaction_badge_description, topEmoji));
             } catch (Exception ignored) {
                 badgeView.setTag(null);
                 badgeView.setVisibility(View.GONE);

@@ -54,6 +54,11 @@ public class SocketManager {
         void onMessageDeleted(org.json.JSONObject messageMetaJson);
         void onReactionUpdated(org.json.JSONObject reactionJson);
     }
+
+    public interface TypingListener {
+        void onUserTyping(String chatId, String userId, String username);
+        void onUserStopTyping(String chatId, String userId);
+    }
     
     // Realtime sync event listeners
     public interface RealtimeSyncListener {
@@ -68,6 +73,7 @@ public class SocketManager {
     private CallRoomListener callRoomListener;
     private MemberRemovedListener memberRemovedListener;
     private MessageListener messageListener; // legacy single-listener (kept for backward compatibility)
+    private TypingListener typingListener;
 
     // New: support multiple listeners for message to avoid clobbering between screens
     private final java.util.List<MessageListener> messageListeners = new java.util.concurrent.CopyOnWriteArrayList<>();
@@ -448,6 +454,20 @@ public class SocketManager {
                 }
             }
         });
+
+        socket.on("user_typing", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                notifyTypingEvent(args, true);
+            }
+        });
+
+        socket.on("user_stop_typing", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                notifyTypingEvent(args, false);
+            }
+        });
         
         // Realtime sync events
         socket.on("new_post", new Emitter.Listener() {
@@ -500,6 +520,62 @@ public class SocketManager {
         });
     }
     
+    private void notifyTypingEvent(Object[] args, boolean isTyping) {
+        if (typingListener == null || args == null || args.length == 0) {
+            return;
+        }
+        try {
+            JSONObject data = (JSONObject) args[0];
+            String chatId = data.optString("chatId", "");
+            String userId = data.optString("userId", data.optString("_id", ""));
+            if (chatId.isEmpty() || userId.isEmpty()) {
+                return;
+            }
+            if (isTyping) {
+                String username = data.optString("username", data.optString("displayName", ""));
+                typingListener.onUserTyping(chatId, userId, username);
+            } else {
+                typingListener.onUserStopTyping(chatId, userId);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error parsing typing event", e);
+        }
+    }
+
+    public void emitTyping(String chatId) {
+        if (socket == null || !isConnected || chatId == null || chatId.isEmpty()) {
+            return;
+        }
+        try {
+            JSONObject data = new JSONObject();
+            data.put("chatId", chatId);
+            socket.emit("typing", data);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error emitting typing", e);
+        }
+    }
+
+    public void emitStopTyping(String chatId) {
+        if (socket == null || !isConnected || chatId == null || chatId.isEmpty()) {
+            return;
+        }
+        try {
+            JSONObject data = new JSONObject();
+            data.put("chatId", chatId);
+            socket.emit("stop_typing", data);
+        } catch (JSONException e) {
+            Log.e(TAG, "Error emitting stop_typing", e);
+        }
+    }
+
+    public void setTypingListener(TypingListener listener) {
+        this.typingListener = listener;
+    }
+
+    public void removeTypingListener() {
+        this.typingListener = null;
+    }
+
     /**
      * Set realtime sync listener
      */

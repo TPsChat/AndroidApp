@@ -6,7 +6,7 @@
         android:right="2dp"
         android:bottom="1dp">
         <shape>
-            <solid android:color="#1A2563EB" />
+            <solid android:color="@color/md3_ripple" />
             <corners android:radius="@dimen/radius_pill" />
         </shape>
     </item>

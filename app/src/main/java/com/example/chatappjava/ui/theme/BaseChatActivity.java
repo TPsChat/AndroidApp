@@ -69,8 +69,10 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -90,6 +92,8 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected ImageView ivBack;
     protected CircleImageView ivProfile;
     protected TextView tvChatName;
+    protected TextView tvChatStatus;
+    protected View tvMessagesEmpty;
     protected ImageView ivMore, ivSend, ivAttachment, ivEmoji, ivGallery, ivVideoCall, ivRecordAudio;
     protected EditText etMessage;
     protected RecyclerView rvMessages;
@@ -155,6 +159,16 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     // Block state for private chats
     protected boolean isBlockedByMe = false;
     protected boolean hasBlockedMe = false;
+
+    // Typing indicator state
+    protected View typingIndicator;
+    protected CharSequence statusSubtitleDefault;
+    private final Map<String, String> remoteTypingUsers = new HashMap<>();
+    private final Handler typingHandler = new Handler(Looper.getMainLooper());
+    private Runnable emitTypingRunnable;
+    private Runnable emitStopTypingRunnable;
+    private boolean isLocalTypingActive = false;
+    private int activeUploadCount = 0;
     
     // Gallery and camera constants
     private static final int REQUEST_CODE_CAMERA_PERMISSION = 1003;
@@ -459,8 +473,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             return;
         }
         
-        // Show loading message
-        Toast.makeText(this, "Uploading image to server...", Toast.LENGTH_SHORT).show();
+        setUploadInProgress(true);
         
         try {
             // Convert URI to File
@@ -487,11 +500,13 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 // Pass original gallery Uri so UI can display instantly without flicker
                 uploadImageToServer(imageFile, imageUri);
             } else {
+                setUploadInProgress(false);
                 Toast.makeText(this, "Cannot read image file", Toast.LENGTH_SHORT).show();
             }
             
         } catch (Exception e) {
             e.printStackTrace();
+            setUploadInProgress(false);
             Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show();
         }
     }
@@ -502,8 +517,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             return;
         }
         
-        // Show loading message
-        Toast.makeText(this, "Uploading image to server...", Toast.LENGTH_SHORT).show();
+        setUploadInProgress(true);
         
         // Convert Bitmap to a temporary file for upload
         try {
@@ -521,6 +535,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             
         } catch (Exception e) {
             e.printStackTrace();
+            setUploadInProgress(false);
             Toast.makeText(this, "Error processing image", Toast.LENGTH_SHORT).show();
         }
     }
@@ -531,8 +546,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             return;
         }
         
-        // Show loading message
-        Toast.makeText(this, "Uploading file to server...", Toast.LENGTH_SHORT).show();
+        setUploadInProgress(true);
         
         try {
             // Get file info
@@ -554,6 +568,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 
                 // Check file size limit (50MB)
                 if (fileSize > 50 * 1024 * 1024) {
+                    setUploadInProgress(false);
                     Toast.makeText(this, "File size too large. Maximum 50MB allowed.", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -564,11 +579,13 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 uploadFileToServer(fileUri, fileName, mimeType, fileSize);
                 
             } else {
+                setUploadInProgress(false);
                 Toast.makeText(this, "Cannot read file information", Toast.LENGTH_SHORT).show();
             }
             
         } catch (Exception e) {
             e.printStackTrace();
+            setUploadInProgress(false);
             Toast.makeText(this, "Error processing file", Toast.LENGTH_SHORT).show();
         }
     }
@@ -580,6 +597,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         
         if (currentChat == null) {
             android.util.Log.e("BaseChatActivity", "uploadImageToServer: currentChat is null");
+            setUploadInProgress(false);
             Toast.makeText(this, "Chat not available", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -587,6 +605,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
             android.util.Log.e("BaseChatActivity", "uploadImageToServer: token is null or empty");
+            setUploadInProgress(false);
             Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -602,14 +621,12 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 android.util.Log.d("BaseChatActivity", "Upload response: " + response.code() + " - " + responseBody);
                 
                 runOnUiThread(() -> {
-                    if (response.isSuccessful()) {
-                        try {
+                    try {
+                        if (response.isSuccessful()) {
                             org.json.JSONObject jsonResponse = new org.json.JSONObject(responseBody);
                             if (jsonResponse.optBoolean("success", false)) {
-                                // Get image URL from server response
                                 String imageUrl = jsonResponse.optString("imageUrl", "");
                                 if (!imageUrl.isEmpty()) {
-                                    // Send image message with local URI for zoom
                                     sendImageMessage(imageUrl, localUri);
                                 } else {
                                     Toast.makeText(BaseChatActivity.this, "Failed to receive image URL from server", Toast.LENGTH_SHORT).show();
@@ -618,12 +635,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                 String errorMsg = jsonResponse.optString("message", "Upload failed");
                                 Toast.makeText(BaseChatActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                             }
-                        } catch (org.json.JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(BaseChatActivity.this, "Error processing server response", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(BaseChatActivity.this, "Upload failed: " + response.code(), Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(BaseChatActivity.this, "Upload failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                    } catch (org.json.JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(BaseChatActivity.this, "Error processing server response", Toast.LENGTH_SHORT).show();
+                    } finally {
+                        setUploadInProgress(false);
                     }
                 });
             }
@@ -631,19 +650,24 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
                 android.util.Log.e("BaseChatActivity", "Upload failed: " + e.getMessage());
-                runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> {
+                    setUploadInProgress(false);
+                    Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }
 
     protected void uploadFileToServer(Uri fileUri, String fileName, String mimeType, long fileSize) {
         if (currentChat == null) {
+            setUploadInProgress(false);
             Toast.makeText(this, "Chat not available", Toast.LENGTH_SHORT).show();
             return;
         }
         
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
+            setUploadInProgress(false);
             Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -672,6 +696,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         final java.io.File fileToUpload = (uploadTempFile != null && uploadTempFile.exists()) ? uploadTempFile : null;
 
         if (fileToUpload == null) {
+            setUploadInProgress(false);
             Toast.makeText(this, "Unable to access selected file. Please try again.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -684,11 +709,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 android.util.Log.d("BaseChatActivity", "File upload response: " + response.code() + " - " + responseBody);
                 
                 runOnUiThread(() -> {
-                    if (response.isSuccessful()) {
-                        try {
+                    try {
+                        if (response.isSuccessful()) {
                             org.json.JSONObject jsonResponse = new org.json.JSONObject(responseBody);
                             if (jsonResponse.optBoolean("success", false)) {
-                                // Get file URL from server response
                                 String fileUrl = jsonResponse.optString("fileUrl", "");
                                 String serverFileName = jsonResponse.optString("fileName", "");
                                 String originalName = jsonResponse.optString("originalName", fileName);
@@ -696,7 +720,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                 String serverMimeType = jsonResponse.optString("mimeType", mimeType);
                                 
                                 if (!fileUrl.isEmpty()) {
-                                    // Send file message
                                     sendFileMessage(fileUrl, serverFileName, originalName, serverMimeType, serverFileSize);
                                 } else {
                                     Toast.makeText(BaseChatActivity.this, "Failed to receive file URL from server", Toast.LENGTH_SHORT).show();
@@ -705,12 +728,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                 String errorMsg = jsonResponse.optString("message", "Upload failed");
                                 Toast.makeText(BaseChatActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                             }
-                        } catch (org.json.JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(BaseChatActivity.this, "Error processing server response", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(BaseChatActivity.this, "Upload failed: " + response.code(), Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(BaseChatActivity.this, "Upload failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                    } catch (org.json.JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(BaseChatActivity.this, "Error processing server response", Toast.LENGTH_SHORT).show();
+                    } finally {
+                        setUploadInProgress(false);
                     }
                 });
             }
@@ -718,7 +743,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             @Override
             public void onFailure(okhttp3.Call call, java.io.IOException e) {
                 android.util.Log.e("BaseChatActivity", "File upload failed: " + e.getMessage());
-                runOnUiThread(() -> Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> {
+                    setUploadInProgress(false);
+                    Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
             }
         };
 
@@ -1236,7 +1264,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             return;
         }
         
-        Toast.makeText(this, "Uploading voice message...", Toast.LENGTH_SHORT).show();
+        setUploadInProgress(true);
         
         String fileName = "voice_" + System.currentTimeMillis() + ".m4a";
         String mimeType = "audio/mp4";
@@ -1256,8 +1284,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                 if (jsonResponse.optBoolean("success", false)) {
                                     String fileUrl = jsonResponse.optString("fileUrl", "");
                                     String serverFileName = jsonResponse.optString("fileName", fileName);
-                                    
-                                    // Send voice message
                                     sendVoiceMessage(fileUrl, serverFileName, fileName, mimeType, fileSize);
                                 } else {
                                     String errorMsg = jsonResponse.optString("message", "Failed to upload voice message");
@@ -1270,6 +1296,8 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                         } catch (org.json.JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(BaseChatActivity.this, "Error processing upload response", Toast.LENGTH_SHORT).show();
+                        } finally {
+                            setUploadInProgress(false);
                         }
                     });
                 }
@@ -1277,6 +1305,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 @Override
                 public void onFailure(okhttp3.Call call, java.io.IOException e) {
                     runOnUiThread(() -> {
+                        setUploadInProgress(false);
                         Toast.makeText(BaseChatActivity.this, "Network error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
                 }
@@ -1427,6 +1456,8 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         ivBack = findViewById(R.id.iv_back);
         ivProfile = findViewById(R.id.iv_profile);
         tvChatName = findViewById(R.id.tv_chat_name);
+        tvChatStatus = findViewById(R.id.tv_chat_status);
+        tvMessagesEmpty = findViewById(R.id.tv_messages_empty);
         ivMore = findViewById(R.id.iv_more);
         ivVideoCall = findViewById(R.id.iv_video_call);
         ivSend = findViewById(R.id.iv_send);
@@ -1444,6 +1475,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         offlineIndicator = findViewById(R.id.offline_indicator);
         summarizeIndicator = findViewById(R.id.summarize_indicator);
         btnScrollToBottom = findViewById(R.id.btn_scroll_to_bottom);
+        typingIndicator = findViewById(R.id.typing_indicator);
         
         // Setup scroll-to-bottom button click listener
         if (btnScrollToBottom != null) {
@@ -1472,6 +1504,164 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         
         // Update offline indicator visibility
         updateOfflineIndicator();
+        updateMessagesEmptyState();
+    }
+
+    protected void updateChatHeaderAccessibility() {
+        if (ivProfile == null) {
+            return;
+        }
+        if (tvChatName != null && tvChatName.getText() != null && tvChatName.getText().length() > 0) {
+            ivProfile.setContentDescription(getString(R.string.open_profile_description, tvChatName.getText()));
+        } else {
+            ivProfile.setContentDescription(getString(R.string.open_profile_cd));
+        }
+    }
+
+    protected void updateChatStatusSubtitle(CharSequence status) {
+        if (tvChatStatus == null) {
+            return;
+        }
+        if (!remoteTypingUsers.isEmpty()) {
+            statusSubtitleDefault = status;
+            refreshRemoteTypingUi();
+            return;
+        }
+        statusSubtitleDefault = status;
+        if (status == null || status.length() == 0) {
+            tvChatStatus.setVisibility(View.GONE);
+        } else {
+            tvChatStatus.setText(status);
+            tvChatStatus.setVisibility(View.VISIBLE);
+        }
+    }
+
+    protected void setUploadInProgress(boolean inProgress) {
+        if (inProgress) {
+            activeUploadCount++;
+        } else if (activeUploadCount > 0) {
+            activeUploadCount--;
+        }
+        if (progressBar != null) {
+            progressBar.setVisibility(activeUploadCount > 0 ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void setupTypingListeners() {
+        if (socketManager == null) {
+            return;
+        }
+        socketManager.setTypingListener(new com.example.chatappjava.network.SocketManager.TypingListener() {
+            @Override
+            public void onUserTyping(String chatId, String userId, String username) {
+                runOnUiThread(() -> handleRemoteTyping(chatId, userId, username, true));
+            }
+
+            @Override
+            public void onUserStopTyping(String chatId, String userId) {
+                runOnUiThread(() -> handleRemoteTyping(chatId, userId, null, false));
+            }
+        });
+    }
+
+    private void handleRemoteTyping(String chatId, String userId, String username, boolean isTyping) {
+        if (currentChat == null || chatId == null || userId == null) {
+            return;
+        }
+        if (!chatId.equals(currentChat.getId())) {
+            return;
+        }
+        String currentUserId = databaseManager.getUserId();
+        if (currentUserId != null && currentUserId.equals(userId)) {
+            return;
+        }
+        if (isTyping) {
+            String label = (username != null && !username.isEmpty()) ? username : getString(R.string.username);
+            remoteTypingUsers.put(userId, label);
+        } else {
+            remoteTypingUsers.remove(userId);
+        }
+        refreshRemoteTypingUi();
+    }
+
+    private void refreshRemoteTypingUi() {
+        boolean hasTypers = !remoteTypingUsers.isEmpty();
+        if (typingIndicator != null) {
+            typingIndicator.setVisibility(hasTypers ? View.VISIBLE : View.GONE);
+        }
+        if (tvChatStatus == null) {
+            return;
+        }
+        if (!hasTypers) {
+            if (statusSubtitleDefault == null || statusSubtitleDefault.length() == 0) {
+                tvChatStatus.setVisibility(View.GONE);
+            } else {
+                tvChatStatus.setText(statusSubtitleDefault);
+                tvChatStatus.setVisibility(View.VISIBLE);
+            }
+            return;
+        }
+        if (remoteTypingUsers.size() == 1) {
+            String name = remoteTypingUsers.values().iterator().next();
+            tvChatStatus.setText(getString(R.string.chat_status_typing_user, name));
+        } else {
+            tvChatStatus.setText(getString(R.string.chat_status_typing_multiple, remoteTypingUsers.size()));
+        }
+        tvChatStatus.setVisibility(View.VISIBLE);
+    }
+
+    private void handleComposerTextChanged(CharSequence text) {
+        if (currentChat == null || socketManager == null) {
+            return;
+        }
+        if (emitTypingRunnable != null) {
+            typingHandler.removeCallbacks(emitTypingRunnable);
+        }
+        if (emitStopTypingRunnable != null) {
+            typingHandler.removeCallbacks(emitStopTypingRunnable);
+        }
+        if (text == null || text.length() == 0) {
+            emitLocalStopTyping();
+            return;
+        }
+        emitTypingRunnable = () -> {
+            if (!isLocalTypingActive) {
+                isLocalTypingActive = true;
+                socketManager.emitTyping(currentChat.getId());
+            }
+        };
+        emitStopTypingRunnable = () -> emitLocalStopTyping();
+        typingHandler.postDelayed(emitTypingRunnable, 350);
+        typingHandler.postDelayed(emitStopTypingRunnable, 2800);
+    }
+
+    protected void emitLocalStopTyping() {
+        if (emitTypingRunnable != null) {
+            typingHandler.removeCallbacks(emitTypingRunnable);
+        }
+        if (emitStopTypingRunnable != null) {
+            typingHandler.removeCallbacks(emitStopTypingRunnable);
+        }
+        if (isLocalTypingActive && socketManager != null && currentChat != null) {
+            socketManager.emitStopTyping(currentChat.getId());
+        }
+        isLocalTypingActive = false;
+    }
+
+    private void clearTypingState() {
+        emitLocalStopTyping();
+        remoteTypingUsers.clear();
+        if (typingIndicator != null) {
+            typingIndicator.setVisibility(View.GONE);
+        }
+    }
+
+    protected void updateMessagesEmptyState() {
+        if (tvMessagesEmpty == null) {
+            return;
+        }
+        boolean empty = messages == null || messages.isEmpty();
+        tvMessagesEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
     }
 
     protected void initData() {
@@ -1662,6 +1852,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             // For now, keep both running - socket for real-time, polling as backup
             android.util.Log.d("BaseChatActivity", "Socket listener setup, keeping polling as backup");
         }
+        setupTypingListeners();
     }
     
     @SuppressLint("ClickableViewAccessibility")
@@ -1738,12 +1929,19 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     handleMentionParsing(s);
+                    handleComposerTextChanged(s);
                 }
 
                 @Override
                 public void afterTextChanged(Editable s) {}
             });
         }
+    }
+
+    @Override
+    protected void onPause() {
+        emitLocalStopTyping();
+        super.onPause();
     }
 
     @SuppressLint("SetTextI18n")
@@ -1768,6 +1966,22 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         layoutManager.setItemPrefetchEnabled(false);
         rvMessages.setLayoutManager(layoutManager);
         rvMessages.setAdapter(messageAdapter);
+        messageAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                updateMessagesEmptyState();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                updateMessagesEmptyState();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                updateMessagesEmptyState();
+            }
+        });
         
         // Performance optimizations for RecyclerView
         rvMessages.setHasFixedSize(false); // Messages have variable sizes
@@ -3317,9 +3531,9 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (shouldShow) {
             btnScrollToBottom.setVisibility(android.view.View.VISIBLE);
             if (newMessagesCount > 0) {
-                btnScrollToBottom.setText("↓ " + newMessagesCount + " tin nhắn mới");
+                btnScrollToBottom.setText(getString(R.string.scroll_to_new_messages_count, newMessagesCount));
             } else {
-                btnScrollToBottom.setText("↓ Tin nhắn mới");
+                btnScrollToBottom.setText(getString(R.string.scroll_to_new_messages));
             }
         } else {
             btnScrollToBottom.setVisibility(android.view.View.GONE);
@@ -3611,8 +3825,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         
         // SocketManager is managed globally, no cleanup needed here
         android.util.Log.d("BaseChatActivity", "Activity destroyed - SocketManager remains global");
+        clearTypingState();
         if (socketManager != null) {
             socketManager.removeMessageListener();
+            socketManager.removeTypingListener();
         }
     }
 

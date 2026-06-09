@@ -6,7 +6,7 @@
         android:right="2dp"
         android:bottom="0dp">
         <shape android:shape="oval">
-            <solid android:color="#1A2563EB" />
+            <solid android:color="@color/md3_ripple" />
         </shape>
     </item>
     <item

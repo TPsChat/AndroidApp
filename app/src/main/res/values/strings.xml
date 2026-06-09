@@ -40,7 +40,34 @@
     <string name="send_sticker_description">Send sticker</string>
     <string name="record_audio_description">Record audio</string>
     <string name="send_message_description">Send message</string>
+    <string name="chat_status_direct">Direct message</string>
+    <string name="chat_status_typing">Typing…</string>
+    <string name="open_profile_cd">Open profile</string>
+    <string name="open_profile_description">Open %1$s profile</string>
+    <string name="summarize_chat_description">Summarize this chat</string>
+    <string name="group_call_notification_description">Group video call in progress. Tap to join.</string>
+    <string name="chat_empty_title">No messages yet</string>
+    <string name="chat_empty_subtitle">Send a message to start the conversation.</string>
+    <string name="image_message_sent_description">Photo you sent</string>
+    <string name="image_message_received_description">Photo from %1$s</string>
+    <string name="tap_to_join">Tap to join</string>
+    <string name="group_member_count">%1$d members</string>
     <string name="create_group_description">Create group</string>
+    <string name="cancel_call_description">Cancel call</string>
+    <string name="close_reply_description">Close reply</string>
+    <string name="offline_connection_title">No internet connection</string>
+    <string name="offline_connection_description">No internet connection</string>
+    <string name="summarize_chat_title">Summarize chat</string>
+    <string name="group_call_in_progress">Group video call in progress</string>
+    <string name="scroll_to_new_messages">New messages</string>
+    <string name="scroll_to_new_messages_count">%1$d new messages</string>
+    <string name="scroll_to_bottom_description">Scroll to latest messages</string>
+    <string name="reaction_badge_description">%1$s reaction, tap to view</string>
+    <string name="chat_status_typing_user">%1$s is typing…</string>
+    <string name="chat_status_typing_multiple">%1$d people are typing…</string>
+    <string name="uploading_image">Uploading image…</string>
+    <string name="uploading_file">Uploading file…</string>
+    <string name="uploading_voice">Uploading voice message…</string>
     
     <!-- Login Activity -->
     <string name="hint_email">Email</string>

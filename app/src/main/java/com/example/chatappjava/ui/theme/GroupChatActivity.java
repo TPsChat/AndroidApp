@@ -426,6 +426,7 @@ public class GroupChatActivity extends BaseChatActivity {
     protected void updateUI() {
         if (currentChat != null) {
             tvChatName.setText(currentChat.getName());
+            updateChatHeaderAccessibility();
             
             // Show initial participant count from chat data
             int participantCount = currentChat.getParticipantCount();
@@ -1480,6 +1481,7 @@ public class GroupChatActivity extends BaseChatActivity {
                     
                     int actualMemberCount = membersArray.length();
                     android.util.Log.d("GroupChatActivity", "Actual member count from server: " + actualMemberCount);
+                    updateChatStatusSubtitle(getString(R.string.group_member_count, actualMemberCount));
 
                 } else {
                     android.util.Log.e("GroupChatActivity", "Failed to get member count: " + jsonResponse.optString("message"));

@@ -50,6 +50,12 @@ public class PrivateChatActivity extends BaseChatActivity {
     protected void setupClickListeners() {
         super.setupClickListeners();
         
+        if (ivProfile != null) {
+            ivProfile.setClickable(true);
+            ivProfile.setFocusable(true);
+            ivProfile.setOnClickListener(v -> showChatInfo());
+        }
+
         // Cancel call button
         if (ivCancelCall != null) {
             ivCancelCall.setOnClickListener(v -> cancelCall());
@@ -175,6 +181,8 @@ public class PrivateChatActivity extends BaseChatActivity {
     protected void updateUI() {
         if (currentChat != null) {
             tvChatName.setText(currentChat.getDisplayName());
+            updateChatHeaderAccessibility();
+            updateChatStatusSubtitle(getString(R.string.chat_status_direct));
 
             // Ensure otherUser is set from currentChat if not already set
             if (otherUser == null && currentChat.isPrivateChat()) {
@@ -238,6 +246,7 @@ public class PrivateChatActivity extends BaseChatActivity {
             }
         } else {
             android.util.Log.d("PrivateChatActivity", "No currentChat");
+            updateChatStatusSubtitle(null);
             if (ivProfile != null) {
                 com.squareup.picasso.Picasso.get().cancelRequest(ivProfile);
                 ivProfile.setTag(null);

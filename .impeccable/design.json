@@ -1,0 +1,156 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-05T00:00:00.000Z",
+  "title": "Design System: ChatApp — Midnight Slate",
+  "extensions": {
+    "colorMeta": {
+      "canvas-deep": {
+        "role": "neutral",
+        "displayName": "Canvas Deep",
+        "canonical": "oklch(18% 0.02 260)",
+        "tonalRamp": ["oklch(12% 0.02 260)", "oklch(15% 0.02 260)", "oklch(18% 0.02 260)", "oklch(22% 0.02 260)", "oklch(26% 0.02 260)", "oklch(30% 0.02 260)", "oklch(35% 0.02 260)", "oklch(42% 0.02 260)"]
+      },
+      "surface-raised": {
+        "role": "neutral",
+        "displayName": "Surface Raised",
+        "canonical": "oklch(28% 0.025 260)",
+        "tonalRamp": ["oklch(15% 0.02 260)", "oklch(20% 0.022 260)", "oklch(24% 0.024 260)", "oklch(28% 0.025 260)", "oklch(32% 0.025 260)", "oklch(36% 0.025 260)", "oklch(40% 0.025 260)", "oklch(48% 0.02 260)"]
+      },
+      "azure-signal": {
+        "role": "primary",
+        "displayName": "Azure Signal",
+        "canonical": "oklch(62% 0.19 255)",
+        "tonalRamp": ["oklch(25% 0.12 255)", "oklch(35% 0.15 255)", "oklch(45% 0.17 255)", "oklch(55% 0.18 255)", "oklch(62% 0.19 255)", "oklch(70% 0.16 255)", "oklch(78% 0.12 255)", "oklch(88% 0.08 255)"]
+      },
+      "bubble-sent": {
+        "role": "neutral",
+        "displayName": "Bubble Sent",
+        "canonical": "oklch(24% 0.03 255)",
+        "tonalRamp": ["oklch(14% 0.02 255)", "oklch(18% 0.025 255)", "oklch(22% 0.028 255)", "oklch(24% 0.03 255)", "oklch(28% 0.03 255)", "oklch(32% 0.028 255)", "oklch(38% 0.025 255)", "oklch(45% 0.02 255)"]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Ink Muted",
+        "canonical": "oklch(65% 0.02 260)",
+        "tonalRamp": ["oklch(25% 0.02 260)", "oklch(35% 0.02 260)", "oklch(45% 0.02 260)", "oklch(55% 0.02 260)", "oklch(65% 0.02 260)", "oklch(75% 0.015 260)", "oklch(85% 0.01 260)", "oklch(95% 0.005 260)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Screen titles on login, settings, major headers." },
+      "headline": { "displayName": "Headline", "purpose": "Section headers, dialog titles." },
+      "body": { "displayName": "Body", "purpose": "Message text, list previews, form content." },
+      "label": { "displayName": "Label", "purpose": "Badges, emphasized timestamps, tab labels." }
+    },
+    "shadows": [
+      { "name": "shadow-subtle", "value": "1dp 2dp 0 #0D000000", "purpose": "Offset layer under raised bubbles and cards." },
+      { "name": "shadow-azure-glow", "value": "0 2dp 8dp #1A3B82F6", "purpose": "Primary button underlay glow on dark canvas." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Default state transitions, 200–300ms." },
+      { "name": "press-scale", "value": "scale(0.98) translateY(1px)", "purpose": "Tactile button press feedback." }
+    ],
+    "breakpoints": [
+      { "name": "phone", "value": "360dp" },
+      { "name": "tablet", "value": "600dp" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Main CTA: sign in, send, confirm. Azure gradient pill.",
+      "html": "<button class=\"ds-btn-primary\">Sign in</button>",
+      "css": ".ds-btn-primary { background: linear-gradient(135deg, #3B82F6, #2563EB); color: #FFFFFF; padding: 12px 24px; min-height: 52px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; border: none; border-radius: 999px; cursor: pointer; transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.15s; } .ds-btn-primary:hover { background: #2563EB; } .ds-btn-primary:active { transform: translateY(1px) scale(0.98); } .ds-btn-primary:focus-visible { outline: 2px solid #3B82F6; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Dialog cancel, ghost actions on raised surface.",
+      "html": "<button class=\"ds-btn-secondary\">Cancel</button>",
+      "css": ".ds-btn-secondary { background: #2A3142; color: #FFFFFF; padding: 12px 24px; min-height: 48px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 500; border: 1px solid #2E3748; border-radius: 999px; cursor: pointer; transition: background 0.2s; } .ds-btn-secondary:hover { background: #313A4D; } .ds-btn-secondary:focus-visible { outline: 2px solid #3B82F6; outline-offset: 2px; }"
+    },
+    {
+      "name": "Danger Button",
+      "kind": "button",
+      "refersTo": "button-danger",
+      "description": "Destructive dialog and decline actions.",
+      "html": "<button class=\"ds-btn-danger\">Delete</button>",
+      "css": ".ds-btn-danger { background: linear-gradient(135deg, #E05252, #C44040); color: #FFFFFF; padding: 12px 24px; min-height: 52px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; border: none; border-radius: 999px; cursor: pointer; transition: transform 0.15s; } .ds-btn-danger:active { transform: translateY(1px) scale(0.98); } .ds-btn-danger:focus-visible { outline: 2px solid #E05252; outline-offset: 2px; }"
+    },
+    {
+      "name": "Sent Message Bubble",
+      "kind": "custom",
+      "refersTo": "bubble-sent",
+      "description": "Outgoing chat message with asymmetric tail corner.",
+      "html": "<div class=\"ds-bubble-sent\">Message text here</div>",
+      "css": ".ds-bubble-sent { background: #1E2A3D; color: #FFFFFF; padding: 12px 14px 22px; max-width: 270px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; line-height: 1.5; border: 1px solid #2E3748; border-radius: 24px 24px 4px 24px; box-shadow: 1px 2px 0 #0D000000; }"
+    },
+    {
+      "name": "Received Message Bubble",
+      "kind": "custom",
+      "refersTo": "bubble-received",
+      "description": "Incoming chat message, one step lighter than sent.",
+      "html": "<div class=\"ds-bubble-received\">Reply from contact</div>",
+      "css": ".ds-bubble-received { background: #2A3142; color: #FFFFFF; padding: 12px 14px 22px; max-width: 270px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; line-height: 1.5; border: 1px solid #2E3748; border-radius: 24px 24px 24px 4px; box-shadow: 1px 2px 0 #0D000000; }"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Pill search bar on home and friend lists.",
+      "html": "<input class=\"ds-input-search\" type=\"search\" placeholder=\"Search conversations\" />",
+      "css": ".ds-input-search { background: #1C2230; color: #FFFFFF; border: 1px solid #2E3748; border-radius: 999px; min-height: 48px; padding: 0 16px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; width: 100%; box-sizing: border-box; } .ds-input-search::placeholder { color: #6B7589; } .ds-input-search:focus { outline: none; border-color: #3B82F6; }"
+    },
+    {
+      "name": "Active Filter Pill",
+      "kind": "chip",
+      "refersTo": "filter-pill-active",
+      "description": "Selected tab or filter state.",
+      "html": "<span class=\"ds-pill-active\">Chats</span>",
+      "css": ".ds-pill-active { display: inline-block; background: linear-gradient(180deg, #3B82F6, #2563EB); color: #FFFFFF; padding: 8px 16px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600; border-radius: 999px; }"
+    },
+    {
+      "name": "Dialog Card",
+      "kind": "card",
+      "description": "Alert dialog container on sunken surface.",
+      "html": "<div class=\"ds-dialog\"><h2 class=\"ds-dialog-title\">Confirm action</h2><p class=\"ds-dialog-body\">This cannot be undone.</p></div>",
+      "css": ".ds-dialog { background: #1C2230; border: 1px solid #2E3748; border-radius: 24px; padding: 24px; max-width: 320px; font-family: 'Plus Jakarta Sans', sans-serif; } .ds-dialog-title { color: #FFFFFF; font-size: 22px; font-weight: 700; margin: 0 0 8px; } .ds-dialog-body { color: #8B95A8; font-size: 14px; line-height: 1.5; margin: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Focused Night Console",
+    "overview": "A dark-premium Android communication surface built for low-light, frequent use. Deep slate canvas, layered surfaces, white type with disciplined hierarchy, and one azure accent. Rejects Facebook brightness, AI-slop gradients, and flat gray chat clones.",
+    "keyCharacteristics": [
+      "Cool slate neutral family with clear surface steps",
+      "Single azure accent for CTAs and active states",
+      "Plus Jakarta Sans, weight-driven hierarchy",
+      "Tonal elevation via offset layers and borders",
+      "Asymmetric message bubble corners",
+      "44dp touch targets, WCAG AA on dark"
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "Azure appears on ≤10% of any screen surface area. Status colors are never decorative accents.", "section": "colors" },
+      { "name": "The Weight-Not-Size Rule", "body": "Secondary hierarchy uses Ink Muted and Medium weight before shrinking below 14sp.", "section": "typography" },
+      { "name": "The Flat-Canvas Rule", "body": "App background stays Canvas Deep. Elevated elements rise through surface tokens only.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use Canvas Deep (#151A24) as universal background. Never pure #000000.",
+      "Do keep one azure accent for primary actions, active tabs, focus rings.",
+      "Do separate sent (#1E2A3D) and received (#2A3142) bubbles by surface step.",
+      "Do use Ink Muted (#8B95A8) for timestamps and metadata.",
+      "Do maintain 44dp minimum touch targets on primary controls.",
+      "Do tint shadows toward canvas hue, never pure black at high opacity."
+    ],
+    "donts": [
+      "Don't use Facebook/Messenger bright blue chrome or cluttered feed density.",
+      "Don't use AI slop: purple neon gradients, decorative glassmorphism, gradient text, side-stripe borders, identical card grids.",
+      "Don't flatten all text to #FFFFFF without Ink Muted hierarchy.",
+      "Don't add a second accent color.",
+      "Don't use glass blur as default decoration.",
+      "Don't gate content visibility on entrance animations.",
+      "Don't use all-caps for headlines or buttons."
+    ]
+  }
+}
