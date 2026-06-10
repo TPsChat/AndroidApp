@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatappjava.R;
 import com.example.chatappjava.models.Chat;
 import com.example.chatappjava.utils.AvatarManager;
+import com.example.chatappjava.utils.MotionUtils;
 import de.hdodenhof.circleimageview.CircleImageView;
 import java.util.List;
 import java.util.Objects;
@@ -70,7 +71,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
             tvChatName = itemView.findViewById(R.id.tv_chat_name);
             tvLastMessage = itemView.findViewById(R.id.tv_last_message);
             tvLastMessageTime = itemView.findViewById(R.id.tv_last_message_time);
-            tvUnreadCount = itemView.findViewById(R.id.tv_unread_count);;
+            tvUnreadCount = itemView.findViewById(R.id.tv_unread_count);
+            MotionUtils.attachPressFeedback(context, itemView);
         }
         
         @SuppressLint("SetTextI18n")

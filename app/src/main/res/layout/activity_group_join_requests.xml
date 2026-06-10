@@ -75,12 +75,11 @@
     </LinearLayout>
 
     <!-- Requests list -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/requests_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/spacing_sm"
-        android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/search_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,17 +98,14 @@
             android:background="@android:color/transparent"
             tools:listitem="@layout/item_join_request" />
 
-    </LinearLayout>
+        <include
+            android:id="@+id/list_skeleton"
+            layout="@layout/component_list_skeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:visibility="gone" />
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:indeterminateTint="@color/md3_primary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -106,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/preview_caller_name"
-            android:textAppearance="@style/MidnightHeadlineLarge"
+            android:textAppearance="@style/AppHeadlineLarge"
             android:textColor="@color/md3_on_surface"
             android:maxLines="1"
             android:ellipsize="end"

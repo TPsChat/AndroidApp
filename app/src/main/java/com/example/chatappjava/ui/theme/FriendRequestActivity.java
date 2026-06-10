@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.EditText;
@@ -22,6 +21,7 @@ import com.example.chatappjava.models.User;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.DatabaseManager;
 import com.example.chatappjava.utils.EmptyStateHelper;
+import com.example.chatappjava.utils.SkeletonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +38,7 @@ import okhttp3.Response;
 public class FriendRequestActivity extends AppCompatActivity implements FriendRequestAdapter.OnFriendRequestActionListener {
 
     private RecyclerView rvFriendRequests;
-    private ProgressBar progressBar;
+    private View listSkeleton;
     private View tvNoRequests;
     private EditText etSearch;
     private View tabRequests;
@@ -79,7 +79,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
 
     private void initializeViews() {
         rvFriendRequests = findViewById(R.id.rv_friend_requests);
-        progressBar = findViewById(R.id.progress_bar);
+        listSkeleton = findViewById(R.id.list_skeleton);
         tvNoRequests = findViewById(R.id.tv_no_requests);
         EmptyStateHelper.bind(
                 tvNoRequests,
@@ -336,7 +336,10 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
     }
 
     private void showLoading(boolean show) {
-        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        SkeletonHelper.setListLoading(listSkeleton, show);
+        if (containerRequests != null && containerRequests.getVisibility() == View.VISIBLE) {
+            rvFriendRequests.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
     // FriendRequestAdapter.OnFriendRequestActionListener implementations

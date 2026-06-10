@@ -2,6 +2,7 @@ package com.example.chatappjava.utils;
 
 import android.content.Context;
 import android.provider.Settings;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -65,6 +66,55 @@ public final class MotionUtils {
         }
     }
 
+    /**
+     * Touch-down scale feedback that does not consume clicks. Safe for nav tabs and list rows.
+     */
+    public static void attachPressFeedback(Context context, View view) {
+        if (view == null || context == null) {
+            return;
+        }
+        final float pressedScale = 0.96f;
+        final int duration = context.getResources().getInteger(R.integer.anim_duration_press);
+        view.setOnTouchListener((v, event) -> {
+            if (isMotionReduced(context)) {
+                return false;
+            }
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    v.animate().cancel();
+                    v.animate()
+                            .scaleX(pressedScale)
+                            .scaleY(pressedScale)
+                            .setDuration(duration)
+                            .setInterpolator(getEaseOutInterpolator())
+                            .start();
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    v.animate().cancel();
+                    v.animate()
+                            .scaleX(1f)
+                            .scaleY(1f)
+                            .setDuration(duration)
+                            .setInterpolator(getEaseOutInterpolator())
+                            .start();
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        });
+    }
+
+    public static void attachPressFeedback(Context context, View... views) {
+        if (views == null) {
+            return;
+        }
+        for (View view : views) {
+            attachPressFeedback(context, view);
+        }
+    }
+
     public static void playPressScale(Context context, View view) {
         if (view == null || context == null || isMotionReduced(context)) {
             return;
@@ -103,6 +153,41 @@ public final class MotionUtils {
                         .setInterpolator(getEaseOutInterpolator())
                         .start())
                 .start();
+    }
+
+    public static void staggeredReveal(Context context, View... views) {
+        if (views == null || views.length == 0) {
+            return;
+        }
+        if (!shouldAnimate(context, true)) {
+            for (View view : views) {
+                if (view != null) {
+                    view.setAlpha(1f);
+                    view.setTranslationY(0f);
+                }
+            }
+            return;
+        }
+        long step = context.getResources().getInteger(R.integer.anim_duration_stagger_step);
+        long duration = context.getResources().getInteger(R.integer.anim_duration_entry);
+        float travel = dp(context, 12f);
+        long delay = 0L;
+        for (View view : views) {
+            if (view == null) {
+                continue;
+            }
+            // Content stays readable; motion enhances, never gates visibility (Impeccable product rule).
+            view.setAlpha(0.92f);
+            view.setTranslationY(travel);
+            view.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setStartDelay(delay)
+                    .setDuration(duration)
+                    .setInterpolator(getEaseOutInterpolator())
+                    .start();
+            delay += step;
+        }
     }
 
     public static void revealView(Context context, View view) {

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_chat_screen_dark"
+    android:background="@drawable/bg_auth_screen"
     android:fitsSystemWindows="true">
 
     <ImageView
@@ -32,7 +32,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="top"
             android:orientation="vertical"
             android:paddingStart="@dimen/margin_mobile"
             android:paddingTop="@dimen/spacing_xl"
@@ -42,25 +42,40 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:id="@+id/auth_top_cluster"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    android:gravity="start"
                     android:orientation="vertical">
 
-                    <ImageView
-                        android:id="@+id/login_title_top"
-                        android:layout_width="@dimen/auth_logo_size"
-                        android:layout_height="@dimen/auth_logo_size"
-                        android:background="@drawable/bg_icon_circle_dark"
-                        android:contentDescription="@string/auth_app_icon_cd"
-                        android:padding="@dimen/auth_logo_padding"
-                        android:src="@mipmap/ic_launcher_round" />
+                    <FrameLayout
+                        android:id="@+id/auth_logo_bezel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_bezel_outer"
+                        android:padding="@dimen/spacing_xs">
+
+                        <ImageView
+                            android:id="@+id/login_title_top"
+                            android:layout_width="@dimen/auth_logo_size"
+                            android:layout_height="@dimen/auth_logo_size"
+                            android:background="@drawable/bg_bezel_inner"
+                            android:contentDescription="@string/auth_app_icon_cd"
+                            android:padding="@dimen/auth_logo_padding"
+                            android:src="@mipmap/ic_launcher_round" />
+
+                    </FrameLayout>
+
+                    <TextView
+                        android:id="@+id/tv_auth_eyebrow"
+                        style="@style/AppEyebrowTag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_md"
+                        android:text="@string/auth_eyebrow" />
 
                     <TextView
                         android:id="@+id/tv_auth_title"
@@ -69,18 +84,18 @@
                         android:layout_marginTop="@dimen/auth_title_margin_top"
                         android:fontFamily="@font/plus_jakarta_sans"
                         android:text="@string/auth_title_sign_in"
-                        android:textAppearance="@style/MidnightHeadlineLarge"
+                        android:textAppearance="@style/AppHeadlineLarge"
                         android:textColor="@color/md3_on_surface" />
 
                     <TextView
                         android:id="@+id/tv_auth_subtitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/auth_subtitle_margin_top"
                         android:fontFamily="@font/plus_jakarta_sans"
-                        android:gravity="center"
+                        android:gravity="start"
                         android:text="@string/auth_subtitle"
-                        android:textAppearance="@style/MidnightBodyMedium"
+                        android:textAppearance="@style/AppBodyMedium"
                         android:textColor="@color/md3_on_surface_secondary" />
 
                     <FrameLayout
@@ -139,16 +154,23 @@
                 </LinearLayout>
 
                 <FrameLayout
-                    android:id="@+id/auth_form_stage"
+                    android:id="@+id/auth_form_bezel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/auth_form_margin_top"
-                    android:background="@drawable/bg_soft_inset"
-                    android:minHeight="@dimen/auth_form_min_height"
-                    android:paddingStart="@dimen/auth_card_padding_h"
-                    android:paddingTop="@dimen/auth_card_padding_v"
-                    android:paddingEnd="@dimen/auth_card_padding_h"
-                    android:paddingBottom="@dimen/auth_card_padding_v">
+                    android:background="@drawable/bg_bezel_outer"
+                    android:padding="@dimen/bezel_shell_padding">
+
+                    <FrameLayout
+                        android:id="@+id/auth_form_stage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_bezel_inner"
+                        android:minHeight="@dimen/auth_form_min_height"
+                        android:paddingStart="@dimen/auth_card_padding_h"
+                        android:paddingTop="@dimen/auth_card_padding_v"
+                        android:paddingEnd="@dimen/auth_card_padding_h"
+                        android:paddingBottom="@dimen/auth_card_padding_v">
 
                     <LinearLayout
                         android:id="@+id/login_panel"
@@ -162,12 +184,12 @@
                             android:layout_height="wrap_content"
                             android:labelFor="@+id/et_email"
                             android:text="@string/label_email"
-                            android:textAppearance="@style/MidnightLabelSmall"
+                            android:textAppearance="@style/AppLabelSmall"
                             android:textColor="@color/md3_on_surface" />
 
                         <EditText
                             android:id="@+id/et_email"
-                            style="@style/MidnightInputField"
+                            style="@style/AppInputField"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/input_field_height"
                             android:layout_marginTop="@dimen/spacing_xs"
@@ -190,7 +212,7 @@
 
                         <EditText
                             android:id="@+id/et_password"
-                            style="@style/MidnightInputField"
+                            style="@style/AppInputField"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/input_field_height"
                             android:layout_marginTop="@dimen/spacing_xs"
@@ -230,7 +252,7 @@
 
                         <Button
                             android:id="@+id/btn_login"
-                            style="@style/MidnightPrimaryButton"
+                            style="@style/AppPrimaryButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dialog_padding_v"
@@ -257,7 +279,7 @@
 
                         <EditText
                             android:id="@+id/et_username"
-                            style="@style/MidnightInputField"
+                            style="@style/AppInputField"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/input_field_height"
                             android:layout_marginTop="@dimen/spacing_xs"
@@ -280,7 +302,7 @@
 
                         <EditText
                             android:id="@+id/et_register_email"
-                            style="@style/MidnightInputField"
+                            style="@style/AppInputField"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/input_field_height"
                             android:layout_marginTop="@dimen/spacing_xs"
@@ -303,7 +325,7 @@
 
                         <EditText
                             android:id="@+id/et_register_password"
-                            style="@style/MidnightInputField"
+                            style="@style/AppInputField"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/input_field_height"
                             android:layout_marginTop="@dimen/spacing_xs"
@@ -328,7 +350,7 @@
 
                         <EditText
                             android:id="@+id/et_confirm_password"
-                            style="@style/MidnightInputField"
+                            style="@style/AppInputField"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/input_field_height"
                             android:layout_marginTop="@dimen/spacing_xs"
@@ -353,13 +375,15 @@
 
                         <Button
                             android:id="@+id/btn_register"
-                            style="@style/MidnightPrimaryButton"
+                            style="@style/AppPrimaryButton"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/dialog_padding_v"
                             android:text="@string/btn_sign_up" />
 
                     </LinearLayout>
+
+                    </FrameLayout>
 
                 </FrameLayout>
 

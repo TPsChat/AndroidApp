@@ -2,13 +2,11 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
 
-    <!-- Màu xanh online -->
-    <solid android:color="#22C55E" />
+    <solid android:color="@color/accept" />
 
-    <!-- Viền trắng giống Messenger -->
     <stroke
         android:width="2dp"
-        android:color="#FFFFFF" />
+        android:color="@color/ink_primary" />
 
     <!-- Kích thước mặc định -->
     <size

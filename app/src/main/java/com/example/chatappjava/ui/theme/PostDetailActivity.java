@@ -87,7 +87,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
     // UI Components - Comments
     private TextView tvCommentsHeader;
     private RecyclerView rvComments;
-    private ProgressBar progressLoading;
+    private View listSkeleton;
     private LinearLayout llEmptyState;
     private LinearLayout llReplyIndicator;
     private TextView tvReplyingTo, tvReplyTargetComment;
@@ -286,7 +286,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         loadUserProfile();
         
         // Show loading
-        progressLoading.setVisibility(View.VISIBLE);
+        com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, true);
         rvComments.setVisibility(View.GONE);
         llEmptyState.setVisibility(View.GONE);
         
@@ -294,7 +294,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    progressLoading.setVisibility(View.GONE);
+                    com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, false);
                     llEmptyState.setVisibility(View.VISIBLE);
                     Toast.makeText(PostDetailActivity.this, getString(R.string.error_load_post_detail, e.getMessage()), Toast.LENGTH_SHORT).show();
                     // Stop refresh on error
@@ -308,7 +308,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
             public void onResponse(Call call, Response response) throws IOException {
                 final String responseBody = response.body().string();
                 runOnUiThread(() -> {
-                    progressLoading.setVisibility(View.GONE);
+                    com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, false);
                     try {
                         JSONObject jsonResponse = new JSONObject(responseBody);
                         if (jsonResponse.getBoolean("success")) {
@@ -362,7 +362,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         // Comments views
         tvCommentsHeader = findViewById(R.id.tv_comments_header);
         rvComments = findViewById(R.id.rv_comments);
-        progressLoading = findViewById(R.id.progress_loading);
+        listSkeleton = findViewById(R.id.list_skeleton);
         llEmptyState = findViewById(R.id.ll_empty_state);
         llReplyIndicator = findViewById(R.id.ll_reply_indicator);
         tvReplyingTo = findViewById(R.id.tv_replying_to);
@@ -1006,7 +1006,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         if (isInitialLoad) {
             currentPage = 1;
             hasMoreComments = true;
-            progressLoading.setVisibility(View.VISIBLE);
+            com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, true);
             llEmptyState.setVisibility(View.GONE);
             rvComments.setVisibility(View.GONE);
         }
@@ -1025,7 +1025,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                     Log.e(TAG, "Error loading comments: " + e.getMessage());
                     Toast.makeText(PostDetailActivity.this, getString(R.string.error_load_comments), Toast.LENGTH_SHORT).show();
                     if (isInitialLoad) {
-                        progressLoading.setVisibility(View.GONE);
+                        com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, false);
                         llEmptyState.setVisibility(View.VISIBLE);
                         rvComments.setVisibility(View.GONE);
                     }
@@ -1042,7 +1042,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
                 String responseBody = response.body() != null ? response.body().string() : "";
                 runOnUiThread(() -> {
                     if (isInitialLoad) {
-                        progressLoading.setVisibility(View.GONE);
+                        com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, false);
                     }
                     isLoadingMore = false;
                     try {

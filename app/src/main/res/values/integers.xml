@@ -5,4 +5,6 @@
     <integer name="anim_duration_normal">220</integer>
     <integer name="anim_duration_modal">280</integer>
     <integer name="anim_duration_highlight">320</integer>
+    <integer name="anim_duration_stagger_step">90</integer>
+    <integer name="anim_duration_entry">300</integer>
 </resources>

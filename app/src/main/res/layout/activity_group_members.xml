@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textAppearance="@style/MidnightScreenTitle"
+                android:textAppearance="@style/AppScreenTitle"
                 android:textColor="@color/md3_on_surface"
                 tools:text="My Awesome Group" />
 

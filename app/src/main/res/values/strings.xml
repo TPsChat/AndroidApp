@@ -154,6 +154,7 @@
 
     <!-- Auth -->
     <string name="auth_app_icon_cd">App icon</string>
+    <string name="auth_eyebrow">Self-hosted chat</string>
     <string name="auth_title_sign_in">Welcome back</string>
     <string name="auth_title_sign_up">Create account</string>
     <string name="auth_subtitle">Sign in to continue your conversations</string>

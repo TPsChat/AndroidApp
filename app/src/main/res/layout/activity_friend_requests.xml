@@ -149,13 +149,12 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <ProgressBar
-                    android:id="@+id/progress_bar"
-                    android:layout_width="wrap_content"
+                <include
+                    android:id="@+id/list_skeleton"
+                    layout="@layout/component_list_skeleton"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:indeterminateTint="@color/md3_primary" />
+                    android:visibility="gone" />
 
                 <include
                     android:id="@+id/tv_no_requests"

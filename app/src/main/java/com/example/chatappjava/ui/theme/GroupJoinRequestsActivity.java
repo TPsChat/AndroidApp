@@ -2,7 +2,6 @@ package com.example.chatappjava.ui.theme;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.EditText;
 import android.text.TextWatcher;
@@ -18,6 +17,7 @@ import com.example.chatappjava.models.Chat;
 import com.example.chatappjava.models.User;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.DatabaseManager;
+import com.example.chatappjava.utils.SkeletonHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +28,7 @@ import java.util.List;
 public class GroupJoinRequestsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private ProgressBar progressBar;
+    private View listSkeleton;
     private MessageAdapter.RequestsAdapter adapter;
     private final List<User> requests = new ArrayList<>();
     private final List<User> allRequests = new ArrayList<>();
@@ -43,7 +43,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
         setContentView(com.example.chatappjava.R.layout.activity_group_join_requests);
 
         recyclerView = findViewById(com.example.chatappjava.R.id.rv_requests);
-        progressBar = findViewById(com.example.chatappjava.R.id.progress_bar);
+        listSkeleton = findViewById(com.example.chatappjava.R.id.list_skeleton);
         etSearch = findViewById(com.example.chatappjava.R.id.et_search);
         View ivBack = findViewById(com.example.chatappjava.R.id.iv_back);
         if (ivBack != null) ivBack.setOnClickListener(v -> finish());
@@ -91,19 +91,22 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
             finish();
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
+        SkeletonHelper.setListLoading(listSkeleton, true);
+        recyclerView.setVisibility(View.GONE);
         String targetGroupId = currentChat.getGroupId() != null && !currentChat.getGroupId().isEmpty() ? currentChat.getGroupId() : currentChat.getId();
         apiClient.authenticatedGet("/api/groups/" + targetGroupId + "/join-requests", token, new okhttp3.Callback() {
             @Override public void onFailure(okhttp3.Call call, IOException e) {
                 runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
+                    SkeletonHelper.setListLoading(listSkeleton, false);
+                    recyclerView.setVisibility(View.VISIBLE);
                     Toast.makeText(GroupJoinRequestsActivity.this, getString(R.string.error_failed_to_load_requests), Toast.LENGTH_SHORT).show();
                 });
             }
             @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 String body = response.body().string();
                 runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
+                    SkeletonHelper.setListLoading(listSkeleton, false);
+                    recyclerView.setVisibility(View.VISIBLE);
                     try {
                         JSONObject json = new JSONObject(body);
                         if (response.code() == 200 && json.optBoolean("success", false)) {

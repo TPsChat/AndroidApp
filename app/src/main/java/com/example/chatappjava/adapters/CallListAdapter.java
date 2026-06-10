@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatappjava.R;
 import com.example.chatappjava.models.Call;
 import com.example.chatappjava.utils.AvatarManager;
+import com.example.chatappjava.utils.MotionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,6 +96,8 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
             tvCallDuration = itemView.findViewById(R.id.tv_call_duration);
             tvCallTime = itemView.findViewById(R.id.tv_call_time);
             btnCallAction = itemView.findViewById(R.id.btn_call_action);
+            MotionUtils.attachPressFeedback(context, itemView);
+            MotionUtils.attachPressFeedback(context, btnCallAction);
 
             itemView.setOnClickListener(v -> {
                 if (onCallClickListener != null) {

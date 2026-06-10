@@ -32,7 +32,7 @@
     <color name="secondary_light">#3A2E22</color>
 
     <!-- Switch track (copper on, outline off) -->
-    <color name="switch_track_off">#334A5568</color>
+    <color name="switch_track_off">#402A323D</color>
     <color name="switch_track_on">#55C8875A</color>
 
     <!-- Semantic -->
@@ -214,9 +214,4 @@
     <color name="gray">@color/ink_muted</color>
     <color name="blue">@color/palette_crimson</color>
 
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
 </resources>

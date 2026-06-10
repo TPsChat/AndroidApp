@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/call_group_title"
-                android:textAppearance="@style/MidnightScreenTitle"
+                android:textAppearance="@style/AppScreenTitle"
                 android:textColor="@color/md3_on_surface"
                 android:maxLines="1"
                 android:ellipsize="end" />

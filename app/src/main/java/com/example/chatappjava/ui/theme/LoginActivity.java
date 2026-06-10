@@ -33,7 +33,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnRegister;
     private TextView tvRegisterError;
     private TextView tvAuthTitle, tvAuthSubtitle;
-    private View authSwitchContainer, authTabIndicator, loginPanel, registerPanel, authFormStage, authTopCluster, loginTitleTop;
+    private View authSwitchContainer, authTabIndicator, loginPanel, registerPanel, authFormStage, authFormBezel, authTopCluster, loginTitleTop, authLogoBezel;
+    private TextView tvAuthEyebrow;
     private ApiClient apiClient;
     private DatabaseManager databaseManager;
     private android.os.CountDownTimer registerCountDownTimer;
@@ -56,12 +57,16 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         setAuthMode(getIntent().getBooleanExtra(EXTRA_OPEN_SIGN_UP, false), false);
+        playEntryAnimation();
     }
     
     private void initializeViews() {
         tvAuthTitle = findViewById(R.id.tv_auth_title);
         tvAuthSubtitle = findViewById(R.id.tv_auth_subtitle);
+        tvAuthEyebrow = findViewById(R.id.tv_auth_eyebrow);
         authTopCluster = findViewById(R.id.auth_top_cluster);
+        authLogoBezel = findViewById(R.id.auth_logo_bezel);
+        authFormBezel = findViewById(R.id.auth_form_bezel);
         authSwitchContainer = findViewById(R.id.auth_switch_container);
         authTabIndicator = findViewById(R.id.auth_tab_indicator);
         authFormStage = findViewById(R.id.auth_form_stage);
@@ -97,6 +102,16 @@ public class LoginActivity extends AppCompatActivity {
         apiClient = new ApiClient();
         databaseManager = new DatabaseManager(this);
     }
+
+    private void playEntryAnimation() {
+        com.example.chatappjava.utils.MotionUtils.staggeredReveal(this,
+                authLogoBezel,
+                tvAuthEyebrow,
+                tvAuthTitle,
+                tvAuthSubtitle,
+                authSwitchContainer,
+                authFormBezel);
+    }
     
     private void setupClickListeners() {
         btnLogin.setOnClickListener(v -> attemptLogin());
@@ -104,6 +119,9 @@ public class LoginActivity extends AppCompatActivity {
         tvSignInTab.setOnClickListener(v -> setAuthMode(false, true));
         tvRegister.setOnClickListener(v -> setAuthMode(true, true));
         tvForgotPassword.setOnClickListener(v -> showForgotPasswordDialog());
+
+        com.example.chatappjava.utils.MotionUtils.attachPressFeedback(this,
+                btnLogin, btnRegister, tvSignInTab, tvRegister, tvForgotPassword);
     }
 
     private void setupPasswordToggle(EditText editText) {

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.Switch;
 import android.text.Editable;
@@ -20,6 +19,7 @@ import com.example.chatappjava.adapters.SelectableUserAdapter;
 import com.example.chatappjava.models.User;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.DatabaseManager;
+import com.example.chatappjava.utils.SkeletonHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +36,7 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
     private RecyclerView rvFriends;
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch switchPublic;
-    private ProgressBar progressBar;
+    private View listSkeleton;
     private SelectableUserAdapter adapter;
     private final List<User> friends = new ArrayList<>();
     private final List<String> selectedUserIds = new ArrayList<>();
@@ -55,7 +55,7 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
         etDescription = findViewById(R.id.et_group_description);
         rvFriends = findViewById(R.id.rv_friends);
         switchPublic = findViewById(R.id.switch_public);
-        progressBar = findViewById(R.id.progress_bar);
+        listSkeleton = findViewById(R.id.list_skeleton);
         etSearch = findViewById(R.id.et_search);
         tvCreate = findViewById(R.id.tv_create);
 
@@ -97,12 +97,14 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
             finish();
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
+        SkeletonHelper.setListLoading(listSkeleton, true);
+        rvFriends.setVisibility(View.GONE);
         apiClient.authenticatedGet("/api/users/friends", token, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
+                    SkeletonHelper.setListLoading(listSkeleton, false);
+                    rvFriends.setVisibility(View.VISIBLE);
                     Toast.makeText(CreateGroupActivity.this, getString(R.string.error_load_friends), Toast.LENGTH_SHORT).show();
                 });
             }
@@ -112,7 +114,8 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
             public void onResponse(Call call, Response response) throws IOException {
                 String body = response.body().string();
                 runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
+                    SkeletonHelper.setListLoading(listSkeleton, false);
+                    rvFriends.setVisibility(View.VISIBLE);
                     try {
                         JSONObject json = new JSONObject(body);
                         if (response.code() == 200 && json.optBoolean("success", false)) {
@@ -176,12 +179,16 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
         try {
             JSONObject payload = getJsonObject(name, desc);
 
-            progressBar.setVisibility(View.VISIBLE);
+            if (tvCreate != null) {
+                tvCreate.setEnabled(false);
+            }
             apiClient.createGroupChat(token, payload, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     runOnUiThread(() -> {
-                        progressBar.setVisibility(View.GONE);
+                        if (tvCreate != null) {
+                            tvCreate.setEnabled(true);
+                        }
                         Toast.makeText(CreateGroupActivity.this, getString(R.string.error_create_group), Toast.LENGTH_SHORT).show();
                     });
                 }
@@ -190,7 +197,9 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
                 public void onResponse(Call call, Response response) throws IOException {
                     String body = response.body().string();
                     runOnUiThread(() -> {
-                        progressBar.setVisibility(View.GONE);
+                        if (tvCreate != null) {
+                            tvCreate.setEnabled(true);
+                        }
                         try {
                             JSONObject json = new JSONObject(body);
                             if ((response.code() == 200 || response.code() == 201) && json.optBoolean("success", false)) {

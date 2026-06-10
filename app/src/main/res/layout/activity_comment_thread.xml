@@ -57,7 +57,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="@dimen/spacing_md"
                 android:text="@string/comments_title"
-                android:textAppearance="@style/MidnightScreenTitle"
+                android:textAppearance="@style/AppScreenTitle"
                 android:textColor="@color/md3_on_surface"
                 android:maxLines="1"
                 android:ellipsize="end" />
@@ -176,17 +176,15 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Loading Indicator -->
-    <ProgressBar
-        android:id="@+id/progress_loading"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/list_skeleton"
+        layout="@layout/component_list_skeleton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:indeterminateTint="@color/md3_primary"
-        app:layout_constraintTop_toBottomOf="@id/cv_post_summary"
-        app:layout_constraintBottom_toTopOf="@id/ll_input_bar"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/cv_post_summary" />
 
     <!-- Empty State -->
     <LinearLayout

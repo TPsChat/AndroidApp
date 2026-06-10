@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +16,7 @@ import com.example.chatappjava.models.User;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.DatabaseManager;
 import com.example.chatappjava.utils.EmptyStateHelper;
+import com.example.chatappjava.utils.SkeletonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,7 +33,7 @@ public class BlockedUsersActivity extends AppCompatActivity {
 
     private ImageView ivBack;
     private RecyclerView rvBlocked;
-    private ProgressBar progressBar;
+    private View listSkeleton;
     private View emptyState;
 
     private final List<User> blockedUsers = new ArrayList<>();
@@ -61,7 +61,7 @@ public class BlockedUsersActivity extends AppCompatActivity {
         ivBack = findViewById(R.id.iv_back);
         TextView tvTitle = findViewById(R.id.tv_title);
         rvBlocked = findViewById(R.id.rv_blocked);
-        progressBar = findViewById(R.id.progress_bar);
+        listSkeleton = findViewById(R.id.list_skeleton);
         emptyState = findViewById(R.id.empty_state);
         tvTitle.setText(R.string.title_activity_blocked_users);
         EmptyStateHelper.bind(
@@ -89,12 +89,14 @@ public class BlockedUsersActivity extends AppCompatActivity {
             finish();
             return;
         }
-        progressBar.setVisibility(View.VISIBLE);
+        SkeletonHelper.setListLoading(listSkeleton, true);
+        rvBlocked.setVisibility(View.GONE);
         apiClient.getBlockedUsers(token, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
+                    SkeletonHelper.setListLoading(listSkeleton, false);
+                    rvBlocked.setVisibility(View.VISIBLE);
                     Toast.makeText(BlockedUsersActivity.this, getString(R.string.error_failed_to_load), Toast.LENGTH_SHORT).show();
                 });
             }
@@ -104,7 +106,8 @@ public class BlockedUsersActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String body = response.body().string();
                 runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
+                    SkeletonHelper.setListLoading(listSkeleton, false);
+                    rvBlocked.setVisibility(View.VISIBLE);
                     try {
                         if (!response.isSuccessful()) {
                             Toast.makeText(BlockedUsersActivity.this, getString(R.string.error_failed_code, response.code()), Toast.LENGTH_SHORT).show();

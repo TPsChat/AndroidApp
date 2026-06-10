@@ -20,6 +20,7 @@ import com.example.chatappjava.R;
 import com.example.chatappjava.config.ServerConfig;
 import com.example.chatappjava.models.Post;
 import com.example.chatappjava.utils.AvatarManager;
+import com.example.chatappjava.utils.MotionUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -292,12 +293,11 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             ivEmbeddedVideoPlay = embeddedPostCard != null ? embeddedPostCard.findViewById(R.id.iv_embedded_video_play) : null;
             ivEmbeddedArrow = embeddedPostCard != null ? embeddedPostCard.findViewById(R.id.iv_embedded_arrow) : null;
             
-            // Debug logging
-            if (llShareButton == null) {
-                android.util.Log.e("PostAdapter", "llShareButton is NULL! View not found.");
-            } else {
-                android.util.Log.d("PostAdapter", "llShareButton found successfully");
-            }
+            Context ctx = itemView.getContext();
+            MotionUtils.attachPressFeedback(ctx, itemView);
+            if (llLikeButton != null) MotionUtils.attachPressFeedback(ctx, llLikeButton);
+            if (llCommentButton != null) MotionUtils.attachPressFeedback(ctx, llCommentButton);
+            if (llShareButton != null) MotionUtils.attachPressFeedback(ctx, llShareButton);
         }
         
         @SuppressLint("SetTextI18n")

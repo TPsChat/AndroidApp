@@ -43,7 +43,7 @@
     <dimen name="icon_tab">24dp</dimen>
 
     <dimen name="text_banner">13sp</dimen>
-    <dimen name="text_tab_label">11sp</dimen>
+    <dimen name="text_tab_label">12sp</dimen>
     <dimen name="text_auth_display">28sp</dimen>
     <dimen name="text_auth_subtitle">15sp</dimen>
 
@@ -84,6 +84,9 @@
     <dimen name="auth_form_min_height">480dp</dimen>
     <dimen name="auth_card_padding_h">20dp</dimen>
     <dimen name="auth_card_padding_v">24dp</dimen>
+    <dimen name="bezel_shell_padding">6dp</dimen>
+    <dimen name="auth_eyebrow_padding_h">12dp</dimen>
+    <dimen name="auth_eyebrow_padding_v">5dp</dimen>
 
     <dimen name="badge_min_width">22dp</dimen>
     <dimen name="badge_padding_h">7dp</dimen>

@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/plus_jakarta_sans"
             android:text="@string/feed_title"
-            android:textAppearance="@style/MidnightScreenTitle"
+            android:textAppearance="@style/AppScreenTitle"
             android:textColor="@color/md3_on_surface"
             android:maxLines="1"
             android:ellipsize="end" />

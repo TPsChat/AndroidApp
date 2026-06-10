@@ -10,7 +10,6 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,7 +37,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
     private EditText etSearch;
     private ImageView ivBack, ivClear;
     private RecyclerView rvSearchResults;
-    private ProgressBar progressBar;
+    private View listSkeleton;
     private LinearLayout tvNoResults, tvSearchHint;
     private TextView tvNoResultsTitle;
     private TextView tabUsers, tabGroups, tabDiscover, tabPosts;
@@ -102,7 +101,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
         ivBack = findViewById(R.id.iv_back);
         ivClear = findViewById(R.id.iv_clear);
         rvSearchResults = findViewById(R.id.rv_search_results);
-        progressBar = findViewById(R.id.progress_bar);
+        listSkeleton = findViewById(R.id.list_skeleton);
         tvNoResults = findViewById(R.id.tv_no_results);
         tvSearchHint = findViewById(R.id.tv_search_hint);
         tvNoResultsTitle = findViewById(R.id.tv_no_results_title);
@@ -947,7 +946,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
     
     
     private void showLoading(boolean show) {
-        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, show);
         if (show) {
             tvNoResults.setVisibility(View.GONE);
             tvSearchHint.setVisibility(View.GONE);

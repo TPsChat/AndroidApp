@@ -52,7 +52,7 @@
             android:layout_weight="1"
             android:layout_marginStart="@dimen/spacing_md"
             android:text="@string/post_detail_title"
-            android:textAppearance="@style/MidnightScreenTitle"
+            android:textAppearance="@style/AppScreenTitle"
             android:textColor="@color/md3_on_surface"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -225,7 +225,7 @@
                                     android:layout_height="wrap_content"
                                     android:minHeight="300dp"
                                     android:visibility="gone"
-                                    android:background="@android:color/black">
+                                    android:background="@color/video_stage">
 
                                     <ImageView
                                         android:id="@+id/iv_post_video_thumbnail"
@@ -433,15 +433,14 @@
                         android:paddingTop="8dp"
                         android:paddingBottom="10dp" />
 
-                    <ProgressBar
-                        android:id="@+id/progress_loading"
-                        android:layout_width="wrap_content"
+                    <include
+                        android:id="@+id/list_skeleton"
+                        layout="@layout/component_list_skeleton"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone"
-                        android:indeterminateTint="@color/md3_primary"
                         android:layout_marginTop="@dimen/spacing_md"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_marginBottom="@dimen/spacing_md"
+                        android:visibility="gone" />
 
                     <LinearLayout
                         android:id="@+id/ll_empty_state"

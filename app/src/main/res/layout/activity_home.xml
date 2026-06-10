@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_chat_screen_dark"
+    android:background="@drawable/bg_auth_screen"
     android:fitsSystemWindows="true">
 
     <ImageView
@@ -20,7 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Midnight header: avatar + title + action -->
+    <!-- Home header: avatar + title + action -->
     <LinearLayout
         android:id="@+id/user_profile_section"
         android:layout_width="0dp"
@@ -53,7 +53,7 @@
             android:fontFamily="@font/plus_jakarta_sans"
             android:maxLines="1"
             android:text="@string/home_title_chats"
-            android:textAppearance="@style/MidnightScreenTitle"
+            android:textAppearance="@style/AppScreenTitle"
             android:textColor="@color/md3_on_surface"
             tools:text="Chats" />
 
@@ -70,7 +70,7 @@
 
     </LinearLayout>
 
-    <!-- Glass search bar -->
+    <!-- Search affordance -->
     <LinearLayout
         android:id="@+id/search_bar_home"
         android:layout_width="0dp"
@@ -101,7 +101,7 @@
 
         <TextView
             android:id="@+id/tv_search_hint"
-            style="@style/MidnightBodyMedium"
+            style="@style/AppBodyMedium"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -49,7 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/list_item_margin"
-                tools:text="John Doe" />
+                tools:text="Mara Okonkwo" />
 
         </LinearLayout>
 

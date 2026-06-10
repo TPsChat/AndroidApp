@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +53,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
     private CircleImageView ivPostAuthorAvatar;
     private TextView tvPostAuthorName, tvPostContentPreview;
     private RecyclerView rvComments;
-    private ProgressBar progressLoading;
+    private View listSkeleton;
     private LinearLayout llEmptyState;
     private LinearLayout llReplyIndicator;
     private TextView tvReplyingTo, tvReplyTargetComment;
@@ -128,7 +127,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
         tvPostAuthorName = findViewById(R.id.tv_post_author_name);
         tvPostContentPreview = findViewById(R.id.tv_post_content_preview);
         rvComments = findViewById(R.id.rv_comments);
-        progressLoading = findViewById(R.id.progress_loading);
+        listSkeleton = findViewById(R.id.list_skeleton);
         llEmptyState = findViewById(R.id.ll_empty_state);
         llReplyIndicator = findViewById(R.id.ll_reply_indicator);
         tvReplyingTo = findViewById(R.id.tv_replying_to);
@@ -249,7 +248,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
         if (isInitialLoad) {
             currentPage = 1;
             hasMoreComments = true;
-            progressLoading.setVisibility(View.VISIBLE);
+            com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, true);
             llEmptyState.setVisibility(View.GONE);
             rvComments.setVisibility(View.GONE);
         }
@@ -269,7 +268,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                     Log.e(TAG, "Error loading comments: " + e.getMessage());
                     Toast.makeText(CommentThreadActivity.this, getString(R.string.error_load_comments), Toast.LENGTH_SHORT).show();
                     if (isInitialLoad) {
-                        progressLoading.setVisibility(View.GONE);
+                        com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, false);
                         llEmptyState.setVisibility(View.VISIBLE);
                         rvComments.setVisibility(View.GONE);
                     }
@@ -282,7 +281,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
                 String responseBody = response.body() != null ? response.body().string() : "";
                 runOnUiThread(() -> {
                     if (isInitialLoad) {
-                        progressLoading.setVisibility(View.GONE);
+                        com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, false);
                     }
                     isLoadingMore = false;
                     try {

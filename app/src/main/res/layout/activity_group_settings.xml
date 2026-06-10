@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/group_settings_title"
-                android:textAppearance="@style/MidnightScreenTitle"
+                android:textAppearance="@style/AppScreenTitle"
                 android:textColor="@color/md3_on_surface"
                 android:maxLines="1"
                 android:ellipsize="end" />

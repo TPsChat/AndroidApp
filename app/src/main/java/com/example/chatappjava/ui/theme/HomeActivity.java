@@ -35,6 +35,7 @@ import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.AvatarManager;
 import com.example.chatappjava.utils.DatabaseManager;
 import com.example.chatappjava.utils.ConversationRepository;
+import com.example.chatappjava.utils.EmptyStateHelper;
 import com.example.chatappjava.utils.MotionUtils;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -246,33 +247,34 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         boolean wasVisible = homeEmptyState.getVisibility() == View.VISIBLE;
         int titleRes;
         int subtitleRes;
+        int iconRes;
         switch (currentTab) {
             case 1:
                 titleRes = R.string.home_groups_empty_title;
                 subtitleRes = R.string.home_groups_empty_subtitle;
+                iconRes = R.drawable.ic_group;
                 break;
             case 2:
                 titleRes = R.string.home_calls_empty_title;
                 subtitleRes = R.string.home_calls_empty_subtitle;
+                iconRes = R.drawable.ic_call;
                 break;
             case 3:
                 titleRes = R.string.feed_empty_title;
                 subtitleRes = R.string.feed_empty_subtitle;
+                iconRes = R.drawable.ic_post;
                 break;
             default:
                 titleRes = R.string.home_chats_empty_title;
                 subtitleRes = R.string.home_chats_empty_subtitle;
+                iconRes = R.drawable.ic_chat;
                 break;
         }
-        if (homeEmptyTitle != null) {
-            homeEmptyTitle.setText(titleRes);
-        }
-        if (homeEmptySubtitle != null) {
-            homeEmptySubtitle.setText(subtitleRes);
-        }
-        homeEmptyState.setVisibility(View.VISIBLE);
         if (!wasVisible) {
-            MotionUtils.revealView(this, homeEmptyState);
+            EmptyStateHelper.bindAndReveal(this, homeEmptyState, titleRes, subtitleRes, iconRes);
+        } else {
+            EmptyStateHelper.bind(homeEmptyState, titleRes, subtitleRes, iconRes);
+            homeEmptyState.setVisibility(View.VISIBLE);
         }
     }
     
@@ -399,6 +401,10 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 switchTab(5);
             }
         });
+
+        MotionUtils.attachPressFeedback(this,
+                ivChats, ivGroups, ivCalls, ivPosts, ivNotifications, ivSettings,
+                searchBarHome, llFriendRequests, efabNewGroup);
         
         // Create Post Bar Click Listeners
         if (llCreatePostInput != null) {

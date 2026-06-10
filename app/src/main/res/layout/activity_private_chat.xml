@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/username"
                 android:textColor="@color/md3_on_surface"
-                android:textAppearance="@style/MidnightScreenTitle"
+                android:textAppearance="@style/AppScreenTitle"
                 android:maxLines="1"
                 android:ellipsize="end"
                 tools:text="Contact name" />

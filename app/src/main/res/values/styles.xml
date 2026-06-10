@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Void Copper typography & components -->
 
     <style name="AppHeadlineLarge" parent="TextAppearance.MaterialComponents.Headline5">
@@ -64,6 +64,31 @@
 
     <style name="AppCaptionMuted" parent="AppBodySmall">
         <item name="android:textColor">@color/text_muted</item>
+    </style>
+
+    <style name="AppBodyMediumEmphasis" parent="AppBodyMedium">
+        <item name="android:textFontWeight" tools:targetApi="p">500</item>
+        <item name="android:textColor">@color/text_muted</item>
+    </style>
+
+    <style name="AppBodySemibold" parent="AppBodyLarge">
+        <item name="android:textFontWeight" tools:targetApi="p">600</item>
+    </style>
+
+    <style name="AppCaptionTabular" parent="AppBodySmall">
+        <item name="android:fontFeatureSettings">tnum</item>
+    </style>
+
+    <style name="AppEyebrowTag" parent="AppLabelSmall">
+        <item name="android:background">@drawable/bg_eyebrow_pill</item>
+        <item name="android:paddingStart">@dimen/auth_eyebrow_padding_h</item>
+        <item name="android:paddingEnd">@dimen/auth_eyebrow_padding_h</item>
+        <item name="android:paddingTop">@dimen/auth_eyebrow_padding_v</item>
+        <item name="android:paddingBottom">@dimen/auth_eyebrow_padding_v</item>
+        <item name="android:textColor">@color/brand_red_light</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:letterSpacing">0.06</item>
     </style>
 
     <style name="AppScreenTitle" parent="AppHeadlineMedium" />

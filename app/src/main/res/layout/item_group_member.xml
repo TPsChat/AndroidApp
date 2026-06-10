@@ -42,7 +42,7 @@
             android:textColor="@color/md3_on_surface"
             android:textSize="@dimen/text_body_large"
             android:textStyle="bold"
-            tools:text="John Doe" />
+            tools:text="Mara Okonkwo" />
 
         <TextView
             android:id="@+id/tv_member_role"
