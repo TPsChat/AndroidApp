@@ -18,60 +18,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Flat header -->
     <LinearLayout
         android:id="@+id/header_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_flat_header"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/header_height"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/margin_mobile"
-        android:paddingTop="@dimen/spacing_sm"
-        android:paddingEnd="@dimen/margin_mobile"
-        android:paddingBottom="@dimen/spacing_sm"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="@dimen/touch_target_min"
-            android:layout_height="@dimen/touch_target_min"
-            android:src="@drawable/ic_back"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:padding="@dimen/spacing_sm"
-            android:contentDescription="@string/back_button_description"
-            app:tint="@color/md3_primary" />
+        <include
+            android:id="@+id/group_settings_toolbar"
+            layout="@layout/component_neu_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <LinearLayout
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv_group_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/spacing_md"
-            android:orientation="vertical"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/group_settings_title"
-                android:textAppearance="@style/AppScreenTitle"
-                android:textColor="@color/md3_on_surface"
-                android:maxLines="1"
-                android:ellipsize="end" />
-
-            <TextView
-                android:id="@+id/tv_group_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/md3_on_surface_secondary"
-                android:textSize="13sp"
-                android:layout_marginTop="3dp"
-                tools:text="My Awesome Group" />
-
-        </LinearLayout>
+            android:layout_marginStart="@dimen/margin_mobile"
+            android:layout_marginTop="@dimen/spacing_xs"
+            android:fontFamily="@font/plus_jakarta_sans"
+            android:textColor="@color/neu_copper_ink_muted"
+            android:textSize="@dimen/text_body_small"
+            tools:text="My Awesome Group" />
 
     </LinearLayout>
 
@@ -86,7 +58,8 @@
         app:layout_constraintTop_toBottomOf="@id/header_card"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -112,7 +85,7 @@
                     android:text="@string/group_info_section"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:layout_marginBottom="@dimen/spacing_md" />
 
                 <LinearLayout
@@ -133,7 +106,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_info"
                         android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_primary" />
+                        app:tint="@color/neu_copper_accent" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -142,13 +115,13 @@
                         android:text="@string/group_view_info"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
+                        android:textColor="@color/neu_copper_ink" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
+                        app:tint="@color/neu_copper_ink_muted" />
 
                 </LinearLayout>
 
@@ -169,7 +142,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_camera"
                         android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_primary" />
+                        app:tint="@color/neu_copper_accent" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -178,13 +151,13 @@
                         android:text="@string/group_change_avatar"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
+                        android:textColor="@color/neu_copper_ink" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
+                        app:tint="@color/neu_copper_ink_muted" />
 
                 </LinearLayout>
 
@@ -208,7 +181,7 @@
                     android:text="@string/group_privacy_section"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:layout_marginBottom="@dimen/spacing_md" />
 
                 <LinearLayout
@@ -229,7 +202,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/group_public_label"
                             android:textSize="16sp"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textStyle="bold" />
 
                         <TextView
@@ -237,7 +210,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/group_public_desc"
                             android:textSize="12sp"
-                            android:textColor="@color/md3_on_surface_secondary"
+                            android:textColor="@color/neu_copper_ink_muted"
                             android:layout_marginTop="5dp" />
 
                     </LinearLayout>
@@ -247,7 +220,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="false"
-                        android:thumbTint="@color/md3_primary"
+                        android:thumbTint="@color/neu_copper_accent"
                         android:trackTint="@color/switch_track_selector" />
 
                 </LinearLayout>
@@ -258,7 +231,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/group_public_help"
                     android:textSize="12sp"
-                    android:textColor="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink_muted"
                     android:lineSpacingExtra="2dp" />
 
             </LinearLayout>
@@ -281,7 +254,7 @@
                     android:text="@string/group_member_management"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:layout_marginBottom="@dimen/spacing_md" />
 
                 <LinearLayout
@@ -302,7 +275,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_add"
                         android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_primary" />
+                        app:tint="@color/neu_copper_accent" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -311,13 +284,13 @@
                         android:text="@string/dialog_option_add_members"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
+                        android:textColor="@color/neu_copper_ink" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
+                        app:tint="@color/neu_copper_ink_muted" />
 
                 </LinearLayout>
 
@@ -339,7 +312,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_eye"
                         android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_primary" />
+                        app:tint="@color/neu_copper_accent" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -348,13 +321,13 @@
                         android:text="@string/group_members_label"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
+                        android:textColor="@color/neu_copper_ink" />
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
+                        app:tint="@color/neu_copper_ink_muted" />
 
                 </LinearLayout>
 
@@ -375,7 +348,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_group"
                         android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_primary" />
+                        app:tint="@color/neu_copper_accent" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -384,7 +357,7 @@
                         android:text="@string/dialog_option_join_requests"
                         android:textSize="15sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface" />
+                        android:textColor="@color/neu_copper_ink" />
 
                     <TextView
                         android:id="@+id/tv_request_count"
@@ -397,7 +370,7 @@
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"
                         android:background="@drawable/bg_badge_red_modern"
-                        android:textColor="@color/md3_on_primary"
+                        android:textColor="@color/neu_copper_ink"
                         android:textStyle="bold"
                         android:textSize="12sp"
                         android:text="@string/badge_count_placeholder"
@@ -408,7 +381,7 @@
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_more"
-                        app:tint="@color/md3_on_surface_secondary" />
+                        app:tint="@color/neu_copper_ink_muted" />
 
                 </LinearLayout>
 
@@ -453,7 +426,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_close"
                         android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_error" />
+                        app:tint="@color/danger" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -468,7 +441,7 @@
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_more"
-                        app:tint="@color/md3_error" />
+                        app:tint="@color/danger" />
 
                 </LinearLayout>
 
@@ -489,7 +462,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_delete"
                         android:layout_marginEnd="12dp"
-                        app:tint="@color/md3_error" />
+                        app:tint="@color/danger" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -504,7 +477,7 @@
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_more"
-                        app:tint="@color/md3_error" />
+                        app:tint="@color/danger" />
 
                 </LinearLayout>
 

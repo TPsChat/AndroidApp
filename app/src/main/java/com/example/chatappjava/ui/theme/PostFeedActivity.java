@@ -70,6 +70,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
     private PostAdapter postAdapter;
     private List<Post> postList;
     private View feedEmptyState;
+    private View listSkeleton;
     private TextView feedEmptyTitle;
     private TextView feedEmptySubtitle;
     
@@ -125,6 +126,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         // Posts
         swipeRefresh = findViewById(R.id.swipe_refresh);
         rvPosts = findViewById(R.id.rv_posts);
+        listSkeleton = findViewById(R.id.list_skeleton);
         feedEmptyState = findViewById(R.id.feed_empty_state);
         if (feedEmptyState != null) {
             feedEmptyTitle = feedEmptyState.findViewById(R.id.tv_empty_title);
@@ -142,6 +144,18 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         llTabGroups = findViewById(R.id.ll_tab_groups);
         llTabWatch = findViewById(R.id.ll_tab_watch);
         llTabProfile = findViewById(R.id.ll_tab_profile);
+        updateBottomNavSelection(0);
+        com.example.chatappjava.utils.MotionUtils.attachPressFeedback(
+                this, llTabFeed, llTabGroups, llTabWatch, llTabProfile, ivSearch, ivNotifications);
+    }
+
+    private void updateBottomNavSelection(int index) {
+        LinearLayout[] tabs = {llTabFeed, llTabGroups, llTabWatch, llTabProfile};
+        for (int i = 0; i < tabs.length; i++) {
+            if (tabs[i] != null) {
+                tabs[i].setSelected(i == index);
+            }
+        }
     }
 
     private void updateFeedEmptyState() {
@@ -298,7 +312,12 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         if (refresh) {
             currentPage = 0;
             hasMorePosts = true;
-            swipeRefresh.setRefreshing(true);
+            if (postList.isEmpty()) {
+                com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, true);
+                rvPosts.setVisibility(View.GONE);
+            } else {
+                swipeRefresh.setRefreshing(true);
+            }
         } else {
             // Load from cache first for instant UI
             loadPostsFromCache();
@@ -307,7 +326,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
             isLoading = false;
-            swipeRefresh.setRefreshing(false);
+            finishFeedLoading();
             return;
         }
         
@@ -320,7 +339,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                     Log.e(TAG, "Failed to load posts: " + e.getMessage());
                     Toast.makeText(PostFeedActivity.this, getString(R.string.error_load_posts), Toast.LENGTH_SHORT).show();
                     isLoading = false;
-                    swipeRefresh.setRefreshing(false);
+                    finishFeedLoading();
                 });
             }
             
@@ -406,7 +425,7 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                         Toast.makeText(PostFeedActivity.this, getString(R.string.error_parse_posts), Toast.LENGTH_SHORT).show();
                     } finally {
                         isLoading = false;
-                        swipeRefresh.setRefreshing(false);
+                        finishFeedLoading();
                     }
                 });
             }
@@ -417,8 +436,14 @@ public class PostFeedActivity extends AppCompatActivity implements PostAdapter.O
                 syncManager.syncPosts(token, false);
             }
             isLoading = false;
-            swipeRefresh.setRefreshing(false);
+            finishFeedLoading();
         }
+    }
+
+    private void finishFeedLoading() {
+        com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, false);
+        rvPosts.setVisibility(View.VISIBLE);
+        swipeRefresh.setRefreshing(false);
     }
     
     /**

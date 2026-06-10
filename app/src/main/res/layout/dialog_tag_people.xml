@@ -18,7 +18,7 @@
         android:paddingEnd="@dimen/dialog_padding_h"
         android:paddingTop="@dimen/dialog_padding_v"
         android:paddingBottom="@dimen/dialog_padding_h"
-        android:background="@drawable/bg_glass_panel">
+        android:background="@drawable/bg_neu_emboss_raised_md">
 
         <!-- Title -->
         <TextView
@@ -34,38 +34,11 @@
             android:paddingBottom="@dimen/dialog_padding_h" />
 
         <!-- Search Bar -->
-        <LinearLayout
+        <include
+            layout="@layout/component_neu_search_field"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:layout_marginBottom="@dimen/spacing_md"
-            android:background="@drawable/bg_soft_inset">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_search"
-                android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
-
-            <EditText
-                android:id="@+id/et_search"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:hint="@string/group_search_friends_hint"
-                android:textColorHint="@color/md3_on_surface_secondary"
-                android:background="@android:color/transparent"
-                android:inputType="text"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:gravity="center_vertical"
-                android:textCursorDrawable="@null" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_md" />
 
         <!-- Progress Bar -->
         <ProgressBar

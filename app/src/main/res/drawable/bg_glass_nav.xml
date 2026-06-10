@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape android:shape="rectangle">
-            <solid android:color="@color/neu_surface_sunken" />
-        </shape>
-    </item>
-    <item android:gravity="top">
-        <shape android:shape="rectangle">
-            <size android:height="1dp" />
-            <solid android:color="@color/md3_border_subtle" />
-        </shape>
-    </item>
+    <item android:drawable="@drawable/bg_neu_composer_dock" />
 </layer-list>

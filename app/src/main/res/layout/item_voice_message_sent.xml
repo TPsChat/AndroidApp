@@ -24,7 +24,7 @@
         android:contentDescription="@string/play_voice_message_cd"
         android:padding="9dp"
         android:layout_marginEnd="@dimen/spacing_sm"
-        app:tint="@color/md3_primary" />
+        app:tint="@color/bubble_sent_ink" />
 
     <ProgressBar
         android:id="@+id/progress_voice"
@@ -34,7 +34,7 @@
         android:layout_weight="1"
         android:max="100"
         android:progress="0"
-        android:progressTint="@color/md3_primary"
+        android:progressTint="@color/bubble_sent_ink"
         android:progressBackgroundTint="@color/md3_border_subtle"
         android:layout_marginEnd="@dimen/spacing_sm" />
 
@@ -45,7 +45,7 @@
         android:fontFamily="@font/plus_jakarta_sans"
         android:text="@string/voice_duration_placeholder"
         android:textSize="@dimen/text_banner"
-        android:textColor="@color/md3_on_surface"
+        android:textColor="@color/bubble_sent_ink"
         android:textStyle="bold" />
 
 </LinearLayout>

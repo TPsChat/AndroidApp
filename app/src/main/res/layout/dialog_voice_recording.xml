@@ -10,7 +10,7 @@
     android:paddingEnd="22dp"
     android:paddingTop="22dp"
     android:paddingBottom="20dp"
-    android:background="@drawable/bg_glass_panel"
+    android:background="@drawable/bg_neu_emboss_raised_md"
     android:clipToPadding="false"
     android:clipChildren="false">
 

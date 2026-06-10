@@ -128,6 +128,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     private android.content.BroadcastReceiver blockedChangedReceiver;
     private android.content.BroadcastReceiver authErrorReceiver;
     private View homeEmptyState;
+    private View listSkeleton;
     private TextView homeEmptyTitle;
     private TextView homeEmptySubtitle;
     
@@ -227,9 +228,26 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         ivUserAvatar = findViewById(R.id.iv_user_avatar);
         tvUserName = findViewById(R.id.tv_user_name);
         homeEmptyState = findViewById(R.id.home_empty_state);
+        listSkeleton = findViewById(R.id.list_skeleton);
         if (homeEmptyState != null) {
             homeEmptyTitle = homeEmptyState.findViewById(R.id.tv_empty_title);
             homeEmptySubtitle = homeEmptyState.findViewById(R.id.tv_empty_subtitle);
+        }
+    }
+
+    private void setChatListLoading(boolean loading) {
+        if (listSkeleton == null) {
+            return;
+        }
+        if (currentTab != 0 && currentTab != 1) {
+            loading = false;
+        }
+        com.example.chatappjava.utils.SkeletonHelper.setListLoading(listSkeleton, loading);
+        if (rvChatList != null) {
+            rvChatList.setVisibility(loading ? View.GONE : View.VISIBLE);
+        }
+        if (loading && homeEmptyState != null) {
+            homeEmptyState.setVisibility(View.GONE);
         }
     }
 
@@ -1135,6 +1153,10 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         // Setup SwipeRefreshLayout
         if (swipeRefreshLayout != null) {
             swipeRefreshLayout.setEnabled(true); // Enable for all tabs
+            swipeRefreshLayout.setColorSchemeColors(
+                    getColor(R.color.neu_copper_accent),
+                    getColor(R.color.neu_copper_accent_light));
+            swipeRefreshLayout.setProgressBackgroundColorSchemeColor(getColor(R.color.neu_copper_surface));
             swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -1240,8 +1262,9 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         ivGroups.setSelected(false);
         ivCalls.setSelected(false);
         ivPosts.setSelected(false);
+        ivNotifications.setSelected(false);
         ivSettings.setSelected(false);
-        
+
         // Show title only on Chats tab
         if (tvFriendRequestsTitle != null) {
             tvFriendRequestsTitle.setVisibility(tabIndex == 0 ? View.VISIBLE : View.GONE);
@@ -1312,12 +1335,15 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     }
                 }
                 if (recyclerView != null) {
-                    int h = (int) (88 * getResources().getDisplayMetrics().density);
+                    float density = getResources().getDisplayMetrics().density;
+                    int bottomPad = (int) (getResources().getDimension(R.dimen.neu_copper_nav_dock_height)
+                            + getResources().getDimension(R.dimen.neu_copper_nav_dock_margin)
+                            + 8 * density);
                     recyclerView.setPadding(
-                            (int) (8 * getResources().getDisplayMetrics().density),
-                            (int) (8 * getResources().getDisplayMetrics().density),
-                            (int) (8 * getResources().getDisplayMetrics().density),
-                            h);
+                            (int) (8 * density),
+                            (int) (8 * density),
+                            (int) (8 * density),
+                            bottomPad);
                 }
                 constraintSet.applyTo(rootLayout);
             }
@@ -1424,6 +1450,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             }
         }
         chatAdapter.updateChats(privates);
+        setChatListLoading(false);
         updateHomeEmptyState();
     }
     
@@ -1439,6 +1466,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         }
         System.out.println("HomeActivity: Groups filter result: " + groups.size() + " groups");
         chatAdapter.updateChats(groups);
+        setChatListLoading(false);
         updateHomeEmptyState();
     }
     
@@ -2461,7 +2489,11 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         }
         isLoadingChats = true;
         System.out.println("HomeActivity: Loading chats...");
-        
+        if ((currentTab == 0 || currentTab == 1)
+                && (chatAdapter == null || chatAdapter.getItemCount() == 0)) {
+            setChatListLoading(true);
+        }
+
         // First, try to load from local database (works offline)
         loadChatsFromDatabase();
         
@@ -2474,6 +2506,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         if (!isNetworkAvailable()) {
             System.out.println("HomeActivity: No network, showing chats from database");
             isLoadingChats = false;
+            setChatListLoading(false);
             // Stop refresh spinner if no network
             if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -2485,6 +2518,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         if (token == null || token.isEmpty()) {
             System.out.println("HomeActivity: No token available for loading chats");
             isLoadingChats = false;
+            setChatListLoading(false);
             // Stop refresh spinner if no token
             if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -2513,6 +2547,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                         loadChatsFromDatabase();
                     }
                     isLoadingChats = false;
+                    setChatListLoading(false);
                     // Stop refresh spinner on error
                     if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
                         swipeRefreshLayout.setRefreshing(false);
@@ -2526,6 +2561,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 runOnUiThread(() -> {
                     handleChatsResponse(response.code(), responseBody);
                     isLoadingChats = false;
+                    setChatListLoading(false);
                 });
             }
         });

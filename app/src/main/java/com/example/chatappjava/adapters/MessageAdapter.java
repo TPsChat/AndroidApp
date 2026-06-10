@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.util.DisplayMetrics;
 import android.content.Context;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatappjava.R;
 import com.example.chatappjava.models.Message;
@@ -159,6 +160,59 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     @Override
     public int getItemCount() {
         return messages.size();
+    }
+
+    public void applyDiff(List<Message> oldMessages) {
+        if (oldMessages == null) {
+            int count = messages.size();
+            if (count > 0) {
+                notifyItemRangeChanged(0, count);
+            } else {
+                notifyDataSetChanged();
+            }
+            return;
+        }
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return oldMessages.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return messages.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                Message oldMessage = oldMessages.get(oldItemPosition);
+                Message newMessage = messages.get(newItemPosition);
+                String oldId = oldMessage != null ? oldMessage.getId() : null;
+                String newId = newMessage != null ? newMessage.getId() : null;
+                if (oldId != null && newId != null) {
+                    return oldId.equals(newId);
+                }
+                return oldMessage == newMessage;
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                Message oldMessage = oldMessages.get(oldItemPosition);
+                Message newMessage = messages.get(newItemPosition);
+                if (oldMessage == newMessage) {
+                    return true;
+                }
+                if (oldMessage == null || newMessage == null) {
+                    return false;
+                }
+                return java.util.Objects.equals(oldMessage.getId(), newMessage.getId())
+                        && java.util.Objects.equals(oldMessage.getContent(), newMessage.getContent())
+                        && oldMessage.getTimestamp() == newMessage.getTimestamp()
+                        && java.util.Objects.equals(oldMessage.getReactionsRaw(), newMessage.getReactionsRaw())
+                        && oldMessage.isEdited() == newMessage.isEdited();
+            }
+        });
+        result.dispatchUpdatesTo(this);
     }
 
     @Override
@@ -1107,7 +1161,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             String postId = postLinkMatcher.group(1);
             
             android.text.style.StyleSpan styleSpan = new android.text.style.StyleSpan(android.graphics.Typeface.BOLD);
-            int linkColor = 0xFFFFFFFF;
+            int linkColorRes = isSent ? R.color.bubble_sent_ink : R.color.neu_copper_accent;
+            int linkColor = androidx.core.content.ContextCompat.getColor(textView.getContext(), linkColorRes);
             android.text.style.ForegroundColorSpan colorSpan = new android.text.style.ForegroundColorSpan(linkColor);
             spannable.setSpan(colorSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannable.setSpan(styleSpan, start, end, android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

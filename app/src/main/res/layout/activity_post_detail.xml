@@ -18,46 +18,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Flat header -->
-    <LinearLayout
+    <include
         android:id="@+id/app_bar"
+        layout="@layout/component_neu_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_flat_header"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/header_height"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/margin_mobile"
-        android:paddingTop="@dimen/spacing_sm"
-        android:paddingEnd="@dimen/margin_mobile"
-        android:paddingBottom="@dimen/spacing_sm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageButton
-            android:id="@+id/iv_back"
-            android:layout_width="@dimen/touch_target_min"
-            android:layout_height="@dimen/touch_target_min"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:src="@drawable/ic_back"
-            android:contentDescription="@string/back_button_description"
-            android:padding="@dimen/spacing_sm"
-            app:tint="@color/md3_primary" />
-
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="@dimen/spacing_md"
-            android:text="@string/post_detail_title"
-            android:textAppearance="@style/AppScreenTitle"
-            android:textColor="@color/md3_on_surface"
-            android:maxLines="1"
-            android:ellipsize="end" />
-
-    </LinearLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width" />
 
     <!-- Scrollable Content -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -67,7 +36,8 @@
         app:layout_constraintTop_toBottomOf="@id/app_bar"
         app:layout_constraintBottom_toTopOf="@id/ll_reply_indicator"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_view"
@@ -136,7 +106,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="@string/preview_display_name"
-                                        android:textColor="@color/md3_on_surface"
+                                        android:textColor="@color/neu_copper_ink"
                                         android:textSize="16sp"
                                         android:textStyle="bold" />
 
@@ -161,20 +131,20 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="3dp"
                                 android:text=""
-                                    android:textColor="@color/md3_on_surface_secondary"
+                                    android:textColor="@color/neu_copper_ink_muted"
                                     android:textSize="12sp" />
 
                             </LinearLayout>
 
                             <ImageButton
                                 android:id="@+id/iv_post_menu"
-                                android:layout_width="36dp"
-                                android:layout_height="36dp"
-                                android:background="@drawable/bg_icon_circle_dark"
+                                android:layout_width="@dimen/touch_target_min"
+                                android:layout_height="@dimen/touch_target_min"
+                                android:background="@drawable/bg_neu_copper_sunken_circle"
                                 android:src="@drawable/ic_more"
                                 android:contentDescription="@string/post_options_cd"
                                 android:padding="9dp"
-                                app:tint="@color/md3_secondary" />
+                                app:tint="@color/neu_copper_ink_muted" />
 
                         </LinearLayout>
 
@@ -190,7 +160,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:text=""
-                                android:textColor="@color/md3_on_surface"
+                                android:textColor="@color/neu_copper_ink"
                                 android:textSize="15sp"
                                 android:lineSpacingMultiplier="1.2"
                                 android:paddingBottom="10dp" />
@@ -243,7 +213,7 @@
                                         android:src="@drawable/ic_play"
                                         android:contentDescription="@string/post_play_video_cd"
                                         android:padding="18dp"
-                                        app:tint="@color/md3_on_surface" />
+                                        app:tint="@color/neu_copper_ink" />
 
                                 </FrameLayout>
 
@@ -274,7 +244,7 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@drawable/ic_emoji_smile"
-                                    app:tint="@color/md3_primary" />
+                                    app:tint="@color/neu_copper_accent" />
 
                                 <TextView
                                     android:id="@+id/tv_likes_count"
@@ -282,7 +252,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="5dp"
                                     android:text="@string/preview_likes_count"
-                                    android:textColor="@color/md3_on_surface_secondary"
+                                    android:textColor="@color/neu_copper_ink_muted"
                                     android:textSize="14sp" />
 
                             </LinearLayout>
@@ -293,7 +263,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="@string/post_comments_count"
-                                android:textColor="@color/md3_on_surface_secondary"
+                                android:textColor="@color/neu_copper_ink_muted"
                                 android:textSize="14sp"
                                 android:clickable="true"
                                 android:focusable="true"
@@ -305,7 +275,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/preview_shares_count"
-                                android:textColor="@color/md3_on_surface_secondary"
+                                android:textColor="@color/neu_copper_ink_muted"
                                 android:textSize="14sp" />
 
                         </LinearLayout>
@@ -340,7 +310,7 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@drawable/ic_emoji_smile"
-                                    app:tint="@color/md3_primary" />
+                                    app:tint="@color/neu_copper_accent" />
 
                                 <TextView
                                     android:id="@+id/tv_like_text"
@@ -348,7 +318,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:text="@string/post_like"
-                                    android:textColor="@color/md3_on_surface"
+                                    android:textColor="@color/neu_copper_ink"
                                     android:textSize="14sp" />
 
                             </LinearLayout>
@@ -368,14 +338,14 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@drawable/ic_chat"
-                                    app:tint="@color/md3_primary" />
+                                    app:tint="@color/neu_copper_accent" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:text="@string/post_comment"
-                                    android:textColor="@color/md3_on_surface"
+                                    android:textColor="@color/neu_copper_ink"
                                     android:textSize="14sp" />
 
                             </LinearLayout>
@@ -395,14 +365,14 @@
                                     android:layout_width="20dp"
                                     android:layout_height="20dp"
                                     android:src="@drawable/ic_open"
-                                    app:tint="@color/md3_primary" />
+                                    app:tint="@color/neu_copper_accent" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
                                     android:text="@string/post_share"
-                                    android:textColor="@color/md3_on_surface"
+                                    android:textColor="@color/neu_copper_ink"
                                     android:textSize="14sp" />
 
                             </LinearLayout>
@@ -425,7 +395,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@string/comments_title"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:textSize="19sp"
                         android:textStyle="bold"
                         android:paddingStart="6dp"
@@ -461,14 +431,14 @@
                             android:src="@drawable/ic_chat"
                             android:background="@drawable/bg_icon_circle_dark"
                             android:padding="16dp"
-                            app:tint="@color/md3_primary" />
+                            app:tint="@color/neu_copper_accent" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/spacing_md"
                             android:text="@string/comments_empty_title"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textStyle="bold"
                             android:textSize="18sp" />
 
@@ -477,7 +447,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="@string/comments_empty_subtitle"
-                            android:textColor="@color/md3_on_surface_secondary"
+                            android:textColor="@color/neu_copper_ink_muted"
                             android:textSize="14sp" />
 
                     </LinearLayout>
@@ -500,7 +470,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/comments_view_more"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:textSize="13sp"
                         android:textStyle="bold"
                         android:clickable="true"
@@ -537,7 +507,8 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/ll_input_bar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <View
             android:layout_width="3dp"
@@ -566,7 +537,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/username"
                 android:textSize="14sp"
-                android:textColor="@color/md3_on_surface"
+                android:textColor="@color/neu_copper_ink"
                 android:maxLines="1"
                 android:ellipsize="end" />
 
@@ -574,13 +545,13 @@
 
         <ImageButton
             android:id="@+id/iv_cancel_reply"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
             android:background="@drawable/bg_icon_circle_dark"
             android:src="@drawable/ic_close"
             android:contentDescription="@string/close_reply_description"
             android:padding="9dp"
-            app:tint="@color/md3_secondary" />
+            app:tint="@color/neu_copper_ink_muted" />
 
     </LinearLayout>
 
@@ -589,7 +560,7 @@
         android:id="@+id/ll_input_bar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_glass_nav"
+        android:background="@drawable/bg_neu_composer_dock"
         android:gravity="center_vertical"
         android:minHeight="@dimen/nav_bar_height"
         android:orientation="horizontal"
@@ -599,7 +570,8 @@
         android:paddingBottom="@dimen/spacing_xs"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -613,8 +585,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_comment_avatar"
-                android:layout_width="34dp"
-                android:layout_height="34dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/ic_profile_placeholder"
                 app:civ_border_color="@color/md3_border_glow"
                 app:civ_border_width="1dp" />
@@ -630,8 +602,8 @@
                 android:maxHeight="120dp"
                 android:background="@android:color/transparent"
                 android:hint="@string/comment_hint"
-                android:textColorHint="@color/md3_on_surface_secondary"
-                android:textColor="@color/md3_on_surface"
+                android:textColorHint="@color/neu_copper_ink_muted"
+                android:textColor="@color/neu_copper_ink"
                 android:textSize="14sp"
                 android:inputType="textCapSentences|textMultiLine"
                 android:gravity="center_vertical|start"
@@ -643,28 +615,28 @@
 
             <ImageButton
                 android:id="@+id/iv_attach_media"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
+                android:layout_width="@dimen/touch_target_min"
+                android:layout_height="@dimen/touch_target_min"
                 android:background="@drawable/bg_icon_circle_transparent"
                 android:src="@drawable/ic_camera"
                 android:contentDescription="@string/attach_media_cd"
                 android:padding="8dp"
                 android:visibility="visible"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/neu_copper_accent" />
 
         </LinearLayout>
 
         <ImageButton
             android:id="@+id/iv_send_comment"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="@dimen/touch_target_min"
+            android:layout_height="@dimen/touch_target_min"
             android:layout_marginStart="10dp"
             android:background="@drawable/bg_send_circle_modern"
             android:src="@drawable/ic_send"
             android:contentDescription="@string/send_comment_cd"
             android:padding="13dp"
             android:enabled="false"
-            app:tint="@color/md3_on_surface" />
+            app:tint="@color/neu_copper_ink" />
 
     </LinearLayout>
 

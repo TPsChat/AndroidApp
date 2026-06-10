@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_list_row_divider"
+    android:background="@drawable/bg_neu_copper_list_row"
     android:clickable="true"
     android:clipChildren="false"
     android:clipToPadding="false"
@@ -24,14 +24,22 @@
         android:orientation="horizontal"
         android:paddingBottom="@dimen/spacing_sm">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/iv_post_avatar"
-            android:layout_width="@dimen/avatar_sm"
-            android:layout_height="@dimen/avatar_sm"
-            android:contentDescription="@string/home_create_post_avatar_cd"
-            android:src="@drawable/ic_profile_placeholder"
-            app:civ_border_color="@color/md3_border_subtle"
-            app:civ_border_width="@dimen/avatar_border_width_sm" />
+        <FrameLayout
+            android:layout_width="@dimen/neu_copper_avatar_well"
+            android:layout_height="@dimen/neu_copper_avatar_well"
+            android:background="@drawable/bg_neu_copper_sunken_circle"
+            android:padding="4dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_post_avatar"
+                android:layout_width="@dimen/neu_copper_avatar_inner"
+                android:layout_height="@dimen/neu_copper_avatar_inner"
+                android:layout_gravity="center"
+                android:contentDescription="@string/home_create_post_avatar_cd"
+                android:src="@drawable/ic_profile_placeholder"
+                app:civ_border_width="0dp" />
+
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -54,7 +62,7 @@
                     android:fontFamily="@font/plus_jakarta_sans"
                     android:maxLines="1"
                     android:maxWidth="@dimen/post_username_max_width"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="@dimen/text_body_large"
                     android:textStyle="bold"
                     tools:text="Sophia Nguyen" />
@@ -87,7 +95,7 @@
                 android:layout_marginTop="@dimen/list_item_margin"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text=""
-                android:textColor="@color/md3_on_surface_secondary"
+                android:textColor="@color/neu_copper_accent"
                 android:textSize="@dimen/text_timestamp" />
 
         </LinearLayout>
@@ -100,7 +108,7 @@
             android:contentDescription="@string/post_options_cd"
             android:padding="@dimen/post_menu_button_padding"
             android:src="@drawable/ic_more"
-            app:tint="@color/md3_secondary" />
+            app:tint="@color/neu_copper_ink_muted" />
 
     </LinearLayout>
 
@@ -120,7 +128,7 @@
             android:maxLines="5"
             android:paddingBottom="@dimen/chat_messages_margin_top"
             android:text=""
-            android:textColor="@color/md3_on_surface"
+            android:textColor="@color/neu_copper_ink"
             android:textSize="@dimen/text_auth_subtitle" />
 
         <FrameLayout
@@ -175,7 +183,7 @@
                     android:contentDescription="@string/post_play_video_cd"
                     android:padding="@dimen/post_play_button_padding"
                     android:src="@drawable/ic_play"
-                    app:tint="@color/md3_on_surface" />
+                    app:tint="@color/neu_copper_ink" />
 
             </FrameLayout>
 
@@ -218,7 +226,7 @@
                 android:layout_height="@dimen/icon_sm"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_emoji_smile"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/neu_copper_accent" />
 
             <TextView
                 android:id="@+id/tv_likes_count"
@@ -229,7 +237,7 @@
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text=""
                 tools:text="1.2K"
-                android:textColor="@color/md3_on_surface"
+                android:textColor="@color/neu_copper_ink"
                 android:textSize="@dimen/text_banner"
                 android:textStyle="bold" />
 
@@ -249,7 +257,7 @@
             android:contentDescription="@string/post_comment"
             android:text=""
             tools:text="245 comments"
-            android:textColor="@color/md3_on_surface_secondary"
+            android:textColor="@color/neu_copper_ink_muted"
             android:textSize="@dimen/text_banner" />
 
         <TextView
@@ -264,7 +272,7 @@
             android:contentDescription="@string/post_share"
             android:text=""
             tools:text="12 shares"
-            android:textColor="@color/md3_on_surface_secondary"
+            android:textColor="@color/neu_copper_ink_muted"
             android:textSize="@dimen/text_banner" />
 
     </LinearLayout>
@@ -300,7 +308,7 @@
                 android:layout_height="@dimen/icon_sm"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_emoji_smile"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/neu_copper_accent" />
 
             <TextView
                 android:id="@+id/tv_like_text"
@@ -309,7 +317,7 @@
                 android:layout_marginStart="@dimen/post_action_icon_margin"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/post_like"
-                android:textColor="@color/md3_on_surface"
+                android:textColor="@color/neu_copper_ink"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold" />
 
@@ -334,7 +342,7 @@
                 android:layout_height="@dimen/icon_sm"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_chat"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/neu_copper_accent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -342,7 +350,7 @@
                 android:layout_marginStart="@dimen/post_action_icon_margin"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/post_comment"
-                android:textColor="@color/md3_on_surface"
+                android:textColor="@color/neu_copper_ink"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold" />
 
@@ -365,7 +373,7 @@
                 android:layout_height="@dimen/icon_sm"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_open"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/neu_copper_accent" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -373,7 +381,7 @@
                 android:layout_marginStart="@dimen/post_action_icon_margin"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/post_share"
-                android:textColor="@color/md3_on_surface"
+                android:textColor="@color/neu_copper_ink"
                 android:textSize="@dimen/text_body_medium"
                 android:textStyle="bold" />
 

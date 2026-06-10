@@ -6,26 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/bg_chat_screen_dark">
+    android:background="@drawable/bg_neu_copper_canvas">
 
     <ImageView
         android:id="@+id/bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:alpha="0.08"
+        android:importantForAccessibility="no"
         android:scaleType="centerCrop"
-        android:contentDescription="@string/background_image_cd"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Flat search header -->
     <LinearLayout
         android:id="@+id/search_header_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_flat_header"
         android:gravity="center_vertical"
         android:minHeight="@dimen/header_height"
         android:orientation="horizontal"
@@ -35,57 +33,35 @@
         android:paddingBottom="@dimen/spacing_sm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="@dimen/touch_target_min"
-            android:layout_height="@dimen/touch_target_min"
+        <FrameLayout
+            android:id="@+id/toolbar_back_well"
+            android:layout_width="@dimen/neu_copper_avatar_well"
+            android:layout_height="@dimen/neu_copper_avatar_well"
             android:layout_marginEnd="@dimen/spacing_sm"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:contentDescription="@string/back_button_description"
-            android:padding="@dimen/spacing_sm"
-            android:src="@drawable/ic_back"
-            app:tint="@color/md3_primary" />
+            android:background="@drawable/bg_neu_copper_sunken_circle"
+            android:padding="4dp">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="@dimen/search_bar_height"
-            android:layout_weight="1"
-            android:background="@drawable/bg_glass_search">
-
-            <EditText
-                android:id="@+id/et_search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:gravity="center_vertical"
-                android:hint="@string/search_hint"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:paddingStart="@dimen/dialog_padding_h"
-                android:paddingEnd="48dp"
-                android:singleLine="true"
-                android:textColor="@color/md3_on_surface"
-                android:textColorHint="@color/md3_on_surface_secondary"
-                android:textCursorDrawable="@null"
-                android:textSize="15sp" />
-
-            <ImageButton
-                android:id="@+id/iv_clear"
+            <ImageView
+                android:id="@+id/iv_toolbar_back"
                 android:layout_width="@dimen/touch_target_min"
                 android:layout_height="@dimen/touch_target_min"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/spacing_xs"
-                android:background="@drawable/bg_icon_circle_transparent"
-                android:contentDescription="@string/clear_search_cd"
-                android:padding="@dimen/icon_button_inset"
-                android:src="@drawable/ic_close"
-                android:visibility="gone"
-                app:tint="@color/md3_primary" />
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/back_button_description"
+                android:padding="@dimen/spacing_sm"
+                android:src="@drawable/ic_back"
+                app:tint="@color/neu_copper_ink" />
 
-        </RelativeLayout>
+        </FrameLayout>
+
+        <include
+            layout="@layout/component_neu_search_field"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/neu_copper_search_height"
+            android:layout_weight="1" />
 
     </LinearLayout>
 
@@ -97,68 +73,38 @@
         android:layout_marginStart="@dimen/margin_mobile"
         android:layout_marginTop="@dimen/spacing_sm"
         android:layout_marginEnd="@dimen/margin_mobile"
-        android:background="@drawable/bg_soft_inset"
-        android:orientation="horizontal"
-        android:padding="@dimen/auth_switch_inner_padding"
+        style="@style/AppNeuTabBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_header_card">
 
         <TextView
             android:id="@+id/tab_users"
+            style="@style/AppNeuTabItem"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_target_min"
             android:layout_weight="1"
-            android:text="@string/search_tab_users"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:background="@drawable/tab_selector"
-            android:textColor="@color/tab_text_selector"
-            android:clickable="true"
-            android:focusable="true" />
+            android:text="@string/search_tab_users" />
 
         <TextView
             android:id="@+id/tab_groups"
+            style="@style/AppNeuTabItem"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_target_min"
             android:layout_weight="1"
-            android:text="@string/search_tab_my_groups"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:background="@drawable/tab_selector"
-            android:textColor="@color/tab_text_selector"
-            android:clickable="true"
-            android:focusable="true" />
+            android:text="@string/search_tab_my_groups" />
 
         <TextView
             android:id="@+id/tab_discover"
+            style="@style/AppNeuTabItem"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_target_min"
             android:layout_weight="1"
-            android:text="@string/search_tab_discover"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:background="@drawable/tab_selector"
-            android:textColor="@color/tab_text_selector"
-            android:clickable="true"
-            android:focusable="true" />
+            android:text="@string/search_tab_discover" />
 
         <TextView
             android:id="@+id/tab_posts"
+            style="@style/AppNeuTabItem"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_target_min"
             android:layout_weight="1"
-            android:text="@string/search_tab_posts"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:background="@drawable/tab_selector"
-            android:textColor="@color/tab_text_selector"
-            android:clickable="true"
-            android:focusable="true" />
+            android:text="@string/search_tab_posts" />
 
     </LinearLayout>
 
@@ -185,70 +131,34 @@
 
             <TextView
                 android:id="@+id/filter_friends"
+                style="@style/AppNeuChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/touch_target_min"
                 android:layout_marginEnd="8dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:background="@drawable/bg_option_row_dark"
-                android:text="@string/search_filter_friends"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface"
-                android:gravity="center"
-                android:clickable="true"
-                android:focusable="true" />
+                android:text="@string/search_filter_friends" />
 
             <TextView
                 android:id="@+id/filter_media"
+                style="@style/AppNeuChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/touch_target_min"
                 android:layout_marginEnd="8dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:background="@drawable/bg_option_row_dark"
-                android:text="@string/search_filter_media"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface"
-                android:gravity="center"
-                android:clickable="true"
-                android:focusable="true" />
+                android:text="@string/search_filter_media" />
 
             <TextView
                 android:id="@+id/filter_hashtag"
+                style="@style/AppNeuChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/touch_target_min"
                 android:layout_marginEnd="8dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:background="@drawable/bg_option_row_dark"
-                android:text="@string/search_filter_hashtag"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface"
-                android:gravity="center"
-                android:clickable="true"
-                android:focusable="true" />
+                android:text="@string/search_filter_hashtag" />
 
             <TextView
                 android:id="@+id/filter_date"
+                style="@style/AppNeuChip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minHeight="@dimen/touch_target_min"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:background="@drawable/bg_option_row_dark"
-                android:text="@string/search_filter_date"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/md3_on_surface"
-                android:gravity="center"
-                android:clickable="true"
-                android:focusable="true" />
+                android:text="@string/search_filter_date" />
 
         </LinearLayout>
 
@@ -264,7 +174,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/filters_container">
+        app:layout_constraintTop_toBottomOf="@id/filters_container"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -307,7 +218,7 @@
                     android:background="@drawable/bg_icon_circle_dark"
                     android:padding="16dp"
                     android:layout_marginBottom="@dimen/spacing_md"
-                    app:tint="@color/md3_primary"
+                    app:tint="@color/neu_copper_accent"
                     android:contentDescription="@string/search_icon_description" />
 
                 <TextView
@@ -316,7 +227,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/search_hint_title"
                     android:textSize="20sp"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
 
@@ -326,7 +237,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/search_hint_subtitle"
                     android:textSize="14sp"
-                    android:textColor="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink_muted"
                     android:textAlignment="center"
                     android:gravity="center" />
 
@@ -356,7 +267,7 @@
                     android:background="@drawable/bg_icon_circle_dark"
                     android:padding="16dp"
                     android:layout_marginBottom="@dimen/spacing_md"
-                    app:tint="@color/md3_primary"
+                    app:tint="@color/neu_copper_accent"
                     android:contentDescription="@string/no_results_cd" />
 
                 <TextView
@@ -365,7 +276,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/search_no_results_title"
                     android:textSize="20sp"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
 
@@ -375,7 +286,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/search_no_results_subtitle"
                     android:textSize="14sp"
-                    android:textColor="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink_muted"
                     android:textAlignment="center"
                     android:gravity="center" />
 

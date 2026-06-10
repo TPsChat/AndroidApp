@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_list_row_divider"
+    android:background="@drawable/bg_neu_copper_list_row"
     android:clickable="true"
     android:clipChildren="false"
     android:clipToPadding="false"
@@ -13,18 +13,26 @@
     android:minHeight="@dimen/list_row_min_height"
     android:orientation="horizontal"
     android:paddingStart="@dimen/margin_mobile"
-    android:paddingTop="@dimen/spacing_sm"
+    android:paddingTop="@dimen/spacing_md"
     android:paddingEnd="@dimen/margin_mobile"
-    android:paddingBottom="@dimen/spacing_sm">
+    android:paddingBottom="@dimen/spacing_md">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_notification_avatar"
-        android:layout_width="@dimen/avatar_sm"
-        android:layout_height="@dimen/avatar_sm"
+    <FrameLayout
+        android:layout_width="@dimen/neu_copper_avatar_well"
+        android:layout_height="@dimen/neu_copper_avatar_well"
         android:layout_marginEnd="@dimen/spacing_md"
-        android:src="@drawable/ic_profile_placeholder"
-        app:civ_border_color="@color/md3_border_subtle"
-        app:civ_border_width="@dimen/avatar_border_width_sm" />
+        android:background="@drawable/bg_neu_copper_sunken_circle"
+        android:padding="4dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_notification_avatar"
+            android:layout_width="@dimen/neu_copper_avatar_inner"
+            android:layout_height="@dimen/neu_copper_avatar_inner"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_profile_placeholder"
+            app:civ_border_width="0dp" />
+
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="0dp"
@@ -41,7 +49,7 @@
             android:lineSpacingExtra="2dp"
             android:maxLines="2"
             android:text=""
-            android:textColor="@color/md3_on_surface"
+            android:textColor="@color/neu_copper_ink"
             android:textSize="@dimen/text_body_medium" />
 
         <TextView
@@ -51,24 +59,24 @@
             android:layout_marginTop="@dimen/list_item_margin"
             android:fontFamily="@font/plus_jakarta_sans"
             android:text=""
-            android:textColor="@color/md3_on_surface_secondary"
+            android:textColor="@color/neu_copper_accent"
             android:textSize="@dimen/text_timestamp" />
 
     </LinearLayout>
 
     <FrameLayout
-        android:layout_width="@dimen/avatar_sm"
-        android:layout_height="@dimen/avatar_sm"
+        android:layout_width="@dimen/neu_copper_avatar_well"
+        android:layout_height="@dimen/neu_copper_avatar_well"
         android:layout_marginStart="@dimen/spacing_sm"
-        android:background="@drawable/bg_soft_inset"
+        android:background="@drawable/bg_neu_copper_sunken_circle"
         android:clipChildren="true"
-        android:clipToPadding="true">
+        android:clipToPadding="true"
+        android:padding="4dp">
 
         <ImageView
             android:id="@+id/iv_notification_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="2dp"
             android:scaleType="centerCrop"
             android:visibility="gone"
             tools:src="@drawable/ic_image"
@@ -81,7 +89,7 @@
         android:layout_width="@dimen/online_dot_size"
         android:layout_height="@dimen/online_dot_size"
         android:layout_marginStart="@dimen/spacing_sm"
-        android:background="@drawable/bg_badge_red_modern"
+        android:background="@drawable/bg_neu_copper_badge"
         android:visibility="gone"
         tools:visibility="visible" />
 

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +21,7 @@ import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.AvatarManager;
 import com.example.chatappjava.utils.DatabaseManager;
 import com.example.chatappjava.utils.EmptyStateHelper;
+import com.example.chatappjava.utils.SkeletonHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,10 +39,11 @@ import okhttp3.Response;
 public class GroupMembersActivity extends AppCompatActivity implements GroupMembersAdapter.OnMemberClickListener {
     
     private TextView tvGroupName, tvMemberCount;
-    private ImageView ivBack;
+    private View ivBack;
     private RecyclerView rvMembers;
     private EditText etSearch;
     private View emptyState;
+    private View listSkeleton;
     
     private Chat currentChat;
     private List<User> members;
@@ -67,12 +68,18 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
     }
     
     private void initViews() {
-        tvGroupName = findViewById(R.id.tv_group_name);
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        tvGroupName = findViewById(R.id.tv_toolbar_title);
         tvMemberCount = findViewById(R.id.tv_member_count);
-        ivBack = findViewById(R.id.iv_back);
+        ivBack = findViewById(R.id.iv_toolbar_back);
         rvMembers = findViewById(R.id.rv_members);
         etSearch = findViewById(R.id.et_search);
+        etSearch.setHint(R.string.search_members_hint);
         emptyState = findViewById(R.id.empty_state);
+        listSkeleton = findViewById(R.id.list_skeleton);
         EmptyStateHelper.bind(
                 emptyState,
                 R.string.empty_group_members_title,
@@ -164,12 +171,15 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
             return;
         }
         
-        Toast.makeText(this, getString(R.string.status_loading_members), Toast.LENGTH_SHORT).show();
-        
+        SkeletonHelper.setListLoading(listSkeleton, true);
+        rvMembers.setVisibility(View.GONE);
+
         apiClient.getGroupMembers(token, currentChat.getId(), new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {
                 runOnUiThread(() -> {
+                    SkeletonHelper.setListLoading(listSkeleton, false);
+                    rvMembers.setVisibility(View.VISIBLE);
                     Toast.makeText(GroupMembersActivity.this, getString(R.string.error_load_members, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
@@ -185,6 +195,8 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
     }
     
     private void handleLoadMembersResponse(int statusCode, String responseBody) {
+        SkeletonHelper.setListLoading(listSkeleton, false);
+        rvMembers.setVisibility(View.VISIBLE);
         try {
             if (statusCode == 200) {
                 JSONObject jsonResponse = new JSONObject(responseBody);
@@ -192,6 +204,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                     JSONObject data = jsonResponse.getJSONObject("data");
                     JSONArray membersArray = data.getJSONArray("members");
                     
+                    int previousSize = members.size();
                     members.clear();
                     allMembers.clear();
                     memberRoles.clear();
@@ -246,7 +259,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                     
                     // Apply current filter text if any
                     String currentQuery = etSearch != null && etSearch.getText() != null ? etSearch.getText().toString() : "";
-                    filterMembers(currentQuery);
+                    filterMembers(currentQuery, previousSize);
                     
                     if (members.isEmpty()) {
                         Toast.makeText(this, getString(R.string.empty_group_members_title), Toast.LENGTH_SHORT).show();
@@ -265,6 +278,10 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
     }
 
     private void filterMembers(String query) {
+        filterMembers(query, members.size());
+    }
+
+    private void filterMembers(String query, int previousSize) {
         String q = query == null ? "" : query.trim().toLowerCase(Locale.ROOT);
         members.clear();
         if (q.isEmpty()) {
@@ -280,13 +297,36 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                 }
             }
         }
-        membersAdapter.notifyDataSetChanged();
+        notifyMembersListChanged(previousSize, members.size());
         // Toggle empty state
         if (emptyState != null) {
             emptyState.setVisibility(members.isEmpty() ? View.VISIBLE : View.GONE);
         }
         // Update count to reflect current visible items
         tvMemberCount.setText(members.size() + " members");
+    }
+
+    private void notifyMembersListChanged(int previousSize, int newSize) {
+        if (membersAdapter == null) {
+            return;
+        }
+        if (previousSize == newSize) {
+            if (newSize > 0) {
+                membersAdapter.notifyItemRangeChanged(0, newSize);
+            }
+            return;
+        }
+        if (newSize > previousSize) {
+            if (previousSize > 0) {
+                membersAdapter.notifyItemRangeChanged(0, previousSize);
+            }
+            membersAdapter.notifyItemRangeInserted(previousSize, newSize - previousSize);
+            return;
+        }
+        if (newSize > 0) {
+            membersAdapter.notifyItemRangeChanged(0, newSize);
+        }
+        membersAdapter.notifyItemRangeRemoved(newSize, previousSize - newSize);
     }
 
     @Override
@@ -544,7 +584,6 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
                                     // Update adapter immediately to reflect role changes
                                     if (membersAdapter != null) {
                                         membersAdapter.setMemberRoles(memberRoles);
-                                        membersAdapter.notifyDataSetChanged();
                                     }
                                     
                                     // Reload members to get fresh data from server and ensure consistency

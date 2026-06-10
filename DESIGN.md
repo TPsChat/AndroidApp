@@ -1,18 +1,23 @@
 ---
-name: ChatApp — Void Copper
-description: Dark-premium Android chat client with void canvas, warm-tinted surfaces, and a single copper accent. Optimized for Google Stitch screen generation.
+name: ChatApp — Neumorphic Copper
+description: Dark-premium Android chat client with image canvas, embossed soft-UI surfaces, and copper accent #C8875A. Home activity is the reference implementation.
 stitch:
   platform: android
   density: 4
   variance: 6
   motion: 5
 colors:
-  canvas-void: "#0B0D11"
+  canvas-void: "#1E2124"
+  canvas-image: "drawable/chatapp_bg"
   surface-sunken: "#12161C"
-  surface-raised: "#1A2028"
-  surface-high: "#222932"
+  surface-raised: "#2F3745"
+  surface-high: "#394252"
   surface-highest: "#2B3340"
-  bubble-sent: "#141C24"
+  emboss-shadow: "#111722"
+  emboss-highlight: "#394252"
+  emboss-face-start: "#2F3745"
+  emboss-face-end: "#1E2530"
+  bubble-sent: "#C8875A"
   bubble-received: "#1A2028"
   bubble-reply: "#1E2733"
   copper-signal: "#C8875A"
@@ -96,11 +101,11 @@ components:
     rounded: "{rounded.pill}"
     height: "52dp"
   bubble-sent:
-    backgroundColor: "{colors.bubble-sent}"
+    backgroundColor: "{colors.copper-signal}"
     textColor: "{colors.ink-primary}"
     rounded: "{rounded.lg}"
   bubble-received:
-    backgroundColor: "{colors.bubble-received}"
+    backgroundColor: "{colors.emboss-face-end}"
     textColor: "{colors.ink-primary}"
     rounded: "{rounded.lg}"
   input-search:
@@ -192,7 +197,8 @@ Warm void neutrals carry depth. Copper is the only decorative accent. Green and 
 |------------------|-----|------|
 | **Ink Primary** | `#F2F4F7` | Headlines, message body, primary labels |
 | **Ink Muted** | `#8A939F` | Timestamps, metadata (≥4.5:1 on void and raised) |
-| **Ink Whisper** | `#7F8996` | Hints, placeholders, inactive nav icons |
+| **Ink Whisper** | `#9AA0A8` | Hints on raised surfaces (verify contrast on image canvas) |
+| **Neu Copper Ink Muted** | `#A8B0BA` | Search/composer hints on `chatapp_bg` canvas (WCAG AA target) |
 
 ### Structure
 | Descriptive name | Hex | Role |
@@ -278,20 +284,20 @@ For Stitch-generated auth and onboarding screens:
 - **Max width:** 280dp phone, 360dp tablet.
 
 ### Inputs & search
-- **Search bar:** Surface Sunken (`bg_glass_search`), 48dp height, 12dp radius. Focus ring in Copper Signal.
-- **Form fields:** `AppInputField` on `bg_soft_inset`, 52dp, Ink Whisper hints. Label above field; error text below inline.
+- **Search bar:** Recessed emboss pill (`bg_neu_copper_sunken_pill` / alias `bg_glass_search`), 52dp height. Hint in `neu_copper_ink_muted`.
+- **Form fields:** Recessed emboss md (`bg_neu_emboss_sunken_md` / alias `bg_soft_inset`), 52dp. Label above field; error text below inline.
 
 ### Navigation
-- **Flat dock:** Full width, Surface Sunken, 1dp top border (`border-subtle`), 56dp height. Not a floating glass pill.
-- **Tabs:** 48dp touch. Active: copper icon + label; inactive: Ink Whisper.
-- **Inner screens:** `AppFlatHeader` + `component_back_button` + `AppToolbarTitle`.
+- **Home dock:** Floating raised pill (`bg_neu_copper_nav_dock`), 72dp, 16dp margin. Tab wells recessed; **selected = copper icon only**, background unchanged.
+- **Composer dock:** Raised bar (`bg_neu_composer_dock` / alias `bg_glass_nav`) for chat/post input areas.
+- **Inner screens:** Transparent header (`bg_flat_header`) over image canvas + `component_back_button` + title.
 
 ### Lists
-- Rows on void canvas; 1dp hairline dividers (`bg_list_row_divider`). Min row height 72dp.
-- **No nested cards per row.** Elevation through surface step only.
+- Rows on image canvas; hairline dividers (`bg_neu_copper_list_row`). Avatar in recessed circle well. Timestamp copper. Min row height 72dp.
+- **No nested cards per row.** Depth via emboss layers only.
 
 ### Dialogs
-- Surface Sunken panel (`bg_glass_panel`), 20dp corner radius. Headline 22sp bold centered or left per context.
+- Raised emboss panel (`bg_neu_emboss_raised_md` / alias `bg_glass_panel`), 12dp corner radius. Headline 22sp bold centered or left per context.
 - Option rows: `AppOptionRow` on Surface Raised. Destructive rows use Danger Rose text on `bg_danger_option_row`.
 - Confirm via `DialogUtils.showConfirm()` with standardized copy from `strings.xml`.
 
@@ -304,15 +310,15 @@ For Stitch-generated auth and onboarding screens:
 - **Empty:** `EmptyStateHelper.bind()` inside double-bezel `component_empty_state` with optional copper-tinted icon shell.
 - **Error / offline:** Inline banner or toast via `strings.xml` — direct copy ("Could not load messages"), no "Oops!" or exclamation-heavy success text.
 
-### Double-bezel surfaces (premium inset)
-- **Outer shell:** `@drawable/bg_bezel_outer` — `neu_shadow` fill, `radius_xl`, 1dp `border-subtle`, `bezel_shell_padding` (6dp).
-- **Inner core:** `@drawable/bg_bezel_inner` — `surface-sunken`, `radius_lg`, inset top hairline (`border_highlight`).
-- **Use on:** Auth form bezel, logo capsule, empty state card, primary button (`bg_button_primary_bezel` inset highlight).
-- **Not on:** Chat list rows, message bubbles, dock nav — divider rhythm only.
+### Emboss surfaces (soft UI — reference: Home)
+- **Raised:** shadow layer `top +4dp` `#111722`, highlight `bottom +2dp` `#394252`, face gradient `#2F3745`→`#1E2530` (`bg_neu_copper_raised_rect`, `bg_neu_copper_nav_dock`, `bg_neu_copper_fab`).
+- **Recessed:** inverted offsets for wells (`bg_neu_copper_sunken_pill`, `bg_neu_copper_sunken_circle`, `bg_neu_emboss_sunken_md`).
+- **Primary copper:** `bg_neu_emboss_fab_pill` / `bg_neu_copper_fab` with accent gradient `#E0A67E`→`#A66D45`.
+- **Legacy aliases:** `bg_soft_inset`, `bg_glass_search`, `bg_glass_nav`, `bg_send_circle_modern`, `bg_bezel_*` delegate to emboss drawables.
 
 ### Ambient canvas
-- **Drawable:** `bg_auth_screen` — charcoal void + warm copper radial (top-left, ≤10% opacity) + depth wash (bottom-right).
-- **Alias:** `bg_chat_screen_dark` delegates to `bg_auth_screen` for legacy layout references.
+- **Image:** `drawable-nodpi/chatapp_bg.webp` via `bg_chatapp_canvas`.
+- **Aliases:** `bg_auth_screen`, `bg_neu_copper_canvas`, `bg_chat_screen_dark` → `bg_chatapp_canvas`. Legacy `neu_red_*` / `bg_neu_red_*` alias to copper.
 - **Banned:** Purple mesh, decorative blur, pure `#000000`.
 
 ### Switches & settings
@@ -389,11 +395,25 @@ For Stitch-generated auth and onboarding screens:
 | Flat header | `component_flat_header` | Title + back row |
 | Empty state | `component_empty_state` | Zero-item lists (double-bezel) |
 | List skeleton | `component_list_skeleton` | Search/list loading placeholder |
-| Search affordance | `component_search_bar` | Tappable search row |
-| Create post bar | `component_create_post_bar` | Feed composer strip |
+| Neu header | `component_neu_header` | Avatar well + title + FAB (Home) |
+| Neu toolbar | `component_neu_toolbar` | Back well + title + action slot (Settings) |
+| Neu search (tap) | `component_neu_search` | Tappable search trench |
+| Neu search (field) | `component_neu_search_field` | Icon + EditText + clear |
+| Neu nav dock | `component_neu_nav_dock` | Bottom tab dock (Home) |
+| Tab/chip styles | `AppNeuTabBar`, `AppNeuTabItem`, `AppNeuChip` | FG-only copper selection |
+| Create post bar | `component_create_post_bar` | Feed composer strip (emboss raised) |
 | Settings body | `item_settings_content` | Settings list (shared with `SettingsActionsHelper`) |
+| Composer dock | `bg_neu_composer_dock` | Chat/post/comment input bars (legacy alias `bg_glass_nav`) |
+| Tablet content cap | `@dimen/home_content_max_width` | Feed, search, post detail, profile, group flows (640dp on `sw600dp`) |
+| Dialog panel | `bg_neu_emboss_raised_md` | Option sheets and pickers (legacy alias `bg_glass_panel`) |
 
-**Key helpers:** `MotionUtils`, `EmptyStateHelper`, `DialogUtils`, `SettingsActionsHelper`, `ReactionEmojis`, `NotificationSettingsHelper`
+**Surfaces on neu toolbar:** Profile, Profile view, Post detail, Comment thread, Settings, Group settings, Create group, Friend requests.
+
+**Auth/Ringing:** Login keeps bezel auth layout (copper ink tokens); Ringing uses copper text on call stage (no toolbar).
+
+**Retired:** `component_search_bar` (use `component_neu_search` or `component_neu_search_field`).
+
+**Key helpers:** `MotionUtils`, `EmptyStateHelper`, `DialogUtils`, `SettingsActionsHelper`, `CallAccessibilityHelper`, `ReactionEmojis`, `NotificationSettingsHelper`
 
 **i18n:** All `android:text`, hints, toasts, and `contentDescription` via `strings.xml`. Emoji pickers use `emoji_reaction_*` glyph strings; reaction type labels stay in accessibility strings only.
 

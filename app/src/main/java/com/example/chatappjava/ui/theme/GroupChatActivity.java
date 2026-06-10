@@ -1381,12 +1381,9 @@ public class GroupChatActivity extends BaseChatActivity {
                 groupCallNotification.setVisibility(View.VISIBLE);
                 groupCallNotification.bringToFront(); // Ensure it's on top
                 
-                // Animate in
-                groupCallNotification.setAlpha(0f);
-                groupCallNotification.animate()
-                        .alpha(1f)
-                        .setDuration(300)
-                        .start();
+                com.example.chatappjava.utils.MotionUtils.revealView(
+                        GroupChatActivity.this,
+                        groupCallNotification);
                 
                 android.util.Log.d("GroupChatActivity", "Notification shown successfully for call: " + callId);
             } catch (Exception e) {
@@ -1401,14 +1398,11 @@ public class GroupChatActivity extends BaseChatActivity {
         // Don't clear activeCallId here - it might still be active when user joins
         // this.activeCallId = null;
         if (groupCallNotification != null) {
-            runOnUiThread(() -> {
-                // Animate out
-                groupCallNotification.animate()
-                        .alpha(0f)
-                        .setDuration(300)
-                        .withEndAction(() -> groupCallNotification.setVisibility(View.GONE))
-                        .start();
-            });
+            runOnUiThread(() ->
+                    com.example.chatappjava.utils.MotionUtils.dismissView(
+                            GroupChatActivity.this,
+                            groupCallNotification,
+                            null));
         }
         android.util.Log.d("GroupChatActivity", "Hiding group call notification");
     }

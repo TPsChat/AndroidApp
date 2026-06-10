@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@color/neu_surface_raised" />
-    <corners android:radius="@dimen/radius_pill" />
-    <stroke
-        android:width="@dimen/divider_height"
-        android:color="@color/md3_border_subtle" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/bg_neu_emboss_sunken_md" />
+</layer-list>

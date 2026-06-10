@@ -18,56 +18,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Flat header -->
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/header_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_flat_header"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/header_height"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/margin_mobile"
-        android:paddingTop="@dimen/spacing_sm"
-        android:paddingEnd="@dimen/margin_mobile"
-        android:paddingBottom="@dimen/spacing_sm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="@dimen/touch_target_min"
-            android:layout_height="@dimen/touch_target_min"
-            android:src="@drawable/ic_back"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:padding="@dimen/spacing_sm"
-            android:contentDescription="@string/settings_back_cd"
-            app:tint="@color/md3_primary" />
+        <include
+            android:id="@+id/profile_view_toolbar"
+            layout="@layout/component_neu_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_md"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            android:text="@string/profile"
-            android:textAppearance="@style/AppScreenTitle"
-            android:textColor="@color/md3_on_surface"
-            android:maxLines="1"
-            android:ellipsize="end" />
-
-        <ImageView
+        <ImageButton
             android:id="@+id/iv_more"
             android:layout_width="@dimen/touch_target_min"
             android:layout_height="@dimen/touch_target_min"
-            android:src="@drawable/ic_more"
-            android:background="@drawable/bg_icon_circle_dark"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="@dimen/margin_mobile"
+            android:background="@drawable/bg_neu_copper_sunken_circle"
             android:contentDescription="@string/profile_more_cd"
             android:padding="@dimen/icon_button_inset"
-            app:tint="@color/md3_secondary" />
+            android:src="@drawable/ic_more"
+            app:tint="@color/neu_copper_ink_muted" />
 
-    </LinearLayout>
+    </FrameLayout>
 
     <!-- Profile Content -->
     <LinearLayout
@@ -81,7 +59,8 @@
         app:layout_constraintTop_toBottomOf="@id/header_card"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -124,7 +103,7 @@
                         android:text="@string/username"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:layout_marginTop="14dp" />
 
                     <TextView
@@ -132,7 +111,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/profile_view_subtitle"
                         android:textSize="13sp"
-                        android:textColor="@color/md3_on_surface_secondary"
+                        android:textColor="@color/neu_copper_ink_muted"
                         android:layout_marginTop="4dp" />
 
                 </LinearLayout>
@@ -155,7 +134,7 @@
                         android:text="@string/section_personal_info"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:layout_marginBottom="@dimen/spacing_md" />
 
                     <!-- First Name -->
@@ -174,7 +153,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/first_name"
                             android:textSize="13sp"
-                            android:textColor="@color/md3_on_surface_secondary" />
+                            android:textColor="@color/neu_copper_ink_muted" />
 
                         <TextView
                             android:id="@+id/tv_first_name"
@@ -182,7 +161,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="14sp"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textStyle="bold"
                             tools:text="John" />
 
@@ -204,7 +183,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/last_name"
                             android:textSize="13sp"
-                            android:textColor="@color/md3_on_surface_secondary" />
+                            android:textColor="@color/neu_copper_ink_muted" />
 
                         <TextView
                             android:id="@+id/tv_last_name"
@@ -212,7 +191,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="14sp"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textStyle="bold"
                             tools:text="Doe" />
 
@@ -234,7 +213,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/label_email"
                             android:textSize="13sp"
-                            android:textColor="@color/md3_on_surface_secondary" />
+                            android:textColor="@color/neu_copper_ink_muted" />
 
                         <TextView
                             android:id="@+id/tv_email"
@@ -242,7 +221,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="14sp"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textStyle="bold"
                             android:maxLines="1"
                             android:ellipsize="end"
@@ -265,7 +244,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/label_phone"
                             android:textSize="13sp"
-                            android:textColor="@color/md3_on_surface_secondary" />
+                            android:textColor="@color/neu_copper_ink_muted" />
 
                         <TextView
                             android:id="@+id/tv_phone_number"
@@ -273,7 +252,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:textSize="14sp"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textStyle="bold"
                             tools:text="+123456789" />
 
@@ -299,7 +278,7 @@
                         android:text="@string/section_about"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:layout_marginBottom="12dp" />
 
                     <TextView
@@ -307,7 +286,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="14sp"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:lineSpacingExtra="4dp"
                         tools:text="This is a sample bio text that describes the user." />
 
@@ -332,7 +311,7 @@
                         android:text="@string/section_friends"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:layout_marginBottom="10dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -352,7 +331,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/empty_friends_title"
                         android:textSize="14sp"
-                        android:textColor="@color/md3_on_surface_secondary"
+                        android:textColor="@color/neu_copper_ink_muted"
                         android:visibility="gone"
                         android:layout_marginTop="8dp" />
 
@@ -376,7 +355,7 @@
                         android:text="@string/section_posts"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:layout_marginBottom="10dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -395,7 +374,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/empty_posts_title"
                         android:textSize="14sp"
-                        android:textColor="@color/md3_on_surface_secondary"
+                        android:textColor="@color/neu_copper_ink_muted"
                         android:visibility="gone"
                         android:layout_marginTop="8dp" />
 

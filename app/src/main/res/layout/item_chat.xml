@@ -9,51 +9,44 @@
     android:clipToPadding="false"
     android:focusable="true">
 
-    <View
-        android:id="@+id/view_active_indicator"
-        android:layout_width="@dimen/active_indicator_width"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_vertical|start"
-        android:background="@drawable/bg_active_chat_indicator"
-        android:visibility="gone" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_list_row_divider"
+        android:background="@drawable/bg_neu_copper_list_row"
         android:gravity="center_vertical"
         android:minHeight="@dimen/list_row_min_height"
         android:orientation="horizontal"
         android:paddingStart="@dimen/margin_mobile"
-        android:paddingTop="@dimen/spacing_sm"
+        android:paddingTop="@dimen/spacing_md"
         android:paddingEnd="@dimen/margin_mobile"
-        android:paddingBottom="@dimen/spacing_sm">
+        android:paddingBottom="@dimen/spacing_md">
 
-        <RelativeLayout
-            android:layout_width="@dimen/avatar_sm"
-            android:layout_height="@dimen/avatar_sm"
+        <!-- Avatar recessed well -->
+        <FrameLayout
+            android:layout_width="@dimen/neu_copper_avatar_well"
+            android:layout_height="@dimen/neu_copper_avatar_well"
             android:layout_marginEnd="@dimen/spacing_md"
+            android:background="@drawable/bg_neu_copper_sunken_circle"
             android:clipChildren="false"
-            android:clipToPadding="false">
+            android:padding="4dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/iv_chat_avatar"
-                android:layout_width="@dimen/avatar_sm"
-                android:layout_height="@dimen/avatar_sm"
+                android:layout_width="@dimen/neu_copper_avatar_inner"
+                android:layout_height="@dimen/neu_copper_avatar_inner"
+                android:layout_gravity="center"
                 android:src="@drawable/ic_profile_placeholder"
-                app:civ_border_color="@color/md3_border_subtle"
-                app:civ_border_width="@dimen/avatar_border_width_sm" />
+                app:civ_border_width="0dp" />
 
             <View
                 android:id="@+id/view_online_dot"
                 android:layout_width="@dimen/online_dot_size"
                 android:layout_height="@dimen/online_dot_size"
-                android:layout_alignEnd="@id/iv_chat_avatar"
-                android:layout_alignBottom="@id/iv_chat_avatar"
+                android:layout_gravity="bottom|end"
                 android:background="@drawable/bg_online_dot"
                 android:visibility="gone" />
 
-        </RelativeLayout>
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -75,7 +68,7 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/plus_jakarta_sans"
                     android:singleLine="true"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="@dimen/text_body_large"
                     android:textStyle="bold"
                     tools:text="Sara Sanders" />
@@ -86,6 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:textColor="@color/neu_copper_accent"
                     android:textSize="@dimen/text_timestamp"
                     tools:text="12:35" />
 
@@ -106,7 +100,7 @@
                     android:ellipsize="end"
                     android:fontFamily="@font/plus_jakarta_sans"
                     android:singleLine="true"
-                    android:textColor="@color/md3_on_surface_variant"
+                    android:textColor="@color/neu_copper_ink_muted"
                     android:textSize="@dimen/text_body_medium"
                     tools:text="Can you buy me dinner?" />
 
@@ -115,14 +109,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/badge_min_width"
                     android:layout_alignParentEnd="true"
-                    android:background="@drawable/bg_badge_red_modern"
+                    android:background="@drawable/bg_neu_copper_badge"
                     android:fontFamily="@font/plus_jakarta_sans"
                     android:gravity="center"
                     android:importantForAccessibility="no"
                     android:minWidth="@dimen/badge_min_width"
                     android:paddingStart="@dimen/badge_padding_h"
                     android:paddingEnd="@dimen/badge_padding_h"
-                    android:textColor="@color/md3_on_primary"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="@dimen/text_label_small"
                     android:textStyle="bold"
                     android:visibility="gone"
@@ -134,5 +128,14 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <!-- Kept for adapter compat; hidden in neumorphic theme -->
+    <View
+        android:id="@+id/view_active_indicator"
+        android:layout_width="@dimen/active_indicator_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|start"
+        android:background="@drawable/bg_active_chat_indicator"
+        android:visibility="gone" />
 
 </FrameLayout>

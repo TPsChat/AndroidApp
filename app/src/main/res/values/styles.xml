@@ -117,7 +117,7 @@
         <item name="android:minHeight">@dimen/input_field_height</item>
         <item name="android:background">@drawable/bg_soft_inset</item>
         <item name="android:textColor">@color/text_primary</item>
-        <item name="android:textColorHint">@color/text_hint</item>
+        <item name="android:textColorHint">@color/neu_copper_ink_muted</item>
         <item name="android:textSize">@dimen/text_body_large</item>
         <item name="android:paddingStart">@dimen/dialog_padding_h</item>
         <item name="android:paddingEnd">@dimen/dialog_padding_h</item>
@@ -135,8 +135,38 @@
     </style>
 
     <style name="AppSearchBar">
-        <item name="android:background">@drawable/bg_glass_search</item>
+        <item name="android:background">@drawable/bg_neu_copper_sunken_pill</item>
         <item name="android:minHeight">@dimen/search_bar_height</item>
+    </style>
+
+    <!-- Neumorphic Copper tab/chip — FG-only selection (Home reference) -->
+    <style name="AppNeuTabBar">
+        <item name="android:background">@drawable/bg_neu_copper_sunken_pill</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">@dimen/auth_switch_inner_padding</item>
+    </style>
+
+    <style name="AppNeuTabItem">
+        <item name="android:layout_height">@dimen/touch_target_min</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/tab_selector</item>
+        <item name="android:textColor">@color/tab_text_selector</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+    </style>
+
+    <style name="AppNeuChip">
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/bg_neu_chip</item>
+        <item name="android:textColor">@color/chip_text_selector</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
     </style>
 
     <style name="AppFlatHeader">
@@ -175,7 +205,7 @@
         <item name="android:layout_marginTop">@dimen/spacing_md</item>
         <item name="android:layout_marginEnd">@dimen/margin_mobile</item>
         <item name="android:layout_marginBottom">@dimen/spacing_sm</item>
-        <item name="android:textColor">@color/md3_on_surface</item>
+        <item name="android:textColor">@color/neu_copper_ink</item>
     </style>
 
     <style name="AppSettingsSectionTitleSpaced" parent="AppSettingsSectionTitle">
@@ -205,7 +235,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/md3_on_surface</item>
+        <item name="android:textColor">@color/neu_copper_ink</item>
     </style>
 
     <style name="AppListDividerRowLabelDanger" parent="AppListDividerRowLabel">
@@ -216,14 +246,14 @@
         <item name="android:layout_width">@dimen/icon_search</item>
         <item name="android:layout_height">@dimen/icon_search</item>
         <item name="android:src">@drawable/ic_more</item>
-        <item name="tint">@color/md3_on_surface_secondary</item>
+        <item name="tint">@color/neu_copper_ink_muted</item>
     </style>
 
     <style name="AppListDividerRowChevronDanger">
         <item name="android:layout_width">@dimen/icon_sm</item>
         <item name="android:layout_height">@dimen/icon_sm</item>
         <item name="android:src">@drawable/ic_more</item>
-        <item name="tint">@color/md3_primary</item>
+        <item name="tint">@color/neu_copper_accent</item>
     </style>
 
     <!-- Legacy aliases (Midnight Slate locked) -->

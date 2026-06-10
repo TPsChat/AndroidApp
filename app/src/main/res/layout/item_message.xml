@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/plus_jakarta_sans"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_body_small"
                     tools:text="Alice" />
@@ -76,7 +76,7 @@
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:fontFamily="@font/plus_jakarta_sans"
-                    android:textColor="@color/md3_on_surface_variant"
+                    android:textColor="@color/neu_copper_ink_muted"
                     android:textSize="@dimen/text_body_small"
                     android:lineSpacingExtra="2dp"
                     tools:text="Previous message content preview" />
@@ -101,7 +101,7 @@
                     android:paddingEnd="@dimen/bubble_padding_h"
                     android:paddingBottom="@dimen/bubble_timestamp_padding_bottom"
                     android:fontFamily="@font/plus_jakarta_sans"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/bubble_sent_ink"
                     android:textSize="@dimen/text_body_medium"
                     android:lineSpacingExtra="3dp"
                     tools:text="This is a sent message" />
@@ -139,7 +139,7 @@
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/message_edited"
                 android:textSize="@dimen/text_timestamp"
-                android:textColor="@color/md3_on_surface_secondary"
+                android:textColor="@color/neu_copper_ink_muted"
                 android:visibility="gone" />
 
             <FrameLayout
@@ -193,7 +193,7 @@
                 android:layout_marginEnd="@dimen/spacing_xs"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:textSize="@dimen/text_timestamp"
-                android:textColor="@color/md3_on_surface_secondary"
+                android:textColor="@color/neu_copper_ink_muted"
                 tools:text="10:30 AM" />
 
         </LinearLayout>
@@ -262,7 +262,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/plus_jakarta_sans"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_body_small"
                     tools:text="Bob" />
@@ -275,7 +275,7 @@
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:fontFamily="@font/plus_jakarta_sans"
-                    android:textColor="@color/md3_on_surface_variant"
+                    android:textColor="@color/neu_copper_ink_muted"
                     android:textSize="@dimen/text_body_small"
                     android:lineSpacingExtra="2dp"
                     tools:text="Previous message content preview" />
@@ -287,7 +287,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/plus_jakarta_sans"
-                android:textColor="@color/md3_primary"
+                android:textColor="@color/neu_copper_accent"
                 android:textSize="@dimen/text_body_small"
                 android:textStyle="bold"
                 android:layout_marginStart="@dimen/list_item_margin"
@@ -313,7 +313,7 @@
                     android:paddingEnd="@dimen/bubble_padding_h"
                     android:paddingBottom="@dimen/bubble_timestamp_padding_bottom"
                     android:fontFamily="@font/plus_jakarta_sans"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="@dimen/text_body_medium"
                     android:lineSpacingExtra="3dp"
                     tools:text="This is a received message" />
@@ -352,7 +352,7 @@
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/message_edited"
                 android:textSize="@dimen/text_timestamp"
-                android:textColor="@color/md3_on_surface_secondary"
+                android:textColor="@color/neu_copper_ink_muted"
                 android:visibility="gone" />
 
             <FrameLayout
@@ -406,7 +406,7 @@
                 android:layout_marginStart="@dimen/spacing_xs"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:textSize="@dimen/text_timestamp"
-                android:textColor="@color/md3_on_surface_secondary"
+                android:textColor="@color/neu_copper_ink_muted"
                 tools:text="10:30 AM" />
 
         </LinearLayout>

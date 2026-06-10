@@ -57,6 +57,7 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
         switchPublic = findViewById(R.id.switch_public);
         listSkeleton = findViewById(R.id.list_skeleton);
         etSearch = findViewById(R.id.et_search);
+        etSearch.setHint(R.string.group_search_friends_hint);
         tvCreate = findViewById(R.id.tv_create);
 
         apiClient = new ApiClient();
@@ -70,7 +71,18 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
         if (tvCreate != null) tvCreate.setOnClickListener(v -> createGroup());
         
         // Back button
-        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        View back = findViewById(R.id.iv_toolbar_back);
+        if (back != null) {
+            back.setOnClickListener(v -> finish());
+        }
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+        if (toolbarTitle != null) {
+            toolbarTitle.setText(R.string.title_activity_create_group);
+        }
 
         if (etSearch != null) {
             etSearch.addTextChangedListener(new TextWatcher() {
@@ -109,7 +121,6 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
                 });
             }
 
-            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String body = response.body().string();
@@ -121,6 +132,7 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
                         if (response.code() == 200 && json.optBoolean("success", false)) {
                             JSONObject data = json.getJSONObject("data");
                             JSONArray arr = data.getJSONArray("friends");
+                            int previousSize = friends.size();
                             friends.clear();
                             allFriends.clear();
                             for (int i = 0; i < arr.length(); i++) {
@@ -128,7 +140,9 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
                                 friends.add(fetched);
                                 allFriends.add(fetched);
                             }
-                            adapter.notifyDataSetChanged();
+                            String currentQuery = etSearch != null && etSearch.getText() != null
+                                    ? etSearch.getText().toString() : "";
+                            filterFriends(currentQuery, previousSize);
                         }
                     } catch (JSONException e) {
                         Toast.makeText(CreateGroupActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
@@ -138,8 +152,11 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
         });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void filterFriends(String query) {
+        filterFriends(query, friends.size());
+    }
+
+    private void filterFriends(String query, int previousSize) {
         String q = query == null ? "" : query.trim().toLowerCase(java.util.Locale.ROOT);
         friends.clear();
         if (q.isEmpty()) {
@@ -155,7 +172,30 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
                 }
             }
         }
-        adapter.notifyDataSetChanged();
+        notifyFriendsListChanged(previousSize, friends.size());
+    }
+
+    private void notifyFriendsListChanged(int previousSize, int newSize) {
+        if (adapter == null) {
+            return;
+        }
+        if (previousSize == newSize) {
+            if (newSize > 0) {
+                adapter.notifyItemRangeChanged(0, newSize);
+            }
+            return;
+        }
+        if (newSize > previousSize) {
+            if (previousSize > 0) {
+                adapter.notifyItemRangeChanged(0, previousSize);
+            }
+            adapter.notifyItemRangeInserted(previousSize, newSize - previousSize);
+            return;
+        }
+        if (newSize > 0) {
+            adapter.notifyItemRangeChanged(0, newSize);
+        }
+        adapter.notifyItemRangeRemoved(newSize, previousSize - newSize);
     }
 
     private void createGroup() {

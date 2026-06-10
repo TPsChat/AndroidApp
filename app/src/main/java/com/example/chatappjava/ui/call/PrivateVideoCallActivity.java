@@ -179,7 +179,9 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
         btnCameraToggle = findViewById(R.id.btn_camera_toggle);
         btnSwitchCamera = findViewById(R.id.btn_switch_camera);
         btnEndCall = findViewById(R.id.btn_end_call);
-        
+        com.example.chatappjava.utils.CallAccessibilityHelper.bindInCallControls(
+                btnMute, btnCameraToggle, btnSwitchCamera, btnEndCall, isMuted, isCameraOn);
+
         // Load local avatar
         String localAvatar = databaseManager.getUserAvatar();
         loadAvatar(ivLocalAvatar, localAvatar);
@@ -868,7 +870,9 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
     private void toggleMute() {
         isMuted = !isMuted;
         btnMute.setImageResource(isMuted ? R.drawable.ic_mic_off : R.drawable.ic_mic);
-        
+        com.example.chatappjava.utils.CallAccessibilityHelper.announceMuteToggle(
+                getResources(), btnMute, isMuted);
+
         // Start or stop audio capture based on mute state
         if (isMuted) {
             stopAudioCapture();
@@ -887,7 +891,9 @@ public class PrivateVideoCallActivity extends AppCompatActivity {
     private void toggleCamera() {
         isCameraOn = !isCameraOn;
         btnCameraToggle.setImageResource(isCameraOn ? R.drawable.ic_video_call : R.drawable.ic_video_off);
-        
+        com.example.chatappjava.utils.CallAccessibilityHelper.announceCameraToggle(
+                getResources(), btnCameraToggle, isCameraOn);
+
         if (isCameraOn) {
             startVideoCapture();
         } else {

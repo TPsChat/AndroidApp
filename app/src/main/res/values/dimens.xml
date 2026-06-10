@@ -67,7 +67,7 @@
     <dimen name="option_row_height">52dp</dimen>
     <dimen name="input_field_height">52dp</dimen>
     <dimen name="auth_switch_height">52dp</dimen>
-    <dimen name="composer_inset_height">44dp</dimen>
+    <dimen name="composer_inset_height">48dp</dimen>
 
     <dimen name="nav_margin_h">0dp</dimen>
     <dimen name="nav_padding_bottom">0dp</dimen>
@@ -106,7 +106,7 @@
     <dimen name="post_play_button_size">56dp</dimen>
     <dimen name="post_play_button_padding">16dp</dimen>
     <dimen name="post_interaction_row_height">36dp</dimen>
-    <dimen name="post_action_row_height">44dp</dimen>
+    <dimen name="post_action_row_height">48dp</dimen>
     <dimen name="post_content_line_spacing">4dp</dimen>
     <dimen name="post_tagged_margin_start">4dp</dimen>
     <dimen name="post_action_icon_margin">6dp</dimen>
@@ -116,4 +116,18 @@
     <dimen name="icon_button_inset">10dp</dimen>
     <dimen name="home_content_max_width">0dp</dimen>
     <dimen name="list_content_padding_bottom">16dp</dimen>
+
+    <!-- Neumorphic Copper -->
+    <dimen name="neu_copper_nav_dock_height">72dp</dimen>
+    <dimen name="neu_copper_nav_dock_margin">16dp</dimen>
+    <dimen name="neu_copper_nav_tab_size">48dp</dimen>
+    <dimen name="neu_copper_avatar_well">52dp</dimen>
+    <dimen name="neu_copper_avatar_inner">44dp</dimen>
+    <dimen name="neu_copper_search_height">52dp</dimen>
+    <dimen name="neu_red_nav_dock_height">@dimen/neu_copper_nav_dock_height</dimen>
+    <dimen name="neu_red_nav_dock_margin">@dimen/neu_copper_nav_dock_margin</dimen>
+    <dimen name="neu_red_nav_tab_size">@dimen/neu_copper_nav_tab_size</dimen>
+    <dimen name="neu_red_avatar_well">@dimen/neu_copper_avatar_well</dimen>
+    <dimen name="neu_red_avatar_inner">@dimen/neu_copper_avatar_inner</dimen>
+    <dimen name="neu_red_search_height">@dimen/neu_copper_search_height</dimen>
 </resources>

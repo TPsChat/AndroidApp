@@ -1,5 +1,9 @@
 package com.example.chatappjava.utils;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.provider.Settings;
 import android.view.MotionEvent;
@@ -209,6 +213,35 @@ public final class MotionUtils {
                 .start();
     }
 
+    public static void dismissView(Context context, View view, @Nullable Runnable onHidden) {
+        if (view == null) {
+            return;
+        }
+        if (!shouldAnimate(context, true)) {
+            view.setVisibility(View.GONE);
+            view.setAlpha(1f);
+            view.setTranslationY(0f);
+            if (onHidden != null) {
+                onHidden.run();
+            }
+            return;
+        }
+        view.animate().cancel();
+        view.animate()
+                .alpha(0.88f)
+                .setDuration(context.getResources().getInteger(R.integer.anim_duration_fast))
+                .setInterpolator(getEaseOutInterpolator())
+                .withEndAction(() -> {
+                    view.setVisibility(View.GONE);
+                    view.setAlpha(1f);
+                    view.setTranslationY(0f);
+                    if (onHidden != null) {
+                        onHidden.run();
+                    }
+                })
+                .start();
+    }
+
     public static void animateDialogIn(Context context, View dialogRoot) {
         if (dialogRoot == null) {
             return;
@@ -218,7 +251,7 @@ public final class MotionUtils {
             dialogRoot.setTranslationY(0f);
             return;
         }
-        dialogRoot.setAlpha(0f);
+        dialogRoot.setAlpha(0.88f);
         dialogRoot.setTranslationY(dp(context, 18f));
         dialogRoot.animate()
                 .alpha(1f)
@@ -241,7 +274,7 @@ public final class MotionUtils {
         float travel = dp(context, 8f);
         textView.animate().cancel();
         textView.animate()
-                .alpha(0f)
+                .alpha(0.88f)
                 .translationY(-travel * 0.4f)
                 .setDuration(120L)
                 .setInterpolator(getEaseOutInterpolator())
@@ -268,6 +301,54 @@ public final class MotionUtils {
                 .setDuration(context.getResources().getInteger(R.integer.anim_duration_fast))
                 .setInterpolator(getEaseOutInterpolator())
                 .start();
+    }
+
+    /**
+     * Decorative incoming-call ripples; skipped when reduced motion is enabled.
+     */
+    @Nullable
+    public static AnimatorSet startIncomingCallRipples(Context context,
+                                                         View ripple1,
+                                                         View ripple2,
+                                                         View ripple3,
+                                                         java.util.function.BooleanSupplier shouldRepeat) {
+        if (isMotionReduced(context) || ripple1 == null || ripple2 == null || ripple3 == null) {
+            return null;
+        }
+        AnimatorSet ripple1Set = buildRipplePulse(ripple1, 0.8f, 2000L);
+        AnimatorSet ripple2Set = buildRipplePulse(ripple2, 0.6f, 2000L);
+        AnimatorSet ripple3Set = buildRipplePulse(ripple3, 0.4f, 2000L);
+
+        AnimatorSet sequence = new AnimatorSet();
+        sequence.play(ripple1Set);
+        sequence.play(ripple2Set).after(500L);
+        sequence.play(ripple3Set).after(1000L);
+        sequence.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (shouldRepeat != null && shouldRepeat.getAsBoolean()) {
+                    sequence.start();
+                }
+            }
+        });
+        sequence.start();
+        return sequence;
+    }
+
+    private static AnimatorSet buildRipplePulse(View target, float startAlpha, long durationMs) {
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(target, View.SCALE_X, 0.5f, 1.5f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(target, View.SCALE_Y, 0.5f, 1.5f);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(target, View.ALPHA, startAlpha, 0f);
+        scaleX.setDuration(durationMs);
+        scaleY.setDuration(durationMs);
+        alpha.setDuration(durationMs);
+        android.view.animation.Interpolator ease = getEaseOutInterpolator();
+        scaleX.setInterpolator(ease);
+        scaleY.setInterpolator(ease);
+        alpha.setInterpolator(ease);
+        AnimatorSet set = new AnimatorSet();
+        set.playTogether(scaleX, scaleY, alpha);
+        return set;
     }
 
     private static float dp(Context context, float value) {

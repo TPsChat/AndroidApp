@@ -170,10 +170,6 @@ public class LoginActivity extends AppCompatActivity {
             applyModeCopy(signUpMode);
         }
 
-        int activeColor = ContextCompat.getColor(this, R.color.md3_on_primary);
-        int inactiveColor = ContextCompat.getColor(this, R.color.text_secondary);
-        tvSignInTab.setTextColor(signUpMode ? inactiveColor : activeColor);
-        tvRegister.setTextColor(signUpMode ? activeColor : inactiveColor);
         updateAuthTabAccessibility(signUpMode);
 
         showLoginInlineError(null);
@@ -215,7 +211,7 @@ public class LoginActivity extends AppCompatActivity {
         float travel = dp(12f);
         textView.animate().cancel();
         textView.animate()
-                .alpha(0f)
+                .alpha(0.88f)
                 .translationY(-travel * 0.45f)
                 .setStartDelay(delayMs)
                 .setDuration(120L)
@@ -277,7 +273,7 @@ public class LoginActivity extends AppCompatActivity {
         View incomingPanel = isSignUpMode ? registerPanel : loginPanel;
         View outgoingPanel = isSignUpMode ? loginPanel : registerPanel;
 
-        if (!animate) {
+        if (!animate || com.example.chatappjava.utils.MotionUtils.isMotionReduced(this)) {
             incomingPanel.setVisibility(View.VISIBLE);
             incomingPanel.setAlpha(1f);
             incomingPanel.setTranslationY(0f);
@@ -293,7 +289,7 @@ public class LoginActivity extends AppCompatActivity {
 
         incomingPanel.bringToFront();
         incomingPanel.setVisibility(View.VISIBLE);
-        incomingPanel.setAlpha(0f);
+        incomingPanel.setAlpha(0.92f);
         incomingPanel.setTranslationY(dp(26f));
         incomingPanel.setScaleX(0.965f);
         incomingPanel.setScaleY(0.965f);

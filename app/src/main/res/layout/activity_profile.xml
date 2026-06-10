@@ -18,61 +18,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Flat header -->
     <LinearLayout
         android:id="@+id/header_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_flat_header"
-        android:gravity="center_vertical"
-        android:minHeight="@dimen/header_height"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/margin_mobile"
-        android:paddingTop="@dimen/spacing_sm"
-        android:paddingEnd="@dimen/margin_mobile"
-        android:paddingBottom="@dimen/spacing_sm"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
-        <ImageView
-            android:id="@+id/iv_back"
-            android:layout_width="@dimen/touch_target_min"
-            android:layout_height="@dimen/touch_target_min"
-            android:src="@drawable/ic_back"
-            android:background="@drawable/bg_icon_circle_dark"
-            android:padding="@dimen/spacing_sm"
-            android:contentDescription="@string/settings_back_cd"
-            app:tint="@color/md3_primary" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_md"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            android:text="@string/profile"
-            android:textAppearance="@style/AppScreenTitle"
-            android:textColor="@color/md3_on_surface"
-            android:maxLines="1"
-            android:ellipsize="end" />
+            <include
+                android:id="@+id/profile_toolbar"
+                layout="@layout/component_neu_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/tv_save"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/touch_target_min"
-            android:minWidth="76dp"
-            android:contentDescription="@string/profile_save_cd"
-            android:gravity="center"
-            android:text="@string/save"
-            android:textSize="@dimen/text_body_medium"
-            android:textStyle="bold"
-            android:textColor="@color/md3_on_primary"
-            android:background="@drawable/bg_filter_pill_active"
-            android:paddingStart="@dimen/dialog_padding_h"
-            android:paddingEnd="@dimen/dialog_padding_h"
-            android:clickable="true"
-            android:focusable="true" />
+            <TextView
+                android:id="@+id/tv_save"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/touch_target_min"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="@dimen/margin_mobile"
+                android:minWidth="76dp"
+                android:contentDescription="@string/profile_save_cd"
+                android:gravity="center"
+                android:text="@string/save"
+                android:textSize="@dimen/text_body_medium"
+                android:textStyle="bold"
+                android:textColor="@color/neu_copper_ink"
+                android:background="@drawable/bg_neu_copper_fab"
+                android:paddingStart="@dimen/dialog_padding_h"
+                android:paddingEnd="@dimen/dialog_padding_h"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -88,7 +73,8 @@
         app:layout_constraintTop_toBottomOf="@id/header_card"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -146,7 +132,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/username"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -162,8 +148,8 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/md3_on_surface"
-                    android:textColorHint="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink"
+                    android:textColorHint="@color/neu_copper_ink_muted"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -172,7 +158,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/first_name"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -188,8 +174,8 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/md3_on_surface"
-                    android:textColorHint="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink"
+                    android:textColorHint="@color/neu_copper_ink_muted"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -198,7 +184,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/last_name"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -214,8 +200,8 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/md3_on_surface"
-                    android:textColorHint="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink"
+                    android:textColorHint="@color/neu_copper_ink_muted"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -224,7 +210,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/phone_number"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -240,8 +226,8 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/md3_on_surface"
-                    android:textColorHint="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink"
+                    android:textColorHint="@color/neu_copper_ink_muted"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -250,7 +236,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/bio"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="8dp" />
@@ -268,8 +254,8 @@
                     android:paddingTop="14dp"
                     android:paddingEnd="16dp"
                     android:paddingBottom="14dp"
-                    android:textColor="@color/md3_on_surface"
-                    android:textColorHint="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink"
+                    android:textColorHint="@color/neu_copper_ink_muted"
                     android:textCursorDrawable="@null"
                     android:textSize="15sp" />
 
@@ -289,7 +275,7 @@
                         android:text="@string/section_friends"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:layout_marginBottom="8dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -308,7 +294,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/empty_friends_title"
                         android:textSize="14sp"
-                        android:textColor="@color/md3_on_surface_secondary"
+                        android:textColor="@color/neu_copper_ink_muted"
                         android:visibility="gone"
                         android:layout_marginTop="8dp" />
 
@@ -330,7 +316,7 @@
                         android:text="@string/section_posts"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/md3_on_surface"
+                        android:textColor="@color/neu_copper_ink"
                         android:layout_marginBottom="8dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -349,7 +335,7 @@
                         android:layout_height="wrap_content"
                         android:text="@string/empty_posts_title"
                         android:textSize="14sp"
-                        android:textColor="@color/md3_on_surface_secondary"
+                        android:textColor="@color/neu_copper_ink_muted"
                         android:visibility="gone"
                         android:layout_marginTop="8dp" />
 
@@ -361,16 +347,15 @@
 
     </LinearLayout>
 
-    <!-- Progress Bar -->
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/profile_loading_skeleton"
+        layout="@layout/component_list_skeleton"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:indeterminateTint="@color/md3_primary"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/header_card"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

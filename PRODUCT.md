@@ -12,7 +12,7 @@ General-purpose communicators: friends, classmates, small teams, and casual grou
 
 A self-hosted Android chat client for private and group messaging, social posts, and voice/video calls against a Node.js backend. Success means users complete core workflows (send a message, start a call, post or react) without friction, and the interface feels cohesive dark-premium rather than a patchwork of screens.
 
-Primary design focus right now: **Void Copper** — unified dark interface with warm copper accent, flat dock navigation, and divider-based lists across chat, feed, calls, auth, and settings.
+Primary design focus right now: **Neumorphic Copper** — image canvas (`chatapp_bg`), embossed soft-UI surfaces, copper accent `#C8875A`, Home activity as reference. Roll out via legacy drawable aliases + shared list/composer patterns.
 
 ## Brand Personality
 

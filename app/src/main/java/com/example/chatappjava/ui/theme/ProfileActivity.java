@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.LinearLayout;
@@ -58,8 +57,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView tvChangeAvatar;
     private EditText etUsername, etFirstName, etLastName, etPhoneNumber, etBio;
     private TextView tvSave;
-    private ProgressBar progressBar;
-    private ImageView ivBack;
+    private View profileLoadingSkeleton;
+    private View ivBack;
     
     // Friends and Posts
     private androidx.recyclerview.widget.RecyclerView rvFriends;
@@ -105,8 +104,8 @@ public class ProfileActivity extends AppCompatActivity {
         etPhoneNumber = findViewById(R.id.et_phone_number);
         etBio = findViewById(R.id.et_bio);
         tvSave = findViewById(R.id.tv_save);
-        progressBar = findViewById(R.id.progress_bar);
-        ivBack = findViewById(R.id.iv_back);
+        profileLoadingSkeleton = findViewById(R.id.profile_loading_skeleton);
+        wireNeuToolbar();
         
         // Friends and Posts
         rvFriends = findViewById(R.id.rv_friends);
@@ -401,14 +400,28 @@ public class ProfileActivity extends AppCompatActivity {
         );
     }
 
+    private void wireNeuToolbar() {
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        ivBack = findViewById(R.id.iv_toolbar_back);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+        if (toolbarTitle != null) {
+            toolbarTitle.setText(R.string.profile);
+        }
+    }
+
     private void setupClickListeners() {
-        ivBack.setOnClickListener(v -> {
-            if (hasChanges) {
-                showUnsavedChangesDialog();
-            } else {
-                finish();
-            }
-        });
+        if (ivBack != null) {
+            ivBack.setOnClickListener(v -> {
+                if (hasChanges) {
+                    showUnsavedChangesDialog();
+                } else {
+                    finish();
+                }
+            });
+        }
 
         tvSave.setOnClickListener(v -> saveProfile());
 
@@ -991,7 +1004,9 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void showLoading(boolean show) {
-        progressBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (profileLoadingSkeleton != null) {
+            profileLoadingSkeleton.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
     }
 
     private boolean isValidUsername(String username) {

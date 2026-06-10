@@ -17,6 +17,7 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,10 @@ public class RingingActivity extends AppCompatActivity {
     private View acceptZone;
     private View declineZone;
     private FrameLayout swipeTrack;
+    private LinearLayout swipeActionCard;
+    private LinearLayout callActionButtons;
+    private ImageButton btnAcceptCall;
+    private ImageButton btnDeclineCall;
     private LinearLayout outgoingCallInfo;
     private View ripple1;
     private View ripple2;
@@ -271,6 +276,10 @@ public class RingingActivity extends AppCompatActivity {
         acceptZone = findViewById(R.id.accept_zone);
         declineZone = findViewById(R.id.decline_zone);
         swipeTrack = findViewById(R.id.swipe_track);
+        swipeActionCard = findViewById(R.id.swipe_action_card);
+        callActionButtons = findViewById(R.id.call_action_buttons);
+        btnAcceptCall = findViewById(R.id.btn_accept_call);
+        btnDeclineCall = findViewById(R.id.btn_decline_call);
         outgoingCallInfo = findViewById(R.id.outgoing_call_info);
         ripple1 = findViewById(R.id.ripple_1);
         ripple2 = findViewById(R.id.ripple_2);
@@ -296,6 +305,15 @@ public class RingingActivity extends AppCompatActivity {
             tvCallType.setText(getString(R.string.call_incoming_audio));
         } else {
             tvCallType.setText(getString(R.string.call_incoming_video));
+        }
+
+        if (btnAcceptCall != null) {
+            btnAcceptCall.setOnClickListener(v -> acceptCall());
+            com.example.chatappjava.utils.MotionUtils.attachPressFeedback(this, btnAcceptCall);
+        }
+        if (btnDeclineCall != null) {
+            btnDeclineCall.setOnClickListener(v -> declineCall());
+            com.example.chatappjava.utils.MotionUtils.attachPressFeedback(this, btnDeclineCall);
         }
     }
     
@@ -398,6 +416,12 @@ public class RingingActivity extends AppCompatActivity {
         tvCallerStatus.setText(getString(R.string.call_is_calling_you));
         // Swipe gesture is always visible for incoming calls
         outgoingCallInfo.setVisibility(View.GONE);
+        if (swipeActionCard != null) {
+            swipeActionCard.setVisibility(View.VISIBLE);
+        }
+        if (callActionButtons != null) {
+            callActionButtons.setVisibility(View.VISIBLE);
+        }
         
         // Mark active call to avoid duplicate handling in other screens
         com.example.chatappjava.network.SocketManager sm = com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
@@ -430,6 +454,9 @@ public class RingingActivity extends AppCompatActivity {
         tvCallerStatus.setText(getString(R.string.call_status_calling));
         outgoingCallInfo.setVisibility(View.VISIBLE);
         tvRingingStatus.setText(getString(R.string.call_status_ringing));
+        if (swipeActionCard != null) {
+            swipeActionCard.setVisibility(View.GONE);
+        }
         
         // Mark active call to avoid duplicate handling across screens
         com.example.chatappjava.network.SocketManager sm = com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
@@ -521,62 +548,8 @@ public class RingingActivity extends AppCompatActivity {
     }
     
     private void startRippleAnimations() {
-        if (com.example.chatappjava.utils.MotionUtils.isMotionReduced(this)) {
-            return;
-        }
-        // Create ripple animations with staggered timing
-        ObjectAnimator ripple1ScaleX = ObjectAnimator.ofFloat(ripple1, "scaleX", 0.5f, 1.5f);
-        ObjectAnimator ripple1ScaleY = ObjectAnimator.ofFloat(ripple1, "scaleY", 0.5f, 1.5f);
-        ObjectAnimator ripple1Alpha = ObjectAnimator.ofFloat(ripple1, "alpha", 0.8f, 0.0f);
-        
-        ObjectAnimator ripple2ScaleX = ObjectAnimator.ofFloat(ripple2, "scaleX", 0.5f, 1.5f);
-        ObjectAnimator ripple2ScaleY = ObjectAnimator.ofFloat(ripple2, "scaleY", 0.5f, 1.5f);
-        ObjectAnimator ripple2Alpha = ObjectAnimator.ofFloat(ripple2, "alpha", 0.6f, 0.0f);
-        
-        ObjectAnimator ripple3ScaleX = ObjectAnimator.ofFloat(ripple3, "scaleX", 0.5f, 1.5f);
-        ObjectAnimator ripple3ScaleY = ObjectAnimator.ofFloat(ripple3, "scaleY", 0.5f, 1.5f);
-        ObjectAnimator ripple3Alpha = ObjectAnimator.ofFloat(ripple3, "alpha", 0.4f, 0.0f);
-        
-        // Set duration
-        ripple1ScaleX.setDuration(2000);
-        ripple1ScaleY.setDuration(2000);
-        ripple1Alpha.setDuration(2000);
-        
-        ripple2ScaleX.setDuration(2000);
-        ripple2ScaleY.setDuration(2000);
-        ripple2Alpha.setDuration(2000);
-        
-        ripple3ScaleX.setDuration(2000);
-        ripple3ScaleY.setDuration(2000);
-        ripple3Alpha.setDuration(2000);
-        
-        // Create animator sets
-        AnimatorSet ripple1Set = new AnimatorSet();
-        ripple1Set.playTogether(ripple1ScaleX, ripple1ScaleY, ripple1Alpha);
-        
-        AnimatorSet ripple2Set = new AnimatorSet();
-        ripple2Set.playTogether(ripple2ScaleX, ripple2ScaleY, ripple2Alpha);
-        
-        AnimatorSet ripple3Set = new AnimatorSet();
-        ripple3Set.playTogether(ripple3ScaleX, ripple3ScaleY, ripple3Alpha);
-        
-        // Stagger the animations
-        rippleAnimatorSet = new AnimatorSet();
-        rippleAnimatorSet.play(ripple1Set).after(0);
-        rippleAnimatorSet.play(ripple2Set).after(500);
-        rippleAnimatorSet.play(ripple3Set).after(1000);
-        
-        // Repeat infinitely
-        rippleAnimatorSet.addListener(new android.animation.AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(android.animation.Animator animation) {
-                if (isCallActive) {
-                    rippleAnimatorSet.start();
-                }
-            }
-        });
-        
-        rippleAnimatorSet.start();
+        rippleAnimatorSet = com.example.chatappjava.utils.MotionUtils.startIncomingCallRipples(
+                this, ripple1, ripple2, ripple3, () -> isCallActive);
     }
     
     @SuppressLint("SetTextI18n")

@@ -6,7 +6,7 @@
     android:layout_marginEnd="@dimen/spacing_xs"
     android:layout_marginTop="6dp"
     android:layout_marginBottom="6dp"
-    android:background="@drawable/bg_glass_panel"
+    android:background="@drawable/bg_neu_emboss_raised_md"
     android:orientation="vertical">
 
     <LinearLayout

@@ -66,7 +66,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
     private static final String TAG = "PostDetailActivity";
 
     // UI Components - Post
-    private ImageButton ivBack;
+    private View ivBack;
     private TextView tvTitle;
     private CircleImageView ivPostAvatar;
     private TextView tvPostUsername, tvPostTaggedUsers, tvPostTimestamp;
@@ -334,8 +334,15 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
 
     private void initializeViews() {
         // Post views
-        ivBack = findViewById(R.id.iv_back);
-        tvTitle = findViewById(R.id.tv_title);
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        ivBack = findViewById(R.id.iv_toolbar_back);
+        tvTitle = findViewById(R.id.tv_toolbar_title);
+        if (tvTitle != null) {
+            tvTitle.setText(R.string.post_detail_title);
+        }
         ivPostAvatar = findViewById(R.id.iv_post_avatar);
         tvPostUsername = findViewById(R.id.tv_post_username);
         tvPostTaggedUsers = findViewById(R.id.tv_post_tagged_users);
@@ -1824,6 +1831,7 @@ public class PostDetailActivity extends AppCompatActivity implements CommentAdap
         ProgressBar progressBar = dialogView.findViewById(R.id.progress_bar);
         TextView tvNoFriends = dialogView.findViewById(R.id.tv_no_friends);
         EditText etSearch = dialogView.findViewById(R.id.et_search);
+        etSearch.setHint(R.string.group_search_friends_hint);
         Button btnDone = dialogView.findViewById(R.id.btn_done);
         
         List<User> friends = new ArrayList<>();

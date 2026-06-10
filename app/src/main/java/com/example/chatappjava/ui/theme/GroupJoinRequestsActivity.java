@@ -45,11 +45,18 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
         recyclerView = findViewById(com.example.chatappjava.R.id.rv_requests);
         listSkeleton = findViewById(com.example.chatappjava.R.id.list_skeleton);
         etSearch = findViewById(com.example.chatappjava.R.id.et_search);
-        View ivBack = findViewById(com.example.chatappjava.R.id.iv_back);
-        if (ivBack != null) ivBack.setOnClickListener(v -> finish());
-        TextView tvTitle = findViewById(com.example.chatappjava.R.id.tv_title);
+        etSearch.setHint(com.example.chatappjava.R.string.search_requests_hint);
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        View ivBack = findViewById(R.id.iv_toolbar_back);
+        if (ivBack != null) {
+            ivBack.setOnClickListener(v -> finish());
+        }
+        TextView tvTitle = findViewById(R.id.tv_toolbar_title);
         if (tvTitle != null) {
-            tvTitle.setText(com.example.chatappjava.R.string.title_activity_group_join_requests);
+            tvTitle.setText(R.string.title_activity_group_join_requests);
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new MessageAdapter.RequestsAdapter(requests, new MessageAdapter.RequestsAdapter.ActionListener() {
@@ -111,6 +118,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
                         JSONObject json = new JSONObject(body);
                         if (response.code() == 200 && json.optBoolean("success", false)) {
                             JSONArray arr = json.getJSONObject("data").optJSONArray("requests");
+                            int previousSize = requests.size();
                             requests.clear();
                             allRequests.clear();
                             if (arr != null) {
@@ -123,9 +131,11 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                            adapter.notifyDataSetChanged();
+                            notifyRequestsListChanged(previousSize, requests.size());
                         } else {
-                            Toast.makeText(GroupJoinRequestsActivity.this, json.optString("message", "Failed"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupJoinRequestsActivity.this,
+                                    json.optString("message", getString(R.string.error_request_failed)),
+                                    Toast.LENGTH_SHORT).show();
                         }
                     } catch (JSONException e) {
                         Toast.makeText(GroupJoinRequestsActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
@@ -136,6 +146,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
     }
 
     private void filterRequests(String query) {
+        int previousSize = requests.size();
         String q = query == null ? "" : query.trim().toLowerCase(java.util.Locale.ROOT);
         requests.clear();
         if (q.isEmpty()) {
@@ -151,7 +162,30 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
                 }
             }
         }
-        adapter.notifyDataSetChanged();
+        notifyRequestsListChanged(previousSize, requests.size());
+    }
+
+    private void notifyRequestsListChanged(int previousSize, int newSize) {
+        if (adapter == null) {
+            return;
+        }
+        if (previousSize == newSize) {
+            if (newSize > 0) {
+                adapter.notifyItemRangeChanged(0, newSize);
+            }
+            return;
+        }
+        if (newSize > previousSize) {
+            if (previousSize > 0) {
+                adapter.notifyItemRangeChanged(0, previousSize);
+            }
+            adapter.notifyItemRangeInserted(previousSize, newSize - previousSize);
+            return;
+        }
+        if (newSize > 0) {
+            adapter.notifyItemRangeChanged(0, newSize);
+        }
+        adapter.notifyItemRangeRemoved(newSize, previousSize - newSize);
     }
 
     private void respond(User user, boolean approve) {
@@ -168,7 +202,10 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
                 @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                     runOnUiThread(() -> {
                         if (response.code() == 200) {
-                            Toast.makeText(GroupJoinRequestsActivity.this, approve ? "Approved" : "Rejected", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GroupJoinRequestsActivity.this,
+                                    approve ? getString(R.string.success_join_request_approved)
+                                            : getString(R.string.success_join_request_rejected),
+                                    Toast.LENGTH_SHORT).show();
                             loadRequests();
                         } else {
                             Toast.makeText(GroupJoinRequestsActivity.this, getString(R.string.error_action_failed), Toast.LENGTH_SHORT).show();

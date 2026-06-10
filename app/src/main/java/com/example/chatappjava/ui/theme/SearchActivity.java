@@ -98,7 +98,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
     
     private void initializeViews() {
         etSearch = findViewById(R.id.et_search);
-        ivBack = findViewById(R.id.iv_back);
+        ivBack = findViewById(R.id.iv_toolbar_back);
         ivClear = findViewById(R.id.iv_clear);
         rvSearchResults = findViewById(R.id.rv_search_results);
         listSkeleton = findViewById(R.id.list_skeleton);
@@ -200,7 +200,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                         currentGroupMemberIds.clear();
                         currentGroupMemberIds.addAll(currentChat.getParticipantIds());
                         android.util.Log.d("SearchActivity", "Using fallback participantIds: " + currentGroupMemberIds);
-                        if (userAdapter != null) userAdapter.notifyDataSetChanged();
+                        refreshUserListDisplay();
                     }
                 });
             }
@@ -252,7 +252,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                     currentGroupMemberIds.addAll(ids);
                     android.util.Log.d("SearchActivity", "Final currentGroupMemberIds: " + currentGroupMemberIds);
                     
-                    if (userAdapter != null) userAdapter.notifyDataSetChanged();
+                    refreshUserListDisplay();
                     
                 } else {
                     String message = jsonResponse.optString("message", "Failed to load members");
@@ -262,7 +262,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                         currentGroupMemberIds.clear();
                         currentGroupMemberIds.addAll(currentChat.getParticipantIds());
                         android.util.Log.d("SearchActivity", "Using fallback participantIds: " + currentGroupMemberIds);
-                        if (userAdapter != null) userAdapter.notifyDataSetChanged();
+                        refreshUserListDisplay();
                     }
                 }
             } else {
@@ -272,7 +272,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                     currentGroupMemberIds.clear();
                     currentGroupMemberIds.addAll(currentChat.getParticipantIds());
                     android.util.Log.d("SearchActivity", "Using fallback participantIds: " + currentGroupMemberIds);
-                    if (userAdapter != null) userAdapter.notifyDataSetChanged();
+                    refreshUserListDisplay();
                 }
             }
         } catch (JSONException e) {
@@ -282,7 +282,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 currentGroupMemberIds.clear();
                 currentGroupMemberIds.addAll(currentChat.getParticipantIds());
                 android.util.Log.d("SearchActivity", "Using fallback participantIds: " + currentGroupMemberIds);
-                if (userAdapter != null) userAdapter.notifyDataSetChanged();
+                refreshUserListDisplay();
             }
         }
     }
@@ -354,7 +354,27 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
         // Forward mode: ensure groups tab shows Forward button
         groupAdapter.setForwardMode("forward".equals(mode));
     }
-    
+
+    private void refreshUserListDisplay() {
+        if (userAdapter == null) {
+            return;
+        }
+        int count = userAdapter.getItemCount();
+        if (count > 0) {
+            userAdapter.notifyItemRangeChanged(0, count);
+        }
+    }
+
+    private void refreshGroupListDisplay() {
+        if (groupAdapter == null) {
+            return;
+        }
+        int count = groupAdapter.getItemCount();
+        if (count > 0) {
+            groupAdapter.notifyItemRangeChanged(0, count);
+        }
+    }
+
     private void setupClickListeners() {
         ivBack.setOnClickListener(v -> finish());
         
@@ -1151,7 +1171,10 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 public void onResponse(okhttp3.Call call, okhttp3.Response response) {
                     runOnUiThread(() -> {
                         if (response.code() == 200) {
-                            Toast.makeText(SearchActivity.this, accept ? "Accepted" : "Rejected", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SearchActivity.this,
+                                    accept ? getString(R.string.success_friend_request_accepted)
+                                            : getString(R.string.success_friend_request_rejected),
+                                    Toast.LENGTH_SHORT).show();
                             // Refresh current results to reflect state
                             String q = etSearch.getText().toString().trim();
                             if (q.length() >= 2) performSearch(q);
@@ -1268,7 +1291,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                 // Remove user from current results to avoid duplicate
                 if (searchResults != null) {
                     searchResults.remove(user);
-                    if (userAdapter != null) userAdapter.notifyDataSetChanged();
+                    refreshUserListDisplay();
                 }
                 updateResultsVisibility();
             } else if (statusCode == 401) {
@@ -1465,7 +1488,9 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                                     groupAdapter.updateGroups(groupResults);
                                     updateResultsVisibility();
                                 } else {
-                                    Toast.makeText(SearchActivity.this, json.optString("message", "Join failed"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SearchActivity.this,
+                                            json.optString("message", getString(R.string.join_group_failed)),
+                                            Toast.LENGTH_SHORT).show();
                                 }
                             } catch (org.json.JSONException e) {
                                 Toast.makeText(SearchActivity.this, getString(R.string.join_group_failed), Toast.LENGTH_SHORT).show();
@@ -1490,7 +1515,9 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                                     group.setJoinRequestStatus("pending");
                                     applyGroupFilterWithCurrentQuery();
                                 } else {
-                                    Toast.makeText(SearchActivity.this, json.optString("message", "Request failed"), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SearchActivity.this,
+                                            json.optString("message", getString(R.string.error_request_failed)),
+                                            Toast.LENGTH_SHORT).show();
                                 }
                             } catch (org.json.JSONException e) {
                                 Toast.makeText(SearchActivity.this, getString(R.string.error_request_failed), Toast.LENGTH_SHORT).show();
@@ -1659,7 +1686,7 @@ public class SearchActivity extends AppCompatActivity implements UserSearchAdapt
                             Toast.makeText(SearchActivity.this, getString(R.string.error_cancel_not_supported), Toast.LENGTH_SHORT).show();
                             // For now, just update UI locally
                             group.setJoinRequestStatus(null);
-                            groupAdapter.notifyDataSetChanged();
+                            refreshGroupListDisplay();
                             updateResultsVisibility();
                         } else {
                             String message = json.optString("message", "Failed to cancel request");

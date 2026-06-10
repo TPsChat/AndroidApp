@@ -18,7 +18,7 @@
         android:paddingEnd="@dimen/dialog_padding_h"
         android:paddingTop="@dimen/dialog_padding_v"
         android:paddingBottom="@dimen/dialog_padding_h"
-        android:background="@drawable/bg_glass_panel">
+        android:background="@drawable/bg_neu_emboss_raised_md">
 
         <!-- Title -->
         <TextView
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:text="@string/dialog_chat_options_title"
             android:textAppearance="@style/AppHeadlineSmall"
-            android:textColor="@color/md3_on_surface"
+            android:textColor="@color/neu_copper_ink"
             android:gravity="center"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
@@ -48,7 +48,7 @@
                 android:layout_height="@dimen/icon_md"
                 android:src="@drawable/ic_info"
                 android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/neu_copper_accent" />
 
             <TextView
                 android:layout_width="0dp"
@@ -81,7 +81,7 @@
                     android:layout_height="@dimen/icon_md"
                     android:src="@drawable/ic_add"
                     android:layout_marginEnd="12dp"
-                    app:tint="@color/md3_primary" />
+                    app:tint="@color/neu_copper_accent" />
 
                 <TextView
                     android:layout_width="0dp"

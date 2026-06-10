@@ -96,6 +96,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected EditText etMessage;
     protected RecyclerView rvMessages;
     protected ProgressBar progressBar;
+    protected ProgressBar sendUploadProgress;
     // Reply UI state
     protected android.view.View replyBar;
     protected TextView tvReplyAuthor;
@@ -1401,6 +1402,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     }
 
     private void wireEmojiAccessibility(View dialogView) {
+        View scroll = dialogView.findViewById(R.id.emoji_scroll);
+        if (scroll != null) {
+            scroll.setContentDescription(getString(R.string.emoji_picker_grid_cd));
+        }
         View grid = dialogView.findViewById(R.id.emoji_grid);
         if (!(grid instanceof android.view.ViewGroup)) {
             return;
@@ -1451,6 +1456,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         etMessage = findViewById(R.id.et_message);
         rvMessages = findViewById(R.id.rv_messages);
         progressBar = findViewById(R.id.progress_bar);
+        sendUploadProgress = findViewById(R.id.send_upload_progress);
+        if (progressBar != null) {
+            progressBar.setVisibility(View.GONE);
+        }
         replyBar = findViewById(R.id.reply_bar);
         tvReplyAuthor = findViewById(R.id.tv_reply_author);
         tvReplyContent = findViewById(R.id.tv_reply_content);
@@ -1525,8 +1534,18 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         } else if (activeUploadCount > 0) {
             activeUploadCount--;
         }
+        boolean uploading = activeUploadCount > 0;
+        if (sendUploadProgress != null) {
+            sendUploadProgress.setVisibility(uploading ? View.VISIBLE : View.GONE);
+        }
+        if (ivSend != null) {
+            ivSend.setEnabled(!uploading);
+            ivSend.setAlpha(uploading ? 0.55f : 1f);
+            ivSend.setContentDescription(getString(
+                    uploading ? R.string.uploading_file : R.string.send_message_description));
+        }
         if (progressBar != null) {
-            progressBar.setVisibility(activeUploadCount > 0 ? View.VISIBLE : View.GONE);
+            progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -2207,7 +2226,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                     }
                                 }
                                 // Initial load — replace list from server page
-                                int oldSize = messages.size();
+                                List<Message> previousMessages = new ArrayList<>(messages);
                                 messages.clear();
                                 java.util.Set<String> seenIds = new java.util.HashSet<>();
                                 for (Message m : pageOne) {
@@ -2217,11 +2236,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                         seenIds.add(msgId);
                                     }
                                 }
-                                if (oldSize == 0 && !messages.isEmpty()) {
-                                    messageAdapter.notifyItemRangeInserted(0, messages.size());
-                                } else if (!messages.isEmpty()) {
-                                    messageAdapter.notifyDataSetChanged();
-                                }
+                                notifyMessageListReplaced(previousMessages);
                                 
                                 // Update chat info if available
                                 if (data.has("chatInfo")) {
@@ -2298,16 +2313,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             
             if (!dbMessages.isEmpty()) {
                 runOnUiThread(() -> {
+                    List<Message> previousMessages = new ArrayList<>(messages);
                     messages.clear();
                     messages.addAll(dbMessages);
                     // Set hasMore flag - if we loaded less than total, there are more messages
                     hasMore = shouldHaveMore;
                     android.util.Log.d("BaseChatActivity", "Loaded " + dbMessages.size() + 
                         " messages from database (total: " + totalCount + "), hasMore=" + hasMore + ", hasMoreInDb=" + hasMoreInDb);
-                    // Use notifyDataSetChanged only for initial load (empty list)
-                    if (messageAdapter != null) {
-                        messageAdapter.notifyDataSetChanged();
-                    }
+                    notifyMessageListReplaced(previousMessages);
                     updateSummarizeIndicator();
                     // On initial load, always enable auto-scroll and scroll to bottom
                     shouldAutoScroll = true;
@@ -2321,6 +2334,25 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
      * Safely update messages list and restore scroll position
      * @param shouldAutoScrollNow Current state of shouldAutoScroll (not the old wasAtBottom)
      */
+    private void notifyMessageListReplaced(List<Message> previousMessages) {
+        if (messageAdapter == null) {
+            return;
+        }
+        int previousSize = previousMessages != null ? previousMessages.size() : 0;
+        int newSize = messages.size();
+        if (previousSize == 0 && newSize > 0) {
+            messageAdapter.notifyItemRangeInserted(0, newSize);
+        } else if (newSize == 0 && previousSize > 0) {
+            messageAdapter.notifyItemRangeRemoved(0, previousSize);
+        } else if (previousMessages != null && !previousMessages.isEmpty() && newSize > 0) {
+            messageAdapter.applyDiff(previousMessages);
+        } else if (newSize == previousSize && newSize > 0) {
+            messageAdapter.notifyItemRangeChanged(0, newSize);
+        } else {
+            messageAdapter.notifyDataSetChanged();
+        }
+    }
+
     private void updateMessagesListSafely(List<Message> dbMessages, boolean shouldAutoScrollNow, 
                                          boolean hasNewMessagesAtEnd, int firstVisiblePosition, 
                                          int topOffset, LinearLayoutManager lm) {
@@ -2374,13 +2406,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 }
                 
                 // Update messages list only if user is NOT reading old messages
+                List<Message> previousMessages = new ArrayList<>(messages);
                 messages.clear();
                 messages.addAll(dbMessages);
-                
-                // Notify adapter
-                if (messageAdapter != null) {
-                    messageAdapter.notifyDataSetChanged();
-                }
+                notifyMessageListReplaced(previousMessages);
                 updateSummarizeIndicator();
                 
                 // SOLUTION: Restore RecyclerView state AFTER notifyDataSetChanged
@@ -3008,7 +3037,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                         currentPage += 1;
                                         hasMore = arr.length() >= pageSize;
                                         if (messageAdapter != null) {
-                                            messageAdapter.notifyDataSetChanged();
+                                            messageAdapter.notifyItemRangeInserted(0, older.size());
                                         }
                                         return;
                                     }
@@ -3706,7 +3735,9 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                         runOnUiThread(() -> {
                             mentionCandidates.clear();
                             mentionCandidates.addAll(users);
-                            if (mentionAdapter != null) mentionAdapter.notifyDataSetChanged();
+                            if (mentionAdapter != null) {
+                                mentionAdapter.notifyDataSetChanged();
+                            }
                         });
                     } catch (Exception ignored) {}
                 }
@@ -3840,8 +3871,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             int idx = indexOfMessageById(message.getId());
             if (idx >= 0) {
                 messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_REACTION);
-            } else {
-                messageAdapter.notifyDataSetChanged();
             }
         } catch (Exception ignored) {}
 
@@ -4316,8 +4345,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                     int idx = indexOfMessageById(message.getId());
                     if (idx >= 0) {
                         messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_REACTION);
-                    } else {
-                        messageAdapter.notifyDataSetChanged();
                     }
 
                     apiClient.removeReaction(token, message.getId(), emojiToRemove, new okhttp3.Callback() {
@@ -4470,8 +4497,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                         if (idx >= 0) {
                             messages.remove(idx);
                             messageAdapter.notifyItemRemoved(idx);
-                        } else {
-                            messageAdapter.notifyDataSetChanged();
                         }
                         Toast.makeText(BaseChatActivity.this, getString(R.string.message_delete_success), Toast.LENGTH_SHORT).show();
                     } else {

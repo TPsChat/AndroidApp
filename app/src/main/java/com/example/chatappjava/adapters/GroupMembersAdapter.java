@@ -39,7 +39,10 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
         if (roles != null) {
             this.memberRoles.putAll(roles);
         }
-        notifyDataSetChanged();
+        int count = getItemCount();
+        if (count > 0) {
+            notifyItemRangeChanged(0, count);
+        }
     }
     
     @NonNull

@@ -58,7 +58,7 @@
                     android:maxWidth="240dp"
                     android:text=""
                     android:fontFamily="@font/plus_jakarta_sans"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="@dimen/text_body_medium"
                     tools:text="Username"
                     android:textStyle="bold"
@@ -75,7 +75,7 @@
                     android:maxWidth="260dp"
                     android:text=""
                     android:fontFamily="@font/plus_jakarta_sans"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="@dimen/text_body_medium"
                     android:lineSpacingExtra="@dimen/list_item_margin"
                     tools:text="Comment text"
@@ -111,7 +111,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/plus_jakarta_sans"
                     android:text="@string/preview_time_ago"
-                    android:textColor="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink_muted"
                     android:textSize="@dimen/text_body_small" />
 
                 <TextView
@@ -123,7 +123,7 @@
                     android:minWidth="@dimen/touch_target_min"
                     android:fontFamily="@font/plus_jakarta_sans"
                     android:text="@string/post_like"
-                    android:textColor="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink_muted"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_body_small"
                     android:gravity="center"
@@ -142,7 +142,7 @@
                     android:minWidth="@dimen/touch_target_min"
                     android:fontFamily="@font/plus_jakarta_sans"
                     android:text="@string/dialog_option_reply"
-                    android:textColor="@color/md3_on_surface_secondary"
+                    android:textColor="@color/neu_copper_ink_muted"
                     android:textStyle="bold"
                     android:textSize="@dimen/text_body_small"
                     android:gravity="center"
@@ -224,7 +224,7 @@
                     android:layout_marginStart="4dp"
                     android:fontFamily="@font/plus_jakarta_sans"
                     android:text="@string/badge_count_placeholder"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:textSize="@dimen/text_body_small"
                     android:textStyle="bold"
                     android:gravity="center"
@@ -244,7 +244,7 @@
                     android:src="@drawable/ic_more"
                     android:contentDescription="@string/comment_options_cd"
                     android:padding="@dimen/icon_button_inset"
-                    app:tint="@color/md3_on_surface_secondary"
+                    app:tint="@color/neu_copper_ink_muted"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -269,7 +269,7 @@
             android:minHeight="@dimen/touch_target_min"
             android:fontFamily="@font/plus_jakarta_sans"
             android:text="@string/preview_view_replies"
-            android:textColor="@color/md3_primary"
+            android:textColor="@color/neu_copper_accent"
             android:textSize="@dimen/text_banner"
             android:textStyle="bold"
             android:gravity="center_vertical"

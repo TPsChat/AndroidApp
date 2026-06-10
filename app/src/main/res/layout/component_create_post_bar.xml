@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_glass_panel"
+    android:background="@drawable/bg_neu_emboss_raised_md"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="vertical"
@@ -50,7 +50,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/home_create_post_hint"
-                android:textColor="@color/md3_on_surface_secondary" />
+                android:textColor="@color/neu_copper_ink_muted" />
 
         </LinearLayout>
 
@@ -86,7 +86,7 @@
                 android:layout_height="@dimen/icon_sm"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_camera"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/neu_copper_accent" />
 
             <TextView
                 style="@style/AppBodyMedium"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_xs"
                 android:text="@string/home_post_live"
-                android:textColor="@color/md3_on_surface" />
+                android:textColor="@color/neu_copper_ink" />
 
         </LinearLayout>
 
@@ -115,7 +115,7 @@
                 android:layout_height="@dimen/icon_sm"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_image"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/neu_copper_accent" />
 
             <TextView
                 style="@style/AppBodyMedium"
@@ -123,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_xs"
                 android:text="@string/home_post_photo"
-                android:textColor="@color/md3_on_surface" />
+                android:textColor="@color/neu_copper_ink" />
 
         </LinearLayout>
 
@@ -144,7 +144,7 @@
                 android:layout_height="@dimen/icon_sm"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_video_call"
-                app:tint="@color/md3_primary" />
+                app:tint="@color/neu_copper_accent" />
 
             <TextView
                 style="@style/AppBodyMedium"
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_xs"
                 android:text="@string/home_post_video"
-                android:textColor="@color/md3_on_surface" />
+                android:textColor="@color/neu_copper_ink" />
 
         </LinearLayout>
 

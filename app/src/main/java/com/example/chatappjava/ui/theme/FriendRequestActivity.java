@@ -87,8 +87,15 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
                 R.string.empty_friend_requests_subtitle,
                 R.drawable.ic_eye
         );
-        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
-        TextView tvTitle = findViewById(R.id.tv_title);
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        View back = findViewById(R.id.iv_toolbar_back);
+        if (back != null) {
+            back.setOnClickListener(v -> finish());
+        }
+        TextView tvTitle = findViewById(R.id.tv_toolbar_title);
         if (tvTitle != null) {
             tvTitle.setText(R.string.title_activity_friend_requests);
         }

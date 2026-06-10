@@ -1,6 +1,7 @@
 package com.example.chatappjava.ui.theme;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -23,7 +24,18 @@ public class SettingsActivity extends AppCompatActivity {
 
         databaseManager = new DatabaseManager(this);
         tvUserName = findViewById(R.id.tv_user_name);
-        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        View back = findViewById(R.id.iv_toolbar_back);
+        if (back != null) {
+            back.setOnClickListener(v -> finish());
+        }
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+        if (toolbarTitle != null) {
+            toolbarTitle.setText(R.string.settings_title);
+        }
 
         loadUserName();
         settingsActionsHelper.bind(findViewById(android.R.id.content), this, databaseManager);

@@ -85,7 +85,7 @@
                         android:fontFamily="@font/plus_jakarta_sans"
                         android:text="@string/auth_title_sign_in"
                         android:textAppearance="@style/AppHeadlineLarge"
-                        android:textColor="@color/md3_on_surface" />
+                        android:textColor="@color/neu_copper_ink" />
 
                     <TextView
                         android:id="@+id/tv_auth_subtitle"
@@ -96,14 +96,14 @@
                         android:gravity="start"
                         android:text="@string/auth_subtitle"
                         android:textAppearance="@style/AppBodyMedium"
-                        android:textColor="@color/md3_on_surface_secondary" />
+                        android:textColor="@color/neu_copper_ink_muted" />
 
                     <FrameLayout
                         android:id="@+id/auth_switch_container"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/auth_switch_height"
                         android:layout_marginTop="@dimen/auth_switch_margin_top"
-                        android:background="@drawable/bg_soft_inset"
+                        android:background="@drawable/bg_neu_copper_sunken_pill"
                         android:padding="@dimen/auth_switch_inner_padding">
 
                         <View
@@ -128,7 +128,7 @@
                                 android:gravity="center"
                                 android:minHeight="@dimen/auth_tab_height"
                                 android:text="@string/auth_sign_in_tab"
-                                android:textColor="@color/md3_on_surface"
+                                android:textColor="@color/tab_text_selector"
                                 android:textSize="@dimen/text_body_large"
                                 android:textStyle="bold" />
 
@@ -143,7 +143,7 @@
                                 android:gravity="center"
                                 android:minHeight="@dimen/auth_tab_height"
                                 android:text="@string/auth_sign_up_tab"
-                                android:textColor="@color/md3_on_surface_secondary"
+                                android:textColor="@color/tab_text_selector"
                                 android:textSize="@dimen/text_body_large"
                                 android:textStyle="bold" />
 
@@ -185,7 +185,7 @@
                             android:labelFor="@+id/et_email"
                             android:text="@string/label_email"
                             android:textAppearance="@style/AppLabelSmall"
-                            android:textColor="@color/md3_on_surface" />
+                            android:textColor="@color/neu_copper_ink" />
 
                         <EditText
                             android:id="@+id/et_email"
@@ -206,7 +206,7 @@
                             android:layout_marginTop="@dimen/spacing_md"
                             android:labelFor="@+id/et_password"
                             android:text="@string/label_password"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 
@@ -273,7 +273,7 @@
                             android:layout_height="wrap_content"
                             android:labelFor="@+id/et_username"
                             android:text="@string/label_username"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 
@@ -296,7 +296,7 @@
                             android:layout_marginTop="@dimen/spacing_md"
                             android:labelFor="@+id/et_register_email"
                             android:text="@string/label_email"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 
@@ -319,7 +319,7 @@
                             android:layout_marginTop="@dimen/spacing_md"
                             android:labelFor="@+id/et_register_password"
                             android:text="@string/label_password"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 
@@ -344,7 +344,7 @@
                             android:layout_marginTop="@dimen/spacing_md"
                             android:labelFor="@+id/et_confirm_password"
                             android:text="@string/label_confirm_password"
-                            android:textColor="@color/md3_on_surface"
+                            android:textColor="@color/neu_copper_ink"
                             android:textSize="@dimen/text_body_large"
                             android:textStyle="bold" />
 

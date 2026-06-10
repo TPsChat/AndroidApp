@@ -3,7 +3,6 @@ package com.example.chatappjava.ui.theme;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +30,7 @@ import okhttp3.Response;
 
 public class BlockedUsersActivity extends AppCompatActivity {
 
-    private ImageView ivBack;
+    private View ivBack;
     private RecyclerView rvBlocked;
     private View listSkeleton;
     private View emptyState;
@@ -58,8 +57,12 @@ public class BlockedUsersActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void initViews() {
-        ivBack = findViewById(R.id.iv_back);
-        TextView tvTitle = findViewById(R.id.tv_title);
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        ivBack = findViewById(R.id.iv_toolbar_back);
+        TextView tvTitle = findViewById(R.id.tv_toolbar_title);
         rvBlocked = findViewById(R.id.rv_blocked);
         listSkeleton = findViewById(R.id.list_skeleton);
         emptyState = findViewById(R.id.empty_state);
@@ -115,12 +118,13 @@ public class BlockedUsersActivity extends AppCompatActivity {
                         }
                         JSONObject json = new JSONObject(body);
                         JSONArray arr = json.getJSONObject("data").getJSONArray("users");
+                        int previousSize = blockedUsers.size();
                         blockedUsers.clear();
                         for (int i = 0; i < arr.length(); i++) {
                             User user = User.fromJsonStatic(arr.getJSONObject(i));
                             blockedUsers.add(user);
                         }
-                        adapter.notifyDataSetChanged();
+                        notifyBlockedListChanged(previousSize, blockedUsers.size());
                         emptyState.setVisibility(blockedUsers.isEmpty() ? View.VISIBLE : View.GONE);
                     } catch (Exception e) {
                         Toast.makeText(BlockedUsersActivity.this, getString(R.string.error_parse), Toast.LENGTH_SHORT).show();
@@ -142,13 +146,15 @@ public class BlockedUsersActivity extends AppCompatActivity {
                 runOnUiThread(() -> Toast.makeText(BlockedUsersActivity.this, getString(R.string.error_network), Toast.LENGTH_SHORT).show());
             }
 
-            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(Call call, Response response) {
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
-                        blockedUsers.remove(user);
-                        adapter.notifyDataSetChanged();
+                        int index = blockedUsers.indexOf(user);
+                        if (index >= 0) {
+                            blockedUsers.remove(index);
+                            adapter.notifyItemRemoved(index);
+                        }
                         emptyState.setVisibility(blockedUsers.isEmpty() ? View.VISIBLE : View.GONE);
                         Toast.makeText(BlockedUsersActivity.this, getString(R.string.msg_unblocked), Toast.LENGTH_SHORT).show();
                         // Notify home to refresh blocked list and chats
@@ -160,6 +166,29 @@ public class BlockedUsersActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void notifyBlockedListChanged(int previousSize, int newSize) {
+        if (adapter == null) {
+            return;
+        }
+        if (previousSize == newSize) {
+            if (newSize > 0) {
+                adapter.notifyItemRangeChanged(0, newSize);
+            }
+            return;
+        }
+        if (newSize > previousSize) {
+            if (previousSize > 0) {
+                adapter.notifyItemRangeChanged(0, previousSize);
+            }
+            adapter.notifyItemRangeInserted(previousSize, newSize - previousSize);
+            return;
+        }
+        if (newSize > 0) {
+            adapter.notifyItemRangeChanged(0, newSize);
+        }
+        adapter.notifyItemRangeRemoved(newSize, previousSize - newSize);
     }
 }
 

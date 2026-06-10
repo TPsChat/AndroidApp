@@ -15,7 +15,7 @@
     <!-- Ink -->
     <color name="ink_primary">#F2F4F7</color>
     <color name="ink_muted">#8A939F</color>
-    <color name="ink_whisper">#7F8996</color>
+    <color name="ink_whisper">#9AA0A8</color>
 
     <!-- Accent: Copper Signal (legacy names palette_crimson / brand_red) -->
     <color name="palette_crimson">#C8875A</color>
@@ -62,8 +62,8 @@
     <color name="call_overlay_scrim">#CC0B0D11</color>
     <color name="control_button_background">#660B0D11</color>
     <color name="semi_transparent_black">#660B0D11</color>
-    <color name="md3_glass_fill">#FF12161C</color>
-    <color name="md3_glass_nav">#FF12161C</color>
+    <color name="md3_glass_fill">@color/neu_surface_sunken</color>
+    <color name="md3_glass_nav">@color/neu_surface_sunken</color>
 
     <!-- Ripples -->
     <color name="md3_ripple">#1AC8875A</color>
@@ -213,5 +213,44 @@
     <color name="light_gray">@color/ink_muted</color>
     <color name="gray">@color/ink_muted</color>
     <color name="blue">@color/palette_crimson</color>
+
+    <!-- Neumorphic Copper (canonical tokens — Home reference) -->
+    <!-- Image canvas tint over void; void base is canvas_void / palette_charcoal -->
+    <color name="neu_copper_canvas">#1E2124</color>
+    <color name="neu_copper_surface">#262A2E</color>
+    <color name="neu_copper_sunken">#181B1E</color>
+    <color name="neu_copper_highlight">#33FFFFFF</color>
+    <color name="neu_copper_shadow">#66000000</color>
+    <color name="neu_copper_accent">#C8875A</color>
+    <color name="neu_copper_accent_dark">#A66D45</color>
+    <color name="neu_copper_accent_light">#E0A67E</color>
+    <color name="neu_copper_ink">#FFFFFF</color>
+    <color name="neu_copper_ink_muted">#A8B0BA</color>
+    <color name="neu_copper_divider">#2A2E33</color>
+    <!-- Legacy aliases -->
+    <color name="neu_red_canvas">@color/neu_copper_canvas</color>
+    <color name="neu_red_surface">@color/neu_copper_surface</color>
+    <color name="neu_red_sunken">@color/neu_copper_sunken</color>
+    <color name="neu_red_highlight">@color/neu_copper_highlight</color>
+    <color name="neu_red_shadow">@color/neu_copper_shadow</color>
+    <color name="neu_red_accent">@color/neu_copper_accent</color>
+    <color name="neu_red_accent_dark">@color/neu_copper_accent_dark</color>
+    <color name="neu_red_accent_light">@color/neu_copper_accent_light</color>
+    <color name="neu_red_ink">@color/neu_copper_ink</color>
+    <color name="neu_red_ink_muted">@color/neu_copper_ink_muted</color>
+    <color name="neu_red_divider">@color/neu_copper_divider</color>
+
+    <!-- Neumorphic emboss (shadow top / highlight bottom / face gradient) -->
+    <color name="neu_emboss_shadow">#111722</color>
+    <color name="neu_emboss_highlight">#394252</color>
+    <color name="neu_emboss_face_start">#2F3745</color>
+    <color name="neu_emboss_face_end">#1E2530</color>
+    <color name="neu_emboss_sunken_start">#1A2028</color>
+    <color name="neu_emboss_sunken_end">#12161C</color>
+
+    <!-- Sent bubble ink (WCAG AA on copper gradient face) -->
+    <color name="bubble_sent_ink">@color/palette_charcoal</color>
+    <color name="bubble_sent_ink_muted">#4A3828</color>
+    <color name="canvas_void">@color/palette_charcoal</color>
 
 </resources>

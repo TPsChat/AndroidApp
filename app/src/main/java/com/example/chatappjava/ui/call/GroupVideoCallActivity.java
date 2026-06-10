@@ -168,7 +168,9 @@ public class GroupVideoCallActivity extends AppCompatActivity {
         btnCameraToggle = findViewById(R.id.btn_camera_toggle);
         btnSwitchCamera = findViewById(R.id.btn_switch_camera);
         btnEndCall = findViewById(R.id.btn_end_call);
-        
+        com.example.chatappjava.utils.CallAccessibilityHelper.bindInCallControls(
+                btnMute, btnCameraToggle, btnSwitchCamera, btnEndCall, isMuted, isCameraOn);
+
         if (groupName != null) {
             tvGroupName.setText(groupName);
         }
@@ -463,8 +465,6 @@ public class GroupVideoCallActivity extends AppCompatActivity {
                             participant.setVideoMuted(isVideoMuted);
                             
                             participants.add(participant);
-                            adapter.notifyDataSetChanged();
-                            updateParticipantCount();
                             
                             // CRITICAL FIX: If avatar is empty, fetch user profile to get avatar
                             // This matches how local participant gets avatar from databaseManager
@@ -476,8 +476,9 @@ public class GroupVideoCallActivity extends AppCompatActivity {
                         }
                     }
                     
-                    // Update adapter after loading is complete
-                    adapter.notifyDataSetChanged();
+                    if (adapter != null && !participants.isEmpty()) {
+                        adapter.notifyItemRangeChanged(0, participants.size());
+                    }
                     updateParticipantCount();
                         } catch (Exception e) {
                             Log.e(TAG, "Error processing call_room_joined", e);
@@ -579,7 +580,9 @@ public class GroupVideoCallActivity extends AppCompatActivity {
         localParticipant.setVideoMuted(!isCameraOn);
         
         participants.add(localParticipant);
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyItemInserted(participants.size() - 1);
+        }
         updateParticipantCount();
     }
     
@@ -609,7 +612,9 @@ public class GroupVideoCallActivity extends AppCompatActivity {
         participant.setVideoMuted(false);
         
         participants.add(participant);
-        adapter.notifyDataSetChanged();
+        if (adapter != null) {
+            adapter.notifyItemInserted(participants.size() - 1);
+        }
         updateParticipantCount();
         
         // CRITICAL FIX: If avatar is empty, fetch user profile to get avatar
@@ -799,7 +804,9 @@ public class GroupVideoCallActivity extends AppCompatActivity {
     private void toggleMute() {
         isMuted = !isMuted;
         btnMute.setImageResource(isMuted ? R.drawable.ic_mic_off : R.drawable.ic_mic);
-        
+        com.example.chatappjava.utils.CallAccessibilityHelper.announceMuteToggle(
+                getResources(), btnMute, isMuted);
+
         // Start or stop audio capture based on mute state
         if (isMuted) {
             stopAudioCapture();
@@ -823,7 +830,9 @@ public class GroupVideoCallActivity extends AppCompatActivity {
     private void toggleCamera() {
         isCameraOn = !isCameraOn;
         btnCameraToggle.setImageResource(isCameraOn ? R.drawable.ic_video_call : R.drawable.ic_video_off);
-        
+        com.example.chatappjava.utils.CallAccessibilityHelper.announceCameraToggle(
+                getResources(), btnCameraToggle, isCameraOn);
+
         if (isCameraOn) {
             startVideoCapture();
         } else {

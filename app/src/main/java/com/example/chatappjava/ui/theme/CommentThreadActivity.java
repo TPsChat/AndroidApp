@@ -48,7 +48,7 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
     private static final String TAG = "CommentThreadActivity";
 
     // UI Components
-    private ImageButton ivBack;
+    private View ivBack;
     private TextView tvTitle;
     private CircleImageView ivPostAuthorAvatar;
     private TextView tvPostAuthorName, tvPostContentPreview;
@@ -121,8 +121,15 @@ public class CommentThreadActivity extends AppCompatActivity implements CommentA
     }
 
     private void initializeViews() {
-        ivBack = findViewById(R.id.iv_back);
-        tvTitle = findViewById(R.id.tv_title);
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        ivBack = findViewById(R.id.iv_toolbar_back);
+        tvTitle = findViewById(R.id.tv_toolbar_title);
+        if (tvTitle != null) {
+            tvTitle.setText(R.string.comments_title);
+        }
         ivPostAuthorAvatar = findViewById(R.id.iv_post_author_avatar);
         tvPostAuthorName = findViewById(R.id.tv_post_author_name);
         tvPostContentPreview = findViewById(R.id.tv_post_content_preview);

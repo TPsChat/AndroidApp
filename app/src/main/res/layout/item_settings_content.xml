@@ -18,7 +18,7 @@
         <ImageView
             style="@style/AppListDividerRowIcon"
             android:src="@drawable/ic_tag"
-            app:tint="@color/md3_primary" />
+            app:tint="@color/neu_copper_accent" />
 
         <TextView
             style="@style/AppListDividerRowLabel"
@@ -35,7 +35,7 @@
         <ImageView
             style="@style/AppListDividerRowIcon"
             android:src="@drawable/ic_setting"
-            app:tint="@color/md3_primary" />
+            app:tint="@color/neu_copper_accent" />
 
         <TextView
             style="@style/AppListDividerRowLabel"
@@ -52,7 +52,7 @@
         <ImageView
             style="@style/AppListDividerRowIcon"
             android:src="@drawable/ic_close"
-            app:tint="@color/md3_primary" />
+            app:tint="@color/neu_copper_accent" />
 
         <TextView
             style="@style/AppListDividerRowLabelDanger"
@@ -73,7 +73,7 @@
         <ImageView
             style="@style/AppListDividerRowIcon"
             android:src="@drawable/ic_close"
-            app:tint="@color/md3_primary" />
+            app:tint="@color/neu_copper_accent" />
 
         <TextView
             style="@style/AppListDividerRowLabel"
@@ -90,7 +90,7 @@
         <ImageView
             style="@style/AppListDividerRowIcon"
             android:src="@drawable/ic_delete"
-            app:tint="@color/md3_primary" />
+            app:tint="@color/neu_copper_accent" />
 
         <TextView
             style="@style/AppListDividerRowLabelDanger"
@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/settings_push_notifications"
-                android:textColor="@color/md3_on_surface"
+                android:textColor="@color/neu_copper_ink"
                 android:textSize="@dimen/text_auth_subtitle"
                 android:textStyle="bold" />
 
@@ -137,7 +137,7 @@
                 android:layout_marginTop="@dimen/list_item_margin"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/settings_push_notifications_desc"
-                android:textColor="@color/md3_on_surface_secondary"
+                android:textColor="@color/neu_copper_ink_muted"
                 android:textSize="@dimen/text_body_small" />
 
         </LinearLayout>
@@ -148,7 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_sm"
             android:checked="true"
-            android:thumbTint="@color/md3_primary"
+            android:thumbTint="@color/neu_copper_accent"
             android:trackTint="@color/switch_track_selector" />
 
     </LinearLayout>
@@ -176,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/settings_sound"
-                android:textColor="@color/md3_on_surface"
+                android:textColor="@color/neu_copper_ink"
                 android:textSize="@dimen/text_auth_subtitle"
                 android:textStyle="bold" />
 
@@ -186,7 +186,7 @@
                 android:layout_marginTop="@dimen/list_item_margin"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/settings_sound_desc"
-                android:textColor="@color/md3_on_surface_secondary"
+                android:textColor="@color/neu_copper_ink_muted"
                 android:textSize="@dimen/text_body_small" />
 
         </LinearLayout>
@@ -197,7 +197,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_sm"
             android:checked="true"
-            android:thumbTint="@color/md3_primary"
+            android:thumbTint="@color/neu_copper_accent"
             android:trackTint="@color/switch_track_selector" />
 
     </LinearLayout>
@@ -225,7 +225,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/settings_vibrate"
-                android:textColor="@color/md3_on_surface"
+                android:textColor="@color/neu_copper_ink"
                 android:textSize="@dimen/text_auth_subtitle"
                 android:textStyle="bold" />
 
@@ -235,7 +235,7 @@
                 android:layout_marginTop="@dimen/list_item_margin"
                 android:fontFamily="@font/plus_jakarta_sans"
                 android:text="@string/settings_vibrate_desc"
-                android:textColor="@color/md3_on_surface_secondary"
+                android:textColor="@color/neu_copper_ink_muted"
                 android:textSize="@dimen/text_body_small" />
 
         </LinearLayout>
@@ -246,7 +246,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_sm"
             android:checked="true"
-            android:thumbTint="@color/md3_primary"
+            android:thumbTint="@color/neu_copper_accent"
             android:trackTint="@color/switch_track_selector" />
 
     </LinearLayout>
@@ -262,7 +262,7 @@
         <ImageView
             style="@style/AppListDividerRowIcon"
             android:src="@drawable/ic_preferences"
-            app:tint="@color/md3_primary" />
+            app:tint="@color/neu_copper_accent" />
 
         <TextView
             style="@style/AppListDividerRowLabel"
@@ -279,7 +279,7 @@
         <ImageView
             style="@style/AppListDividerRowIcon"
             android:src="@drawable/ic_restore"
-            app:tint="@color/md3_primary" />
+            app:tint="@color/neu_copper_accent" />
 
         <TextView
             style="@style/AppListDividerRowLabelDanger"
@@ -298,7 +298,7 @@
         <ImageView
             style="@style/AppListDividerRowIcon"
             android:src="@drawable/ic_info"
-            app:tint="@color/md3_primary" />
+            app:tint="@color/neu_copper_accent" />
 
         <TextView
             style="@style/AppListDividerRowLabel"
@@ -310,7 +310,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/settings_app_version_value"
-            android:textColor="@color/md3_on_surface_secondary"
+            android:textColor="@color/neu_copper_ink_muted"
             android:textStyle="bold" />
 
     </LinearLayout>
@@ -323,7 +323,7 @@
         <ImageView
             style="@style/AppListDividerRowIcon"
             android:src="@drawable/ic_help"
-            app:tint="@color/md3_primary" />
+            app:tint="@color/neu_copper_accent" />
 
         <TextView
             style="@style/AppListDividerRowLabel"

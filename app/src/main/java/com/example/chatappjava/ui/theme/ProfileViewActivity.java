@@ -71,7 +71,15 @@ public class ProfileViewActivity extends AppCompatActivity {
         tvLastName = findViewById(R.id.tv_last_name);
         tvPhoneNumber = findViewById(R.id.tv_phone_number);
         tvBio = findViewById(R.id.tv_bio);
-        ivBack = findViewById(R.id.iv_back);
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        ivBack = findViewById(R.id.iv_toolbar_back);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+        if (toolbarTitle != null) {
+            toolbarTitle.setText(R.string.profile);
+        }
         ivMore = findViewById(R.id.iv_more);
         rvFriends = findViewById(R.id.rv_friends);
         tvNoFriends = findViewById(R.id.tv_no_friends);
@@ -309,10 +317,14 @@ public class ProfileViewActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
                         isBlockedInSession = !isBlockedInSession;
-                        Toast.makeText(ProfileViewActivity.this, (isBlockedInSession ? "Blocked" : "Unblocked") + " successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ProfileViewActivity.this,
+                                isBlockedInSession
+                                        ? getString(R.string.success_user_blocked_successfully)
+                                        : getString(R.string.success_user_unblocked),
+                                Toast.LENGTH_SHORT).show();
                         // Optionally finish or refresh UI
                     } else {
-                        String message = "Action failed";
+                        String message = getString(R.string.error_action_failed);
                         try {
                             org.json.JSONObject json = new org.json.JSONObject(body);
                             message = json.optString("message", message);

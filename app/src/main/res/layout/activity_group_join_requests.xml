@@ -5,29 +5,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/bg_chat_screen_dark">
+    android:background="@drawable/bg_neu_copper_canvas">
 
     <ImageView
         android:id="@+id/bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.12"
+        android:alpha="0.08"
+        android:importantForAccessibility="no"
         android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <include
-        android:id="@+id/header_card"
-        layout="@layout/component_flat_header"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Inset search below flat header -->
+    <include
+        android:id="@+id/header_card"
+        layout="@layout/component_neu_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width" />
+
     <LinearLayout
         android:id="@+id/search_card"
         android:layout_width="0dp"
@@ -36,66 +37,40 @@
         android:layout_marginTop="@dimen/spacing_sm"
         android:layout_marginEnd="@dimen/margin_mobile"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/header_card"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/header_card"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
-        <LinearLayout
+        <include
+            layout="@layout/component_neu_search_field"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/search_bar_height"
-            android:background="@drawable/bg_glass_search"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_search"
-                android:layout_marginEnd="12dp"
-                app:tint="@color/md3_primary" />
-
-            <EditText
-                android:id="@+id/et_search"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:hint="@string/search_requests_hint"
-                android:textSize="15sp"
-                android:textColor="@color/md3_on_surface"
-                android:textColorHint="@color/md3_on_surface_secondary"
-                android:background="@android:color/transparent"
-                android:inputType="text"
-                android:gravity="center_vertical"
-                android:textCursorDrawable="@null" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
-    <!-- Requests list -->
     <FrameLayout
         android:id="@+id/requests_card"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/spacing_sm"
-        app:layout_constraintTop_toBottomOf="@id/search_card"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_card"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_requests"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             android:clipToPadding="false"
             android:paddingStart="4dp"
-            android:paddingEnd="4dp"
             android:paddingTop="8dp"
+            android:paddingEnd="4dp"
             android:paddingBottom="8dp"
             android:scrollbars="none"
-            android:background="@android:color/transparent"
             tools:listitem="@layout/item_join_request" />
 
         <include

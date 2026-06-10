@@ -700,6 +700,7 @@ public class CreatePostActivity extends AppCompatActivity {
         ProgressBar progressBar = dialogView.findViewById(R.id.progress_bar);
         TextView tvNoFriends = dialogView.findViewById(R.id.tv_no_friends);
         EditText etSearch = dialogView.findViewById(R.id.et_search);
+        etSearch.setHint(R.string.group_search_friends_hint);
         Button btnDone = dialogView.findViewById(R.id.btn_done);
         
         List<User> friends = new ArrayList<>();

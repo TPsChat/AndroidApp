@@ -285,9 +285,17 @@
     <string name="call_accept_cd">Accept call</string>
     <string name="call_decline_cd">Decline call</string>
     <string name="call_swipe_hint">Swipe to answer or decline</string>
+    <string name="call_button_hint">Or use the buttons below</string>
+    <string name="call_swipe_thumb_cd">Swipe to answer or decline call</string>
     <string name="call_accept_label">Accept</string>
     <string name="call_decline_label">Decline</string>
     <string name="call_caller_avatar_cd">Caller photo</string>
+    <string name="call_mute_cd">Mute microphone</string>
+    <string name="call_unmute_cd">Unmute microphone</string>
+    <string name="call_camera_on_cd">Turn camera on</string>
+    <string name="call_camera_off_cd">Turn camera off</string>
+    <string name="call_switch_camera_cd">Switch camera</string>
+    <string name="call_end_cd">End call</string>
 
     <!-- Post detail -->
     <string name="post_detail_title">Post</string>
@@ -329,6 +337,11 @@
     <!-- Emoji picker -->
     <string name="emoji_picker_title">Choose emoji</string>
     <string name="emoji_insert_cd">Insert %1$s emoji</string>
+    <string name="emoji_picker_grid_cd">Emoji picker grid</string>
+    <string name="success_join_request_approved">Request approved</string>
+    <string name="success_join_request_rejected">Request rejected</string>
+    <string name="success_friend_request_accepted">Friend request accepted</string>
+    <string name="success_friend_request_rejected">Friend request rejected</string>
     <string name="emoji_reaction_like">👍</string>
     <string name="emoji_reaction_love">❤️</string>
     <string name="emoji_reaction_haha">😂</string>
@@ -741,6 +754,7 @@
     <string name="error_user_not_found">User not found</string>
     <string name="error_failed_to_block_user">Failed to block user</string>
     <string name="success_user_blocked_successfully">User blocked successfully</string>
+    <string name="success_user_unblocked">User unblocked successfully</string>
     <string name="error_chat_not_found">Chat not found</string>
     <string name="error_error_initiating_call">Error initiating call</string>
     <string name="error_failed_to_cancel_call">Failed to cancel call</string>

@@ -20,12 +20,13 @@
 
     <include
         android:id="@+id/header_card"
-        layout="@layout/component_flat_header"
+        layout="@layout/component_neu_toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width" />
 
     <!-- Search -->
     <LinearLayout
@@ -38,41 +39,13 @@
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/header_card"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
-        <LinearLayout
+        <include
+            layout="@layout/component_neu_search_field"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/search_bar_height"
-            android:background="@drawable/bg_glass_search"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:src="@drawable/ic_search"
-                app:tint="@color/md3_primary"
-                android:contentDescription="@string/search_icon_description"
-                android:layout_marginEnd="12dp" />
-
-            <EditText
-                android:id="@+id/et_search"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:hint="@string/search_hint"
-                android:inputType="text"
-                android:textColor="@color/md3_on_surface"
-                android:textColorHint="@color/md3_on_surface_secondary"
-                android:textSize="15sp"
-                android:gravity="center_vertical"
-                android:textCursorDrawable="@null"
-                tools:ignore="TouchTargetSizeCheck" />
-
-        </LinearLayout>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -85,39 +58,25 @@
         android:layout_marginStart="@dimen/margin_mobile"
         android:layout_marginTop="@dimen/spacing_sm"
         android:layout_marginEnd="@dimen/margin_mobile"
-        android:background="@drawable/bg_soft_inset"
-        android:padding="@dimen/auth_switch_inner_padding"
+        style="@style/AppNeuTabBar"
         app:layout_constraintTop_toBottomOf="@id/search_card"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <TextView
             android:id="@+id/tab_requests"
+            style="@style/AppNeuTabItem"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_target_min"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/friend_requests_tab_requests"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/tab_text_selector"
-            android:background="@drawable/tab_selector"
-            android:clickable="true"
-            android:focusable="true" />
+            android:text="@string/friend_requests_tab_requests" />
 
         <TextView
             android:id="@+id/tab_friends"
+            style="@style/AppNeuTabItem"
             android:layout_width="0dp"
-            android:layout_height="@dimen/touch_target_min"
             android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/friend_requests_tab_friends"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="@color/tab_text_selector"
-            android:background="@drawable/tab_selector"
-            android:clickable="true"
-            android:focusable="true" />
+            android:text="@string/friend_requests_tab_friends" />
 
     </LinearLayout>
 
@@ -131,7 +90,8 @@
         app:layout_constraintTop_toBottomOf="@id/tabs_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="@dimen/home_content_max_width">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -175,7 +135,7 @@
                     android:text="@string/friend_requests_tab_requests"
                     android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:paddingTop="12dp"
@@ -215,7 +175,7 @@
                     android:text="@string/friend_requests_tab_friends"
                     android:textSize="17sp"
                     android:textStyle="bold"
-                    android:textColor="@color/md3_on_surface"
+                    android:textColor="@color/neu_copper_ink"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:paddingTop="12dp"

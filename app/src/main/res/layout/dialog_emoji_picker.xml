@@ -17,7 +17,7 @@
         android:paddingEnd="@dimen/dialog_padding_h"
         android:paddingTop="@dimen/dialog_padding_v"
         android:paddingBottom="@dimen/dialog_padding_h"
-        android:background="@drawable/bg_glass_panel">
+        android:background="@drawable/bg_neu_emboss_raised_md">
 
         <!-- Title -->
         <TextView
@@ -34,6 +34,7 @@
 
         <!-- Emoji Grid Container -->
         <ScrollView
+            android:id="@+id/emoji_scroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxHeight="320dp"

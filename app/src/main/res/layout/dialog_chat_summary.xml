@@ -17,7 +17,7 @@
         android:paddingEnd="@dimen/dialog_padding_h"
         android:paddingTop="@dimen/dialog_padding_v"
         android:paddingBottom="@dimen/dialog_padding_h"
-        android:background="@drawable/bg_glass_panel">
+        android:background="@drawable/bg_neu_emboss_raised_md">
 
         <!-- Title -->
         <TextView

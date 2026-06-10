@@ -42,7 +42,7 @@ import okhttp3.Response;
 public class GroupSettingsActivity extends AppCompatActivity {
 
     private TextView tvGroupName;
-    private ImageView ivBack;
+    private View ivBack;
     private Switch switchPublic;
     private TextView tvRequestCount;
     
@@ -108,7 +108,15 @@ public class GroupSettingsActivity extends AppCompatActivity {
     
     private void initViews() {
         tvGroupName = findViewById(R.id.tv_group_name);
-        ivBack = findViewById(R.id.iv_back);
+        View backWell = findViewById(R.id.toolbar_back_well);
+        if (backWell != null) {
+            backWell.setVisibility(View.VISIBLE);
+        }
+        ivBack = findViewById(R.id.iv_toolbar_back);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+        if (toolbarTitle != null) {
+            toolbarTitle.setText(R.string.group_settings_title);
+        }
         switchPublic = findViewById(R.id.switch_public);
         tvRequestCount = findViewById(R.id.tv_request_count);
     }
@@ -133,7 +141,9 @@ public class GroupSettingsActivity extends AppCompatActivity {
     }
     
     private void setupClickListeners() {
-        ivBack.setOnClickListener(v -> finish());
+        if (ivBack != null) {
+            ivBack.setOnClickListener(v -> finish());
+        }
         
         // Group Information
         findViewById(R.id.option_view_group_info).setOnClickListener(v -> showGroupInfo());
