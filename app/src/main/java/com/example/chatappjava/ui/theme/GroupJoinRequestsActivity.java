@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.text.TextWatcher;
 import android.text.Editable;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
     private DatabaseManager databaseManager;
     private Chat currentChat;
     private EditText etSearch;
+    private ImageButton ivClear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +47,17 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
         recyclerView = findViewById(com.example.chatappjava.R.id.rv_requests);
         listSkeleton = findViewById(com.example.chatappjava.R.id.list_skeleton);
         etSearch = findViewById(com.example.chatappjava.R.id.et_search);
-        etSearch.setHint(com.example.chatappjava.R.string.search_requests_hint);
+        ivClear = findViewById(com.example.chatappjava.R.id.iv_clear);
+        if (etSearch != null) {
+            etSearch.setHint(com.example.chatappjava.R.string.search_requests_hint);
+        }
+        if (ivClear != null) {
+            ivClear.setOnClickListener(v -> {
+                if (etSearch != null) {
+                    etSearch.setText("");
+                }
+            });
+        }
         View backWell = findViewById(R.id.toolbar_back_well);
         if (backWell != null) {
             backWell.setVisibility(View.VISIBLE);
@@ -82,6 +94,9 @@ public class GroupJoinRequestsActivity extends AppCompatActivity {
             etSearch.addTextChangedListener(new TextWatcher() {
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (ivClear != null) {
+                        ivClear.setVisibility(s != null && s.length() > 0 ? View.VISIBLE : View.GONE);
+                    }
                     filterRequests(s != null ? s.toString() : "");
                 }
                 @Override public void afterTextChanged(Editable s) {}

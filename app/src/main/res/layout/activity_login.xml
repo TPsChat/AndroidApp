@@ -70,14 +70,6 @@
                     </FrameLayout>
 
                     <TextView
-                        android:id="@+id/tv_auth_eyebrow"
-                        style="@style/AppEyebrowTag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_md"
-                        android:text="@string/auth_eyebrow" />
-
-                    <TextView
                         android:id="@+id/tv_auth_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -110,7 +102,7 @@
                             android:id="@+id/auth_tab_indicator"
                             android:layout_width="1dp"
                             android:layout_height="@dimen/auth_tab_height"
-                            android:background="@drawable/bg_filter_pill_active" />
+                            android:background="@drawable/bg_auth_tab_indicator_outline" />
 
                         <LinearLayout
                             android:layout_width="match_parent"

@@ -3,7 +3,7 @@ package com.example.chatappjava.ui.theme;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.EditText;
@@ -41,6 +41,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
     private View listSkeleton;
     private View tvNoRequests;
     private EditText etSearch;
+    private ImageButton ivClear;
     private View tabRequests;
     private View tabFriends;
     private View containerRequests;
@@ -100,6 +101,17 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             tvTitle.setText(R.string.title_activity_friend_requests);
         }
         etSearch = findViewById(R.id.et_search);
+        ivClear = findViewById(R.id.iv_clear);
+        if (etSearch != null) {
+            etSearch.setHint(R.string.group_search_friends_hint);
+        }
+        if (ivClear != null) {
+            ivClear.setOnClickListener(v -> {
+                if (etSearch != null) {
+                    etSearch.setText("");
+                }
+            });
+        }
         // new views
         rvMyFriends = findViewById(R.id.rv_my_friends);
         tvFriendsTitle = findViewById(R.id.tv_friends_title);
@@ -131,6 +143,9 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
             etSearch.addTextChangedListener(new TextWatcher() {
                 @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (ivClear != null) {
+                        ivClear.setVisibility(s != null && s.length() > 0 ? View.VISIBLE : View.GONE);
+                    }
                     String q = s != null ? s.toString() : "";
                     filterRequests(q);
                     filterFriendsList(q);

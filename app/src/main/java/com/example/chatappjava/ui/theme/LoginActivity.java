@@ -63,7 +63,6 @@ public class LoginActivity extends AppCompatActivity {
     private void initializeViews() {
         tvAuthTitle = findViewById(R.id.tv_auth_title);
         tvAuthSubtitle = findViewById(R.id.tv_auth_subtitle);
-        tvAuthEyebrow = findViewById(R.id.tv_auth_eyebrow);
         authTopCluster = findViewById(R.id.auth_top_cluster);
         authLogoBezel = findViewById(R.id.auth_logo_bezel);
         authFormBezel = findViewById(R.id.auth_form_bezel);

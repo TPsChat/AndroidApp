@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import android.widget.Switch;
 import android.text.Editable;
@@ -43,6 +44,7 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
     private ApiClient apiClient;
     private DatabaseManager sharedPrefs;
     private EditText etSearch;
+    private ImageButton ivClear;
     private TextView tvCreate;
     private final List<User> allFriends = new ArrayList<>();
 
@@ -57,7 +59,17 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
         switchPublic = findViewById(R.id.switch_public);
         listSkeleton = findViewById(R.id.list_skeleton);
         etSearch = findViewById(R.id.et_search);
-        etSearch.setHint(R.string.group_search_friends_hint);
+        ivClear = findViewById(R.id.iv_clear);
+        if (etSearch != null) {
+            etSearch.setHint(R.string.group_search_friends_hint);
+        }
+        if (ivClear != null) {
+            ivClear.setOnClickListener(v -> {
+                if (etSearch != null) {
+                    etSearch.setText("");
+                }
+            });
+        }
         tvCreate = findViewById(R.id.tv_create);
 
         apiClient = new ApiClient();
@@ -91,6 +103,9 @@ public class CreateGroupActivity extends AppCompatActivity implements Selectable
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (ivClear != null) {
+                        ivClear.setVisibility(s != null && s.length() > 0 ? View.VISIBLE : View.GONE);
+                    }
                     filterFriends(s != null ? s.toString() : "");
                 }
 

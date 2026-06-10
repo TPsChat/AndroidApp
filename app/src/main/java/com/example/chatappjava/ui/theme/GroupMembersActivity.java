@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
     private View ivBack;
     private RecyclerView rvMembers;
     private EditText etSearch;
+    private ImageButton ivClear;
     private View emptyState;
     private View listSkeleton;
     
@@ -77,7 +79,17 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
         ivBack = findViewById(R.id.iv_toolbar_back);
         rvMembers = findViewById(R.id.rv_members);
         etSearch = findViewById(R.id.et_search);
-        etSearch.setHint(R.string.search_members_hint);
+        ivClear = findViewById(R.id.iv_clear);
+        if (etSearch != null) {
+            etSearch.setHint(R.string.search_members_hint);
+        }
+        if (ivClear != null) {
+            ivClear.setOnClickListener(v -> {
+                if (etSearch != null) {
+                    etSearch.setText("");
+                }
+            });
+        }
         emptyState = findViewById(R.id.empty_state);
         listSkeleton = findViewById(R.id.list_skeleton);
         EmptyStateHelper.bind(
@@ -121,6 +133,9 @@ public class GroupMembersActivity extends AppCompatActivity implements GroupMemb
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (ivClear != null) {
+                        ivClear.setVisibility(s != null && s.length() > 0 ? View.VISIBLE : View.GONE);
+                    }
                     filterMembers(s != null ? s.toString() : "");
                 }
 
