@@ -300,11 +300,13 @@ public class Chat {
     public void setDescription(String description) { this.description = description; }
 
     public String getLastMessage() { return lastMessage; }
-    
+    public void setLastMessage(String lastMessage) { this.lastMessage = lastMessage; }
+
     public long getLastMessageTime() { return lastMessageTime; }
     public void setLastMessageTime(long lastMessageTime) { this.lastMessageTime = lastMessageTime; }
 
     public int getUnreadCount() { return unreadCount; }
+    public void setUnreadCount(int unreadCount) { this.unreadCount = unreadCount; }
     
     public boolean isActive() { return isActive; }
     public void setActive(boolean active) { this.isActive = active; }

@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.chatappjava.models.Message;
 import com.example.chatappjava.models.Post;
 import com.example.chatappjava.network.ApiClient;
+import com.example.chatappjava.network.SocketManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,9 +24,7 @@ public class SyncManager {
     private static final String TAG = "SyncManager";
     private static final String PREFS_NAME = "sync_prefs";
     private static final String KEY_LAST_FOREGROUND_SYNC = "last_foreground_sync";
-    private static final String KEY_LAST_CHAT_MSG_SYNC = "last_chat_msg_sync";
-    private static final long FOREGROUND_SYNC_INTERVAL_MS = 2 * 1000; // 2 seconds
-    private static final long CHAT_MSG_SYNC_INTERVAL_MS = 2 * 1000; // messages-only, while chat open
+    private static final long FOREGROUND_SYNC_INTERVAL_MS = 30 * 1000; // fallback when socket offline
     private static final long BACKGROUND_SYNC_INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
     
     private static SyncManager instance;
@@ -78,10 +77,17 @@ public class SyncManager {
         syncListeners.remove(listener);
     }
     
+    private boolean isRealtimeActive() {
+        return SocketManager.getInstance().isConnected();
+    }
+
     /**
-     * Check if foreground sync is needed (every 2 seconds)
+     * Check if foreground delta sync is needed (skipped while socket is connected).
      */
     public boolean shouldSyncForeground() {
+        if (isRealtimeActive()) {
+            return false;
+        }
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         long lastSync = prefs.getLong(KEY_LAST_FOREGROUND_SYNC, 0);
         long now = System.currentTimeMillis();
@@ -96,7 +102,11 @@ public class SyncManager {
             Log.w(TAG, "Cannot sync: token is null or empty");
             return;
         }
-        
+        if (isRealtimeActive()) {
+            Log.d(TAG, "Foreground sync skipped: socket connected");
+            return;
+        }
+
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
         long lastSync = prefs.getLong(KEY_LAST_FOREGROUND_SYNC, 0);
         long now = System.currentTimeMillis();
@@ -110,24 +120,6 @@ public class SyncManager {
         syncAll(token, false);
         
         prefs.edit().putLong(KEY_LAST_FOREGROUND_SYNC, now).apply();
-    }
-
-    /**
-     * Delta-sync messages only (lightweight backup while a chat screen is open).
-     * Uses a separate debounce from {@link #syncForeground} so chat polling is not blocked.
-     */
-    public void syncChatMessages(String token) {
-        if (token == null || token.isEmpty()) {
-            return;
-        }
-        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        long lastSync = prefs.getLong(KEY_LAST_CHAT_MSG_SYNC, 0);
-        long now = System.currentTimeMillis();
-        if ((now - lastSync) < CHAT_MSG_SYNC_INTERVAL_MS) {
-            return;
-        }
-        prefs.edit().putLong(KEY_LAST_CHAT_MSG_SYNC, now).apply();
-        syncMessages(token, false);
     }
 
     /** Immediate delta-sync (no debounce) — only after socket disconnect / send timeout. */
@@ -164,6 +156,10 @@ public class SyncManager {
      * Sync messages - fetch only new messages since last sync
      */
     public void syncMessages(String token, boolean isBackground) {
+        if (!isBackground && isRealtimeActive()) {
+            Log.d(TAG, "Messages sync skipped: socket connected");
+            return;
+        }
         long lastSyncTimestamp = getLastSyncTimestamp("messages");
         
         String endpoint = "/api/updates/messages?since=" + lastSyncTimestamp;
@@ -236,6 +232,10 @@ public class SyncManager {
      * Sync posts - fetch only new posts since last sync
      */
     public void syncPosts(String token, boolean isBackground) {
+        if (!isBackground && isRealtimeActive()) {
+            Log.d(TAG, "Posts sync skipped: socket connected");
+            return;
+        }
         long lastSyncTimestamp = getLastSyncTimestamp("posts");
         
         String endpoint = "/api/updates/posts?since=" + lastSyncTimestamp;
@@ -308,6 +308,10 @@ public class SyncManager {
      * Sync conversations - fetch only updated conversations since last sync
      */
     public void syncConversations(String token, boolean isBackground) {
+        if (!isBackground && isRealtimeActive()) {
+            Log.d(TAG, "Conversations sync skipped: socket connected");
+            return;
+        }
         long lastSyncTimestamp = getLastSyncTimestamp("conversations");
         
         String endpoint = "/api/updates/conversations?since=" + lastSyncTimestamp;

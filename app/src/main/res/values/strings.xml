@@ -119,6 +119,9 @@
     <string name="home_post_live">Live</string>
     <string name="home_post_photo">Photo</string>
     <string name="home_post_video">Video</string>
+    <string name="chat_preview_voice">Voice message</string>
+    <string name="chat_preview_file">File</string>
+    <string name="chat_preview_video">Video</string>
     <string name="home_create_post_avatar_cd">Your profile photo</string>
     <string name="home_search_bar_cd">Search conversations</string>
     <string name="home_friend_requests_cd">Friend requests</string>

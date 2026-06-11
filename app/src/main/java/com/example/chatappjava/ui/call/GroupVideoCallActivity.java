@@ -31,12 +31,8 @@ import com.example.chatappjava.adapters.CustomVideoParticipantAdapter;
 import com.example.chatappjava.models.CallParticipant;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.network.SocketManager;
-import com.example.chatappjava.utils.AudioCaptureManager;
-import com.example.chatappjava.utils.AudioFrameEncoder;
-import com.example.chatappjava.utils.AudioPlaybackManager;
-import com.example.chatappjava.utils.CameraCaptureManager;
+import com.example.chatappjava.utils.CallMediaPipeline;
 import com.example.chatappjava.utils.DatabaseManager;
-import com.example.chatappjava.utils.VideoFrameEncoder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,10 +42,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -64,8 +56,6 @@ public class GroupVideoCallActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 100;
     // CRITICAL: Reduced FPS to minimize encoding load and latency
     // 33ms = ~30 FPS - reduces encoding time significantly
-    private static final int FRAME_CAPTURE_INTERVAL_MS = 10;
-    
     // UI Components
     private RecyclerView rvVideoGrid;
     private LinearLayout emptyState;
@@ -91,23 +81,13 @@ public class GroupVideoCallActivity extends AppCompatActivity {
     private DatabaseManager databaseManager;
     private ApiClient apiClient;
     private SocketManager socketManager;
-    private CameraCaptureManager cameraCaptureManager;
-    private AudioCaptureManager audioCaptureManager;
-    private AudioPlaybackManager audioPlaybackManager;
+    private CallMediaPipeline mediaPipeline;
     
     // State
     private boolean isMuted = false;
     private boolean isCameraOn = true;
     private boolean isCallActive = false;
     private boolean isFrontCamera = false; // Track current camera facing
-    private AtomicBoolean isSendingFrame = new AtomicBoolean(false);
-    private AtomicBoolean isSendingAudio = new AtomicBoolean(false);
-    private Handler frameCaptureHandler;
-    private Runnable frameCaptureRunnable;
-    private long callStartTime;
-    private Handler callDurationHandler;
-    private Runnable callDurationRunnable;
-    
     // CRITICAL: Track last frame received time for each participant
     // If no frames received for 2 seconds, assume camera is off
     private Map<String, Long> lastFrameReceivedTime;
@@ -116,9 +96,6 @@ public class GroupVideoCallActivity extends AppCompatActivity {
     private static final long VIDEO_FRAME_TIMEOUT_MS = 10000; // 10 seconds (increased from 2s)
     private Handler videoFrameTimeoutHandler;
     private Runnable videoFrameTimeoutRunnable;
-    
-    // CRITICAL: Thread pool for audio/video processing to avoid thread exhaustion
-    private ExecutorService videoProcessingExecutor;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,12 +202,75 @@ public class GroupVideoCallActivity extends AppCompatActivity {
         }
     }
     
+    private void initMediaPipeline() {
+        if (mediaPipeline != null) {
+            return;
+        }
+        mediaPipeline = new CallMediaPipeline(TAG, socketManager, new CallMediaPipeline.Host() {
+            @Override
+            public boolean isCallActive() {
+                return isCallActive;
+            }
+
+            @Override
+            public boolean isMuted() {
+                return isMuted;
+            }
+
+            @Override
+            public boolean isCameraOn() {
+                return isCameraOn;
+            }
+
+            @Override
+            public boolean isFrontCamera() {
+                return isFrontCamera;
+            }
+
+            @Override
+            public void setFrontCamera(boolean frontCamera) {
+                isFrontCamera = frontCamera;
+            }
+
+            @Override
+            public String getCallId() {
+                return callId;
+            }
+
+            @Override
+            public void runOnUiThread(Runnable runnable) {
+                GroupVideoCallActivity.this.runOnUiThread(runnable);
+            }
+
+            @Override
+            public void onLocalVideoFrame(String base64Frame, boolean frontCamera) {
+                if (adapter != null && currentUserId != null) {
+                    adapter.updateVideoFrame(currentUserId, base64Frame, frontCamera);
+                }
+            }
+
+            @Override
+            public void onCameraUnavailable() {
+                Toast.makeText(GroupVideoCallActivity.this,
+                        getString(R.string.msg_camera_unavailable_continuing_without_video),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onAudioCaptureError(String message) {
+                Toast.makeText(GroupVideoCallActivity.this,
+                        getString(R.string.error_failed_with_message, message),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void initializeCall() {
         showLoading("Connecting to call...");
         
         try {
-            // Setup audio mode for voice call
-            setupAudioMode();
+            initMediaPipeline();
+            mediaPipeline.setupAudioMode(this);
             
             // CRITICAL: Setup listeners BEFORE joining room to avoid missing call_room_joined event
             setupSocketListeners();
@@ -248,34 +288,20 @@ public class GroupVideoCallActivity extends AppCompatActivity {
                 return;
             }
             
-            // Start video capture (with error handling)
             try {
-                startVideoCapture();
+                mediaPipeline.startVideoCapture(this);
             } catch (Exception e) {
                 Log.e(TAG, "Error starting video capture", e);
-                // Don't end call - continue without video
             }
-            
-            // Initialize audio playback manager early
+
             try {
-                if (audioPlaybackManager == null) {
-                    audioPlaybackManager = new AudioPlaybackManager();
-                    Log.d(TAG, "AudioPlaybackManager initialized");
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error initializing audio playback manager", e);
-            }
-            
-            // Start audio capture (with error handling)
-            try {
-                startAudioCapture();
+                mediaPipeline.ensurePlaybackReady();
+                mediaPipeline.startAudioCapture();
             } catch (Exception e) {
                 Log.e(TAG, "Error starting audio capture", e);
-                // Don't end call - continue without audio
             }
-            
-            // Start call duration timer
-            startCallDurationTimer();
+
+            mediaPipeline.startCallDurationTimer(tvCallDuration);
             
             hideLoading();
             isCallActive = true;
@@ -284,67 +310,6 @@ public class GroupVideoCallActivity extends AppCompatActivity {
             Log.e(TAG, "Critical error initializing call", e);
             Toast.makeText(this, getString(R.string.error_failed_with_message, e.getMessage()), Toast.LENGTH_LONG).show();
             finish();
-        }
-    }
-    
-    private void setupAudioMode() {
-        try {
-            android.media.AudioManager audioManager = (android.media.AudioManager) getSystemService(android.content.Context.AUDIO_SERVICE);
-            if (audioManager != null) {
-                // CRITICAL: Request audio focus for voice calls
-                // This ensures our app has priority for audio playback
-                int focusRequest = audioManager.requestAudioFocus(
-                    null, // AudioFocusChangeListener (null for one-time request)
-                    android.media.AudioManager.STREAM_MUSIC, // Stream type
-                    android.media.AudioManager.AUDIOFOCUS_GAIN_TRANSIENT // Request transient focus
-                );
-                Log.d(TAG, "Audio focus request result: " + focusRequest + " (AUDIOFOCUS_REQUEST_GRANTED=" + android.media.AudioManager.AUDIOFOCUS_REQUEST_GRANTED + ")");
-                
-                // Set mode to IN_COMMUNICATION for voice calls
-                audioManager.setMode(android.media.AudioManager.MODE_IN_COMMUNICATION);
-                
-                // CRITICAL: Set speakerphone on for group calls (better for multiple participants)
-                audioManager.setSpeakerphoneOn(true);
-                
-                // CRITICAL: Since we're using USAGE_VOICE_COMMUNICATION in AudioTrack, 
-                // it may map to STREAM_VOICE_CALL, but also set MUSIC stream volume as fallback
-                int maxMusicVolume = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_MUSIC);
-                int currentMusicVolume = audioManager.getStreamVolume(android.media.AudioManager.STREAM_MUSIC);
-                
-                Log.d(TAG, "Current MUSIC stream volume: " + currentMusicVolume + "/" + maxMusicVolume);
-                
-                // Set MUSIC stream volume to maximum to ensure audio is clearly audible
-                if (currentMusicVolume < maxMusicVolume) {
-                    audioManager.setStreamVolume(android.media.AudioManager.STREAM_MUSIC, 
-                                                 maxMusicVolume, 0);
-                    Log.d(TAG, "Set MUSIC stream volume to maximum: " + maxMusicVolume);
-                }
-                
-                // Also set VOICE_CALL stream volume for better compatibility
-                int maxVoiceVolume = audioManager.getStreamMaxVolume(android.media.AudioManager.STREAM_VOICE_CALL);
-                int currentVoiceVolume = audioManager.getStreamVolume(android.media.AudioManager.STREAM_VOICE_CALL);
-                if (currentVoiceVolume < maxVoiceVolume * 0.7) {
-                    audioManager.setStreamVolume(android.media.AudioManager.STREAM_VOICE_CALL, 
-                                                 (int)(maxVoiceVolume * 0.7), 0);
-                    Log.d(TAG, "Adjusted VOICE_CALL stream volume to " + (int)(maxVoiceVolume * 0.7) + " (max: " + maxVoiceVolume + ")");
-                }
-                
-                Log.d(TAG, "Audio mode set to MODE_IN_COMMUNICATION, speakerphone: true, MUSIC volume: " + maxMusicVolume + ", VOICE_CALL volume: " + currentVoiceVolume);
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error setting audio mode", e);
-        }
-    }
-    
-    private void resetAudioMode() {
-        try {
-            android.media.AudioManager audioManager = (android.media.AudioManager) getSystemService(android.content.Context.AUDIO_SERVICE);
-            if (audioManager != null) {
-                audioManager.setMode(android.media.AudioManager.MODE_NORMAL);
-                Log.d(TAG, "Audio mode reset to MODE_NORMAL");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error resetting audio mode", e);
         }
     }
     
@@ -553,23 +518,6 @@ public class GroupVideoCallActivity extends AppCompatActivity {
         });
     }
     
-    // This method is no longer needed because participants are loaded from call_room_joined event
-    // Kept for compatibility if other code calls it
-    private void loadParticipants() {
-        // Participants will be loaded from call_room_joined event
-        // Only add local participant if not already present
-        boolean hasLocal = false;
-        for (CallParticipant p : participants) {
-            if (p.isLocal() && p.getUserId() != null && p.getUserId().equals(currentUserId)) {
-                hasLocal = true;
-                break;
-            }
-        }
-        if (!hasLocal) {
-            addLocalParticipant();
-        }
-    }
-    
     private void addLocalParticipant() {
         CallParticipant localParticipant = new CallParticipant();
         localParticipant.setUserId(currentUserId);
@@ -693,128 +641,16 @@ public class GroupVideoCallActivity extends AppCompatActivity {
         tvParticipantCount.setText(count + " participant" + (count > 1 ? "s" : ""));
     }
     
-    private void startVideoCapture() {
-        if (!isCameraOn) {
-            return;
-        }
-        
-        try {
-            // CRITICAL FIX: Reset isFrontCamera flag when starting capture
-            // Default is back camera (false)
-            isFrontCamera = false;
-            
-            cameraCaptureManager = new CameraCaptureManager(this);
-            cameraCaptureManager.startCapture(new CameraCaptureManager.FrameCaptureCallback() {
-                @Override
-                public void onFrameCaptured(byte[] frameData, int width, int height) {
-                    try {
-                        if (frameData != null && isCallActive && isCameraOn) {
-                            sendVideoFrame(frameData);
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error in video frame callback", e);
-                        // Don't end call on frame processing error
-                    }
-                }
-            });
-            
-            // Start periodic capture
-            frameCaptureHandler = new Handler(Looper.getMainLooper());
-            frameCaptureRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        if (isCallActive && isCameraOn && cameraCaptureManager != null && cameraCaptureManager.isCapturing()) {
-                            // Capture is continuous, send frames periodically
-                            frameCaptureHandler.postDelayed(this, FRAME_CAPTURE_INTERVAL_MS);
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error in frame capture runnable", e);
-                        // Don't end call - just stop the runnable
-                    }
-                }
-            };
-            frameCaptureHandler.post(frameCaptureRunnable);
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting video capture", e);
-            // Don't end call - continue without video
-            Toast.makeText(this, getString(R.string.msg_camera_unavailable_continuing_without_video), Toast.LENGTH_SHORT).show();
-        }
-    }
-    
-    private void sendVideoFrame(byte[] frameData) {
-        // CRITICAL: Always send frames, even if previous send is in progress
-        // This ensures frames are sent periodically even when user is idle
-        // Use tryLock to allow skipping if encoding is slow to maintain frame rate
-        if (!isSendingFrame.compareAndSet(false, true)) {
-            // If previous frame is still being encoded, skip this one to maintain frame rate
-            // This prevents queue buildup and ensures timely delivery
-            return;
-        }
-        
-        // CRITICAL: Use thread pool instead of creating new thread for each frame
-        // This prevents thread exhaustion and process kill
-        if (videoProcessingExecutor == null || videoProcessingExecutor.isShutdown()) {
-            videoProcessingExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
-                @Override
-                public Thread newThread(Runnable r) {
-                    Thread t = new Thread(r, "VideoProcessor");
-                    t.setPriority(Thread.MAX_PRIORITY);
-                    return t;
-                }
-            });
-        }
-
-        videoProcessingExecutor.execute(() -> {
-            try {
-                if (!isCallActive) {
-                    isSendingFrame.set(false);
-                    return;
-                }
-                
-                // Encode frame to base64
-                String base64Frame = VideoFrameEncoder.encodeFrame(frameData);
-                
-                if (base64Frame != null && isCallActive) {
-                    // CRITICAL: Update local participant video frame immediately
-                    // This ensures the user sees their own video
-                    // CRITICAL FIX: Pass isFrontCamera flag to mirror front camera correctly
-                    final boolean frontCamera = isFrontCamera;
-                    runOnUiThread(() -> {
-                        if (isCallActive && adapter != null && currentUserId != null) {
-                            adapter.updateVideoFrame(currentUserId, base64Frame, frontCamera);
-                        }
-                    });
-                    
-                    // Send to server to forward to other participants
-                    if (socketManager != null && isCallActive) {
-                        socketManager.sendVideoFrame(callId, base64Frame);
-                    }
-                }
-            } catch (Exception e) {
-                // CRITICAL: Catch all exceptions to prevent call from ending
-                Log.e(TAG, "Error sending video frame", e);
-                // Don't end call on encoding error - just skip this frame
-            } finally {
-                isSendingFrame.set(false);
-            }
-        });
-    }
-    
     private void toggleMute() {
         isMuted = !isMuted;
         btnMute.setImageResource(isMuted ? R.drawable.ic_mic_off : R.drawable.ic_mic);
         com.example.chatappjava.utils.CallAccessibilityHelper.announceMuteToggle(
                 getResources(), btnMute, isMuted);
-
-        // Start or stop audio capture based on mute state
         if (isMuted) {
-            stopAudioCapture();
+            mediaPipeline.stopAudioCapture();
         } else {
-            startAudioCapture();
+            mediaPipeline.startAudioCapture();
         }
-        
-        // Update local participant
         for (CallParticipant p : participants) {
             if (p.isLocal()) {
                 p.setAudioMuted(isMuted);
@@ -822,29 +658,22 @@ public class GroupVideoCallActivity extends AppCompatActivity {
                 break;
             }
         }
-        
-        // Send update to server
         updateMediaState();
     }
-    
+
     private void toggleCamera() {
         isCameraOn = !isCameraOn;
         btnCameraToggle.setImageResource(isCameraOn ? R.drawable.ic_video_call : R.drawable.ic_video_off);
         com.example.chatappjava.utils.CallAccessibilityHelper.announceCameraToggle(
                 getResources(), btnCameraToggle, isCameraOn);
-
         if (isCameraOn) {
-            startVideoCapture();
+            mediaPipeline.startVideoCapture(this);
         } else {
-            stopVideoCapture();
-            // CRITICAL FIX: Clear local participant video frame when camera is turned off
-            // This ensures avatar is shown instead of last frame
+            mediaPipeline.stopVideoCapture();
             if (adapter != null && currentUserId != null) {
                 adapter.clearVideoFrameForUser(currentUserId);
             }
         }
-        
-        // Update local participant
         for (CallParticipant p : participants) {
             if (p.isLocal()) {
                 p.setVideoMuted(!isCameraOn);
@@ -852,176 +681,25 @@ public class GroupVideoCallActivity extends AppCompatActivity {
                 break;
             }
         }
-        
-        // Send update to server
         updateMediaState();
     }
-    
+
     private void switchCamera() {
-        if (cameraCaptureManager != null) {
-            cameraCaptureManager.switchCamera();
-            // CRITICAL FIX: Update isFrontCamera flag when switching camera
-            isFrontCamera = !isFrontCamera;
-            Log.d(TAG, "Camera switched, isFrontCamera=" + isFrontCamera);
+        if (mediaPipeline != null) {
+            mediaPipeline.switchCamera();
         }
     }
-    
-    private void stopVideoCapture() {
-        if (cameraCaptureManager != null) {
-            cameraCaptureManager.stopCapture();
-        }
-        
-        if (frameCaptureHandler != null && frameCaptureRunnable != null) {
-            frameCaptureHandler.removeCallbacks(frameCaptureRunnable);
-        }
-    }
-    
-    private void startAudioCapture() {
-        if (isMuted || !isCallActive) {
-            Log.d(TAG, "Skipping audio capture start - muted: " + isMuted + ", callActive: " + isCallActive);
-            return;
-        }
-        
-        try {
-            // Stop existing capture if any
-            if (audioCaptureManager != null) {
-                Log.d(TAG, "Stopping existing audio capture before restarting");
-                audioCaptureManager.stopCapture();
-                audioCaptureManager = null;
-            }
-            
-            audioCaptureManager = new AudioCaptureManager();
-            Log.d(TAG, "AudioCaptureManager created, starting capture...");
-            
-            audioCaptureManager.startCapture(new AudioCaptureManager.AudioCaptureCallback() {
-                @Override
-                public void onAudioCaptured(byte[] audioData, int sampleRate) {
-                    try {
-                        if (audioData != null && isCallActive && !isMuted) {
-                            sendAudioFrame(audioData);
-                        }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Error in audio capture callback", e);
-                    }
-                }
-            });
-            
-            Log.d(TAG, "Audio capture started successfully");
-        } catch (Exception e) {
-            Log.e(TAG, "Error starting audio capture", e);
-            Toast.makeText(this, getString(R.string.error_failed_with_message, e.getMessage()), Toast.LENGTH_SHORT).show();
-        }
-    }
-    
-    private void stopAudioCapture() {
-        if (audioCaptureManager != null) {
-            audioCaptureManager.stopCapture();
-        }
-    }
-    
-    private void sendAudioFrame(byte[] audioData) {
-        // Skip if previous encoding is still in progress
-        if (!isSendingAudio.compareAndSet(false, true)) {
-            return;
-        }
-        
-        // Use thread pool for audio processing
-        if (videoProcessingExecutor == null || videoProcessingExecutor.isShutdown()) {
-            videoProcessingExecutor = Executors.newSingleThreadExecutor(new ThreadFactory() {
-                @Override
-                public Thread newThread(Runnable r) {
-                    Thread t = new Thread(r, "AudioProcessor");
-                    t.setPriority(Thread.MAX_PRIORITY);
-                    return t;
-                }
-            });
-        }
-        
-        videoProcessingExecutor.execute(() -> {
-            try {
-                if (!isCallActive || isMuted) {
-                    isSendingAudio.set(false);
-                    return;
-                }
-                
-                // Encode audio to base64
-                String base64Audio = AudioFrameEncoder.encodeFrame(audioData);
-                
-                if (base64Audio != null && isCallActive && !isMuted) {
-                    // Send to server
-                    if (socketManager != null && isCallActive) {
-                        socketManager.sendAudioFrame(callId, base64Audio);
-                    }
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error sending audio frame", e);
-            } finally {
-                isSendingAudio.set(false);
-            }
-        });
-    }
-    
+
     private void playRemoteAudio(String userId, String base64Audio) {
-        if (!isCallActive || base64Audio == null || base64Audio.isEmpty()) {
-            return;
+        if (mediaPipeline != null) {
+            mediaPipeline.playRemoteAudio(userId, base64Audio);
         }
-        
-        // Decode audio in background thread
-        new Thread(() -> {
-            try {
-                byte[] audioData = AudioFrameEncoder.decodeFrame(base64Audio);
-                if (audioData != null && isCallActive) {
-                    // Initialize playback manager if needed (should already be initialized)
-                    if (audioPlaybackManager == null) {
-                        Log.w(TAG, "AudioPlaybackManager is null, initializing now");
-                        audioPlaybackManager = new AudioPlaybackManager();
-                    }
-                    
-                    // Start playback if not already playing
-                    if (!audioPlaybackManager.isPlaying(userId)) {
-                        Log.d(TAG, "Starting audio playback for user: " + userId);
-                        audioPlaybackManager.startPlayback(userId, 16000); // 16kHz sample rate
-                    }
-                    
-                    // Play audio data
-                    audioPlaybackManager.playAudio(userId, audioData);
-                } else {
-                    if (audioData == null) {
-                        Log.w(TAG, "Failed to decode audio data for user: " + userId);
-                    }
-                }
-            } catch (Exception e) {
-                Log.e(TAG, "Error playing remote audio for user: " + userId, e);
-            }
-        }).start();
     }
-    
-    
+
     private void updateMediaState() {
-        // Send media state update to server
-        // Note: You may need to create this method in ApiClient
+        // Server media-state REST is optional for this client build.
     }
-    
-    private void startCallDurationTimer() {
-        callStartTime = System.currentTimeMillis();
-        callDurationHandler = new Handler(Looper.getMainLooper());
-        callDurationRunnable = new Runnable() {
-            @Override
-            public void run() {
-                if (isCallActive) {
-                    long duration = System.currentTimeMillis() - callStartTime;
-                    long seconds = duration / 1000;
-                    long minutes = seconds / 60;
-                    seconds = seconds % 60;
-                    
-                    tvCallDuration.setText(String.format("%02d:%02d", minutes, seconds));
-                    callDurationHandler.postDelayed(this, 1000);
-                }
-            }
-        };
-        callDurationHandler.post(callDurationRunnable);
-    }
-    
+
     /**
      * Start checking for video frame timeouts
      * If a participant hasn't sent frames for VIDEO_FRAME_TIMEOUT_MS, assume camera is off
@@ -1216,35 +894,17 @@ public class GroupVideoCallActivity extends AppCompatActivity {
     
     private void endCall() {
         isCallActive = false;
-        
-        // CRITICAL: Shutdown thread pools to prevent memory leaks
-        if (videoProcessingExecutor != null && !videoProcessingExecutor.isShutdown()) {
-            videoProcessingExecutor.shutdown();
-            videoProcessingExecutor = null;
+
+        if (mediaPipeline != null) {
+            mediaPipeline.release(false);
+            mediaPipeline.resetAudioMode(this);
         }
-        
-        // Stop video capture
-        stopVideoCapture();
-        
-        // Stop audio capture and playback
-        stopAudioCapture();
-        if (audioPlaybackManager != null) {
-            audioPlaybackManager.stopAllPlayback();
-        }
-        
-        // Reset audio mode
-        resetAudioMode();
-        
+
         // Leave call room
         if (socketManager != null) {
             socketManager.leaveCallRoom(callId);
             socketManager.removeVideoFrameListener();
             socketManager.removeAudioFrameListener();
-        }
-        
-        // Stop call duration timer
-        if (callDurationHandler != null && callDurationRunnable != null) {
-            callDurationHandler.removeCallbacks(callDurationRunnable);
         }
         
         // Call API to leave call
@@ -1271,23 +931,11 @@ public class GroupVideoCallActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        
-        // CRITICAL: Shutdown thread pools to prevent memory leaks
-        if (videoProcessingExecutor != null && !videoProcessingExecutor.isShutdown()) {
-            videoProcessingExecutor.shutdownNow();
-            videoProcessingExecutor = null;
+
+        if (mediaPipeline != null) {
+            mediaPipeline.release(true);
         }
-        
-        // Clean up resources
-        if (cameraCaptureManager != null) {
-            cameraCaptureManager.stopCapture();
-        }
-        
-        // Stop audio capture and playback
-        
-        // Reset audio mode
-        resetAudioMode();
-        
+
         if (socketManager != null) {
             socketManager.removeVideoFrameListener();
             socketManager.removeAudioFrameListener();
@@ -1296,24 +944,10 @@ public class GroupVideoCallActivity extends AppCompatActivity {
             socketManager.off("user_left_call");
         }
         
-        // Stop audio capture and playback
-        stopAudioCapture();
-        if (audioPlaybackManager != null) {
-            audioPlaybackManager.stopAllPlayback();
-        }
-        
         if (adapter != null) {
             adapter.clearVideoFrames();
         }
-        
-        if (frameCaptureHandler != null && frameCaptureRunnable != null) {
-            frameCaptureHandler.removeCallbacks(frameCaptureRunnable);
-        }
-        
-        if (callDurationHandler != null && callDurationRunnable != null) {
-            callDurationHandler.removeCallbacks(callDurationRunnable);
-        }
-        
+
         if (videoFrameTimeoutHandler != null && videoFrameTimeoutRunnable != null) {
             videoFrameTimeoutHandler.removeCallbacks(videoFrameTimeoutRunnable);
         }

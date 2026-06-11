@@ -50,7 +50,6 @@ public class GroupChatActivity extends BaseChatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupImagePicker();
-        ensureSocketConnection();
         
         // Initialize notification view after layout is set
         // Use post to ensure layout is fully inflated
@@ -58,42 +57,6 @@ public class GroupChatActivity extends BaseChatActivity {
             setupGroupCallNotification();
             checkForActiveGroupCall();
         });
-    }
-    
-    private void ensureSocketConnection() {
-        if (socketManager != null) {
-            boolean isConnected = socketManager.isConnected();
-            android.util.Log.d("GroupChatActivity", "Socket connection status: " + isConnected);
-            
-            if (!isConnected) {
-                android.util.Log.w("GroupChatActivity", "Socket not connected, attempting to reconnect...");
-                
-                // Get credentials from database
-                String token = databaseManager.getToken();
-                String userId = databaseManager.getUserId();
-                
-                if (token != null && !token.isEmpty() && userId != null && !userId.isEmpty()) {
-                    socketManager.connect(token, userId, GroupChatActivity.this);
-                    
-                    // Give it a moment to connect
-                    new android.os.Handler().postDelayed(() -> {
-                        boolean nowConnected = socketManager.isConnected();
-                        android.util.Log.d("GroupChatActivity", "Socket connection after retry: " + nowConnected);
-                        if (!nowConnected) {
-                            Toast.makeText(this, getString(R.string.msg_real_time_updates_may_be_delayed), Toast.LENGTH_SHORT).show();
-                        } else {
-                            android.util.Log.d("GroupChatActivity", "Socket reconnected successfully");
-                        }
-                    }, 1000);
-                } else {
-                    android.util.Log.e("GroupChatActivity", "Cannot reconnect: missing token or userId");
-                }
-            } else {
-                android.util.Log.d("GroupChatActivity", "Socket already connected");
-            }
-        } else {
-            android.util.Log.e("GroupChatActivity", "SocketManager is null!");
-        }
     }
     
     @Override
@@ -400,18 +363,6 @@ public class GroupChatActivity extends BaseChatActivity {
     }
     
     @Override
-    protected void setupRecyclerView() {
-        super.setupRecyclerView();
-        // Set group chat mode for message adapter
-        if (messageAdapter != null) {
-            messageAdapter.setGroupChat(true);
-            android.util.Log.d("GroupChatActivity", "Set isGroupChat = true for MessageAdapter");
-        } else {
-            android.util.Log.e("GroupChatActivity", "MessageAdapter is null!");
-        }
-    }
-    
-    @Override
     protected void loadChatData() {
         android.util.Log.d("GroupChatActivity", "loadChatData called");
         android.util.Log.d("GroupChatActivity", "currentChat: " + (currentChat != null ? currentChat.getName() : "null"));
@@ -555,14 +506,6 @@ public class GroupChatActivity extends BaseChatActivity {
                 }
             });
         } catch (Exception e) { cb.onResult(0); }
-    }
-    
-    @Override
-    protected void handleSendMessage() {
-        String content = etMessage.getText().toString().trim();
-        if (!content.isEmpty()) {
-            sendMessage(content);
-        }
     }
     
     private void showGroupInfo() {
@@ -1512,13 +1455,20 @@ public class GroupChatActivity extends BaseChatActivity {
                         runOnUiThread(() -> {
                             try {
                                 android.util.Log.d("GroupChatActivity", "Server response chatData: " + chatData.toString());
-                                currentChat = Chat.fromJson(chatData);
+                                String preservedType = currentChat.getType();
+                                Chat refreshed = Chat.fromJson(chatData);
+                                if ((refreshed.getType() == null || refreshed.getType().isEmpty())
+                                        && preservedType != null && !preservedType.isEmpty()) {
+                                    refreshed.setType(preservedType);
+                                }
+                                currentChat = refreshed;
+                                refreshMessageAdapterMode();
                                 android.util.Log.d("GroupChatActivity", "After parsing - Participant count: " + currentChat.getParticipantCount());
                                 android.util.Log.d("GroupChatActivity", "After parsing - Participant IDs: " + currentChat.getParticipantIds());
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
-                            updateUI(); // Refresh the UI with updated data
+                            updateUI();
                         });
                     } catch (Exception e) {
                         android.util.Log.e("GroupChatActivity", "Error parsing group data: " + e.getMessage());

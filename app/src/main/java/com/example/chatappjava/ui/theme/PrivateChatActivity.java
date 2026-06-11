@@ -293,14 +293,6 @@ public class PrivateChatActivity extends BaseChatActivity {
     }
     
     @Override
-    protected void handleSendMessage() {
-        String content = etMessage.getText().toString().trim();
-        if (!content.isEmpty()) {
-            sendMessage(content);
-        }
-    }
-    
-    @Override
     protected void handleVideoCall() {
         if (currentChat == null) {
             Toast.makeText(this, getString(R.string.msg_chat_not_loaded), Toast.LENGTH_SHORT).show();

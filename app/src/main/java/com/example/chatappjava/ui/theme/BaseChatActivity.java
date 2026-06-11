@@ -52,6 +52,8 @@ import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.network.SocketManager;
 import com.example.chatappjava.ui.call.RingingActivity;
 import com.example.chatappjava.utils.AvatarManager;
+import com.example.chatappjava.utils.ConversationPreviewHelper;
+import com.example.chatappjava.utils.ConversationRepository;
 import com.example.chatappjava.utils.DatabaseManager;
 import com.example.chatappjava.utils.MessageRepository;
 import com.example.chatappjava.utils.OfflineMessageSyncManager;
@@ -120,6 +122,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected MessageAdapter messageAdapter;
     protected DatabaseManager databaseManager;
     protected MessageRepository messageRepository;
+    protected ConversationRepository conversationRepository;
     protected OfflineMessageSyncManager syncManager; // For offline message sync
     protected com.example.chatappjava.utils.SyncManager backgroundSyncManager; // For background delta sync
     protected ApiClient apiClient;
@@ -298,7 +301,42 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected abstract void loadChatData();
     protected abstract void updateUI();
     protected abstract void showChatOptions();
-    protected abstract void handleSendMessage();
+
+    /** Shared send path for private and group chats (optimistic UI + outbox + REST). */
+    protected void handleSendMessage() {
+        if (etMessage == null) {
+            return;
+        }
+        String content = etMessage.getText().toString().trim();
+        if (!content.isEmpty()) {
+            sendMessage(content);
+        }
+    }
+
+    protected void refreshMessageAdapterMode() {
+        if (messageAdapter != null && currentChat != null) {
+            messageAdapter.setGroupChat(currentChat.isGroupChat());
+        }
+    }
+
+    /** Keep Home conversation row aligned while this chat is open. */
+    protected void updateConversationPreview(Message message, boolean incrementUnreadWhenIncoming) {
+        if (currentChat == null || message == null || conversationRepository == null) {
+            return;
+        }
+        if (message.getChatId() == null || message.getChatId().isEmpty()) {
+            message.setChatId(currentChat.getId());
+        }
+        if (message.getChatType() == null || message.getChatType().isEmpty()) {
+            message.setChatType(currentChat.isGroupChat() ? "group" : "private");
+        }
+        String userId = databaseManager != null ? databaseManager.getUserId() : null;
+        ConversationPreviewHelper.applyMessagePreview(
+                this, conversationRepository, message, userId, incrementUnreadWhenIncoming);
+        if (!incrementUnreadWhenIncoming && currentChat.getId() != null) {
+            ConversationPreviewHelper.clearUnread(conversationRepository, currentChat.getId());
+        }
+    }
     
     // Video call handling - can be overridden by subclasses
     protected void handleVideoCall() {
@@ -1672,6 +1710,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected void initData() {
         databaseManager = new DatabaseManager(this);
         messageRepository = new MessageRepository(this);
+        conversationRepository = new ConversationRepository(this);
         messageRepository.setOnTempMessageRemovedListener((tempId, realId) ->
                 runOnUiThread(() -> onTempMessageRemovedFromDb(tempId, realId)));
         syncManager = new OfflineMessageSyncManager(this); // For offline message sync
@@ -1939,6 +1978,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         messageAdapter = new MessageAdapter(messages, currentUserId);
         messageAdapter.setOnMessageClickListener(this);
         messageAdapter.setAvatarManager(avatarManager);
+        refreshMessageAdapterMode();
         android.util.Log.d("BaseChatActivity", "AvatarManager set: " + (avatarManager != null) + ", currentUserId: " + currentUserId);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setStackFromEnd(false);   // Set true to stack from bottom. But it can cause issues when have few messages.
@@ -3109,6 +3149,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         
         registerOutgoingNonce(clientNonce, finalMessageId);
         upsertChatMessage(message, false);
+        updateConversationPreview(message, false);
         forceScrollToBottom();
 
         // Clear input
@@ -3635,6 +3676,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (syncManager != null && tempId != null) {
             syncManager.clearSendTimeoutGrace(tempId);
         }
+        updateConversationPreview(serverMessage, false);
     }
 
     private void onTempMessageRemovedFromDb(String tempId, String realId) {
@@ -4300,6 +4342,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 final Message toSave = incoming;
                 new Thread(() -> messageRepository.saveMessage(toSave)).start();
             }
+            updateConversationPreview(incoming, false);
             updateSummarizeIndicator();
 
             if (inserted) {
@@ -4321,6 +4364,9 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             String chatId = messageJson.optString("chat");
             if (currentChat == null || !chatId.equals(currentChat.getId())) return;
             Message edited = Message.fromJson(messageJson);
+            if (messageRepository != null) {
+                messageRepository.saveMessage(edited);
+            }
             int idx = indexOfMessageById(edited.getId());
             if (idx >= 0) {
                 messages.set(idx, edited);
@@ -4643,6 +4689,9 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                             if (json.optBoolean("success", false)) {
                                 message.setContent(newContent);
                                 message.setEdited(true);
+                                if (messageRepository != null) {
+                                    messageRepository.saveMessage(message);
+                                }
                                 int idx = indexOfMessageById(message.getId());
                                 if (idx >= 0) {
                                     messageAdapter.notifyItemChanged(idx);

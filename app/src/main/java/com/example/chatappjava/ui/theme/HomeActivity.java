@@ -30,10 +30,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.chatappjava.R;
 import com.example.chatappjava.adapters.ChatListAdapter;
 import com.example.chatappjava.models.Chat;
+import com.example.chatappjava.models.Message;
 import com.example.chatappjava.models.User;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.AvatarManager;
 import com.example.chatappjava.utils.DatabaseManager;
+import com.example.chatappjava.utils.ConversationPreviewHelper;
 import com.example.chatappjava.utils.ConversationRepository;
 import com.example.chatappjava.utils.EmptyStateHelper;
 import com.example.chatappjava.utils.MotionUtils;
@@ -66,7 +68,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     private LinearLayout llFriendRequests;
     private TextView tvFriendRequestCount;
     private TextView tvFriendRequestsTitle;
-    private View userProfileSection; // Top bar with user profile (hidden)
+    private View userProfileSection;
     private LinearLayout searchBarHome; // Search bar replacing top bar
     
     // Posts Tab - Create Post Bar
@@ -351,10 +353,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         if (ivSearch != null) {
             ivSearch.setVisibility(View.GONE);
         }
-        if (userProfileSection != null) {
-            userProfileSection.setVisibility(View.GONE);
-        }
-        
+
         // Search bar click - open SearchActivity
         if (searchBarHome != null) {
             searchBarHome.setOnClickListener(new View.OnClickListener() {
@@ -2245,8 +2244,13 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             
             // Refresh blocked users and then chats
             loadBlockedUsers();
-            // Also refresh chat list to keep it up to date
-            loadChats();
+            // Instant preview from local DB, then server catch-up if needed
+            refreshChatListFromDatabase();
+            com.example.chatappjava.network.SocketManager socketManager =
+                    com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
+            if (socketManager == null || !socketManager.isConnected()) {
+                loadChats();
+            }
             startHomePolling();
             // Setup socket listener for member removal
             setupSocketManager();
@@ -2324,19 +2328,19 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 homeMessageListener = new com.example.chatappjava.network.SocketManager.MessageListener() {
                     @Override
                     public void onPrivateMessage(org.json.JSONObject messageJson) {
-                        runOnUiThread(() -> loadChats());
+                        runOnUiThread(() -> applyRealtimeMessagePreview(messageJson, true));
                     }
                     @Override
                     public void onGroupMessage(org.json.JSONObject messageJson) {
-                        runOnUiThread(() -> loadChats());
+                        runOnUiThread(() -> applyRealtimeMessagePreview(messageJson, true));
                     }
                     @Override
                     public void onMessageEdited(org.json.JSONObject messageJson) {
-                        runOnUiThread(() -> loadChats());
+                        runOnUiThread(() -> applyRealtimeMessagePreview(messageJson, false));
                     }
                     @Override
                     public void onMessageDeleted(org.json.JSONObject messageMetaJson) {
-                        runOnUiThread(() -> loadChats());
+                        runOnUiThread(() -> refreshChatListFromDatabase());
                     }
                     @Override
                     public void onReactionUpdated(org.json.JSONObject reactionJson) {
@@ -2525,6 +2529,21 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             }
             return;
         }
+
+        // Realtime previews are pushed via socket; avoid slow full fetch while connected
+        if (!forceRefreshAvatars) {
+            com.example.chatappjava.network.SocketManager socketManager =
+                    com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
+            if (socketManager != null && socketManager.isConnected()) {
+                refreshChatListFromDatabase();
+                isLoadingChats = false;
+                setChatListLoading(false);
+                if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                return;
+            }
+        }
         
         // Use sync deltas instead of full API call
         if (syncManager != null && syncManager.shouldSyncForeground()) {
@@ -2573,22 +2592,61 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
      */
     private void loadChatsFromDatabase() {
         if (conversationRepository == null) return;
-        
+
         List<Chat> dbChats = conversationRepository.getAllConversations();
         if (!dbChats.isEmpty()) {
             this.chatList = dbChats;
-            // Only update adapter if list is empty (to show cached data immediately)
-            // Otherwise, wait for server response to avoid double update and flickering
             if (chatAdapter != null && (chatList.isEmpty() || chatAdapter.getItemCount() == 0)) {
-                if (currentTab == 1) {
-                    applyGroupsFilter();
-                } else {
-                    applyChatsFilter();
-                }
-                System.out.println("HomeActivity: Loaded " + dbChats.size() + " chats from database and updated adapter");
-            } else {
-                System.out.println("HomeActivity: Loaded " + dbChats.size() + " chats from database (skipped adapter update to prevent flickering)");
+                refreshChatListFromDatabase();
             }
+        }
+    }
+
+    /** Merge conversation cache into the visible list (no network). */
+    private void refreshChatListFromDatabase() {
+        if (conversationRepository == null) {
+            return;
+        }
+        List<Chat> dbChats = conversationRepository.getAllConversations();
+        if (dbChats.isEmpty()) {
+            return;
+        }
+        this.chatList = dbChats;
+        if (currentTab == 1) {
+            applyGroupsFilter();
+        } else if (currentTab == 0) {
+            applyChatsFilter();
+        }
+    }
+
+    /**
+     * Socket → update SQLite preview + bump row on Home immediately (no full GET /api/chats).
+     */
+    private void applyRealtimeMessagePreview(org.json.JSONObject messageJson, boolean incrementUnread) {
+        if (messageJson == null || conversationRepository == null) {
+            return;
+        }
+        try {
+            Message message = Message.fromJson(messageJson);
+            String chatId = message.getChatId();
+            if (chatId == null || chatId.isEmpty()) {
+                chatId = messageJson.optString("chatId", messageJson.optString("chat", "")).trim();
+                message.setChatId(chatId);
+            }
+            if (chatId.isEmpty()) {
+                return;
+            }
+
+            String userId = databaseManager != null ? databaseManager.getUserId() : null;
+            ConversationPreviewHelper.applyMessagePreview(
+                    this, conversationRepository, message, userId, incrementUnread);
+
+            // Reload fresh Chat instances from DB so DiffUtil detects preview changes
+            // (in-place mutation shares refs with the adapter and skips UI updates).
+            refreshChatListFromDatabase();
+        } catch (JSONException e) {
+            Log.e(TAG, "applyRealtimeMessagePreview failed", e);
+            refreshChatListFromDatabase();
         }
     }
     
@@ -2946,6 +3004,11 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     // ChatListAdapter.OnChatClickListener implementation
     @Override
     public void onChatClick(Chat chat) {
+        if (chat != null && conversationRepository != null) {
+            chat.setUnreadCount(0);
+            ConversationPreviewHelper.clearUnread(conversationRepository, chat.getId());
+        }
+
         Intent intent;
         
         // Choose appropriate activity based on chat type

@@ -175,9 +175,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
         if (newChats == null) {
             newChats = new java.util.ArrayList<>();
         }
-        final List<Chat> oldChats = chats != null ? chats : new java.util.ArrayList<>();
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ChatDiffCallback(oldChats, newChats));
-        this.chats = newChats;
+        final List<Chat> oldChats = chats != null ? new java.util.ArrayList<>(chats) : new java.util.ArrayList<>();
+        final List<Chat> nextChats = new java.util.ArrayList<>(newChats);
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ChatDiffCallback(oldChats, nextChats));
+        this.chats = nextChats;
         diffResult.dispatchUpdatesTo(this);
     }
 

@@ -2,7 +2,6 @@ package com.example.chatappjava.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.webrtc.VideoTrack;
 
 public class CallParticipant {
     private String userId;
@@ -13,7 +12,6 @@ public class CallParticipant {
     private boolean screenSharing;
     private boolean isLocal;
     private boolean isCaller;
-    private VideoTrack videoTrack;
     private String connectionQuality;
     private String status; // invited, notified, ringing, connected, declined, missed, left
 
@@ -81,14 +79,6 @@ public class CallParticipant {
 
     public void setLocal(boolean local) {
         isLocal = local;
-    }
-
-    public VideoTrack getVideoTrack() {
-        return videoTrack;
-    }
-
-    public void setVideoTrack(VideoTrack videoTrack) {
-        this.videoTrack = videoTrack;
     }
 
     public String getConnectionQuality() {

@@ -81,10 +81,9 @@ public class SocketManager {
     private CallStatusListener callStatusListener;
     private CallRoomListener callRoomListener;
     private MemberRemovedListener memberRemovedListener;
-    private MessageListener messageListener; // legacy single-listener (kept for backward compatibility)
     private TypingListener typingListener;
 
-    // New: support multiple listeners for message to avoid clobbering between screens
+    // Support multiple listeners for message to avoid clobbering between screens
     private final java.util.List<MessageListener> messageListeners = new java.util.concurrent.CopyOnWriteArrayList<>();
     private final java.util.List<ConnectionListener> connectionListeners = new java.util.concurrent.CopyOnWriteArrayList<>();
     
@@ -448,9 +447,6 @@ public class SocketManager {
                     JSONObject data = (JSONObject) args[0];
                     Log.d(TAG, "private_message received chatId=" + data.optString("chatId", ""));
                     JSONObject message = enrichMessagePayload(data);
-                    // Legacy single listener
-                    if (messageListener != null) messageListener.onPrivateMessage(message);
-                    // Multi listeners
                     for (MessageListener l : messageListeners) {
                         try {
                             l.onPrivateMessage(message);
@@ -471,7 +467,6 @@ public class SocketManager {
                     JSONObject data = (JSONObject) args[0];
                     Log.d(TAG, "group_message received chatId=" + data.optString("chatId", ""));
                     JSONObject message = enrichMessagePayload(data);
-                    if (messageListener != null) messageListener.onGroupMessage(message);
                     for (MessageListener l : messageListeners) {
                         try {
                             l.onGroupMessage(message);
@@ -490,7 +485,6 @@ public class SocketManager {
                 try {
                     JSONObject data = (JSONObject) args[0];
                     JSONObject message = data.getJSONObject("message");
-                    if (messageListener != null) messageListener.onMessageEdited(message);
                     for (MessageListener l : messageListeners) {
                         try {
                             l.onMessageEdited(message);
@@ -508,7 +502,6 @@ public class SocketManager {
             public void call(Object... args) {
                 try {
                     JSONObject data = (JSONObject) args[0];
-                    if (messageListener != null) messageListener.onMessageDeleted(data);
                     for (MessageListener l : messageListeners) {
                         try {
                             l.onMessageDeleted(data);
@@ -526,7 +519,6 @@ public class SocketManager {
             public void call(Object... args) {
                 try {
                     JSONObject data = (JSONObject) args[0];
-                    if (messageListener != null) messageListener.onReactionUpdated(data);
                     for (MessageListener l : messageListeners) {
                         try {
                             l.onReactionUpdated(data);
@@ -922,17 +914,6 @@ public class SocketManager {
         this.memberRemovedListener = null;
     }
     
-    public void setMessageListener(MessageListener listener) {
-        // legacy behavior: replace the single listener reference
-        this.messageListener = listener;
-    }
-    
-    public void removeMessageListener() {
-        this.messageListener = null;
-        // does not clear multi-listeners
-    }
-
-    // New multi-listener APIs
     public void addMessageListener(MessageListener listener) {
         if (listener != null && !messageListeners.contains(listener)) {
             messageListeners.add(listener);

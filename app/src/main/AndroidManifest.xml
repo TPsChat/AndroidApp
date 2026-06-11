@@ -99,11 +99,6 @@
             android:exported="false"
             android:theme="@style/Theme.ChatAppJava" />
         <activity
-            android:name=".ui.theme.PrivateChatActivityNew"
-            android:exported="false"
-            android:label="@string/title_activity_private_chat"
-            android:theme="@style/Theme.ChatAppJava" />
-        <activity
             android:name=".ui.theme.GroupChatActivity"
             android:exported="false"
             android:label="@string/title_activity_group_chat"
@@ -112,11 +107,6 @@
             android:name=".ui.theme.GroupMembersActivity"
             android:exported="false"
             android:label="@string/title_activity_group_members"
-            android:theme="@style/Theme.ChatAppJava" />
-        <activity
-            android:name=".ui.file.FilePreviewActivity"
-            android:exported="false"
-            android:label="File Preview"
             android:theme="@style/Theme.ChatAppJava" />
         <activity
             android:name=".ui.theme.GroupJoinRequestsActivity"
@@ -162,11 +152,6 @@
             android:name=".ui.theme.CreatePostActivity"
             android:exported="false"
             android:label="Create Post"
-            android:theme="@style/Theme.ChatAppJava" />
-        <activity
-            android:name=".ui.theme.PostFeedActivity"
-            android:exported="false"
-            android:label="Post Feed"
             android:theme="@style/Theme.ChatAppJava" />
         <activity
             android:name=".ui.theme.CommentThreadActivity"
