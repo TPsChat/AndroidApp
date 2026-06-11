@@ -2,7 +2,8 @@ package com.example.chatappjava.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import com.example.chatappjava.models.Message;
 import com.example.chatappjava.network.ApiClient;
@@ -10,6 +11,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ConcurrentHashMap;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -22,6 +25,8 @@ public class OfflineMessageSyncManager {
     private static final String TAG = "OfflineMessageSync";
     private static final int MAX_SYNC_ATTEMPTS = 3;
     private static final long SYNC_DEBOUNCE_MS = 2000; // Prevent duplicate syncs within 2 seconds
+    /** Defer POST retry after HTTP timeout so delta sync can reconcile first. */
+    private static final long SEND_TIMEOUT_GRACE_MS = 12000;
     
     private final Context context;
     private final MessageRepository messageRepository;
@@ -30,6 +35,56 @@ public class OfflineMessageSyncManager {
     private volatile boolean isSyncing = false;
     private long lastSyncTime = 0;
     private final Object syncLock = new Object();
+    private final ConcurrentHashMap<String, Long> sendTimeoutGraceUntil = new ConcurrentHashMap<>();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private PendingSyncListener pendingSyncListener;
+
+    public interface PendingSyncListener {
+        void onMessageSynced(String tempMessageId, Message serverMessage);
+    }
+
+    public void setPendingSyncListener(PendingSyncListener listener) {
+        this.pendingSyncListener = listener;
+    }
+
+    /**
+     * HTTP send timed out — server may still have saved the message.
+     * POST retry is deferred so delta sync / DB reconcile can run first.
+     */
+    public void markSendTimeout(String tempMessageId) {
+        if (tempMessageId == null || tempMessageId.isEmpty()) {
+            return;
+        }
+        sendTimeoutGraceUntil.put(tempMessageId, System.currentTimeMillis() + SEND_TIMEOUT_GRACE_MS);
+        Log.d(TAG, "Send timeout grace started for " + tempMessageId);
+        mainHandler.postDelayed(this::syncPendingMessages, SEND_TIMEOUT_GRACE_MS + 500);
+    }
+
+    public void clearSendTimeoutGrace(String tempMessageId) {
+        if (tempMessageId != null) {
+            sendTimeoutGraceUntil.remove(tempMessageId);
+        }
+    }
+
+    private boolean isInSendTimeoutGrace(String tempMessageId) {
+        Long until = sendTimeoutGraceUntil.get(tempMessageId);
+        if (until == null) {
+            return false;
+        }
+        if (System.currentTimeMillis() >= until) {
+            sendTimeoutGraceUntil.remove(tempMessageId);
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean isTimeoutError(String error) {
+        if (error == null) {
+            return false;
+        }
+        String lower = error.toLowerCase(Locale.US);
+        return lower.contains("timeout") || lower.contains("timed out");
+    }
     
     public OfflineMessageSyncManager(Context context) {
         this.context = context;
@@ -42,13 +97,23 @@ public class OfflineMessageSyncManager {
      * Check if device has network connectivity
      */
     public boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = 
+        ConnectivityManager cm =
             (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-            return activeNetwork != null && activeNetwork.isConnected();
+        if (cm == null) {
+            return false;
         }
-        return false;
+        android.net.Network network = cm.getActiveNetwork();
+        if (network == null) {
+            return false;
+        }
+        android.net.NetworkCapabilities caps = cm.getNetworkCapabilities(network);
+        if (caps == null) {
+            return false;
+        }
+        return caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                && (caps.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI)
+                || caps.hasTransport(android.net.NetworkCapabilities.TRANSPORT_CELLULAR)
+                || caps.hasTransport(android.net.NetworkCapabilities.TRANSPORT_ETHERNET));
     }
     
     /**
@@ -102,6 +167,12 @@ public class OfflineMessageSyncManager {
                 return;
             }
             
+            for (Message msg : stillPending) {
+                Log.d(TAG, "SYNC_PENDING id=" + msg.getId()
+                        + " nonce=" + msg.getClientNonce()
+                        + " content=" + msg.getContent());
+            }
+
             Log.d(TAG, "Starting sync for " + stillPending.size() + " pending messages");
             isSyncing = true;
             lastSyncTime = currentTime;
@@ -131,46 +202,63 @@ public class OfflineMessageSyncManager {
         // This prevents duplicate syncs if status was updated by another thread
         if (!messageRepository.isMessagePending(message.getId())) {
             Log.d(TAG, "Message " + message.getId() + " is no longer pending, skipping");
-            // Continue with next message
             syncMessagesSequentially(messages, index + 1);
             return;
         }
-        
+
+        final String tempMessageId = message.getId();
+        if (isInSendTimeoutGrace(tempMessageId)) {
+            Log.d(TAG, "Deferring POST retry during timeout grace: " + tempMessageId);
+            syncMessagesSequentially(messages, index + 1);
+            return;
+        }
+
+        Message existingServer = messageRepository.findMatchingServerMessage(message);
+        if (existingServer != null) {
+            Log.d(TAG, "SKIP_POST already synced temp=" + tempMessageId
+                    + " real=" + existingServer.getId());
+            messageRepository.resolvePendingWithServerMessage(tempMessageId, existingServer);
+            clearSendTimeoutGrace(tempMessageId);
+            if (pendingSyncListener != null) {
+                pendingSyncListener.onMessageSynced(tempMessageId, existingServer);
+            }
+            syncMessagesSequentially(messages, index + 1);
+            return;
+        }
+
         syncSingleMessage(message, new SyncCallback() {
             @Override
-            public void onSuccess(String newMessageId) {
-                // Update message with server ID and mark as synced
-                // Use synchronized update to ensure atomicity
+            public void onSuccess(String newMessageId, Message serverMessage) {
                 synchronized (syncLock) {
                     messageRepository.updateSyncStatus(
-                        message.getId(),
+                        tempMessageId,
                         newMessageId,
                         "synced",
                         null
                     );
                 }
-                
-                Log.d(TAG, "Successfully synced message: " + message.getId() + " -> " + newMessageId);
-                
-                // Continue with next message
+
+                Log.d(TAG, "Successfully synced message: " + tempMessageId + " -> " + newMessageId);
+
+                clearSendTimeoutGrace(tempMessageId);
+
+                if (pendingSyncListener != null && serverMessage != null) {
+                    pendingSyncListener.onMessageSynced(tempMessageId, serverMessage);
+                }
+
                 syncMessagesSequentially(messages, index + 1);
             }
-            
+
             @Override
             public void onFailure(String error) {
-                // Mark as failed and continue (don't block other messages)
                 synchronized (syncLock) {
-                    messageRepository.updateSyncStatus(
-                        message.getId(),
-                        null,
-                        "failed",
-                        error
-                    );
+                    messageRepository.markMessageAsPending(tempMessageId, error);
                 }
-                
-                Log.e(TAG, "Failed to sync message: " + message.getId() + " - " + error);
-                
-                // Continue with next message
+
+                Log.e(TAG, "Failed to sync message: " + tempMessageId + " - " + error);
+                if (isTimeoutError(error)) {
+                    markSendTimeout(tempMessageId);
+                }
                 syncMessagesSequentially(messages, index + 1);
             }
         });
@@ -225,11 +313,13 @@ public class OfflineMessageSyncManager {
                             JSONObject jsonResponse = new JSONObject(responseBody);
                             if (jsonResponse.optBoolean("success", false)) {
                                 JSONObject data = jsonResponse.optJSONObject("data");
-                                if (data != null) {
-                                    String newMessageId = data.optString("_id", "");
+                                JSONObject msgJson = data != null ? data.optJSONObject("message") : null;
+                                if (msgJson != null) {
+                                    String newMessageId = msgJson.optString("_id", "");
                                     if (!newMessageId.isEmpty()) {
+                                        Message serverMessage = Message.fromJson(msgJson);
                                         Log.d(TAG, "Message synced successfully: " + message.getId() + " -> " + newMessageId);
-                                        callback.onSuccess(newMessageId);
+                                        callback.onSuccess(newMessageId, serverMessage);
                                         return;
                                     }
                                 }
@@ -256,7 +346,7 @@ public class OfflineMessageSyncManager {
      * Callback interface for sync operations
      */
     private interface SyncCallback {
-        void onSuccess(String newMessageId);
+        void onSuccess(String newMessageId, Message serverMessage);
         void onFailure(String error);
     }
     

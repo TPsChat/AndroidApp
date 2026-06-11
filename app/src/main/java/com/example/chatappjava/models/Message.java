@@ -5,6 +5,19 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+final class MessageJsonHelper {
+    private MessageJsonHelper() {}
+
+    static String resolveUserId(JSONObject json) {
+        if (json == null) return "";
+        String id = json.optString("_id", "");
+        if (id.isEmpty()) {
+            id = json.optString("id", "");
+        }
+        return id;
+    }
+}
+
 // Sender class for backend response
 class Sender {
     private String id;
@@ -15,7 +28,7 @@ class Sender {
     
     public static Sender fromJson(JSONObject json) throws JSONException {
         Sender sender = new Sender();
-        sender.id = json.optString("_id", "");
+        sender.id = MessageJsonHelper.resolveUserId(json);
         sender.username = json.optString("username", "");
         sender.avatar = json.optString("avatar", "");
         return sender;
@@ -42,12 +55,12 @@ class SenderInfo {
     
     public static SenderInfo fromJson(JSONObject json) throws JSONException {
         SenderInfo senderInfo = new SenderInfo();
-        senderInfo.id = json.optString("id", "");
+        senderInfo.id = MessageJsonHelper.resolveUserId(json);
         senderInfo.username = json.optString("username", "");
         senderInfo.avatar = json.optString("avatar", "");
         return senderInfo;
     }
-    
+
     // Getters and setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -109,7 +122,28 @@ public class Message {
         Message message = new Message();
         message.id = json.optString("_id", "");
         message.chatId = json.optString("chat", "");
-        message.senderId = json.optString("sender", "");
+        if (message.chatId.isEmpty()) {
+            message.chatId = json.optString("chatId", "");
+        }
+        message.senderId = json.optString("senderId", "");
+        if (json.has("sender")) {
+            Object senderValue = json.get("sender");
+            if (senderValue instanceof String) {
+                String senderRef = (String) senderValue;
+                if (!senderRef.isEmpty()) {
+                    message.senderId = senderRef;
+                }
+            } else if (senderValue instanceof JSONObject) {
+                JSONObject senderJson = (JSONObject) senderValue;
+                message.sender = Sender.fromJson(senderJson);
+                String resolvedSenderId = message.sender.getId();
+                if (!resolvedSenderId.isEmpty()) {
+                    message.senderId = resolvedSenderId;
+                }
+                message.senderDisplayName = message.sender.getUsername();
+                message.senderAvatarUrl = message.sender.getAvatar();
+            }
+        }
         message.content = json.optString("content", "");
         message.type = json.optString("type", "text");
         message.chatType = json.optString("chatType", "private");
@@ -159,22 +193,25 @@ public class Message {
             }
         }
         
-        // Edited info
-        message.edited = json.optBoolean("edited", json.has("editedAt"));
+        // Edited info — never infer "edited" from key presence alone (editedAt:null used to mark all as edited)
+        message.edited = json.optBoolean("edited", false) || json.optBoolean("isEdited", false);
         message.editedAt = parseTimestamp(json, "editedAt", 0);
-        
-        // Parse sender object if available
-        if (json.has("sender") && json.get("sender") instanceof JSONObject) {
-            JSONObject senderJson = json.getJSONObject("sender");
-            message.sender = Sender.fromJson(senderJson);
-            // Update legacy fields for backward compatibility
-            message.senderId = message.sender.getId();
-            message.senderDisplayName = message.sender.getUsername();
-            message.senderAvatarUrl = message.sender.getAvatar();
-            android.util.Log.d("Message", "Parsed sender: " + message.sender.getUsername() + ", avatar: " + message.sender.getAvatar());
+
+        // Parse senderInfo for display fields (delta-sync API)
+        if (json.has("senderInfo") && json.get("senderInfo") instanceof JSONObject) {
+            JSONObject senderInfoJson = json.getJSONObject("senderInfo");
+            message.senderInfo = SenderInfo.fromJson(senderInfoJson);
+            if (message.senderId == null || message.senderId.isEmpty()) {
+                message.senderId = message.senderInfo.getId();
+            }
+            if (message.senderDisplayName == null || message.senderDisplayName.isEmpty()) {
+                message.senderDisplayName = message.senderInfo.getUsername();
+            }
+            if (message.senderAvatarUrl == null || message.senderAvatarUrl.isEmpty()) {
+                message.senderAvatarUrl = message.senderInfo.getAvatar();
+            }
         }
-        
-        // Parse senderInfo object if available
+
         // Parse reaction summary if present (from server virtual)
         if (json.has("reactionSummary") && json.get("reactionSummary") instanceof JSONObject) {
             JSONObject sum = json.getJSONObject("reactionSummary");
@@ -399,6 +436,11 @@ public class Message {
     public void setReplyToSenderName(String replyToSenderName) { this.replyToSenderName = replyToSenderName; }
     public boolean isEdited() { return edited; }
     public void setEdited(boolean edited) { this.edited = edited; }
+
+    /** True only when the message was actually edited (not a parse/sync artifact). */
+    public boolean shouldShowEditedLabel() {
+        return edited && editedAt > 0;
+    }
     
     public long getEditedAt() { return editedAt; }
     public void setEditedAt(long editedAt) { this.editedAt = editedAt; }

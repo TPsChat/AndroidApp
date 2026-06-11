@@ -540,7 +540,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 }
                 
                 if (tvSentTime != null) tvSentTime.setText(timeString);
-                if (tvSentEdited != null) tvSentEdited.setVisibility(message.isEdited() ? View.VISIBLE : View.GONE);
+                if (tvSentEdited != null) tvSentEdited.setVisibility(message.shouldShowEditedLabel() ? View.VISIBLE : View.GONE);
                 if (message.isImageMessage()) {
                     if (ivSentReactionImage != null) ivSentReactionImage.setVisibility(View.GONE);
                 } else {
@@ -759,7 +759,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 }
                 
                 if (tvReceivedTime != null) tvReceivedTime.setText(timeString);
-                if (tvReceivedEdited != null) tvReceivedEdited.setVisibility(message.isEdited() ? View.VISIBLE : View.GONE);
+                if (tvReceivedEdited != null) tvReceivedEdited.setVisibility(message.shouldShowEditedLabel() ? View.VISIBLE : View.GONE);
                 if (message.isImageMessage()) {
                     if (ivReceivedReactionImage != null) ivReceivedReactionImage.setVisibility(View.GONE);
                 } else {

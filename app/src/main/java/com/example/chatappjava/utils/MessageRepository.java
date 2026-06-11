@@ -22,13 +22,23 @@ public class MessageRepository {
     private static final String SYNC_STATUS_SYNCED = "synced";
     private static final String SYNC_STATUS_PENDING = "pending";
     private static final String SYNC_STATUS_FAILED = "failed";
+    private static final long PLACEHOLDER_MATCH_WINDOW_MS = 5000L;
+
+    public interface OnTempMessageRemovedListener {
+        void onTempMessageRemoved(String tempId, String realId);
+    }
     
     private final DatabaseHelper dbHelper;
     private final Context context;
+    private OnTempMessageRemovedListener tempRemovedListener;
     
     public MessageRepository(Context context) {
         this.context = context;
         this.dbHelper = new DatabaseHelper(context);
+    }
+
+    public void setOnTempMessageRemovedListener(OnTempMessageRemovedListener listener) {
+        this.tempRemovedListener = listener;
     }
     
     /**
@@ -51,7 +61,9 @@ public class MessageRepository {
                 messageId = "temp_" + UUID.randomUUID().toString();
                 syncStatus = SYNC_STATUS_PENDING;
                 message.setId(messageId);
-                message.setClientNonce(messageId); // Use temp ID as nonce for deduplication
+                if (message.getClientNonce() == null || message.getClientNonce().isEmpty()) {
+                    message.setClientNonce(messageId);
+                }
                 Log.d(TAG, "Saving new offline message with temp ID: " + messageId);
             }
             
@@ -299,6 +311,51 @@ public class MessageRepository {
         Log.d(TAG, "Retrieved " + messages.size() + " new messages after timestamp " + afterTimestamp + " for chat: " + chatId);
         return messages;
     }
+
+    /**
+     * Synced messages with timestamp &gt;= sinceTimestamp (inclusive).
+     * Used when the UI tail is a pending placeholder that may share the same millisecond
+     * as the server copy already stored in DB.
+     */
+    public List<Message> getSyncedMessagesSince(String chatId, long sinceTimestampInclusive) {
+        List<Message> messages = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String whereClause = DatabaseHelper.COL_MSG_CHAT_ID + " = ? AND "
+                + DatabaseHelper.COL_MSG_TIMESTAMP + " >= ? AND "
+                + DatabaseHelper.COL_MSG_SYNC_STATUS + " = ? AND "
+                + DatabaseHelper.COL_MSG_IS_DELETED + " = 0";
+        String[] whereArgs = {chatId, String.valueOf(sinceTimestampInclusive), SYNC_STATUS_SYNCED};
+        String orderBy = DatabaseHelper.COL_MSG_TIMESTAMP + " ASC";
+
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_MESSAGES,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                orderBy,
+                null
+        );
+
+        if (cursor != null) {
+            try {
+                while (cursor.moveToNext()) {
+                    Message message = cursorToMessage(cursor);
+                    if (message != null) {
+                        messages.add(message);
+                    }
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+
+        Log.d(TAG, "Retrieved " + messages.size() + " synced messages since timestamp "
+                + sinceTimestampInclusive + " for chat: " + chatId);
+        return messages;
+    }
     
     /**
      * Get new messages for a chat after a certain message ID (for real-time updates)
@@ -429,6 +486,220 @@ public class MessageRepository {
         Log.d(TAG, "Found " + messages.size() + " pending messages");
         return messages;
     }
+
+    /**
+     * Pending outbox rows for a single chat.
+     */
+    public List<Message> getPendingMessagesForChat(String chatId) {
+        List<Message> messages = new ArrayList<>();
+        if (chatId == null || chatId.isEmpty()) {
+            return messages;
+        }
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_MESSAGES,
+                null,
+                DatabaseHelper.COL_MSG_CHAT_ID + " = ? AND "
+                        + DatabaseHelper.COL_MSG_SYNC_STATUS + " = ?",
+                new String[]{chatId, SYNC_STATUS_PENDING},
+                null,
+                null,
+                DatabaseHelper.COL_MSG_TIMESTAMP + " ASC",
+                null
+        );
+        if (cursor != null) {
+            try {
+                while (cursor.moveToNext()) {
+                    Message message = cursorToMessage(cursor);
+                    if (message != null) {
+                        messages.add(message);
+                    }
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return messages;
+    }
+
+    /**
+     * Find a synced server row that likely corresponds to a pending outbox message.
+     */
+    public Message findMatchingServerMessage(Message pending) {
+        if (pending == null || pending.getChatId() == null || pending.getChatId().isEmpty()) {
+            return null;
+        }
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        try {
+            String nonce = pending.getClientNonce();
+            if (nonce != null && !nonce.isEmpty()) {
+                Message byNonce = querySyncedMessage(db,
+                        DatabaseHelper.COL_MSG_CHAT_ID + " = ? AND "
+                                + DatabaseHelper.COL_MSG_SYNC_STATUS + " = ? AND "
+                                + DatabaseHelper.COL_MSG_CLIENT_NONCE + " = ? AND "
+                                + DatabaseHelper.COL_MSG_IS_DELETED + " = 0",
+                        new String[]{pending.getChatId(), SYNC_STATUS_SYNCED, nonce});
+                if (byNonce != null) {
+                    return byNonce;
+                }
+            }
+
+            long ts = pending.getTimestamp();
+            long minTs = Math.max(0, ts - PLACEHOLDER_MATCH_WINDOW_MS);
+            long maxTs = ts + PLACEHOLDER_MATCH_WINDOW_MS;
+            String senderId = pending.getSenderId() != null ? pending.getSenderId() : "";
+            Cursor cursor = db.query(
+                    DatabaseHelper.TABLE_MESSAGES,
+                    null,
+                    DatabaseHelper.COL_MSG_CHAT_ID + " = ? AND "
+                            + DatabaseHelper.COL_MSG_SYNC_STATUS + " = ? AND "
+                            + DatabaseHelper.COL_MSG_SENDER_ID + " = ? AND "
+                            + DatabaseHelper.COL_MSG_TIMESTAMP + " >= ? AND "
+                            + DatabaseHelper.COL_MSG_TIMESTAMP + " <= ? AND "
+                            + DatabaseHelper.COL_MSG_IS_DELETED + " = 0",
+                    new String[]{
+                            pending.getChatId(),
+                            SYNC_STATUS_SYNCED,
+                            senderId,
+                            String.valueOf(minTs),
+                            String.valueOf(maxTs)
+                    },
+                    null,
+                    null,
+                    DatabaseHelper.COL_MSG_TIMESTAMP + " ASC",
+                    null
+            );
+            if (cursor != null) {
+                try {
+                    Message best = null;
+                    long bestDelta = Long.MAX_VALUE;
+                    while (cursor.moveToNext()) {
+                        Message candidate = cursorToMessage(cursor);
+                        if (candidate == null || isPlaceholderId(candidate.getId())) {
+                            continue;
+                        }
+                        if (!pendingMatchesServer(pending, candidate)) {
+                            continue;
+                        }
+                        long delta = Math.abs(candidate.getTimestamp() - ts);
+                        if (delta < bestDelta) {
+                            bestDelta = delta;
+                            best = candidate;
+                        }
+                    }
+                    return best;
+                } finally {
+                    cursor.close();
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error finding matching server message: " + e.getMessage(), e);
+        }
+        return null;
+    }
+
+    /**
+     * Close outbox: link pending temp row to an existing server message (or delete temp if real exists).
+     */
+    public void resolvePendingWithServerMessage(String tempId, Message serverMessage) {
+        if (tempId == null || tempId.isEmpty() || serverMessage == null) {
+            return;
+        }
+        String realId = serverMessage.getId();
+        if (realId == null || realId.isEmpty() || isPlaceholderId(realId)) {
+            return;
+        }
+        if (!isMessagePending(tempId)) {
+            return;
+        }
+        updateSyncStatus(tempId, realId, SYNC_STATUS_SYNCED, null);
+    }
+
+    /**
+     * Close any pending outbox rows that match this server message.
+     *
+     * @return true if at least one pending row was resolved
+     */
+    public boolean resolvePendingWithServerMessage(Message serverMessage) {
+        if (serverMessage == null || serverMessage.getChatId() == null) {
+            return false;
+        }
+        String realId = serverMessage.getId();
+        if (realId == null || realId.isEmpty() || isPlaceholderId(realId)) {
+            return false;
+        }
+
+        List<Message> pendingRows = getPendingMessagesForChat(serverMessage.getChatId());
+        if (pendingRows.isEmpty()) {
+            return false;
+        }
+
+        boolean resolved = false;
+        for (Message pending : pendingRows) {
+            if (!pendingMatchesServer(pending, serverMessage)) {
+                continue;
+            }
+            resolvePendingWithServerMessage(pending.getId(), serverMessage);
+            resolved = true;
+        }
+        return resolved;
+    }
+
+    private Message querySyncedMessage(SQLiteDatabase db, String where, String[] args) {
+        Cursor cursor = db.query(
+                DatabaseHelper.TABLE_MESSAGES,
+                null,
+                where,
+                args,
+                null,
+                null,
+                DatabaseHelper.COL_MSG_TIMESTAMP + " DESC",
+                "1"
+        );
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    Message message = cursorToMessage(cursor);
+                    if (message != null && !isPlaceholderId(message.getId())) {
+                        return message;
+                    }
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return null;
+    }
+
+    private static boolean isPlaceholderId(String id) {
+        return id != null && (id.startsWith("temp_") || id.startsWith("local-"));
+    }
+
+    private static String normalizeContent(Message message) {
+        if (message == null || message.getContent() == null) {
+            return "";
+        }
+        return message.getContent().trim();
+    }
+
+    private static boolean pendingMatchesServer(Message pending, Message server) {
+        if (pending == null || server == null) {
+            return false;
+        }
+        String nonce = pending.getClientNonce();
+        if (nonce != null && !nonce.isEmpty()) {
+            return nonce.equals(server.getClientNonce());
+        }
+        String pendingType = pending.getType() != null ? pending.getType() : "text";
+        String serverType = server.getType() != null ? server.getType() : "text";
+        if (!pendingType.equals(serverType)) {
+            return false;
+        }
+        if (!normalizeContent(pending).equals(normalizeContent(server))) {
+            return false;
+        }
+        return Math.abs(server.getTimestamp() - pending.getTimestamp()) <= PLACEHOLDER_MATCH_WINDOW_MS;
+    }
     
     /**
      * Update message sync status after successful/failed sync
@@ -445,6 +716,13 @@ public class MessageRepository {
             ContentValues values = new ContentValues();
             values.put(DatabaseHelper.COL_MSG_SYNC_STATUS, syncStatus);
             
+            if (SYNC_STATUS_SYNCED.equals(syncStatus)
+                    && newMessageId != null && !newMessageId.isEmpty()
+                    && !newMessageId.equals(messageId)
+                    && isPlaceholderId(messageId)) {
+                Log.d(TAG, "CLOSE_OUTBOX temp=" + messageId + " real=" + newMessageId);
+            }
+
             // If we got a new server ID, update the message ID
             if (newMessageId != null && !newMessageId.isEmpty() && !newMessageId.equals(messageId)) {
                 // First, check if new ID already exists (duplicate)
@@ -462,6 +740,9 @@ public class MessageRepository {
                         DatabaseHelper.COL_MSG_ID + " = ?", 
                         new String[]{messageId});
                     Log.d(TAG, "Deleted duplicate message with temp ID: " + messageId);
+                    if (tempRemovedListener != null) {
+                        tempRemovedListener.onTempMessageRemoved(messageId, newMessageId);
+                    }
                 } else {
                     // Update temp ID to server ID
                     values.put(DatabaseHelper.COL_MSG_ID, newMessageId);
@@ -564,6 +845,34 @@ public class MessageRepository {
         }
     }
     
+    /**
+     * Mark an existing message as pending (e.g. after a failed send). Does not create a new row.
+     */
+    public void markMessageAsPending(String messageId, String error) {
+        if (messageId == null || messageId.isEmpty()) {
+            return;
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.COL_MSG_SYNC_STATUS, SYNC_STATUS_PENDING);
+            if (error != null) {
+                values.put(DatabaseHelper.COL_MSG_SYNC_ERROR, error);
+            } else {
+                values.putNull(DatabaseHelper.COL_MSG_SYNC_ERROR);
+            }
+            db.update(
+                DatabaseHelper.TABLE_MESSAGES,
+                values,
+                DatabaseHelper.COL_MSG_ID + " = ?",
+                new String[]{messageId}
+            );
+            Log.d(TAG, "Marked message as pending: " + messageId);
+        } catch (Exception e) {
+            Log.e(TAG, "Error marking message pending: " + e.getMessage(), e);
+        }
+    }
+
     /**
      * Mark message as read
      */
@@ -685,7 +994,12 @@ public class MessageRepository {
                 int edited = cursor.getInt(editedIndex);
                 message.setEdited(edited == 1);
             }
-            if (editedAtIndex >= 0) message.setEditedAt(cursor.getLong(editedAtIndex));
+            if (editedAtIndex >= 0) {
+                message.setEditedAt(cursor.getLong(editedAtIndex));
+            }
+            if (message.isEdited() && message.getEditedAt() <= 0) {
+                message.setEdited(false);
+            }
             if (reactionsIndex >= 0) {
                 String reactions = cursor.getString(reactionsIndex);
                 message.setReactionsRaw(reactions);

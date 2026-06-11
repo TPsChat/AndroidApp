@@ -53,7 +53,7 @@ public class ChatApplication extends Application {
         
         if (token != null && userId != null) {
             socketManager.connect(token, userId, getApplicationContext());
-            
+
             // Set up global incoming call listener
             socketManager.setIncomingCallListener((callId, caller, chatId, callType) -> {
                 Log.d(TAG, "Global incoming call received: " + callId);

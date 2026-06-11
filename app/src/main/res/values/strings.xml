@@ -676,6 +676,7 @@
     <string name="msg_you_blocked_this_user_unblock_to_continue">You blocked this user. Unblock to continue.</string>
     <string name="msg_you_cannot_message_this_user">You cannot message this user</string>
     <string name="msg_no_connection_message_will_be_sent_when_network_is_available">No connection. Message will be sent when network is available.</string>
+    <string name="msg_send_delayed_retrying">Connection slow. Retrying send…</string>
     <string name="error_error_preparing_message_will_retry_later">Error preparing message. Will retry later.</string>
     <string name="error_message_not_found">Message not found</string>
     <string name="msg_message_copied">Message copied</string>

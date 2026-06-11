@@ -17,9 +17,12 @@ import java.net.URISyntaxException;
  */
 public class SocketManager {
     private static final String TAG = "SocketManager";
+    /** No socket activity within this window → treat as zombie, use delta-sync backup. */
+    public static final long SOCKET_HEALTH_TIMEOUT_MS = 5_000L;
     private static SocketManager instance;
     private Socket socket;
     private boolean isConnected = false;
+    private volatile long lastSocketEventTime = 0L;
     private String currentToken;
     private String currentUserId;
     private android.content.Context appContext; // Store context for sync operations
@@ -59,6 +62,12 @@ public class SocketManager {
         void onUserTyping(String chatId, String userId, String username);
         void onUserStopTyping(String chatId, String userId);
     }
+
+    /** Notified when the socket connects or disconnects (incl. auto-reconnect). */
+    public interface ConnectionListener {
+        void onConnected();
+        void onDisconnected();
+    }
     
     // Realtime sync event listeners
     public interface RealtimeSyncListener {
@@ -77,6 +86,7 @@ public class SocketManager {
 
     // New: support multiple listeners for message to avoid clobbering between screens
     private final java.util.List<MessageListener> messageListeners = new java.util.concurrent.CopyOnWriteArrayList<>();
+    private final java.util.List<ConnectionListener> connectionListeners = new java.util.concurrent.CopyOnWriteArrayList<>();
     
     private SocketManager() {
         // Private constructor for singleton
@@ -93,34 +103,51 @@ public class SocketManager {
      * Connect to Socket.io server
      */
     public void connect(String token, String userId, android.content.Context context) {
-        if (isConnected && token.equals(currentToken)) {
-            Log.d(TAG, "Already connected with same token");
+        if (token == null || token.isEmpty()) {
             return;
         }
-        
-        disconnect(); // Disconnect previous connection if any
-        
-        currentToken = token;
-        currentUserId = userId;
         if (context != null) {
             this.appContext = context.getApplicationContext();
         }
-        
+
+        // Same session: keep one socket instance; let Socket.IO auto-reconnect if dropped.
+        if (socket != null && token.equals(currentToken)) {
+            if (isConnected) {
+                Log.d(TAG, "Already connected with same token");
+                return;
+            }
+            Log.d(TAG, "Reconnecting existing socket (same token)");
+            if (!socket.connected()) {
+                socket.connect();
+            }
+            return;
+        }
+
+        disconnect(); // Token changed — tear down previous session
+
+        currentToken = token;
+        currentUserId = userId;
+
         try {
             IO.Options options = new IO.Options();
             java.util.Map<String, String> auth = new java.util.HashMap<>();
             auth.put("token", token);
             options.auth = auth;
-            options.forceNew = true;
-            options.timeout = 10000;
-            
+            options.forceNew = false;
+            options.timeout = 15000;
+            options.reconnection = true;
+            options.reconnectionAttempts = Integer.MAX_VALUE;
+            options.reconnectionDelay = 1000;
+            options.reconnectionDelayMax = 5000;
+            options.transports = new String[] { "polling", "websocket" };
+
             String serverUrl = ServerConfig.getWebSocketUrl();
             Log.d(TAG, "Connecting to Socket.io server: " + serverUrl);
-            
+
             socket = IO.socket(serverUrl, options);
             setupEventListeners();
             socket.connect();
-            
+
         } catch (URISyntaxException e) {
             Log.e(TAG, "Failed to connect to Socket.io server", e);
         }
@@ -137,8 +164,52 @@ public class SocketManager {
             socket = null;
         }
         isConnected = false;
+        lastSocketEventTime = 0L;
         currentToken = null;
         currentUserId = null;
+    }
+
+    private void recordSocketActivity() {
+        lastSocketEventTime = System.currentTimeMillis();
+    }
+
+    /** Copy wrapper chatId/chatType onto nested message so UI filter never drops events. */
+    private static JSONObject enrichMessagePayload(JSONObject data) throws JSONException {
+        JSONObject message = data.getJSONObject("message");
+        String wrapperChatId = data.optString("chatId", "").trim();
+        if (!wrapperChatId.isEmpty()) {
+            if (!message.has("chat") || message.optString("chat", "").isEmpty()) {
+                message.put("chat", wrapperChatId);
+            }
+            if (!message.has("chatId") || message.optString("chatId", "").isEmpty()) {
+                message.put("chatId", wrapperChatId);
+            }
+        }
+        String wrapperChatType = data.optString("chatType", "").trim();
+        if (!wrapperChatType.isEmpty()
+                && (!message.has("chatType") || message.optString("chatType", "").isEmpty())) {
+            message.put("chatType", wrapperChatType);
+        }
+        return message;
+    }
+
+    public long getLastSocketEventTime() {
+        return lastSocketEventTime;
+    }
+
+    /**
+     * True when socket reports connected AND had activity within {@link #SOCKET_HEALTH_TIMEOUT_MS}.
+     * Prevents "zombie socket" (connected flag set but no events) from disabling backup sync.
+     */
+    public boolean isSocketHealthy() {
+        if (!isConnected) {
+            return false;
+        }
+        long last = lastSocketEventTime;
+        if (last <= 0) {
+            return false;
+        }
+        return (System.currentTimeMillis() - last) < SOCKET_HEALTH_TIMEOUT_MS;
     }
     
     /**
@@ -153,7 +224,15 @@ public class SocketManager {
             public void call(Object... args) {
                 Log.d(TAG, "Connected to Socket.io server");
                 isConnected = true;
-                
+                recordSocketActivity();
+                notifyConnectionListeners(true);
+            }
+        });
+
+        socket.on("connected", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                recordSocketActivity();
             }
         });
         
@@ -162,6 +241,8 @@ public class SocketManager {
             public void call(Object... args) {
                 Log.d(TAG, "Disconnected from Socket.io server");
                 isConnected = false;
+                lastSocketEventTime = 0L;
+                notifyConnectionListeners(false);
             }
         });
         
@@ -362,9 +443,11 @@ public class SocketManager {
         socket.on("private_message", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                recordSocketActivity();
                 try {
                     JSONObject data = (JSONObject) args[0];
-                    JSONObject message = data.getJSONObject("message");
+                    Log.d(TAG, "private_message received chatId=" + data.optString("chatId", ""));
+                    JSONObject message = enrichMessagePayload(data);
                     // Legacy single listener
                     if (messageListener != null) messageListener.onPrivateMessage(message);
                     // Multi listeners
@@ -383,9 +466,11 @@ public class SocketManager {
         socket.on("group_message", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                recordSocketActivity();
                 try {
                     JSONObject data = (JSONObject) args[0];
-                    JSONObject message = data.getJSONObject("message");
+                    Log.d(TAG, "group_message received chatId=" + data.optString("chatId", ""));
+                    JSONObject message = enrichMessagePayload(data);
                     if (messageListener != null) messageListener.onGroupMessage(message);
                     for (MessageListener l : messageListeners) {
                         try {
@@ -857,6 +942,32 @@ public class SocketManager {
     public void removeMessageListener(MessageListener listener) {
         if (listener != null) {
             messageListeners.remove(listener);
+        }
+    }
+
+    public void addConnectionListener(ConnectionListener listener) {
+        if (listener != null && !connectionListeners.contains(listener)) {
+            connectionListeners.add(listener);
+        }
+    }
+
+    public void removeConnectionListener(ConnectionListener listener) {
+        if (listener != null) {
+            connectionListeners.remove(listener);
+        }
+    }
+
+    private void notifyConnectionListeners(boolean connected) {
+        for (ConnectionListener listener : connectionListeners) {
+            try {
+                if (connected) {
+                    listener.onConnected();
+                } else {
+                    listener.onDisconnected();
+                }
+            } catch (Exception ex) {
+                Log.e(TAG, "Error notifying connection listener", ex);
+            }
         }
     }
 }

@@ -56,7 +56,6 @@ import com.example.chatappjava.utils.DatabaseManager;
 import com.example.chatappjava.utils.MessageRepository;
 import com.example.chatappjava.utils.OfflineMessageSyncManager;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.ConnectivityManager.NetworkCallback;
 import android.net.Network;
 import android.net.NetworkRequest;
@@ -72,6 +71,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
@@ -138,9 +138,18 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected int mentionStart = -1;
 
     // Common state
-    protected boolean isPolling = false;
-    protected Handler pollHandler = new Handler(Looper.getMainLooper());
-    protected Runnable pollRunnable;
+    private static final long APPEND_DEBOUNCE_MS = 150;
+    private static final long OFFLINE_TOAST_DEBOUNCE_MS = 3000;
+    private static final long PLACEHOLDER_MATCH_WINDOW_MS = 5000L;
+    private static final long SEND_TIMEOUT_RECONCILE_MS = 3000L;
+    private static final long NETWORK_RESTORE_POST_DELAY_MS = 5000L;
+    private final ConcurrentHashMap<String, String> nonceToTempId = new ConcurrentHashMap<>();
+    private long lastOfflineSendToastAt = 0;
+    private final Handler appendHandler = new Handler(Looper.getMainLooper());
+    private Runnable appendFromDbRunnable;
+    private SocketManager.MessageListener chatMessageListener;
+    private SocketManager.ConnectionListener realtimeConnectionListener;
+    private boolean socketWasDisconnected = false;
     protected boolean hasNewMessages = false;
     protected boolean isInitialLoad = true;
     // Smart auto-scroll state (like Messenger)
@@ -211,7 +220,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         setupClickListeners();
         setupRecyclerView();
         loadChatData();
-        startPolling();
+        setupRealtimeConnectionListener();
         setupMentionSupport();
     }
 
@@ -1473,18 +1482,12 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (btnScrollToBottom != null) {
             btnScrollToBottom.setOnClickListener(v -> {
                 if (messages != null && !messages.isEmpty() && rvMessages != null) {
-                    int lastPos = messages.size() - 1;
-                    // Use postDelayed to ensure layout is complete
-                    rvMessages.postDelayed(() -> {
-                        if (rvMessages != null && !messages.isEmpty() && lastPos >= 0 && lastPos < messages.size()) {
-                            rvMessages.smoothScrollToPosition(lastPos);
-                        }
-                    }, 100);
                     shouldAutoScroll = true;
                     isUserReadingOldMessages = false;
                     hasNewMessages = false;
                     newMessagesCount = 0;
                     updateScrollToBottomButton();
+                    scrollToBottomInstant();
                 }
             });
         }
@@ -1669,105 +1672,19 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected void initData() {
         databaseManager = new DatabaseManager(this);
         messageRepository = new MessageRepository(this);
+        messageRepository.setOnTempMessageRemovedListener((tempId, realId) ->
+                runOnUiThread(() -> onTempMessageRemovedFromDb(tempId, realId)));
         syncManager = new OfflineMessageSyncManager(this); // For offline message sync
+        syncManager.setPendingSyncListener((tempId, serverMessage) -> runOnUiThread(() -> {
+            if (serverMessage == null) return;
+            acknowledgeSentMessage(tempId, serverMessage);
+        }));
         backgroundSyncManager = com.example.chatappjava.utils.SyncManager.getInstance(this); // For background delta sync
         apiClient = new ApiClient();
         avatarManager = AvatarManager.getInstance(this);
         socketManager = ChatApplication.getInstance().getSocketManager();
         messages = new ArrayList<>();
         
-        // Setup sync listener to update UI when sync completes
-        backgroundSyncManager.addSyncListener(new com.example.chatappjava.utils.SyncManager.SyncListener() {
-            @Override
-            public void onSyncComplete(String resourceType, boolean success, int itemsUpdated) {
-                // FIX: Always check for new messages, even if itemsUpdated is 0
-                // Sometimes sync might not report itemsUpdated correctly, but messages are still in DB
-                if (success && "messages".equals(resourceType)) {
-                    // FIX: Always update UI with new messages, but only append (don't reload entire list)
-                    // This ensures real-time chat works even when user is reading old messages
-                    runOnUiThread(() -> {
-                        if (currentChat != null && rvMessages != null && messageRepository != null) {
-                            // Get last message ID to fetch only new messages
-                            String lastMessageId = messages.isEmpty() ? null : messages.get(messages.size() - 1).getId();
-                            long lastTimestamp = messages.isEmpty() ? 0 : messages.get(messages.size() - 1).getTimestamp();
-                            
-                            // Check if user is at bottom (for auto-scroll decision)
-                            LinearLayoutManager lm = (LinearLayoutManager) rvMessages.getLayoutManager();
-                            boolean isAtBottom = isAtBottom();
-                            
-                            android.util.Log.d("BaseChatActivity", "SYNC: Fetching new messages after ID=" + lastMessageId + 
-                                ", timestamp=" + lastTimestamp + ", isAtBottom=" + isAtBottom + ", itemsUpdated=" + itemsUpdated);
-                            
-                            // Fetch only new messages (after last message)
-                            new Thread(() -> {
-                                List<Message> newMessages;
-                                if (lastMessageId != null) {
-                                    newMessages = messageRepository.getMessagesAfterId(currentChat.getId(), lastMessageId);
-                                } else if (lastTimestamp > 0) {
-                                    newMessages = messageRepository.getMessagesAfter(currentChat.getId(), lastTimestamp);
-                                } else {
-                                    // No messages yet, load initial batch
-                                    newMessages = messageRepository.getMessagesForChat(currentChat.getId(), initialDbLoadLimit);
-                                }
-                                
-                                if (newMessages != null && !newMessages.isEmpty()) {
-                                    runOnUiThread(() -> {
-                                        // Append new messages to list
-                                        int oldSize = messages.size();
-                                        for (Message msg : newMessages) {
-                                            // Avoid duplicates
-                                            boolean exists = false;
-                                            for (Message existing : messages) {
-                                                if (existing.getId() != null && existing.getId().equals(msg.getId())) {
-                                                    exists = true;
-                                                    break;
-                                                }
-                                            }
-                                            if (!exists) {
-                                                messages.add(msg);
-                                            }
-                                        }
-                                        
-                                        int addedCount = messages.size() - oldSize;
-                                        if (addedCount > 0) {
-                                            android.util.Log.d("BaseChatActivity", "SYNC: Added " + addedCount + " new messages");
-                                            
-                                            // Notify adapter of new items
-                                            messageAdapter.notifyItemRangeInserted(oldSize, addedCount);
-                                            
-                                            // Only auto-scroll if user is at bottom
-                                            if (isAtBottom && shouldAutoScroll) {
-                                                rvMessages.postDelayed(() -> {
-                                                    if (isAtBottom() && !messages.isEmpty() && rvMessages != null) {
-                                                        int lastPos = messages.size() - 1;
-                                                        if (lastPos >= 0 && lastPos < messages.size()) {
-                                                            rvMessages.smoothScrollToPosition(lastPos);
-                                                        }
-                                                    }
-                                                }, 100);
-                                            } else {
-                                                // User is not at bottom - show scroll-to-bottom button
-                                                newMessagesCount += addedCount;
-                                                hasNewMessages = true;
-                                                updateScrollToBottomButton();
-                                            }
-                                        }
-                                    });
-                                } else {
-                                    android.util.Log.d("BaseChatActivity", "SYNC: No new messages found in DB");
-                                }
-                            }).start();
-                        }
-                    });
-                }
-            }
-            
-            @Override
-            public void onSyncError(String resourceType, String error) {
-                Log.e("BaseChatActivity", "Sync error for " + resourceType + ": " + error);
-            }
-        });
-
         // Initialize chat data from intent
         Intent intent = getIntent();
         if (intent.hasExtra("chat")) {
@@ -1818,45 +1735,107 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     }
     
     protected void setupSocketManager() {
-        // SocketManager is already setup in Application class
         if (socketManager != null) {
-            socketManager.setMessageListener(new com.example.chatappjava.network.SocketManager.MessageListener() {
-                @Override
-                public void onPrivateMessage(org.json.JSONObject messageJson) {
-                    runOnUiThread(() -> handleIncomingMessage(messageJson));
-                }
+            if (chatMessageListener == null) {
+                chatMessageListener = new SocketManager.MessageListener() {
+                    @Override
+                    public void onPrivateMessage(org.json.JSONObject messageJson) {
+                        dispatchIncomingMessage(messageJson);
+                    }
 
-                @Override
-                public void onGroupMessage(org.json.JSONObject messageJson) {
-                    runOnUiThread(() -> handleIncomingMessage(messageJson));
-                }
+                    @Override
+                    public void onGroupMessage(org.json.JSONObject messageJson) {
+                        dispatchIncomingMessage(messageJson);
+                    }
 
-                @Override
-                public void onMessageEdited(org.json.JSONObject messageJson) {
-                    runOnUiThread(() -> handleEditedMessage(messageJson));
-                }
+                    @Override
+                    public void onMessageEdited(org.json.JSONObject messageJson) {
+                        runOnUiThread(() -> handleEditedMessage(messageJson));
+                    }
 
-                @Override
-                public void onMessageDeleted(org.json.JSONObject messageMetaJson) {
-                    runOnUiThread(() -> handleDeletedMessage(messageMetaJson));
-                }
+                    @Override
+                    public void onMessageDeleted(org.json.JSONObject messageMetaJson) {
+                        runOnUiThread(() -> handleDeletedMessage(messageMetaJson));
+                    }
 
-                @Override
-                public void onReactionUpdated(org.json.JSONObject reactionJson) {
-                    // Optional: update reactions UI later
-                }
-            });
-
-            // FIX: Don't stop polling when socket is setup
-            // Keep polling as backup in case socket doesn't work
-            // Polling will sync messages to DB, and onSyncComplete will update UI
-            // Only stop polling if we're sure socket is working and receiving messages
-            // For now, keep both running - socket for real-time, polling as backup
-            android.util.Log.d("BaseChatActivity", "Socket listener setup, keeping polling as backup");
+                    @Override
+                    public void onReactionUpdated(org.json.JSONObject reactionJson) {
+                        runOnUiThread(() -> mergeRecentMessageUpdatesFromDB());
+                    }
+                };
+            }
+            socketManager.addMessageListener(chatMessageListener);
         }
         setupTypingListeners();
     }
-    
+
+    /**
+     * Industry pattern: socket = realtime; HTTP delta only on reconnect / resume (gap-fill).
+     */
+    private void setupRealtimeConnectionListener() {
+        if (socketManager == null) return;
+        if (realtimeConnectionListener == null) {
+            realtimeConnectionListener = new SocketManager.ConnectionListener() {
+                @Override
+                public void onConnected() {
+                    if (!socketWasDisconnected) {
+                        return;
+                    }
+                    socketWasDisconnected = false;
+                    runOnUiThread(() -> catchUpAfterDisconnect());
+                }
+
+                @Override
+                public void onDisconnected() {
+                    socketWasDisconnected = true;
+                }
+            };
+        }
+        socketManager.addConnectionListener(realtimeConnectionListener);
+    }
+
+    /**
+     * HTTP catch-up only after real disconnect (socket down, network lost, send timeout).
+     * While socket is connected, incoming messages come solely from socket events.
+     */
+    private void catchUpAfterDisconnect() {
+        if (currentChat == null) return;
+        reconcileOutboxFromDb();
+        String token = databaseManager != null ? databaseManager.getToken() : null;
+        if (token == null || token.isEmpty() || backgroundSyncManager == null) {
+            return;
+        }
+        final com.example.chatappjava.utils.SyncManager.SyncListener once =
+                new com.example.chatappjava.utils.SyncManager.SyncListener() {
+                    @Override
+                    public void onSyncComplete(String resourceType, boolean success, int itemsUpdated) {
+                        if (!"messages".equals(resourceType)) {
+                            return;
+                        }
+                        backgroundSyncManager.removeSyncListener(this);
+                        runOnUiThread(() -> scheduleAppendNewMessagesFromDb(false));
+                    }
+
+                    @Override
+                    public void onSyncError(String resourceType, String error) {
+                        if ("messages".equals(resourceType)) {
+                            backgroundSyncManager.removeSyncListener(this);
+                        }
+                    }
+                };
+        backgroundSyncManager.addSyncListener(once);
+        backgroundSyncManager.syncMessagesNow(token);
+    }
+
+    /** Socket event → UI immediately (front of main queue). */
+    private void dispatchIncomingMessage(org.json.JSONObject messageJson) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            handleIncomingMessage(messageJson);
+        } else {
+            appendHandler.postAtFrontOfQueue(() -> handleIncomingMessage(messageJson));
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     protected void setupClickListeners() {
         // Back button
@@ -2052,23 +2031,16 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 int scrollState = recyclerView.getScrollState();
                 boolean canLoadMore = (scrollState == RecyclerView.SCROLL_STATE_IDLE || scrollState == RecyclerView.SCROLL_STATE_SETTLING);
                 
-                if (!isLoadingMore && hasMore && canLoadMore) {
+                // Only load older messages when user scrolls up (not while sitting at bottom)
+                if (!isLoadingMore && hasMore && canLoadMore && dy < 0 && !isAtBottom()) {
                     int firstVisible = lm.findFirstVisibleItemPosition();
                     if (firstVisible <= 3) {
-                        // Use postDelayed to avoid loading during active scrolling
                         recyclerView.postDelayed(() -> {
-                            if (!isLoadingMore && hasMore) {
-                                android.util.Log.d("BaseChatActivity", "Triggering loadMoreMessages: firstVisible=" + firstVisible + ", hasMore=" + hasMore + ", isLoadingMore=" + isLoadingMore);
+                            if (!isLoadingMore && hasMore && !isAtBottom()) {
                                 loadMoreMessages();
-                            } else {
-                                android.util.Log.d("BaseChatActivity", "Skipped loadMoreMessages: isLoadingMore=" + isLoadingMore + ", hasMore=" + hasMore);
                             }
-                        }, 200); // 200ms delay to ensure scroll has settled
-                    } else {
-                        android.util.Log.d("BaseChatActivity", "Not triggering loadMoreMessages: firstVisible=" + firstVisible + " > 3, hasMore=" + hasMore);
+                        }, 200);
                     }
-                } else {
-                    android.util.Log.d("BaseChatActivity", "Not triggering loadMoreMessages: isLoadingMore=" + isLoadingMore + ", hasMore=" + hasMore + ", scrollState=" + scrollState + ", canLoadMore=" + canLoadMore);
                 }
             }
             
@@ -2174,7 +2146,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (currentChat == null) return;
 
         if (!isInitialLoad) {
-            refreshMessagesIncremental();
             return;
         }
 
@@ -2474,133 +2445,121 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         });
     }
     
-    /**
-     * Load messages from local database silently (without scrolling)
-     * Used for foreground sync updates to avoid disrupting user's reading position
-     */
-    private void loadMessagesFromDatabaseSilent() {
-        if (currentChat == null || messageRepository == null) return;
-        
-        // CRITICAL: Don't reload if user is reading old messages
-        // This is the most important check to prevent unwanted scrolling
-        // Check both flag and actual position
-        boolean isCurrentlyReadingOld = isUserReadingOldMessages || !shouldAutoScroll || isReadingOldMessages();
-        if (isCurrentlyReadingOld) {
-            android.util.Log.d("BaseChatActivity", "BLOCKED silent reload - user is reading old messages (isUserReadingOldMessages=" + isUserReadingOldMessages + ", shouldAutoScroll=" + shouldAutoScroll + ", isReadingOldMessages()=" + isReadingOldMessages() + ")");
-            return;
+    private void scheduleAppendNewMessagesFromDb(boolean allowInitialBatch) {
+        if (appendFromDbRunnable != null) {
+            appendHandler.removeCallbacks(appendFromDbRunnable);
         }
-        
-        android.util.Log.d("BaseChatActivity", "ALLOWED silent reload - user at bottom (isUserReadingOldMessages=" + isUserReadingOldMessages + ", shouldAutoScroll=" + shouldAutoScroll + ")");
-        
-        // Don't reload if currently loading more messages to avoid conflicts
-        if (isLoadingMore) {
-            android.util.Log.d("BaseChatActivity", "Skipping silent reload - currently loading more messages");
-            return;
+        appendFromDbRunnable = () -> appendNewMessagesFromDb(allowInitialBatch);
+        appendHandler.postDelayed(appendFromDbRunnable, APPEND_DEBOUNCE_MS);
+    }
+
+    private void appendNewMessagesFromDb(boolean allowInitialBatch) {
+        if (currentChat == null || messageRepository == null || messages == null) return;
+        if (isUpdatingMessages || isLoadingMore) return;
+
+        String lastMessageId = messages.isEmpty() ? null : messages.get(messages.size() - 1).getId();
+        long lastTimestamp = messages.isEmpty() ? 0 : messages.get(messages.size() - 1).getTimestamp();
+        final boolean lastWasPlaceholder = isPlaceholderId(lastMessageId);
+        if (lastWasPlaceholder) {
+            lastMessageId = null;
         }
-        
-        // SOLUTION: Save RecyclerView state BEFORE loading
-        // This is the recommended approach to prevent auto-scroll
-        LinearLayoutManager lm = 
-            (LinearLayoutManager) rvMessages.getLayoutManager();
-        android.os.Parcelable recyclerViewState = null;
-        if (lm != null && rvMessages != null) {
-            recyclerViewState = lm.onSaveInstanceState();
-        }
-        // Create final variable for use in nested lambdas
-        final android.os.Parcelable savedRecyclerViewState = recyclerViewState;
-        
-        // Check if user is reading old messages using the flag and current position
-        int lastVisiblePosition = lm != null ? lm.findLastVisibleItemPosition() : -1;
-        int totalItemCount = lm != null ? lm.getItemCount() : 0;
-        int distanceFromBottom = totalItemCount > 0 ? totalItemCount - 1 - lastVisiblePosition : 0;
-        boolean userIsReadingOldMessages = isUserReadingOldMessages || !shouldAutoScroll || 
-            (distanceFromBottom > 5);
-        
-        // Use current shouldAutoScroll state
-        boolean currentShouldAutoScroll = shouldAutoScroll;
-        String lastMessageIdBefore = messages.isEmpty() ? null : messages.get(messages.size() - 1).getId();
-        
-        // Load asynchronously to avoid blocking UI thread
-        new Thread(() -> {
-            List<Message> dbMessages = messageRepository.getMessagesForChat(
-                currentChat.getId(), 
-                initialDbLoadLimit
-            );
-            
-            // Check if there are more messages in DB
-            int totalCount = messageRepository.getMessagesCountForChat(currentChat.getId());
-            hasMoreInDb = totalCount > initialDbLoadLimit;
-            
-            if (!dbMessages.isEmpty()) {
-                runOnUiThread(() -> {
-                    // Stop any ongoing scroll to avoid inconsistency
-                    if (rvMessages != null) {
-                        rvMessages.stopScroll();
-                    }
-                    
-                    // Check if new messages were added at the end BEFORE updating the list
-                    String lastMessageIdAfter = dbMessages.isEmpty() ? null : dbMessages.get(dbMessages.size() - 1).getId();
-                    boolean hasNewMessagesAtEnd = lastMessageIdAfter != null && 
-                        (lastMessageIdBefore == null || !lastMessageIdAfter.equals(lastMessageIdBefore));
-                    
-                    // Use double post to ensure RecyclerView has finished its current layout pass
-                    // This prevents IndexOutOfBoundsException
-                    rvMessages.post(() -> {
-                        rvMessages.post(() -> {
-                            try {
-                                // Check if RecyclerView is scrolling - if so, defer update
-                                int scrollState = rvMessages != null ? rvMessages.getScrollState() : RecyclerView.SCROLL_STATE_IDLE;
-                                boolean isScrolling = scrollState != RecyclerView.SCROLL_STATE_IDLE;
-                                
-                                if (isScrolling) {
-                                    // Defer update until scroll is complete
-                                    // Use the saved final state
-                                    rvMessages.postDelayed(() -> {
-                                        if (rvMessages.getScrollState() == RecyclerView.SCROLL_STATE_IDLE) {
-                                            // Re-check shouldAutoScroll state after scroll completes (may have changed)
-                                            // Save state again before updating
-                                            android.os.Parcelable newState = null;
-                                            LinearLayoutManager currentLm = (LinearLayoutManager) rvMessages.getLayoutManager();
-                                            if (currentLm != null) {
-                                                newState = currentLm.onSaveInstanceState();
-                                            }
-                                            // Use new state if available, otherwise use the saved one
-                                            final android.os.Parcelable stateToUse = newState != null ? newState : savedRecyclerViewState;
-                                            boolean updatedShouldAutoScroll = shouldAutoScroll;
-                                            // updateMessagesListSafely will handle state restoration using onSaveInstanceState
-                                            updateMessagesListSafely(dbMessages, updatedShouldAutoScroll, hasNewMessagesAtEnd, -1, 0, currentLm);
-                                        }
-                                    }, 300);
-                                    return;
-                                }
-                                
-                                // Update messages list - updateMessagesListSafely will handle state restoration
-                                // It will use onSaveInstanceState() internally, so we don't need firstVisiblePosition/topOffset
-                                updateMessagesListSafely(dbMessages, currentShouldAutoScroll, hasNewMessagesAtEnd, -1, 0, lm);
-                                
-                                android.util.Log.d("BaseChatActivity", "Silently loaded " + dbMessages.size() + 
-                                    " messages from database (total: " + totalCount + "), shouldAutoScroll: " + currentShouldAutoScroll);
-                            } catch (Exception e) {
-                                android.util.Log.e("BaseChatActivity", "Error updating messages list: " + e.getMessage());
-                            }
-                        });
-                    });
-                });
+
+        final String currentUserId = databaseManager != null ? databaseManager.getUserId() : null;
+        final String chatId = currentChat.getId();
+        long minPlaceholderTs = Long.MAX_VALUE;
+        boolean hasOutgoingPlaceholders = false;
+        if (currentUserId != null) {
+            for (Message m : messages) {
+                if (!isPlaceholderId(m.getId())) continue;
+                if (!currentUserId.equals(m.getSenderId())) continue;
+                if (!chatId.equals(m.getChatId())) continue;
+                hasOutgoingPlaceholders = true;
+                if (m.getTimestamp() < minPlaceholderTs) {
+                    minPlaceholderTs = m.getTimestamp();
+                }
             }
+        }
+
+        final String queryAfterId = lastMessageId;
+        final long queryAfterTimestamp = lastTimestamp;
+        final boolean reconcilePlaceholders = hasOutgoingPlaceholders && minPlaceholderTs < Long.MAX_VALUE;
+        final long placeholderSinceTs = minPlaceholderTs;
+        final boolean wasAtBottom = isAtBottom();
+
+        new Thread(() -> {
+            List<Message> newMessages;
+            if (reconcilePlaceholders) {
+                newMessages = messageRepository.getSyncedMessagesSince(chatId, placeholderSinceTs);
+            } else if (queryAfterId != null) {
+                newMessages = messageRepository.getMessagesAfterId(chatId, queryAfterId);
+            } else if (queryAfterTimestamp > 0) {
+                if (lastWasPlaceholder) {
+                    newMessages = messageRepository.getSyncedMessagesSince(chatId, queryAfterTimestamp);
+                } else {
+                    newMessages = messageRepository.getMessagesAfter(chatId, queryAfterTimestamp);
+                }
+            } else if (allowInitialBatch) {
+                newMessages = messageRepository.getMessagesForChat(chatId, initialDbLoadLimit);
+            } else {
+                return;
+            }
+
+            if (newMessages == null || newMessages.isEmpty()) {
+                if (reconcilePlaceholders) {
+                    runOnUiThread(this::sweepOrphanPlaceholders);
+                }
+                return;
+            }
+
+            runOnUiThread(() -> applyAppendedMessages(newMessages, wasAtBottom));
         }).start();
     }
+
+    private void applyAppendedMessages(List<Message> newMessages, boolean wasAtBottom) {
+        if (messageAdapter == null || isUpdatingMessages || newMessages == null) return;
+
+        int inserted = 0;
+        for (Message msg : newMessages) {
+            if (upsertChatMessage(msg, false)) {
+                inserted++;
+            }
+        }
+        sweepOrphanPlaceholders();
+        if (inserted <= 0) return;
+
+        updateSummarizeIndicator();
+        if (wasAtBottom && shouldAutoScroll && !isUserReadingOldMessages) {
+            scrollToBottomInstant();
+        } else {
+            newMessagesCount += inserted;
+            hasNewMessages = true;
+            updateScrollToBottomButton();
+        }
+    }
+
     
     /**
      * Check if network is available
      */
     private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager = 
+        ConnectivityManager cm =
             (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-            return activeNetwork != null && activeNetwork.isConnected();
+        if (cm == null) {
+            return false;
         }
-        return false;
+        android.net.Network network = cm.getActiveNetwork();
+        if (network == null) {
+            return false;
+        }
+        android.net.NetworkCapabilities caps = cm.getNetworkCapabilities(network);
+        if (caps == null) {
+            return false;
+        }
+        // LAN server: do not require NET_CAPABILITY_VALIDATED (no public internet needed).
+        return caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                && (caps.hasTransport(android.net.NetworkCapabilities.TRANSPORT_WIFI)
+                || caps.hasTransport(android.net.NetworkCapabilities.TRANSPORT_CELLULAR)
+                || caps.hasTransport(android.net.NetworkCapabilities.TRANSPORT_ETHERNET));
     }
     
     /**
@@ -2616,13 +2575,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         NetworkCallback callback = new NetworkCallback() {
             @Override
             public void onAvailable(Network network) {
-                // Network is available - sync pending messages
-                android.util.Log.d("BaseChatActivity", "Network available, syncing pending messages");
+                android.util.Log.d("BaseChatActivity", "Network available, reconciling messages");
                 runOnUiThread(() -> {
                     updateOfflineIndicator();
-                    if (syncManager != null) {
-                        syncManager.syncPendingMessages();
-                    }
+                    reconcileAfterNetworkRestore();
                 });
             }
             
@@ -2961,18 +2917,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             startAutoHideSummarizeTimer();
         }
         
-        // Sync foreground when app becomes active
-        String token = databaseManager.getToken();
-        if (token != null && !token.isEmpty() && backgroundSyncManager != null) {
-            backgroundSyncManager.syncForeground(token);
+        reconcileOutboxFromDb();
+        if (socketManager == null || !socketManager.isConnected()) {
+            catchUpAfterDisconnect();
         }
-        
-        // Update offline indicator
+
         updateOfflineIndicator();
-        
-        // Update summarize indicator
         updateSummarizeIndicator();
-        
+
         // Note: Sync pending messages is handled by network callback (setupNetworkListener)
         // No need to sync here to avoid duplicate syncs when network comes back
         // Network callback will handle it automatically
@@ -3155,11 +3107,8 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         final String finalMessageId = message.getId();
         final int messagePosition = messages.size();
         
-        // Add to local list immediately for better UX
-        message.setLocalSignature(buildLocalSignature(message));
-        messages.add(message);
-        messageAdapter.notifyItemInserted(messages.size() - 1);
-        // Always scroll to bottom when user sends a message
+        registerOutgoingNonce(clientNonce, finalMessageId);
+        upsertChatMessage(message, false);
         forceScrollToBottom();
 
         // Clear input
@@ -3205,49 +3154,25 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                         if (data != null && data.has("message")) {
                                             JSONObject m = data.getJSONObject("message");
                                             Message serverMessage = Message.fromJson(m);
-                                            
-                                            // Update sync status in database
-                                            messageRepository.updateSyncStatus(
-                                                finalMessageId,
-                                                serverMessage.getId(),
-                                                "synced",
-                                                null
-                                            );
-                                            
-                                            // Replace the last local placeholder that matches signature
-                                            int idx = findLocalPlaceholderIndex(serverMessage);
-                                            if (idx >= 0) {
-                                                messages.set(idx, serverMessage);
-                                                messageAdapter.notifyItemChanged(idx);
+                                            if (serverMessage.getClientNonce() == null
+                                                    || serverMessage.getClientNonce().isEmpty()) {
+                                                serverMessage.setClientNonce(clientNonce);
                                             }
+
+                                            acknowledgeSentMessage(finalMessageId, serverMessage);
                                         }
                                     } catch (Exception ignored) {}
                                     clearReplyState();
                                 } else {
-                                    // Save as pending instead of removing
-                                    finalMessage.setId(null);
-                                    messageRepository.saveMessage(finalMessage);
-                                    if (messagePosition < messages.size()) {
-                                        messageAdapter.notifyItemChanged(messagePosition);
-                                    }
-                                    String errorMsg = jsonResponse.optString("message", "Failed to send message");
+                                    markSendFailed(finalMessageId, messagePosition,
+                                        jsonResponse.optString("message", "Failed to send message"));
                                 }
                             } catch (JSONException e) {
                                 Log.e("BaseActivity", "Error processing response", e);
-                                // Save as pending instead of removing
-                                finalMessage.setId(null);
-                                messageRepository.saveMessage(finalMessage);
-                                if (messagePosition < messages.size()) {
-                                    messageAdapter.notifyItemChanged(messagePosition);
-                                }
+                                markSendFailed(finalMessageId, messagePosition, e.getMessage());
                             }
                         } else {
-                            // Save as pending instead of removing
-                            finalMessage.setId(null);
-                            messageRepository.saveMessage(finalMessage);
-                            if (messagePosition < messages.size()) {
-                                messageAdapter.notifyItemChanged(messagePosition);
-                            }
+                            markSendFailed(finalMessageId, messagePosition, "HTTP " + response.code());
                         }
                     });
                 }
@@ -3256,41 +3181,128 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 @Override
                 public void onFailure(Call call, IOException e) {
                     android.util.Log.e("BaseChatActivity", "Send message failed: " + e.getMessage());
-                    runOnUiThread(() -> {
-                        // Save as pending instead of removing
-                        finalMessage.setId(null);
-                        messageRepository.saveMessage(finalMessage);
-                        if (messagePosition < messages.size()) {
-                            messageAdapter.notifyItemChanged(messagePosition);
-                        }
-                        Toast.makeText(BaseChatActivity.this, getString(R.string.msg_no_connection_message_will_be_sent_when_network_is_available), Toast.LENGTH_LONG).show();
-                    });
+                    runOnUiThread(() -> markSendFailed(finalMessageId, messagePosition, e.getMessage()));
                 }
             });
         } catch (JSONException e) {
             Log.e("BaseActivity", "Error preparing message", e);
-            // Save as pending
-            finalMessage.setId(null);
-            messageRepository.saveMessage(finalMessage);
+            markSendFailed(finalMessageId, messagePosition, e.getMessage());
             Toast.makeText(this, getString(R.string.error_error_preparing_message_will_retry_later), Toast.LENGTH_SHORT).show();
         }
     }
 
-    protected void scrollToBottom() {
-        // Only scroll if shouldAutoScroll is true (user is at/near bottom)
-        // This prevents unwanted scrolling when user is reading older messages
-        if (!messages.isEmpty() && shouldAutoScroll && rvMessages != null) {
-            int lastPosition = messages.size() - 1;
-            
-            // Use postDelayed to ensure RecyclerView has finished layout and adapter has updated
-            rvMessages.postDelayed(() -> {
-                if (rvMessages != null && !messages.isEmpty() && lastPosition >= 0 && lastPosition < messages.size()) {
-                    // Use smoothScrollToPosition to scroll to the last message
-                    // This ensures the last message is fully visible at the bottom
-                    rvMessages.smoothScrollToPosition(lastPosition);
-                    android.util.Log.d("BaseChatActivity", "scrollToBottom: scrolled to position " + lastPosition + " (total: " + messages.size() + ")");
+    private void markSendFailed(String messageId, int messagePosition, String error) {
+        if (messageRepository != null && messageId != null && !messageId.isEmpty()) {
+            messageRepository.markMessageAsPending(messageId, error);
+        }
+        if (messagePosition >= 0 && messagePosition < messages.size() && messageAdapter != null) {
+            messageAdapter.notifyItemChanged(messagePosition);
+        }
+        if (isTimeoutError(error)) {
+            if (syncManager != null) {
+                syncManager.markSendTimeout(messageId);
+            }
+            scheduleReconcileAfterSendTimeout();
+            if (isNetworkAvailable()) {
+                showSendDelayedToastOnce();
+            } else {
+                showOfflineSendToastOnce();
+            }
+            return;
+        }
+        if (!isNetworkAvailable()) {
+            showOfflineSendToastOnce();
+        } else if (error != null && !error.isEmpty()) {
+            Toast.makeText(this,
+                getString(R.string.error_network_detail, error),
+                Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private static boolean isTimeoutError(String error) {
+        if (error == null) {
+            return false;
+        }
+        String lower = error.toLowerCase(Locale.US);
+        return lower.contains("timeout") || lower.contains("timed out");
+    }
+
+    /** After HTTP timeout: delta sync + DB append may find the server copy before POST retry. */
+    private void scheduleReconcileAfterSendTimeout() {
+        appendHandler.postDelayed(this::reconcilePendingFromDbAndServer, SEND_TIMEOUT_RECONCILE_MS);
+    }
+
+    private void reconcileAfterNetworkRestore() {
+        reconcilePendingFromDbAndServer();
+        appendHandler.postDelayed(() -> {
+            if (syncManager != null) {
+                syncManager.syncPendingMessages();
+            }
+        }, NETWORK_RESTORE_POST_DELAY_MS);
+    }
+
+    private void reconcilePendingFromDbAndServer() {
+        catchUpAfterDisconnect();
+    }
+
+    /** Close pending outbox rows when a synced server copy already exists in DB. */
+    private void reconcileOutboxFromDb() {
+        if (currentChat == null || messageRepository == null) {
+            return;
+        }
+        List<Message> pending = messageRepository.getPendingMessagesForChat(currentChat.getId());
+        for (Message pendingMsg : pending) {
+            Message existing = messageRepository.findMatchingServerMessage(pendingMsg);
+            if (existing != null) {
+                messageRepository.resolvePendingWithServerMessage(pendingMsg.getId(), existing);
+                final String tempId = pendingMsg.getId();
+                final Message serverCopy = existing;
+                if (Looper.myLooper() == Looper.getMainLooper()) {
+                    acknowledgeSentMessage(tempId, serverCopy);
+                } else {
+                    runOnUiThread(() -> acknowledgeSentMessage(tempId, serverCopy));
                 }
-            }, 100);
+            }
+        }
+    }
+
+    private void showOfflineSendToastOnce() {
+        long now = System.currentTimeMillis();
+        if (now - lastOfflineSendToastAt < OFFLINE_TOAST_DEBOUNCE_MS) {
+            return;
+        }
+        lastOfflineSendToastAt = now;
+        Toast.makeText(this,
+            getString(R.string.msg_no_connection_message_will_be_sent_when_network_is_available),
+            Toast.LENGTH_SHORT).show();
+    }
+
+    private void showSendDelayedToastOnce() {
+        long now = System.currentTimeMillis();
+        if (now - lastOfflineSendToastAt < OFFLINE_TOAST_DEBOUNCE_MS) {
+            return;
+        }
+        lastOfflineSendToastAt = now;
+        Toast.makeText(this,
+            getString(R.string.msg_send_delayed_retrying),
+            Toast.LENGTH_SHORT).show();
+    }
+
+    protected void scrollToBottom() {
+        if (!messages.isEmpty() && shouldAutoScroll && rvMessages != null) {
+            scrollToBottomInstant();
+        }
+    }
+
+    private void scrollToBottomInstant() {
+        if (rvMessages == null || messages.isEmpty()) return;
+        int lastPosition = messages.size() - 1;
+        rvMessages.stopScroll();
+        LinearLayoutManager lm = (LinearLayoutManager) rvMessages.getLayoutManager();
+        if (lm != null) {
+            lm.scrollToPositionWithOffset(lastPosition, 0);
+        } else {
+            rvMessages.scrollToPosition(lastPosition);
         }
     }
 
@@ -3365,25 +3377,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         updateScrollToBottomButton();
     }
     
-    /**
-     * Check for new messages in DB and append them to the list (without reloading entire list)
-     * This is used when user is reading old messages - we still want to show new messages
-     */
-    /**
-     * Poll / background refresh: sync with server and patch the list in place (no full reload).
-     */
-    protected void refreshMessagesIncremental() {
-        if (currentChat == null) return;
-
-        String token = databaseManager.getToken();
-        if (token != null && !token.isEmpty() && backgroundSyncManager != null) {
-            backgroundSyncManager.syncForeground(token);
-        }
-
-        checkAndAppendNewMessagesFromDB();
-        mergeRecentMessageUpdatesFromDB();
-    }
-
     private void mergeRecentMessageUpdatesFromDB() {
         if (currentChat == null || messageRepository == null || messages == null || messages.isEmpty()) {
             return;
@@ -3421,6 +3414,9 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                     if (fromDb == null) {
                         continue;
                     }
+                    if (fromDb.isEdited() && fromDb.getEditedAt() <= 0) {
+                        fromDb.setEdited(false);
+                    }
                     fromDb.ensureReactionSummaryFromRaw();
                     local.ensureReactionSummaryFromRaw();
 
@@ -3431,6 +3427,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                         }
                         continue;
                     }
+                    preserveSenderIfMissing(fromDb, local);
                     messages.set(i, fromDb);
                     fullUpdateIndices.add(i);
                 }
@@ -3444,90 +3441,31 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         }).start();
     }
 
+    private static void preserveSenderIfMissing(Message target, Message fallback) {
+        if (target == null || fallback == null) {
+            return;
+        }
+        if (target.getSenderId() == null || target.getSenderId().isEmpty()) {
+            target.setSenderId(fallback.getSenderId());
+        }
+        if (target.getSenderDisplayName() == null || target.getSenderDisplayName().isEmpty()) {
+            target.setSenderDisplayName(fallback.getSenderDisplayName());
+        }
+        if (target.getSenderAvatarUrl() == null || target.getSenderAvatarUrl().isEmpty()) {
+            target.setSenderAvatarUrl(fallback.getSenderAvatarUrl());
+        }
+    }
+
     private static boolean hasNonReactionVisualChanges(Message local, Message fromDb) {
         if (!java.util.Objects.equals(local.getContent(), fromDb.getContent())) {
             return true;
         }
-        if (local.isEdited() != fromDb.isEdited()) {
-            return true;
-        }
-        if (local.getEditedAt() != fromDb.getEditedAt()) {
+        if (local.shouldShowEditedLabel() != fromDb.shouldShowEditedLabel()) {
             return true;
         }
         return false;
     }
 
-    protected void checkAndAppendNewMessagesFromDB() {
-        if (currentChat == null || messageRepository == null || messages == null) return;
-        
-        // Get last message ID to fetch only new messages
-        String lastMessageId = messages.isEmpty() ? null : messages.get(messages.size() - 1).getId();
-        long lastTimestamp = messages.isEmpty() ? 0 : messages.get(messages.size() - 1).getTimestamp();
-        
-        // Check if user is at bottom (for auto-scroll decision)
-        boolean isAtBottom = isAtBottom();
-        
-        android.util.Log.d("BaseChatActivity", "checkAndAppendNewMessagesFromDB: lastMessageId=" + lastMessageId + 
-            ", timestamp=" + lastTimestamp + ", isAtBottom=" + isAtBottom);
-        
-        // Fetch only new messages (after last message)
-        new Thread(() -> {
-            List<Message> newMessages;
-            if (lastMessageId != null) {
-                newMessages = messageRepository.getMessagesAfterId(currentChat.getId(), lastMessageId);
-            } else if (lastTimestamp > 0) {
-                newMessages = messageRepository.getMessagesAfter(currentChat.getId(), lastTimestamp);
-            } else {
-                // No messages yet, skip (initial load will handle this)
-                return;
-            }
-            
-            if (newMessages != null && !newMessages.isEmpty()) {
-                runOnUiThread(() -> {
-                    // Append new messages to list
-                    int oldSize = messages.size();
-                    for (Message msg : newMessages) {
-                        // Avoid duplicates
-                        boolean exists = false;
-                        for (Message existing : messages) {
-                            if (existing.getId() != null && existing.getId().equals(msg.getId())) {
-                                exists = true;
-                                break;
-                            }
-                        }
-                        if (!exists) {
-                            messages.add(msg);
-                        }
-                    }
-                    
-                    int addedCount = messages.size() - oldSize;
-                    if (addedCount > 0) {
-                        android.util.Log.d("BaseChatActivity", "checkAndAppendNewMessagesFromDB: Added " + addedCount + " new messages");
-                        
-                        // Notify adapter of new items
-                        messageAdapter.notifyItemRangeInserted(oldSize, addedCount);
-                        
-                        // Only auto-scroll if user is at bottom
-                        if (isAtBottom && shouldAutoScroll) {
-                            rvMessages.postDelayed(() -> {
-                                if (isAtBottom() && !messages.isEmpty() && rvMessages != null) {
-                                    int lastPos = messages.size() - 1;
-                                    if (lastPos >= 0 && lastPos < messages.size()) {
-                                        rvMessages.smoothScrollToPosition(lastPos);
-                                    }
-                                }
-                            }, 100);
-                        } else {
-                            // User is not at bottom - show scroll-to-bottom button
-                            newMessagesCount += addedCount;
-                            hasNewMessages = true;
-                            updateScrollToBottomButton();
-                        }
-                    }
-                });
-            }
-        }).start();
-    }
     
     /**
      * Update scroll-to-bottom button visibility and text
@@ -3557,33 +3495,343 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
      * Follows Messenger-style pattern: only update when RecyclerView is idle
      */
     private void safeAddMessage(Message message, boolean shouldScroll) {
-        if (message == null || messageAdapter == null || rvMessages == null) return;
-        if (isUpdatingMessages) {
-            // Another update in progress - defer this one
-            rvMessages.postDelayed(() -> safeAddMessage(message, shouldScroll), 150);
+        if (message == null || messageAdapter == null) return;
+        boolean inserted = upsertChatMessage(message, false);
+        if (inserted && shouldScroll && shouldAutoScroll && !isUserReadingOldMessages) {
+            scrollToBottomInstant();
+        }
+    }
+
+    /**
+     * Server message acknowledged in DB first, then reflected in UI.
+     * Returns true when a new row was inserted in the list.
+     */
+    private boolean onServerMessageArrived(Message serverMessage, boolean scrollIfAtBottom) {
+        if (serverMessage == null) {
+            return false;
+        }
+        if (messageRepository != null) {
+            messageRepository.resolvePendingWithServerMessage(serverMessage);
+        }
+        return upsertChatMessage(serverMessage, scrollIfAtBottom);
+    }
+
+    /**
+     * Insert or update a message in the list. Returns true when a new row was inserted.
+     */
+    private boolean upsertChatMessage(Message incoming, boolean scrollIfAtBottom) {
+        if (incoming == null || messageAdapter == null) return false;
+
+        // Level 1: match by server/local id
+        if (incoming.getId() != null && !incoming.getId().isEmpty()) {
+            int existing = indexOfMessageById(incoming.getId());
+            if (existing >= 0) {
+                mergeMessageAt(existing, incoming);
+                removeOrphanedPlaceholdersMatchedBy(incoming);
+                return false;
+            }
+        }
+
+        // Level 2: match by clientNonce on list
+        String nonce = incoming.getClientNonce();
+        if (nonce != null && !nonce.isEmpty()) {
+            for (int i = messages.size() - 1; i >= 0; i--) {
+                Message local = messages.get(i);
+                if (nonce.equals(local.getClientNonce())) {
+                    closeOutboxForPlaceholder(local.getId(), incoming);
+                    mergeMessageAt(i, incoming);
+                    clearOutgoingNonce(nonce);
+                    removeOrphanedPlaceholdersMatchedBy(incoming);
+                    return false;
+                }
+            }
+        }
+
+        // Level 3–5: nonce registry then fuzzy placeholder match
+        int placeholder = resolvePlaceholderIndex(incoming);
+        if (placeholder >= 0) {
+            closeOutboxForPlaceholder(messages.get(placeholder).getId(), incoming);
+            mergeMessageAt(placeholder, incoming);
+            if (nonce != null && !nonce.isEmpty()) {
+                clearOutgoingNonce(nonce);
+            }
+            removeOrphanedPlaceholdersMatchedBy(incoming);
+            return false;
+        }
+
+        messages.add(incoming);
+        int pos = messages.size() - 1;
+        messageAdapter.notifyItemInserted(pos);
+        updateMessagesEmptyState();
+
+        if (scrollIfAtBottom && shouldAutoScroll && !isUserReadingOldMessages && isAtBottom()) {
+            scrollToBottomInstant();
+        }
+        return true;
+    }
+
+    /**
+     * Acknowledge a sent message: replace temp with server copy, or drop temp if real already shown.
+     */
+    private void acknowledgeSentMessage(String tempId, Message serverMessage) {
+        if (serverMessage == null || messageAdapter == null) return;
+
+        if (messageRepository != null) {
+            if (tempId != null && !tempId.isEmpty()) {
+                messageRepository.resolvePendingWithServerMessage(tempId, serverMessage);
+            } else {
+                messageRepository.resolvePendingWithServerMessage(serverMessage);
+            }
+        }
+
+        String clientNonce = serverMessage.getClientNonce();
+        if ((clientNonce == null || clientNonce.isEmpty()) && tempId != null) {
+            for (Map.Entry<String, String> entry : nonceToTempId.entrySet()) {
+                if (tempId.equals(entry.getValue())) {
+                    clientNonce = entry.getKey();
+                    serverMessage.setClientNonce(clientNonce);
+                    break;
+                }
+            }
+        }
+
+        int tempIdx = tempId != null ? indexOfMessageById(tempId) : -1;
+        if (tempIdx < 0 && clientNonce != null && !clientNonce.isEmpty()) {
+            String mappedTempId = nonceToTempId.get(clientNonce);
+            if (mappedTempId != null) {
+                tempIdx = indexOfMessageById(mappedTempId);
+                if (tempIdx >= 0) {
+                    tempId = mappedTempId;
+                }
+            }
+        }
+
+        String realId = serverMessage.getId();
+        int existingRealIdx = (realId != null && !realId.isEmpty()) ? indexOfMessageById(realId) : -1;
+
+        if (tempIdx >= 0) {
+            Message local = messages.get(tempIdx);
+            preserveSenderIfMissing(serverMessage, local);
+            if (serverMessage.getClientNonce() == null || serverMessage.getClientNonce().isEmpty()) {
+                serverMessage.setClientNonce(local.getClientNonce());
+            }
+
+            if (existingRealIdx >= 0 && existingRealIdx != tempIdx) {
+                messages.remove(tempIdx);
+                messageAdapter.notifyItemRemoved(tempIdx);
+                mergeMessageAt(existingRealIdx, serverMessage);
+            } else {
+                mergeMessageAt(tempIdx, serverMessage);
+            }
+        } else if (existingRealIdx >= 0) {
+            mergeMessageAt(existingRealIdx, serverMessage);
+        } else {
+            upsertChatMessage(serverMessage, false);
+        }
+
+        if (clientNonce != null && !clientNonce.isEmpty()) {
+            clearOutgoingNonce(clientNonce);
+        }
+        if (syncManager != null && tempId != null) {
+            syncManager.clearSendTimeoutGrace(tempId);
+        }
+    }
+
+    private void onTempMessageRemovedFromDb(String tempId, String realId) {
+        if (tempId == null || messageAdapter == null) return;
+
+        int tempIdx = indexOfMessageById(tempId);
+        if (tempIdx < 0) {
+            clearNonceForTempId(tempId);
             return;
         }
-        
-        // Add message to list first
-        messages.add(message);
-        int position = messages.size() - 1;
-        
-        // Wait for RecyclerView to be completely idle before notifying
-        waitForRecyclerViewIdle(() -> {
-            if (isUpdatingMessages) return; // Another update started
-            isUpdatingMessages = true;
-            
-            try {
-                if (messageAdapter != null && position < messages.size() && position >= 0) {
-                    messageAdapter.notifyItemInserted(position);
-                    if (shouldScroll && shouldAutoScroll) {
-                        rvMessages.post(() -> scrollToBottomIfAtBottom());
-                    }
+
+        int realIdx = (realId != null && !realId.isEmpty()) ? indexOfMessageById(realId) : -1;
+        messages.remove(tempIdx);
+        messageAdapter.notifyItemRemoved(tempIdx);
+        clearNonceForTempId(tempId);
+        if (syncManager != null) {
+            syncManager.clearSendTimeoutGrace(tempId);
+        }
+
+        if (realIdx < 0) {
+            scheduleAppendNewMessagesFromDb(false);
+        }
+    }
+
+    private void mergeMessageAt(int index, Message incoming) {
+        preserveSenderIfMissing(incoming, messages.get(index));
+        messages.set(index, incoming);
+        messageAdapter.notifyItemChanged(index);
+    }
+
+    /** Scan list for temp rows that already have a synced counterpart in the UI. */
+    private void sweepOrphanPlaceholders() {
+        if (messageAdapter == null || messages == null) return;
+
+        String userId = databaseManager != null ? databaseManager.getUserId() : null;
+        String chatId = currentChat != null ? currentChat.getId() : null;
+        if (userId == null || chatId == null) return;
+
+        for (int i = messages.size() - 1; i >= 0; i--) {
+            Message placeholder = messages.get(i);
+            if (!isPlaceholderId(placeholder.getId())) continue;
+            if (!userId.equals(placeholder.getSenderId())) continue;
+            if (!chatId.equals(placeholder.getChatId())) continue;
+
+            for (int j = 0; j < messages.size(); j++) {
+                if (i == j) continue;
+                Message synced = messages.get(j);
+                if (isPlaceholderId(synced.getId())) continue;
+                if (!userId.equals(synced.getSenderId())) continue;
+                if (!placeholderMatchesSynced(placeholder, synced)) continue;
+
+                String tempId = placeholder.getId();
+                closeOutboxForPlaceholder(tempId, synced);
+                messages.remove(i);
+                messageAdapter.notifyItemRemoved(i);
+                clearNonceForTempId(tempId);
+                if (syncManager != null) {
+                    syncManager.clearSendTimeoutGrace(tempId);
                 }
-            } finally {
-                isUpdatingMessages = false;
+                break;
             }
-        });
+        }
+    }
+
+    private boolean placeholderMatchesSynced(Message placeholder, Message synced) {
+        if (placeholder == null || synced == null) return false;
+
+        String nonce = synced.getClientNonce();
+        if (nonce != null && !nonce.isEmpty() && nonce.equals(placeholder.getClientNonce())) {
+            return true;
+        }
+
+        String syncedType = synced.getType() != null ? synced.getType() : "text";
+        String placeholderType = placeholder.getType() != null ? placeholder.getType() : "text";
+        if (!syncedType.equals(placeholderType)) return false;
+        if (!normalizeMessageContent(synced).equals(normalizeMessageContent(placeholder))) return false;
+        return Math.abs(synced.getTimestamp() - placeholder.getTimestamp()) <= PLACEHOLDER_MATCH_WINDOW_MS;
+    }
+
+    /**
+     * When a synced message is already in the list, drop matching temp rows elsewhere
+     * (e.g. real at end, orphan temp in the middle after timeout).
+     */
+    private void removeOrphanedPlaceholdersMatchedBy(Message incoming) {
+        if (incoming == null || isPlaceholderId(incoming.getId()) || messageAdapter == null) {
+            return;
+        }
+
+        String userId = databaseManager != null ? databaseManager.getUserId() : null;
+        String chatId = currentChat != null ? currentChat.getId() : null;
+        if (userId == null || chatId == null) {
+            return;
+        }
+
+        String incomingId = incoming.getId();
+
+        for (int i = messages.size() - 1; i >= 0; i--) {
+            Message local = messages.get(i);
+            if (!isPlaceholderId(local.getId())) continue;
+            if (incomingId != null && incomingId.equals(local.getId())) continue;
+            if (!userId.equals(local.getSenderId())) continue;
+            if (!chatId.equals(local.getChatId())) continue;
+
+            if (!placeholderMatchesSynced(local, incoming)) continue;
+
+            String tempId = local.getId();
+            closeOutboxForPlaceholder(tempId, incoming);
+            messages.remove(i);
+            messageAdapter.notifyItemRemoved(i);
+            clearNonceForTempId(tempId);
+            if (syncManager != null) {
+                syncManager.clearSendTimeoutGrace(tempId);
+            }
+        }
+    }
+
+    private void closeOutboxForPlaceholder(String tempId, Message serverMessage) {
+        if (messageRepository == null || tempId == null || serverMessage == null) {
+            return;
+        }
+        if (!isPlaceholderId(tempId)) {
+            return;
+        }
+        messageRepository.resolvePendingWithServerMessage(tempId, serverMessage);
+    }
+
+    private void registerOutgoingNonce(String clientNonce, String tempId) {
+        if (clientNonce != null && !clientNonce.isEmpty() && tempId != null && !tempId.isEmpty()) {
+            nonceToTempId.put(clientNonce, tempId);
+        }
+    }
+
+    private void clearOutgoingNonce(String clientNonce) {
+        if (clientNonce != null && !clientNonce.isEmpty()) {
+            nonceToTempId.remove(clientNonce);
+        }
+    }
+
+    private void clearNonceForTempId(String tempId) {
+        if (tempId == null) return;
+        nonceToTempId.entrySet().removeIf(entry -> tempId.equals(entry.getValue()));
+    }
+
+    private static boolean isPlaceholderId(String id) {
+        return id != null && (id.startsWith("temp_") || id.startsWith("local-"));
+    }
+
+    private static String normalizeMessageContent(Message message) {
+        if (message == null) return "";
+        String content = message.getContent();
+        return content != null ? content.trim() : "";
+    }
+
+    /**
+     * Level 3: nonce registry. Level 4–5: fuzzy match with closest timestamp.
+     */
+    private int resolvePlaceholderIndex(Message incoming) {
+        if (incoming == null) return -1;
+
+        String nonce = incoming.getClientNonce();
+        if (nonce != null && !nonce.isEmpty()) {
+            String tempId = nonceToTempId.get(nonce);
+            if (tempId != null) {
+                int idx = indexOfMessageById(tempId);
+                if (idx >= 0) return idx;
+            }
+        }
+
+        String currentUserId = databaseManager != null ? databaseManager.getUserId() : null;
+        String chatId = currentChat != null ? currentChat.getId() : null;
+        if (currentUserId == null || chatId == null) return -1;
+
+        int bestIdx = -1;
+        long bestDelta = Long.MAX_VALUE;
+        long incomingTs = incoming.getTimestamp();
+        String incomingType = incoming.getType() != null ? incoming.getType() : "text";
+        String incomingContent = normalizeMessageContent(incoming);
+
+        for (int i = 0; i < messages.size(); i++) {
+            Message local = messages.get(i);
+            if (!isPlaceholderId(local.getId())) continue;
+            if (!currentUserId.equals(local.getSenderId())) continue;
+            if (!chatId.equals(local.getChatId())) continue;
+
+            String localType = local.getType() != null ? local.getType() : "text";
+            if (!incomingType.equals(localType)) continue;
+            if (!incomingContent.equals(normalizeMessageContent(local))) continue;
+
+            long delta = Math.abs(incomingTs - local.getTimestamp());
+            if (delta > PLACEHOLDER_MATCH_WINDOW_MS) continue;
+
+            if (delta < bestDelta) {
+                bestDelta = delta;
+                bestIdx = i;
+            }
+        }
+        return bestIdx;
     }
     
     /**
@@ -3645,38 +3893,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             com.example.chatappjava.utils.MotionUtils.playAnimation(this, messageView, R.anim.message_highlight);
             new Handler(Looper.getMainLooper()).postDelayed(messageView::clearAnimation, 1000);
         }
-    }
-
-    protected void startPolling() {
-        if (isPolling) return;
-        isPolling = true;
-
-        pollRunnable = new Runnable() {
-            @Override
-            public void run() {
-                // FIX: Always sync messages to DB (polling should always run)
-                // Only block UI reload, not the sync itself
-                // This ensures real-time chat works even when user is reading old messages
-                android.util.Log.d("BaseChatActivity", "Polling: syncing messages (isUserReadingOldMessages=" + isUserReadingOldMessages + ", shouldAutoScroll=" + shouldAutoScroll + ")");
-                
-                // Always trigger sync to get new messages into DB
-                String token = databaseManager.getToken();
-                if (token != null && !token.isEmpty() && backgroundSyncManager != null) {
-                    backgroundSyncManager.syncForeground(token);
-                }
-                
-                refreshMessagesIncremental();
-                
-                pollHandler.postDelayed(this, 3000); // Poll every 3 seconds
-            }
-        };
-        pollHandler.post(pollRunnable);
-    }
-
-    protected void stopPolling() {
-        if (!isPolling) return;
-        isPolling = false;
-        pollHandler.removeCallbacks(pollRunnable);
     }
 
     // ===== Mentions support =====
@@ -3829,14 +4045,23 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         // Stop voice playback
         stopVoicePlayback();
         
+        appendHandler.removeCallbacksAndMessages(null);
+        nonceToTempId.clear();
+        if (messageRepository != null) {
+            messageRepository.setOnTempMessageRemovedListener(null);
+        }
+        if (syncManager != null) {
+            syncManager.setPendingSyncListener(null);
+        }
         super.onDestroy();
-        stopPolling();
-        
-        // SocketManager is managed globally, no cleanup needed here
-        android.util.Log.d("BaseChatActivity", "Activity destroyed - SocketManager remains global");
         clearTypingState();
         if (socketManager != null) {
-            socketManager.removeMessageListener();
+            if (chatMessageListener != null) {
+                socketManager.removeMessageListener(chatMessageListener);
+            }
+            if (realtimeConnectionListener != null) {
+                socketManager.removeConnectionListener(realtimeConnectionListener);
+            }
             socketManager.removeTypingListener();
         }
     }
@@ -4028,63 +4253,64 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         }
     }
 
+    private static String resolveIncomingChatId(org.json.JSONObject messageJson, Message incoming) {
+        if (incoming != null && incoming.getChatId() != null && !incoming.getChatId().isEmpty()) {
+            return incoming.getChatId().trim();
+        }
+        if (messageJson == null) {
+            return "";
+        }
+        String chatId = messageJson.optString("chatId", "").trim();
+        if (!chatId.isEmpty()) {
+            return chatId;
+        }
+        return messageJson.optString("chat", "").trim();
+    }
+
+    private static boolean chatIdsMatch(String incomingChatId, String currentChatId) {
+        if (incomingChatId == null || currentChatId == null) {
+            return false;
+        }
+        return incomingChatId.equals(currentChatId);
+    }
+
     // ===== Realtime message handlers =====
     protected void handleIncomingMessage(org.json.JSONObject messageJson) {
         try {
-            // Filter by current chat
-            String chatId = messageJson.optString("chat");
-            if (currentChat == null || !chatId.equals(currentChat.getId())) return;
-
             Message incoming = Message.fromJson(messageJson);
-            
-            // First check if message already exists by ID (most reliable)
-            int idx = indexOfMessageById(incoming.getId());
-            if (idx >= 0) {
-                // Message already exists, just update it
-                messages.set(idx, incoming);
-                messageAdapter.notifyItemChanged(idx);
-                // Still save to database to ensure sync
-                if (messageRepository != null) {
-                    messageRepository.saveMessage(incoming);
-                }
+            String chatId = resolveIncomingChatId(messageJson, incoming);
+            if (incoming.getChatId() == null || incoming.getChatId().isEmpty()) {
+                incoming.setChatId(chatId);
+            }
+            if (currentChat == null || chatId.isEmpty()) {
                 return;
             }
-            
-            // Check for local placeholder (for offline messages that were just synced)
-            int localIdx = findLocalPlaceholderIndex(incoming);
-            if (localIdx >= 0) {
-                // Replace local placeholder with server message
-                messages.set(localIdx, incoming);
-                messageAdapter.notifyItemChanged(localIdx);
-                // Save to database
-                if (messageRepository != null) {
-                    messageRepository.saveMessage(incoming);
-                }
-                // Update summarize indicator when new message arrives
-                updateSummarizeIndicator();
-                // Only scroll to bottom if user is already at the bottom AND not reading old messages
-                if (!isUserReadingOldMessages && shouldAutoScroll) {
-                    scrollToBottomIfAtBottom();
-                } else {
-                    android.util.Log.d("BaseChatActivity", "BLOCKED scroll from handleIncomingMessage (placeholder) - isUserReadingOldMessages=" + isUserReadingOldMessages + ", shouldAutoScroll=" + shouldAutoScroll);
-                }
+            if (!chatIdsMatch(chatId, currentChat.getId())) {
+                android.util.Log.d("BaseChatActivity",
+                        "handleIncomingMessage dropped: chatId=" + chatId
+                                + " current=" + currentChat.getId());
                 return;
             }
-            
-            // New message - add to list and save to database
-            // Save to database first
+            android.util.Log.d("BaseChatActivity",
+                    "handleIncomingMessage chatId=" + chatId + " msgId=" + incoming.getId());
+
+            boolean wasAtBottom = isAtBottom();
+            boolean inserted = upsertChatMessage(incoming, false);
             if (messageRepository != null) {
-                messageRepository.saveMessage(incoming);
+                final Message toSave = incoming;
+                new Thread(() -> messageRepository.saveMessage(toSave)).start();
             }
-            // Safely add message to UI list (prevents IndexOutOfBoundsException during scroll)
-            // Only scroll if user is NOT reading old messages
-            boolean shouldScrollForNewMessage = !isUserReadingOldMessages && shouldAutoScroll;
-            safeAddMessage(incoming, shouldScrollForNewMessage);
-            if (!shouldScrollForNewMessage) {
-                android.util.Log.d("BaseChatActivity", "BLOCKED scroll from handleIncomingMessage (new message) - isUserReadingOldMessages=" + isUserReadingOldMessages + ", shouldAutoScroll=" + shouldAutoScroll);
-            }
-            // Update summarize indicator when new message arrives
             updateSummarizeIndicator();
+
+            if (inserted) {
+                if (wasAtBottom && shouldAutoScroll && !isUserReadingOldMessages) {
+                    scrollToBottomInstant();
+                } else if (!wasAtBottom || isUserReadingOldMessages) {
+                    newMessagesCount++;
+                    hasNewMessages = true;
+                    updateScrollToBottomButton();
+                }
+            }
         } catch (Exception e) {
             android.util.Log.e("BaseChatActivity", "Failed to handle incoming message: " + e.getMessage());
         }
@@ -4146,31 +4372,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 messageAdapter.notifyItemRemoved(idx);
             }
         }
-    }
-
-    private int findLocalPlaceholderIndex(Message incoming) {
-        if (incoming == null) return -1;
-        String currentUserId = databaseManager != null ? databaseManager.getUserId() : null;
-        if (currentUserId == null) return -1;
-        // If server includes clientNonce, prefer matching by nonce
-        String incomingNonce = null;
-        try { incomingNonce = (String) Message.class.getMethod("getClientNonce").invoke(incoming); } catch (Exception ignored) {}
-        String expectedSig = buildLocalSignature(incoming);
-        for (int i = messages.size() - 1; i >= 0; i--) {
-            Message m = messages.get(i);
-            if (m.getId() != null && m.getId().startsWith("local-") && currentUserId.equals(m.getSenderId())) {
-                String sig = m.getLocalSignature();
-                boolean nonceMatch = false;
-                if (incomingNonce != null) {
-                    try {
-                        String localNonce = (String) Message.class.getMethod("getClientNonce").invoke(m);
-                        nonceMatch = incomingNonce.equals(localNonce);
-                    } catch (Exception ignored) {}
-                }
-                if (nonceMatch || (sig != null && sig.equals(expectedSig))) return i;
-            }
-        }
-        return -1;
     }
 
     private String buildLocalSignature(Message m) {

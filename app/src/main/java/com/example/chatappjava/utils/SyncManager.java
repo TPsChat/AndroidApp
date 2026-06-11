@@ -23,7 +23,9 @@ public class SyncManager {
     private static final String TAG = "SyncManager";
     private static final String PREFS_NAME = "sync_prefs";
     private static final String KEY_LAST_FOREGROUND_SYNC = "last_foreground_sync";
+    private static final String KEY_LAST_CHAT_MSG_SYNC = "last_chat_msg_sync";
     private static final long FOREGROUND_SYNC_INTERVAL_MS = 2 * 1000; // 2 seconds
+    private static final long CHAT_MSG_SYNC_INTERVAL_MS = 2 * 1000; // messages-only, while chat open
     private static final long BACKGROUND_SYNC_INTERVAL_MS = 15 * 60 * 1000; // 15 minutes
     
     private static SyncManager instance;
@@ -108,6 +110,32 @@ public class SyncManager {
         syncAll(token, false);
         
         prefs.edit().putLong(KEY_LAST_FOREGROUND_SYNC, now).apply();
+    }
+
+    /**
+     * Delta-sync messages only (lightweight backup while a chat screen is open).
+     * Uses a separate debounce from {@link #syncForeground} so chat polling is not blocked.
+     */
+    public void syncChatMessages(String token) {
+        if (token == null || token.isEmpty()) {
+            return;
+        }
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        long lastSync = prefs.getLong(KEY_LAST_CHAT_MSG_SYNC, 0);
+        long now = System.currentTimeMillis();
+        if ((now - lastSync) < CHAT_MSG_SYNC_INTERVAL_MS) {
+            return;
+        }
+        prefs.edit().putLong(KEY_LAST_CHAT_MSG_SYNC, now).apply();
+        syncMessages(token, false);
+    }
+
+    /** Immediate delta-sync (no debounce) — only after socket disconnect / send timeout. */
+    public void syncMessagesNow(String token) {
+        if (token == null || token.isEmpty()) {
+            return;
+        }
+        syncMessages(token, false);
     }
     
     /**
