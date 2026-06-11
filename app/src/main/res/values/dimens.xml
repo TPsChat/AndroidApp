@@ -26,6 +26,9 @@
     <dimen name="avatar_md">56dp</dimen>
     <dimen name="avatar_lg">72dp</dimen>
     <dimen name="nav_bar_height">56dp</dimen>
+    <dimen name="call_controls_dock_height">96dp</dimen>
+    <dimen name="call_control_button_size">52dp</dimen>
+    <dimen name="call_end_button_size">56dp</dimen>
     <dimen name="search_bar_height">48dp</dimen>
     <dimen name="header_height">56dp</dimen>
     <dimen name="touch_target_min">48dp</dimen>

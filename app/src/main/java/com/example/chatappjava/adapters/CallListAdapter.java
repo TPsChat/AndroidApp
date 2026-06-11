@@ -80,7 +80,6 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
     class CallViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView ivCallAvatar;
         private final TextView tvCallName;
-        private final TextView tvCallTypeIcon;
         private final TextView tvCallStatus;
         private final TextView tvCallDuration;
         private final TextView tvCallTime;
@@ -91,7 +90,6 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
             
             ivCallAvatar = itemView.findViewById(R.id.iv_call_avatar);
             tvCallName = itemView.findViewById(R.id.tv_call_name);
-            tvCallTypeIcon = itemView.findViewById(R.id.tv_call_type_icon);
             tvCallStatus = itemView.findViewById(R.id.tv_call_status);
             tvCallDuration = itemView.findViewById(R.id.tv_call_duration);
             tvCallTime = itemView.findViewById(R.id.tv_call_time);
@@ -130,7 +128,6 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
             String displayName = call.getDisplayName(currentUserId);
             tvCallName.setText(displayName);
             itemView.setContentDescription(context.getString(R.string.call_row_cd, displayName));
-            tvCallTypeIcon.setText(call.getCallTypeIcon());
             tvCallStatus.setText(call.getStatusText());
 
             if (call.isEnded() && call.getDuration() > 0) {

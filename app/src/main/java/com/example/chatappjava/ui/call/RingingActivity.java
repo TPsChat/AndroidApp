@@ -17,7 +17,6 @@ import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,15 +47,11 @@ public class RingingActivity extends AppCompatActivity {
     private TextView tvCallerStatus;
     private TextView tvRingingStatus;
     private CircleImageView ivCallerAvatar;
-    // Swipe UI components
     private FrameLayout swipeThumb;
     private View acceptZone;
     private View declineZone;
     private FrameLayout swipeTrack;
     private LinearLayout swipeActionCard;
-    private LinearLayout callActionButtons;
-    private ImageButton btnAcceptCall;
-    private ImageButton btnDeclineCall;
     private LinearLayout outgoingCallInfo;
     private View ripple1;
     private View ripple2;
@@ -78,8 +73,8 @@ public class RingingActivity extends AppCompatActivity {
     // Animation
     private AnimatorSet rippleAnimatorSet;
     private Animation avatarPulseAnimation;
-    
-    // Swipe gesture variables
+
+    // Swipe gesture
     private float initialX;
     private float initialThumbX;
     private boolean isDragging = false;
@@ -229,7 +224,7 @@ public class RingingActivity extends AppCompatActivity {
         // Initialize UI
         initializeViews();
         setupSwipeGesture();
-        
+
         // Setup call based on type
         if (isIncomingCall) {
             setupIncomingCall();
@@ -271,15 +266,11 @@ public class RingingActivity extends AppCompatActivity {
         tvCallerStatus = findViewById(R.id.tv_caller_status);
         tvRingingStatus = findViewById(R.id.tv_ringing_status);
         ivCallerAvatar = findViewById(R.id.iv_caller_avatar);
-        // Swipe components
         swipeThumb = findViewById(R.id.swipe_thumb);
         acceptZone = findViewById(R.id.accept_zone);
         declineZone = findViewById(R.id.decline_zone);
         swipeTrack = findViewById(R.id.swipe_track);
         swipeActionCard = findViewById(R.id.swipe_action_card);
-        callActionButtons = findViewById(R.id.call_action_buttons);
-        btnAcceptCall = findViewById(R.id.btn_accept_call);
-        btnDeclineCall = findViewById(R.id.btn_decline_call);
         outgoingCallInfo = findViewById(R.id.outgoing_call_info);
         ripple1 = findViewById(R.id.ripple_1);
         ripple2 = findViewById(R.id.ripple_2);
@@ -307,120 +298,104 @@ public class RingingActivity extends AppCompatActivity {
             tvCallType.setText(getString(R.string.call_incoming_video));
         }
 
-        if (btnAcceptCall != null) {
-            btnAcceptCall.setOnClickListener(v -> acceptCall());
-            com.example.chatappjava.utils.MotionUtils.attachPressFeedback(this, btnAcceptCall);
-        }
-        if (btnDeclineCall != null) {
-            btnDeclineCall.setOnClickListener(v -> declineCall());
-            com.example.chatappjava.utils.MotionUtils.attachPressFeedback(this, btnDeclineCall);
-        }
     }
-    
+
     @SuppressLint("ClickableViewAccessibility")
     private void setupSwipeGesture() {
-        if (swipeThumb == null || swipeTrack == null) return;
-        
-        // Get dimensions
+        if (swipeThumb == null || swipeTrack == null) {
+            return;
+        }
+
         swipeTrack.post(() -> {
             trackWidth = swipeTrack.getWidth();
             thumbWidth = swipeThumb.getWidth();
         });
-        
-        // Set up touch listener for swipe gesture
-        swipeThumb.setOnTouchListener(new View.OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        initialX = event.getRawX();
-                        initialThumbX = swipeThumb.getX();
-                        isDragging = true;
-                        return true;
-                        
-                    case MotionEvent.ACTION_MOVE:
-                        if (isDragging) {
-                            float deltaX = event.getRawX() - initialX;
-                            float newX = initialThumbX + deltaX;
-                            
-                            // Constrain movement within track bounds
-                            float minX = 0;
-                            float maxX = trackWidth - thumbWidth;
-                            newX = Math.max(minX, Math.min(maxX, newX));
-                            
-                            swipeThumb.setX(newX);
-                            
-                            // Update zone visibility based on position
-                            updateZoneVisibility(newX);
-                        }
-                        return true;
-                        
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        if (isDragging) {
-                            handleSwipeRelease();
-                            isDragging = false;
-                        }
-                        return true;
-                }
-                return false;
+
+        swipeThumb.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    initialX = event.getRawX();
+                    initialThumbX = swipeThumb.getX();
+                    isDragging = true;
+                    return true;
+
+                case MotionEvent.ACTION_MOVE:
+                    if (isDragging) {
+                        float deltaX = event.getRawX() - initialX;
+                        float newX = initialThumbX + deltaX;
+                        float minX = 0;
+                        float maxX = trackWidth - thumbWidth;
+                        newX = Math.max(minX, Math.min(maxX, newX));
+                        swipeThumb.setX(newX);
+                        updateZoneVisibility(newX);
+                    }
+                    return true;
+
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    if (isDragging) {
+                        handleSwipeRelease();
+                        isDragging = false;
+                    }
+                    return true;
+
+                default:
+                    return false;
             }
         });
     }
-    
+
     private void updateZoneVisibility(float thumbX) {
+        if (acceptZone == null || declineZone == null || trackWidth == 0) {
+            return;
+        }
         float centerX = trackWidth / 2f;
         float thumbCenterX = thumbX + thumbWidth / 2f;
-        
         if (thumbCenterX < centerX) {
-            // In decline zone
             declineZone.setAlpha(0.6f);
             acceptZone.setAlpha(0.1f);
         } else {
-            // In accept zone
             acceptZone.setAlpha(0.6f);
             declineZone.setAlpha(0.1f);
         }
     }
-    
+
     private void handleSwipeRelease() {
+        if (trackWidth == 0 || thumbWidth == 0) {
+            return;
+        }
         float thumbCenterX = swipeThumb.getX() + thumbWidth / 2f;
         float centerX = trackWidth / 2f;
-        
         if (thumbCenterX < centerX) {
-            // Swiped to decline
             declineCall();
         } else {
-            // Swiped to accept
             acceptCall();
         }
-        
-        // Reset thumb position
         resetThumbPosition();
     }
-    
+
     private void resetThumbPosition() {
+        if (swipeThumb == null || trackWidth == 0 || thumbWidth == 0) {
+            return;
+        }
         swipeThumb.animate()
-            .x(trackWidth / 2f - thumbWidth / 2f)
-            .setDuration(200)
-            .start();
-        
-        // Reset zone visibility
-        acceptZone.setAlpha(0.3f);
-        declineZone.setAlpha(0.3f);
+                .x(trackWidth / 2f - thumbWidth / 2f)
+                .setDuration(200)
+                .start();
+        if (acceptZone != null) {
+            acceptZone.setAlpha(0.25f);
+        }
+        if (declineZone != null) {
+            declineZone.setAlpha(0.25f);
+        }
     }
     
     @SuppressLint("SetTextI18n")
     private void setupIncomingCall() {
         tvCallerStatus.setText(getString(R.string.call_is_calling_you));
-        // Swipe gesture is always visible for incoming calls
         outgoingCallInfo.setVisibility(View.GONE);
         if (swipeActionCard != null) {
             swipeActionCard.setVisibility(View.VISIBLE);
-        }
-        if (callActionButtons != null) {
-            callActionButtons.setVisibility(View.VISIBLE);
         }
         
         // Mark active call to avoid duplicate handling in other screens

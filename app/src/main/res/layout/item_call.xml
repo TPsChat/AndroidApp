@@ -59,18 +59,6 @@
                 android:textSize="@dimen/text_body_large"
                 android:textStyle="bold"
                 tools:text="Mateo Castillo" />
-
-            <TextView
-                android:id="@+id/tv_call_type_icon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="@dimen/spacing_xs"
-                android:background="@drawable/bg_neu_copper_sunken_circle"
-                android:gravity="center"
-                android:importantForAccessibility="no"
-                android:textSize="@dimen/text_auth_subtitle"
-                tools:text="VID" />
-
         </LinearLayout>
 
         <LinearLayout

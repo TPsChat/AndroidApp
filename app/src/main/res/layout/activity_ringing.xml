@@ -174,7 +174,7 @@
 
     </LinearLayout>
 
-    <!-- Swipe Action Card -->
+    <!-- Incoming call: swipe to accept / decline -->
     <LinearLayout
         android:id="@+id/swipe_action_card"
         android:layout_width="0dp"
@@ -184,7 +184,6 @@
         android:layout_marginBottom="@dimen/spacing_xl"
         android:orientation="vertical"
         android:gravity="center"
-        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -192,13 +191,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/call_swipe_hint"
-            android:textSize="15sp"
-            android:textColor="@color/neu_copper_ink"
             android:layout_marginBottom="@dimen/spacing_md"
-            android:gravity="center" />
+            android:gravity="center"
+            android:text="@string/call_swipe_hint"
+            android:textColor="@color/neu_copper_ink"
+            android:textSize="15sp" />
 
-        <!-- Swipe Track Container -->
         <FrameLayout
             android:id="@+id/swipe_track"
             android:layout_width="match_parent"
@@ -231,7 +229,6 @@
 
             </LinearLayout>
 
-            <!-- Decline Label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -242,7 +239,6 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <!-- Accept Label -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -253,7 +249,6 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <!-- Swipe Thumb -->
             <FrameLayout
                 android:id="@+id/swipe_thumb"
                 android:layout_width="64dp"
@@ -273,48 +268,6 @@
             </FrameLayout>
 
         </FrameLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_md"
-            android:gravity="center"
-            android:text="@string/call_button_hint"
-            android:textColor="@color/neu_copper_ink_muted"
-            android:textSize="@dimen/text_body_small" />
-
-        <LinearLayout
-            android:id="@+id/call_action_buttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_sm"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/btn_decline_call"
-                android:layout_width="@dimen/touch_target_min"
-                android:layout_height="@dimen/touch_target_min"
-                android:layout_marginEnd="@dimen/spacing_xl"
-                android:background="@drawable/bg_call_decline_circle"
-                android:contentDescription="@string/call_decline_cd"
-                android:padding="12dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_end_call"
-                app:tint="@color/text_white" />
-
-            <ImageButton
-                android:id="@+id/btn_accept_call"
-                android:layout_width="@dimen/touch_target_min"
-                android:layout_height="@dimen/touch_target_min"
-                android:background="@drawable/bg_call_accept_circle"
-                android:contentDescription="@string/call_accept_cd"
-                android:padding="12dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_call"
-                app:tint="@color/text_white" />
-
-        </LinearLayout>
 
     </LinearLayout>
 
