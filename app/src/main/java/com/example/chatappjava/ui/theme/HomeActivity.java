@@ -37,6 +37,7 @@ import com.example.chatappjava.utils.AvatarManager;
 import com.example.chatappjava.utils.DatabaseManager;
 import com.example.chatappjava.utils.ConversationPreviewHelper;
 import com.example.chatappjava.utils.ConversationRepository;
+import com.example.chatappjava.utils.MessageRepository;
 import com.example.chatappjava.utils.EmptyStateHelper;
 import com.example.chatappjava.utils.MotionUtils;
 import android.net.ConnectivityManager;
@@ -87,6 +88,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     // Data and Services
     private DatabaseManager databaseManager;
     private ConversationRepository conversationRepository;
+    private MessageRepository messageRepository;
     private com.example.chatappjava.utils.CallRepository callRepository;
     private com.example.chatappjava.utils.PostRepository postRepository;
     private com.example.chatappjava.utils.SyncManager syncManager;
@@ -301,6 +303,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     private void initializeServices() {
         databaseManager = new DatabaseManager(this);
         conversationRepository = new ConversationRepository(this);
+        messageRepository = new MessageRepository(this);
         callRepository = new com.example.chatappjava.utils.CallRepository(this);
         postRepository = new com.example.chatappjava.utils.PostRepository(this);
         syncManager = com.example.chatappjava.utils.SyncManager.getInstance(this);
@@ -2640,6 +2643,13 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             String userId = databaseManager != null ? databaseManager.getUserId() : null;
             ConversationPreviewHelper.applyMessagePreview(
                     this, conversationRepository, message, userId, incrementUnread);
+
+            final Message toCache = message;
+            new Thread(() -> {
+                if (messageRepository != null) {
+                    messageRepository.saveMessage(toCache);
+                }
+            }).start();
 
             // Reload fresh Chat instances from DB so DiffUtil detects preview changes
             // (in-place mutation shares refs with the adapter and skips UI updates).

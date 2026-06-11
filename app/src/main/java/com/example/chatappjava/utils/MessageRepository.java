@@ -65,6 +65,8 @@ public class MessageRepository {
                     message.setClientNonce(messageId);
                 }
                 Log.d(TAG, "Saving new offline message with temp ID: " + messageId);
+            } else if (messageId.startsWith("temp_") || messageId.startsWith("local-")) {
+                syncStatus = SYNC_STATUS_PENDING;
             }
             
             ContentValues values = new ContentValues();

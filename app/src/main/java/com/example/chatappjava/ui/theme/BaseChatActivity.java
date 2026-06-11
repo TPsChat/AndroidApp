@@ -337,6 +337,20 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             ConversationPreviewHelper.clearUnread(conversationRepository, currentChat.getId());
         }
     }
+
+    protected void updateConversationPreviewAsync(Message message, boolean incrementUnreadWhenIncoming) {
+        if (message == null) {
+            return;
+        }
+        new Thread(() -> updateConversationPreview(message, incrementUnreadWhenIncoming)).start();
+    }
+
+    protected void persistMessageAsync(Message message) {
+        if (message == null || messageRepository == null) {
+            return;
+        }
+        new Thread(() -> messageRepository.saveMessage(message)).start();
+    }
     
     // Video call handling - can be overridden by subclasses
     protected void handleVideoCall() {
@@ -2706,27 +2720,13 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         int skippedByTimestamp = 0;
         int skippedByReadStatus = 0;
         
-        // Get unread message IDs from local database (before server marks them as read)
-        java.util.Set<String> unreadMessageIds = new java.util.HashSet<>();
-        if (messageRepository != null && currentChat != null) {
-            List<Message> dbMessages = messageRepository.getMessagesForChat(currentChat.getId(), 0);
-            for (Message dbMsg : dbMessages) {
-                if (!dbMsg.isRead() && dbMsg.getSenderId() != null && 
-                    !dbMsg.getSenderId().equals(currentUserId)) {
-                    unreadMessageIds.add(dbMsg.getId());
-                }
-            }
-        }
-        
         for (Message message : messages) {
             // Count messages that are not from current user
             if (message.getSenderId() != null && 
                 !message.getSenderId().equals(currentUserId) && 
                 !message.isDeleted()) {
                 
-                // Check if message is unread (either from message.isRead() or from local database)
-                boolean isUnread = !message.isRead() || 
-                    (message.getId() != null && unreadMessageIds.contains(message.getId()));
+                boolean isUnread = !message.isRead();
                 
                 if (!isUnread) {
                     skippedByReadStatus++;
@@ -3134,22 +3134,18 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             }
         }
 
-        // Save message to database first (with pending status if offline)
-        // Don't set ID - MessageRepository will generate temp ID for offline messages
-        message.setId(null);
-        Message savedMessage = messageRepository.saveMessage(message);
-        if (savedMessage != null) {
-            message = savedMessage; // Use saved message with temp ID
-        }
-        
-        // Create final reference for use in lambda
+        // Optimistic UI first — persist to SQLite on a worker thread
+        String tempId = "temp_" + java.util.UUID.randomUUID().toString();
+        message.setId(tempId);
+
         final Message finalMessage = message;
-        final String finalMessageId = message.getId();
+        final String finalMessageId = tempId;
         final int messagePosition = messages.size();
-        
+
         registerOutgoingNonce(clientNonce, finalMessageId);
         upsertChatMessage(message, false);
-        updateConversationPreview(message, false);
+        updateConversationPreviewAsync(message, false);
+        persistMessageAsync(message);
         forceScrollToBottom();
 
         // Clear input
@@ -3676,7 +3672,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (syncManager != null && tempId != null) {
             syncManager.clearSendTimeoutGrace(tempId);
         }
-        updateConversationPreview(serverMessage, false);
+        updateConversationPreviewAsync(serverMessage, false);
     }
 
     private void onTempMessageRemovedFromDb(String tempId, String realId) {
@@ -4337,23 +4333,23 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                     "handleIncomingMessage chatId=" + chatId + " msgId=" + incoming.getId());
 
             boolean wasAtBottom = isAtBottom();
-            boolean inserted = upsertChatMessage(incoming, false);
-            if (messageRepository != null) {
-                final Message toSave = incoming;
-                new Thread(() -> messageRepository.saveMessage(toSave)).start();
-            }
-            updateConversationPreview(incoming, false);
-            updateSummarizeIndicator();
+            boolean shouldScroll = wasAtBottom && shouldAutoScroll && !isUserReadingOldMessages;
+            boolean inserted = upsertChatMessage(incoming, shouldScroll);
 
             if (inserted) {
-                if (wasAtBottom && shouldAutoScroll && !isUserReadingOldMessages) {
+                if (shouldScroll) {
                     scrollToBottomInstant();
-                } else if (!wasAtBottom || isUserReadingOldMessages) {
+                } else {
                     newMessagesCount++;
                     hasNewMessages = true;
                     updateScrollToBottomButton();
                 }
             }
+
+            final Message toPersist = incoming;
+            persistMessageAsync(toPersist);
+            updateConversationPreviewAsync(toPersist, false);
+            appendHandler.post(this::updateSummarizeIndicator);
         } catch (Exception e) {
             android.util.Log.e("BaseChatActivity", "Failed to handle incoming message: " + e.getMessage());
         }
