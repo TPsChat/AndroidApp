@@ -57,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView tvChangeAvatar;
     private EditText etUsername, etFirstName, etLastName, etPhoneNumber, etBio;
     private TextView tvSave;
-    private View profileLoadingSkeleton;
+    private View profileCard;
     private View ivBack;
     
     // Friends and Posts
@@ -74,6 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
     private DatabaseManager databaseManager;
     private User currentUser;
     private boolean hasChanges = false;
+    private boolean suppressChangeDetection = false;
     private Uri selectedImageUri;
     
     // Image picker launcher
@@ -104,7 +105,10 @@ public class ProfileActivity extends AppCompatActivity {
         etPhoneNumber = findViewById(R.id.et_phone_number);
         etBio = findViewById(R.id.et_bio);
         tvSave = findViewById(R.id.tv_save);
-        profileLoadingSkeleton = findViewById(R.id.profile_loading_skeleton);
+        if (tvSave != null) {
+            tvSave.setVisibility(View.GONE);
+        }
+        profileCard = findViewById(R.id.profile_card);
         wireNeuToolbar();
         
         // Friends and Posts
@@ -482,7 +486,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void checkForChanges() {
-        if (currentUser == null) return;
+        if (suppressChangeDetection || currentUser == null) return;
 
         boolean changed = false;
 
@@ -538,11 +542,11 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void loadUserProfile() {
-        showLoading(true);
+        showProfileContent(false);
 
         String token = databaseManager.getToken();
         if (token == null || token.isEmpty()) {
-            showLoading(false);
+            showProfileContent(true);
             Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -552,7 +556,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    showLoading(false);
+                    showProfileContent(true);
                     Toast.makeText(ProfileActivity.this, getString(R.string.error_load_profile, e.getMessage()), Toast.LENGTH_SHORT).show();
                 });
             }
@@ -561,7 +565,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 String responseBody = response.body().string();
                 runOnUiThread(() -> {
-                    showLoading(false);
+                    showProfileContent(true);
                     handleLoadProfileResponse(response.code(), responseBody);
                 });
             }
@@ -589,11 +593,13 @@ public class ProfileActivity extends AppCompatActivity {
     private void populateFields() {
         if (currentUser == null) return;
 
+        suppressChangeDetection = true;
         etUsername.setText(currentUser.getUsername());
         etFirstName.setText(currentUser.getFirstName() != null ? currentUser.getFirstName() : "");
         etLastName.setText(currentUser.getLastName() != null ? currentUser.getLastName() : "");
         etPhoneNumber.setText(currentUser.getPhoneNumber() != null ? currentUser.getPhoneNumber() : "");
         etBio.setText(currentUser.getBio() != null ? currentUser.getBio() : "");
+        suppressChangeDetection = false;
 
         // Load avatar
         if (currentUser.getAvatar() != null && !currentUser.getAvatar().isEmpty()) {
@@ -1003,9 +1009,16 @@ public class ProfileActivity extends AppCompatActivity {
                 .show();
     }
 
+    private void showProfileContent(boolean show) {
+        if (profileCard != null) {
+            profileCard.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+    }
+
     private void showLoading(boolean show) {
-        if (profileLoadingSkeleton != null) {
-            profileLoadingSkeleton.setVisibility(show ? View.VISIBLE : View.GONE);
+        if (tvSave != null) {
+            tvSave.setEnabled(!show);
+            tvSave.setAlpha(show ? 0.5f : 1f);
         }
     }
 
