@@ -2156,6 +2156,8 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                         public void onResponse(okhttp3.Call call, okhttp3.Response response) throws java.io.IOException {
                             runOnUiThread(() -> {
                                 if (response.code() == 200) {
+                                    com.example.chatappjava.utils.ChatLocalStore.clearChatLocally(
+                                            HomeActivity.this, chat.getId());
                                     Toast.makeText(HomeActivity.this, getString(R.string.msg_chat_deleted), Toast.LENGTH_SHORT).show();
                                     reloadHome();
                                 } else {

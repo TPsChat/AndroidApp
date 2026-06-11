@@ -553,6 +553,8 @@ public class PrivateChatActivity extends BaseChatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 runOnUiThread(() -> {
                     if (response.isSuccessful()) {
+                        com.example.chatappjava.utils.ChatLocalStore.clearChatLocally(
+                                PrivateChatActivity.this, currentChat.getId());
                         Toast.makeText(PrivateChatActivity.this, getString(R.string.success_chat_deleted_successfully), Toast.LENGTH_SHORT).show();
                         finish();
                     } else {

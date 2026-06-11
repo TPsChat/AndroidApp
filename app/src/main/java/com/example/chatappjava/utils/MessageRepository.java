@@ -912,6 +912,16 @@ public class MessageRepository {
     }
     
     /**
+     * Replace all cached messages for a chat with the server's current page (e.g. after leftAt filter).
+     */
+    public void replaceMessagesForChat(String chatId, List<Message> messages) {
+        deleteAllMessagesForChat(chatId);
+        if (messages != null && !messages.isEmpty()) {
+            saveMessagesBatch(messages);
+        }
+    }
+
+    /**
      * Delete all messages for a chat (hard delete - removes from database)
      * Used when a chat/group is deleted
      */

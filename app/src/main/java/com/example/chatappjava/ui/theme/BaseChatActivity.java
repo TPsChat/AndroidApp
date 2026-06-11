@@ -2203,12 +2203,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             return;
         }
 
-        // Initial load only — replace list once from cache, then fetch from server
+        // Initial load only — offline: show cache; online: wait for server to avoid stale leftAt messages
         messages.clear();
-        loadMessagesFromDatabase();
-        
-        // Then sync deltas from server if network is available
-        if (isNetworkAvailable()) {
+        boolean networkAvailable = isNetworkAvailable();
+        if (!networkAvailable) {
+            loadMessagesFromDatabase();
+        }
+
+        if (networkAvailable) {
             String token = databaseManager.getToken();
             if (token == null || token.isEmpty()) {
                 return;
@@ -2244,11 +2246,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                                         pageOne.add(message);
                                     }
                                     hasMore = messagesArray.length() >= pageSize;
-                                    
-                                    // Batch save messages for better performance
-                                    if (!pageOne.isEmpty() && messageRepository != null) {
-                                        messageRepository.saveMessagesBatch(pageOne);
-                                    }
+                                }
+                                // Sync SQLite with server truth (drops messages before leftAt)
+                                if (messageRepository != null) {
+                                    messageRepository.replaceMessagesForChat(currentChat.getId(), pageOne);
                                 }
                                 // Initial load — replace list from server page
                                 List<Message> previousMessages = new ArrayList<>(messages);
