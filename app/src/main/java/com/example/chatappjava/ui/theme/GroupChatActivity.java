@@ -387,20 +387,15 @@ public class GroupChatActivity extends BaseChatActivity {
             fetchActualMemberCount();
             
             // Load group avatar
-            String avatarUrl = currentChat.getFullAvatarUrl();
-            android.util.Log.d("GroupAvatar", "Group avatar URL: " + avatarUrl);
-            android.util.Log.d("GroupAvatar", "Current chat avatar field: " + currentChat.getAvatar());
-            
-            if (avatarUrl != null && !avatarUrl.isEmpty()) {
-                android.util.Log.d("GroupAvatar", "Loading group avatar: " + avatarUrl);
-                if (avatarManager != null) {
-                    avatarManager.loadAvatar(avatarUrl, ivProfile, R.drawable.ic_group_avatar);
-                } else {
-                    android.util.Log.e("GroupAvatar", "AvatarManager is null!");
-                    ivProfile.setImageResource(R.drawable.ic_group_avatar);
-                }
-            } else {
-                android.util.Log.d("GroupAvatar", "No group avatar, using placeholder");
+            if (ivProfile != null) {
+                com.squareup.picasso.Picasso.get().cancelRequest(ivProfile);
+                ivProfile.setTag(null);
+            }
+
+            String avatarUrl = currentChat.getListAvatarUrl();
+            if (avatarUrl != null && !avatarUrl.isEmpty() && avatarManager != null) {
+                avatarManager.loadAvatar(avatarUrl, ivProfile, R.drawable.ic_group_avatar);
+            } else if (ivProfile != null) {
                 ivProfile.setImageResource(R.drawable.ic_group_avatar);
             }
             

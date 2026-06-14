@@ -361,10 +361,23 @@ public class Chat {
     public void setJoinRequestStatus(String status) { this.joinRequestStatus = status; }
     
     public String getFullAvatarUrl() {
-        android.util.Log.d("ChatModel", "getFullAvatarUrl() called with avatar: " + avatar);
-        String fullUrl = com.example.chatappjava.utils.UrlUtils.getFullAvatarUrl(avatar);
-        android.util.Log.d("ChatModel", "getFullAvatarUrl() returning: " + fullUrl + " (from input: " + avatar + ")");
-        return fullUrl;
+        return com.example.chatappjava.utils.UrlUtils.getFullAvatarUrl(avatar);
+    }
+
+    /**
+     * Avatar shown in chat lists: peer avatar for private chats, group avatar otherwise.
+     */
+    public String getListAvatarUrl() {
+        if (isGroupChat()) {
+            return getFullAvatarUrl();
+        }
+        if (otherParticipant != null) {
+            String peerAvatar = otherParticipant.getFullAvatarUrl();
+            if (peerAvatar != null && !peerAvatar.isEmpty()) {
+                return peerAvatar;
+            }
+        }
+        return getFullAvatarUrl();
     }
     
     // Helper methods

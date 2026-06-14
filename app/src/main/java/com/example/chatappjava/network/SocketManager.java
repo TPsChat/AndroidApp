@@ -586,13 +586,39 @@ public class SocketManager {
                     String userId = data.getString("userId");
                     String newAvatarUrl = data.getString("avatar");
                     Log.d(TAG, "Received avatar_changed event for user: " + userId);
-                    
+
+                    if (appContext != null) {
+                        com.example.chatappjava.utils.AvatarSyncCoordinator
+                                .getInstance(appContext)
+                                .handleUserAvatarChanged(userId, newAvatarUrl);
+                    }
+
                     // Notify listener to update UI
                     if (realtimeSyncListener != null) {
                         realtimeSyncListener.onAvatarChanged(userId, newAvatarUrl);
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "Error handling avatar_changed event", e);
+                }
+            }
+        });
+
+        socket.on("group_avatar_changed", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                try {
+                    org.json.JSONObject data = (org.json.JSONObject) args[0];
+                    String chatId = data.getString("chatId");
+                    String avatar = data.optString("avatar", "");
+                    Log.d(TAG, "Received group_avatar_changed for chat: " + chatId);
+
+                    if (appContext != null) {
+                        com.example.chatappjava.utils.AvatarSyncCoordinator
+                                .getInstance(appContext)
+                                .handleGroupAvatarChanged(chatId, avatar);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Error handling group_avatar_changed event", e);
                 }
             }
         });

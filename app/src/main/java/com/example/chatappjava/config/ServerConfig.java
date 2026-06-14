@@ -1,5 +1,7 @@
 package com.example.chatappjava.config;
 
+import com.example.chatappjava.utils.DeviceUtils;
+
 /**
  * Server configuration class for managing server URLs and endpoints
  * Simple configuration that only supports specific IP addresses
@@ -56,6 +58,13 @@ public class ServerConfig {
         } catch (Exception e) {
             // If database access fails, return default IP
             android.util.Log.w("ServerConfig", "Failed to get server IP override, using default: " + e.getMessage());
+        }
+        return resolveDefaultServerIp();
+    }
+
+    private static String resolveDefaultServerIp() {
+        if (DeviceUtils.isRunningOnEmulator()) {
+            return DeviceUtils.getEmulatorLoopbackHost();
         }
         return SERVER_IP;
     }

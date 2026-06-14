@@ -155,6 +155,21 @@ public class AvatarManager {
     public void loadAvatar(String avatarUrl, ImageView imageView) {
         loadAvatar(avatarUrl, imageView, com.example.chatappjava.R.drawable.circle_background);
     }
+
+    public void loadUserAvatar(com.example.chatappjava.models.User user, ImageView imageView, int placeholderResId) {
+        if (user == null) {
+            imageView.setImageResource(placeholderResId);
+            imageView.setTag(null);
+            return;
+        }
+        String fullUrl = user.getFullAvatarUrl();
+        if (fullUrl == null || fullUrl.isEmpty()) {
+            imageView.setImageResource(placeholderResId);
+            imageView.setTag(null);
+            return;
+        }
+        loadAvatar(fullUrl, imageView, placeholderResId);
+    }
     
     /**
      * Check if avatars should be refreshed (at midnight daily)
@@ -212,7 +227,23 @@ public class AvatarManager {
      * Force refresh all avatars (called on app reload)
      */
     public void forceRefreshAvatars() {
+        clearInvalidAvatars();
         clearAvatarCache();
+    }
+
+    /**
+     * Drop cached/error state for one avatar URL so a new upload can load immediately.
+     */
+    public void invalidateAvatarUrl(String avatarUrl) {
+        if (avatarUrl == null || avatarUrl.isEmpty()) {
+            return;
+        }
+        invalidAvatars.remove(avatarUrl);
+        saveInvalidAvatars();
+        try {
+            Picasso.get().invalidate(avatarUrl);
+        } catch (Exception ignored) {
+        }
     }
     
     /**

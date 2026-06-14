@@ -79,6 +79,28 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         diffResult.dispatchUpdatesTo(createOffsetUpdateCallback());
     }
 
+    public void applyUserAvatarChange(String userId, String avatarPath) {
+        if (userId == null || userId.isEmpty()) {
+            return;
+        }
+        boolean changed = false;
+        for (int i = 0; i < posts.size(); i++) {
+            Post post = posts.get(i);
+            if (post != null && userId.equals(post.getAuthorId())) {
+                post.setAuthorAvatar(avatarPath != null ? avatarPath : "");
+                changed = true;
+                notifyItemChanged(i + postOffset());
+            }
+        }
+        if (changed) {
+            android.util.Log.d("PostAdapter", "Applied avatar change for author: " + userId);
+        }
+    }
+
+    public void applyGroupAvatarChange(String chatId, String avatarPath) {
+        // Posts do not embed group avatars today; no-op for now.
+    }
+
     private int postOffset() {
         return createPostBarListener != null ? 1 : 0;
     }
@@ -753,7 +775,8 @@ public class PostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     && oldPost.getCommentsCount() == newPost.getCommentsCount()
                     && oldPost.getSharesCount() == newPost.getSharesCount()
                     && oldPost.isLiked() == newPost.isLiked()
-                    && Objects.equals(oldPost.getAuthorUsername(), newPost.getAuthorUsername());
+                    && Objects.equals(oldPost.getAuthorUsername(), newPost.getAuthorUsername())
+                    && Objects.equals(oldPost.getAuthorAvatar(), newPost.getAuthorAvatar());
         }
     }
 }

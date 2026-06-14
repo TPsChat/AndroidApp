@@ -279,6 +279,10 @@ public class Post {
     public void setAuthorAvatar(String authorAvatar) {
         this.authorAvatar = authorAvatar;
     }
+
+    public String getAuthorFullAvatarUrl() {
+        return com.example.chatappjava.utils.UrlUtils.getFullAvatarUrl(authorAvatar);
+    }
     
     public String getContent() {
         return content;

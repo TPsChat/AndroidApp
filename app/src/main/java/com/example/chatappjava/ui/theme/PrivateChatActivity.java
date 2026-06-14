@@ -14,6 +14,7 @@ import com.example.chatappjava.R;
 import com.example.chatappjava.config.ServerConfig;
 import com.example.chatappjava.models.Chat;
 import com.example.chatappjava.models.User;
+import com.example.chatappjava.utils.AvatarSyncCoordinator;
 import com.example.chatappjava.network.SocketManager;
 
 import org.json.JSONException;
@@ -184,74 +185,40 @@ public class PrivateChatActivity extends BaseChatActivity {
             updateChatHeaderAccessibility();
             updateChatStatusSubtitle(getString(R.string.chat_status_direct));
 
-            // Ensure otherUser is set from currentChat if not already set
             if (otherUser == null && currentChat.isPrivateChat()) {
                 otherUser = currentChat.getOtherParticipant();
-                android.util.Log.d("PrivateChatActivity", "Set otherUser from currentChat: " + 
-                    (otherUser != null ? otherUser.getId() : "null"));
             }
 
-            // Clean up avatar ImageView first to prevent showing wrong avatar
             if (ivProfile != null) {
-                // Cancel any pending Picasso request
                 com.squareup.picasso.Picasso.get().cancelRequest(ivProfile);
-                // Clear the tag to reset state
                 ivProfile.setTag(null);
-                // Show placeholder immediately while loading
+            }
+
+            String avatarUrl = currentChat.getListAvatarUrl();
+            if (avatarUrl != null && !avatarUrl.isEmpty() && avatarManager != null) {
+                avatarManager.loadAvatar(avatarUrl, ivProfile, R.drawable.ic_profile_placeholder);
+            } else if (ivProfile != null) {
                 ivProfile.setImageResource(R.drawable.ic_profile_placeholder);
             }
-
-            // Load other user's avatar - try multiple sources
-            String avatarUrl = null;
-            
-            // Priority 1: Get avatar from otherUser
-            if (otherUser != null) {
-                avatarUrl = otherUser.getAvatar();
-                android.util.Log.d("PrivateChatActivity", "Avatar from otherUser: " + avatarUrl);
-            }
-            
-            // Priority 2: If otherUser has no avatar, try from currentChat.getOtherParticipant()
-            if ((avatarUrl == null || avatarUrl.isEmpty()) && currentChat.isPrivateChat()) {
-                User otherParticipant = currentChat.getOtherParticipant();
-                if (otherParticipant != null) {
-                    avatarUrl = otherParticipant.getAvatar();
-                    android.util.Log.d("PrivateChatActivity", "Avatar from currentChat.getOtherParticipant(): " + avatarUrl);
-                }
-            }
-            
-            // Priority 3: If still no avatar, try from currentChat.avatar (for private chats, this is other participant's avatar)
-            if ((avatarUrl == null || avatarUrl.isEmpty()) && currentChat.isPrivateChat()) {
-                avatarUrl = currentChat.getAvatar();
-                android.util.Log.d("PrivateChatActivity", "Avatar from currentChat.getAvatar(): " + avatarUrl);
-            }
-            
-            // Load avatar if we have a URL
-            if (avatarUrl != null && !avatarUrl.isEmpty()) {
-                android.util.Log.d("PrivateChatActivity", "Loading avatar for user " + 
-                    (otherUser != null ? otherUser.getId() : "unknown") + ", avatar URL: " + avatarUrl);
-                
-                // Construct full URL if needed
-                if (!avatarUrl.startsWith("http")) {
-                    avatarUrl = "http://" + ServerConfig.getServerIp() +
-                               ":" + ServerConfig.getServerPort() + avatarUrl;
-                    android.util.Log.d("PrivateChatActivity", "Constructed full URL: " + avatarUrl);
-                }
-                android.util.Log.d("PrivateChatActivity", "Loading avatar with AvatarManager");
-                avatarManager.loadAvatar(avatarUrl, ivProfile, R.drawable.ic_profile_placeholder);
-            } else {
-                android.util.Log.d("PrivateChatActivity", "No avatar URL found, using placeholder");
-                if (ivProfile != null) {
-                    ivProfile.setImageResource(R.drawable.ic_profile_placeholder);
-                }
-            }
         } else {
-            android.util.Log.d("PrivateChatActivity", "No currentChat");
             updateChatStatusSubtitle(null);
             if (ivProfile != null) {
                 com.squareup.picasso.Picasso.get().cancelRequest(ivProfile);
                 ivProfile.setTag(null);
                 ivProfile.setImageResource(R.drawable.ic_profile_placeholder);
             }
+        }
+    }
+
+    @Override
+    protected void handleUserAvatarSynced(String userId, String avatarPath) {
+        super.handleUserAvatarSynced(userId, avatarPath);
+        if (otherUser != null && userId.equals(otherUser.getId())) {
+            otherUser.setAvatar(avatarPath);
+        }
+        if (currentChat != null) {
+            AvatarSyncCoordinator.applyUserAvatarToChat(currentChat, userId, avatarPath);
+            updateUI();
         }
     }
 

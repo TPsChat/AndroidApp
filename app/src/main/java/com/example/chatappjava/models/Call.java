@@ -256,6 +256,25 @@ public class Call {
         }
         return null;
     }
+
+    public String getListAvatarUrl(String currentUserId) {
+        String path = isGroupCall() ? callerAvatar : getOtherParticipantAvatar(currentUserId);
+        return com.example.chatappjava.utils.UrlUtils.getFullAvatarUrl(path);
+    }
+
+    public void applyUserAvatarChange(String userId, String avatarPath) {
+        if (userId == null || userId.isEmpty()) {
+            return;
+        }
+        if (userId.equals(callerId)) {
+            callerAvatar = avatarPath;
+        }
+        for (CallParticipant participant : participants) {
+            if (userId.equals(participant.getUserId())) {
+                participant.setAvatar(avatarPath);
+            }
+        }
+    }
     
     // Keep old methods for backward compatibility
     public String getDisplayName() {

@@ -292,9 +292,7 @@ public class ConversationRepository {
                         otherParticipant = new User();
                         chat.setOtherParticipant(otherParticipant);
                     }
-                    if (otherParticipant.getAvatar() == null || otherParticipant.getAvatar().isEmpty()) {
-                        otherParticipant.setAvatar(avatar);
-                    }
+                    otherParticipant.setAvatar(avatar);
                 }
             }
             
@@ -393,6 +391,36 @@ public class ConversationRepository {
         }
     }
     
+    public void updatePeerAvatarForUser(String userId, String avatarPath) {
+        if (userId == null || userId.isEmpty()) {
+            return;
+        }
+        List<Chat> conversations = getAllConversations();
+        for (Chat chat : conversations) {
+            if (chat == null || !chat.isPrivateChat()) {
+                continue;
+            }
+            User other = chat.getOtherParticipant();
+            if (other != null && userId.equals(other.getId())) {
+                other.setAvatar(avatarPath != null ? avatarPath : "");
+                chat.setAvatar(avatarPath != null ? avatarPath : "");
+                saveConversation(chat);
+            }
+        }
+    }
+
+    public void updateGroupAvatar(String chatId, String avatarPath) {
+        if (chatId == null || chatId.isEmpty()) {
+            return;
+        }
+        Chat chat = getConversationById(chatId);
+        if (chat == null || !chat.isGroupChat()) {
+            return;
+        }
+        chat.setAvatar(avatarPath != null ? avatarPath : "");
+        saveConversation(chat);
+    }
+
     /**
      * Clear all conversations (for logout)
      */

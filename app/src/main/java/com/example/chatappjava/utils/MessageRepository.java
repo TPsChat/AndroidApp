@@ -969,6 +969,30 @@ public class MessageRepository {
     }
 
     /**
+     * Update cached sender avatars after a profile photo change.
+     */
+    public void updateSenderAvatarForUser(String userId, String avatarPath) {
+        if (userId == null || userId.isEmpty()) {
+            return;
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.COL_MSG_SENDER_AVATAR, avatarPath != null ? avatarPath : "");
+            db.update(
+                DatabaseHelper.TABLE_MESSAGES,
+                values,
+                DatabaseHelper.COL_MSG_SENDER_ID + " = ?",
+                new String[]{userId}
+            );
+        } catch (Exception e) {
+            Log.e(TAG, "Error updating sender avatar for user: " + userId, e);
+        } finally {
+            db.close();
+        }
+    }
+
+    /**
      * Replace all cached messages for a chat with the server's current page (e.g. after leftAt filter).
      */
     public void replaceMessagesForChat(String chatId, List<Message> messages) {

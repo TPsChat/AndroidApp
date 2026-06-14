@@ -106,45 +106,18 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
                 tvUnreadCount.setVisibility(View.GONE);
             }
 
-            // Load chat avatar - using same approach as CallListAdapter
-            String avatarUrl = null;
-            if (chat.isGroupChat()) {
-                // For group chats, load group avatar if available
-                avatarUrl = chat.getFullAvatarUrl();
-            } else {
-                // For private chats, load the other participant's avatar
-                if (chat.getOtherParticipant() != null && 
-                    chat.getOtherParticipant().getAvatar() != null && 
-                    !chat.getOtherParticipant().getAvatar().isEmpty()) {
-                    avatarUrl = chat.getOtherParticipant().getAvatar();
-                }
-            }
+            // Load chat avatar
+            String avatarUrl = chat.getListAvatarUrl();
+            int placeholderResId = chat.isGroupChat()
+                    ? R.drawable.ic_group_avatar
+                    : R.drawable.ic_profile_placeholder;
 
             if (avatarUrl != null && !avatarUrl.isEmpty()) {
                 android.util.Log.d("ChatListAdapter", "Loading chat avatar: " + avatarUrl);
-
-                if (!avatarUrl.startsWith("http")) {
-                    avatarUrl = "http://" + com.example.chatappjava.config.ServerConfig.getServerIp() + 
-                               ":" + com.example.chatappjava.config.ServerConfig.getServerPort() + avatarUrl;
-                    android.util.Log.d("ChatListAdapter", "Constructed full URL: " + avatarUrl);
-                }
-                
-                // Use appropriate placeholder based on chat type
-                int placeholderResId = chat.isGroupChat() 
-                    ? R.drawable.ic_group_avatar 
-                    : R.drawable.ic_profile_placeholder;
-                
-                avatarManager.loadAvatar(
-                    avatarUrl, 
-                    ivChatAvatar, 
-                    placeholderResId
-                );
+                avatarManager.loadAvatar(avatarUrl, ivChatAvatar, placeholderResId);
             } else {
                 android.util.Log.d("ChatListAdapter", "No avatar URL, using default");
-                // Use appropriate placeholder based on chat type
-                int placeholderResId = chat.isGroupChat() 
-                    ? R.drawable.ic_group_avatar 
-                    : R.drawable.ic_profile_placeholder;
+                ivChatAvatar.setTag(null);
                 ivChatAvatar.setImageResource(placeholderResId);
             }
             
@@ -214,7 +187,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatVi
                     && Objects.equals(oldChat.getLastMessage(), newChat.getLastMessage())
                     && oldChat.getLastMessageTime() == newChat.getLastMessageTime()
                     && oldChat.getUnreadCount() == newChat.getUnreadCount()
-                    && oldChat.isGroupChat() == newChat.isGroupChat();
+                    && oldChat.isGroupChat() == newChat.isGroupChat()
+                    && Objects.equals(oldChat.getListAvatarUrl(), newChat.getListAvatarUrl());
         }
     }
 }

@@ -11,8 +11,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.example.chatappjava.R;
+import com.example.chatappjava.config.ServerConfig;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.DatabaseManager;
+import com.example.chatappjava.utils.ServerConfigDialogHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnRegister;
     private TextView tvRegisterError;
     private TextView tvAuthTitle, tvAuthSubtitle;
+    private TextView tvServerEndpoint;
     private View authSwitchContainer, authTabIndicator, loginPanel, registerPanel, authFormStage, authFormBezel, authTopCluster, loginTitleTop, authLogoBezel;
     private TextView tvAuthEyebrow;
     private ApiClient apiClient;
@@ -49,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         initializeViews();
         initializeServices();
         setupClickListeners();
+        setupServerConfigEntryPoints();
         
         // Check if the user is already logged in
         if (databaseManager.isLoggedIn()) {
@@ -85,6 +89,7 @@ public class LoginActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.et_confirm_password);
         btnRegister = findViewById(R.id.btn_register);
         tvRegisterError = findViewById(R.id.tv_register_error);
+        tvServerEndpoint = findViewById(R.id.tv_server_endpoint);
 
         setupPasswordToggle(etPassword);
         setupPasswordToggle(etRegisterPassword);
@@ -121,6 +126,31 @@ public class LoginActivity extends AppCompatActivity {
 
         com.example.chatappjava.utils.MotionUtils.attachPressFeedback(this,
                 btnLogin, btnRegister, tvSignInTab, tvRegister, tvForgotPassword);
+    }
+
+    private void setupServerConfigEntryPoints() {
+        updateServerEndpointLabel();
+        View.OnClickListener openServerConfig = v ->
+                ServerConfigDialogHelper.show(this, databaseManager, this::updateServerEndpointLabel);
+
+        if (tvServerEndpoint != null) {
+            tvServerEndpoint.setOnClickListener(openServerConfig);
+            com.example.chatappjava.utils.MotionUtils.attachPressFeedback(this, tvServerEndpoint);
+        }
+        if (authLogoBezel != null) {
+            authLogoBezel.setOnLongClickListener(v -> {
+                openServerConfig.onClick(v);
+                return true;
+            });
+        }
+    }
+
+    private void updateServerEndpointLabel() {
+        if (tvServerEndpoint == null) {
+            return;
+        }
+        tvServerEndpoint.setText(getString(R.string.login_server_endpoint, ServerConfig.getBaseUrl()));
+        tvServerEndpoint.setContentDescription(getString(R.string.login_server_config_cd));
     }
 
     private void setupPasswordToggle(EditText editText) {
@@ -664,7 +694,11 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             showLoginLoading(false);
-                            showLoginInlineError("Connection error. Please try again.");
+                            android.util.Log.e("LoginActivity", "Login failed for " + ServerConfig.getBaseUrl(), e);
+                            showLoginInlineError(
+                                    getString(R.string.error_login_connection_hint, ServerConfig.getBaseUrl())
+                                            + (e.getMessage() != null ? "\n" + e.getMessage() : "")
+                            );
                         }
                     });
                 }

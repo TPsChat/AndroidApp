@@ -248,6 +248,10 @@ public class DatabaseManager {
         return getString(KEY_USER_AVATAR, "");
     }
 
+    public void updateUserAvatar(String avatar) {
+        putString(KEY_USER_AVATAR, avatar != null ? avatar : "");
+    }
+
     /**
      * Clear all login information (logout)
      */

@@ -547,6 +547,14 @@
     <string name="hint_server_port">Enter server port</string>
     <string name="dialog_use_https">Use HTTPS</string>
     <string name="dialog_use_wss">Use WSS (WebSocket secure)</string>
+    <string name="action_test_connection">Test connection</string>
+    <string name="action_testing_connection">Testing…</string>
+    <string name="success_server_config_saved">Server saved: %1$s</string>
+    <string name="success_server_connection_test">Connected to %1$s (HTTP %2$d)</string>
+    <string name="error_server_connection_test">Cannot reach %1$s\n%2$s</string>
+    <string name="login_server_endpoint">Server: %1$s · Tap to change</string>
+    <string name="login_server_config_cd">Change server address</string>
+    <string name="error_login_connection_hint">Cannot reach %1$s. Use the same Wi‑Fi as your PC, then tap the server address below to verify IP/port.</string>
     <string name="recording_label">Recording</string>
     <string name="action_unblock">Unblock</string>
     <string name="user_search_add_friend">Add friend</string>

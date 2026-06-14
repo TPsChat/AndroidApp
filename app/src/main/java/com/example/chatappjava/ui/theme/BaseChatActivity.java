@@ -52,6 +52,7 @@ import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.network.SocketManager;
 import com.example.chatappjava.ui.call.RingingActivity;
 import com.example.chatappjava.utils.AvatarManager;
+import com.example.chatappjava.utils.AvatarSyncCoordinator;
 import com.example.chatappjava.utils.ConversationPreviewHelper;
 import com.example.chatappjava.utils.ConversationRepository;
 import com.example.chatappjava.utils.DatabaseManager;
@@ -128,6 +129,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected com.example.chatappjava.utils.SyncManager backgroundSyncManager; // For background delta sync
     protected ApiClient apiClient;
     protected AvatarManager avatarManager;
+    private AvatarSyncCoordinator.Listener avatarSyncListener;
     protected AlertDialog emojiDialog;
     protected AlertDialog imageSelectDialog;
     protected SocketManager socketManager;
@@ -2007,7 +2009,44 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     @Override
     protected void onPause() {
         emitLocalStopTyping();
+        unregisterAvatarSyncListener();
         super.onPause();
+    }
+
+    private void registerAvatarSyncListener() {
+        if (avatarSyncListener == null) {
+            avatarSyncListener = new AvatarSyncCoordinator.Listener() {
+                @Override
+                public void onUserAvatarChanged(String userId, String avatarPath) {
+                    handleUserAvatarSynced(userId, avatarPath);
+                }
+
+                @Override
+                public void onGroupAvatarChanged(String chatId, String avatarPath) {
+                    handleGroupAvatarSynced(chatId, avatarPath);
+                }
+            };
+        }
+        AvatarSyncCoordinator.getInstance(this).addListener(avatarSyncListener);
+    }
+
+    private void unregisterAvatarSyncListener() {
+        if (avatarSyncListener != null) {
+            AvatarSyncCoordinator.getInstance(this).removeListener(avatarSyncListener);
+        }
+    }
+
+    protected void handleUserAvatarSynced(String userId, String avatarPath) {
+        if (messageAdapter != null) {
+            messageAdapter.applyUserAvatarChange(userId, avatarPath);
+        }
+    }
+
+    protected void handleGroupAvatarSynced(String chatId, String avatarPath) {
+        if (currentChat != null && chatId.equals(currentChat.getId())) {
+            currentChat.setAvatar(avatarPath != null ? avatarPath : "");
+            updateUI();
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -2996,6 +3035,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     @Override
     protected void onResume() {
         super.onResume();
+        registerAvatarSyncListener();
         // Restart auto-hide timer if summarize indicator is visible
         if (summarizeIndicator != null && summarizeIndicator.getVisibility() == View.VISIBLE) {
             startAutoHideSummarizeTimer();

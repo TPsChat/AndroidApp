@@ -34,6 +34,7 @@ import com.example.chatappjava.models.Message;
 import com.example.chatappjava.models.User;
 import com.example.chatappjava.network.ApiClient;
 import com.example.chatappjava.utils.AvatarManager;
+import com.example.chatappjava.utils.AvatarSyncCoordinator;
 import com.example.chatappjava.utils.DatabaseManager;
 import com.example.chatappjava.utils.ConversationPreviewHelper;
 import com.example.chatappjava.utils.ConversationRepository;
@@ -129,6 +130,8 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
     private boolean postsLoadedFromServer = false; // Track if posts have been loaded from server
     // Hold reference to message listener for add/remove
     private com.example.chatappjava.network.SocketManager.MessageListener homeMessageListener;
+    private com.example.chatappjava.network.SocketManager.RealtimeSyncListener homeRealtimeSyncListener;
+    private AvatarSyncCoordinator.Listener homeAvatarSyncListener;
     private android.content.BroadcastReceiver blockedChangedReceiver;
     private android.content.BroadcastReceiver authErrorReceiver;
     private View homeEmptyState;
@@ -2259,6 +2262,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             startHomePolling();
             // Setup socket listener for member removal
             setupSocketManager();
+            registerHomeAvatarSyncListener();
         }
     }
 
@@ -2271,6 +2275,87 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
         if (socketManager != null && homeMessageListener != null) {
             socketManager.removeMessageListener(homeMessageListener);
+        }
+        if (socketManager != null) {
+            socketManager.removeRealtimeSyncListener();
+        }
+        unregisterHomeAvatarSyncListener();
+    }
+
+    private void registerHomeAvatarSyncListener() {
+        if (homeAvatarSyncListener == null) {
+            homeAvatarSyncListener = new AvatarSyncCoordinator.Listener() {
+                @Override
+                public void onUserAvatarChanged(String userId, String avatarPath) {
+                    refreshHomeForUserAvatar(userId, avatarPath);
+                }
+
+                @Override
+                public void onGroupAvatarChanged(String chatId, String avatarPath) {
+                    refreshHomeForGroupAvatar(chatId, avatarPath);
+                }
+            };
+        }
+        AvatarSyncCoordinator.getInstance(HomeActivity.this).addListener(homeAvatarSyncListener);
+    }
+
+    private void unregisterHomeAvatarSyncListener() {
+        if (homeAvatarSyncListener != null) {
+            AvatarSyncCoordinator.getInstance(this).removeListener(homeAvatarSyncListener);
+        }
+    }
+
+    private void refreshHomeForUserAvatar(String userId, String avatarPath) {
+        if (userId == null || userId.isEmpty()) {
+            return;
+        }
+
+        for (Chat chat : chatList) {
+            AvatarSyncCoordinator.applyUserAvatarToChat(chat, userId, avatarPath);
+        }
+
+        if (callList != null && callAdapter != null) {
+            for (Call call : callList) {
+                if (call != null) {
+                    call.applyUserAvatarChange(userId, avatarPath);
+                }
+            }
+            callAdapter.applyUserAvatarChange(userId, avatarPath);
+        }
+
+        if (postAdapter != null) {
+            postAdapter.applyUserAvatarChange(userId, avatarPath);
+        }
+
+        String currentUserId = databaseManager != null ? databaseManager.getUserId() : null;
+        if (currentUserId != null && currentUserId.equals(userId)) {
+            loadUserProfile();
+        }
+
+        if (currentTab == 0) {
+            applyChatsFilter();
+        } else if (currentTab == 1) {
+            applyGroupsFilter();
+        } else if (chatAdapter != null) {
+            chatAdapter.updateChats(new ArrayList<>(chatList));
+        }
+    }
+
+    private void refreshHomeForGroupAvatar(String chatId, String avatarPath) {
+        if (chatId == null || chatId.isEmpty()) {
+            return;
+        }
+        for (Chat chat : chatList) {
+            if (chat != null && chatId.equals(chat.getId())) {
+                chat.setAvatar(avatarPath != null ? avatarPath : "");
+            }
+        }
+        if (currentTab == 0) {
+            applyChatsFilter();
+        } else if (currentTab == 1) {
+            applyGroupsFilter();
+        } else if (chatAdapter != null) {
+            chatAdapter.updateChats(new ArrayList<>(chatList));
         }
     }
     
@@ -2369,6 +2454,23 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 };
             }
             socketManager.addMessageListener(homeMessageListener);
+
+            if (homeRealtimeSyncListener == null) {
+                homeRealtimeSyncListener = new com.example.chatappjava.network.SocketManager.RealtimeSyncListener() {
+                    @Override
+                    public void onNewPost(org.json.JSONObject postJson) {
+                        if (currentTab == 3) {
+                            runOnUiThread(() -> loadPosts(true));
+                        }
+                    }
+
+                    @Override
+                    public void onAvatarChanged(String userId, String newAvatarUrl) {
+                        // Handled centrally by AvatarSyncCoordinator.
+                    }
+                };
+            }
+            socketManager.setRealtimeSyncListener(homeRealtimeSyncListener);
         }
     }
     
@@ -2383,7 +2485,9 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             com.example.chatappjava.ChatApplication.getInstance().getSocketManager();
         if (socketManager != null) {
             socketManager.removeMemberRemovedListener();
+            socketManager.removeRealtimeSyncListener();
         }
+        unregisterHomeAvatarSyncListener();
         if (blockedChangedReceiver != null) {
             try { unregisterReceiver(blockedChangedReceiver); } catch (Exception ignored) {}
         }

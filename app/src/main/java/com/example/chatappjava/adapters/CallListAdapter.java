@@ -59,6 +59,25 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
         diffResult.dispatchUpdatesTo(this);
     }
 
+    public void applyUserAvatarChange(String userId, String avatarPath) {
+        if (userId == null || userId.isEmpty()) {
+            return;
+        }
+        boolean changed = false;
+        for (int i = 0; i < callList.size(); i++) {
+            Call call = callList.get(i);
+            if (call == null) {
+                continue;
+            }
+            call.applyUserAvatarChange(userId, avatarPath);
+            changed = true;
+            notifyItemChanged(i);
+        }
+        if (changed) {
+            android.util.Log.d("CallListAdapter", "Applied avatar change for user: " + userId);
+        }
+    }
+
     @NonNull
     @Override
     public CallViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -139,34 +158,17 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
 
             tvCallTime.setText(call.getFormattedTimeWithDate());
 
-            String avatarUrl;
-            if (call.isGroupCall()) {
-                avatarUrl = call.getCallerAvatar(); // For group calls, use caller avatar
-            } else {
-                avatarUrl = call.getOtherParticipantAvatar(currentUserId); // For private calls, use other participant's avatar
-            }
+            String avatarUrl = call.getListAvatarUrl(currentUserId);
 
             if (avatarUrl != null && !avatarUrl.isEmpty()) {
                 android.util.Log.d("CallListAdapter", "Loading call avatar: " + avatarUrl);
-
-                // Construct full URL if needed (same as ChatListAdapter)
-                if (!avatarUrl.startsWith("http")) {
-                    // Ensure avatar starts with / if it doesn't already
-                    String avatarPath = avatarUrl.startsWith("/") ? avatarUrl : "/" + avatarUrl;
-                    avatarUrl = "http://" + com.example.chatappjava.config.ServerConfig.getServerIp() + 
-                               ":" + com.example.chatappjava.config.ServerConfig.getServerPort() + avatarPath;
-                    android.util.Log.d("CallListAdapter", "Constructed full URL: " + avatarUrl);
-                }
-                
-                // Use AvatarManager to load avatar (same as ChatListAdapter)
                 if (avatarManager != null) {
                     avatarManager.loadAvatar(
-                        avatarUrl, 
-                        ivCallAvatar, 
+                        avatarUrl,
+                        ivCallAvatar,
                         R.drawable.ic_profile_placeholder
                     );
                 } else {
-                    // Fallback to Picasso directly if AvatarManager is not available
                     android.util.Log.w("CallListAdapter", "AvatarManager is null, using Picasso directly");
                     com.squareup.picasso.Picasso.get()
                         .load(avatarUrl)
@@ -239,7 +241,8 @@ public class CallListAdapter extends RecyclerView.Adapter<CallListAdapter.CallVi
             Call newCall = newCalls.get(newItemPosition);
             return Objects.equals(oldCall.getStatus(), newCall.getStatus())
                     && oldCall.getDuration() == newCall.getDuration()
-                    && oldCall.isVideoCall() == newCall.isVideoCall();
+                    && oldCall.isVideoCall() == newCall.isVideoCall()
+                    && Objects.equals(oldCall.getCallerAvatar(), newCall.getCallerAvatar());
         }
     }
 }

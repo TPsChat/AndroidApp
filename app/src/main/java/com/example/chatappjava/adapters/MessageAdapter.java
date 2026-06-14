@@ -75,6 +75,25 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         MessageAdapter.avatarManager = avatarManager;
         android.util.Log.d("MessageAdapter", "Static AvatarManager set: " + (avatarManager != null));
     }
+
+    public void applyUserAvatarChange(String userId, String avatarPath) {
+        if (userId == null || userId.isEmpty()) {
+            return;
+        }
+        boolean changed = false;
+        for (int i = 0; i < messages.size(); i++) {
+            Message message = messages.get(i);
+            if (message == null || !userId.equals(message.getSenderId())) {
+                continue;
+            }
+            message.setSenderAvatarUrl(avatarPath != null ? avatarPath : "");
+            changed = true;
+            notifyItemChanged(i);
+        }
+        if (changed) {
+            android.util.Log.d("MessageAdapter", "Applied avatar change for user: " + userId);
+        }
+    }
     
     public void setCurrentlyPlayingMessageId(String messageId) {
         String oldId = this.currentlyPlayingMessageId;
