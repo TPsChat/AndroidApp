@@ -97,6 +97,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected ImageView ivMore, ivSend, ivAttachment, ivEmoji, ivGallery, ivVideoCall, ivRecordAudio;
     protected EditText etMessage;
     protected RecyclerView rvMessages;
+    protected View messagesLoadingSkeleton;
     protected ProgressBar progressBar;
     protected ProgressBar sendUploadProgress;
     // Reply UI state
@@ -155,6 +156,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     private boolean socketWasDisconnected = false;
     protected boolean hasNewMessages = false;
     protected boolean isInitialLoad = true;
+    private boolean isMessagesLoading = false;
     // Smart auto-scroll state (like Messenger)
     protected boolean shouldAutoScroll = true; // Auto-scroll enabled by default
     protected int newMessagesCount = 0; // Count of new messages when user is not at bottom
@@ -1516,6 +1518,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         ivRecordAudio = findViewById(R.id.record_audio_button);
         etMessage = findViewById(R.id.et_message);
         rvMessages = findViewById(R.id.rv_messages);
+        messagesLoadingSkeleton = findViewById(R.id.messages_loading_skeleton);
         progressBar = findViewById(R.id.progress_bar);
         sendUploadProgress = findViewById(R.id.send_upload_progress);
         if (progressBar != null) {
@@ -1717,8 +1720,29 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (tvMessagesEmpty == null) {
             return;
         }
+        if (isMessagesLoading) {
+            tvMessagesEmpty.setVisibility(View.GONE);
+            return;
+        }
         boolean empty = messages == null || messages.isEmpty();
         tvMessagesEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
+    }
+
+    protected void showMessagesLoading(boolean show) {
+        isMessagesLoading = show;
+        if (messagesLoadingSkeleton != null) {
+            messagesLoadingSkeleton.setVisibility(show ? View.VISIBLE : View.GONE);
+        }
+        if (rvMessages != null) {
+            rvMessages.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+        }
+        updateMessagesEmptyState();
+    }
+
+    private void finishInitialMessagesLoad() {
+        showMessagesLoading(false);
+        isInitialLoad = false;
+        updateMessagesEmptyState();
     }
 
     protected void initData() {
@@ -2220,8 +2244,10 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         }
 
         if (networkAvailable) {
+            showMessagesLoading(true);
             String token = databaseManager.getToken();
             if (token == null || token.isEmpty()) {
+                loadMessagesFromDatabase();
                 return;
             }
 
@@ -2291,17 +2317,28 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
 
                                 shouldAutoScroll = true;
                                 scrollToBottom();
-                                isInitialLoad = false;
+                                finishInitialMessagesLoad();
                             } else {
                                 String errorMessage = jsonResponse.optString("message", "Failed to load messages");
                                 Toast.makeText(BaseChatActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                                finishInitialMessagesLoad();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(BaseChatActivity.this, getString(R.string.error_error_parsing_messages), Toast.LENGTH_SHORT).show();
+                            if (messages.isEmpty()) {
+                                loadMessagesFromDatabase();
+                            } else {
+                                finishInitialMessagesLoad();
+                            }
                         }
                     } else {
                         Toast.makeText(BaseChatActivity.this, getString(R.string.error_load_messages_code, response.code()), Toast.LENGTH_SHORT).show();
+                        if (messages.isEmpty()) {
+                            loadMessagesFromDatabase();
+                        } else {
+                            finishInitialMessagesLoad();
+                        }
                     }
                 });
             }
@@ -2309,20 +2346,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
-                    // If we failed to load from server, show message from database
                     if (messages.isEmpty()) {
                         loadMessagesFromDatabase();
-                    }
-                    // Only show toast if we don't have any messages from database
-                    if (messages.isEmpty()) {
+                    } else {
+                        finishInitialMessagesLoad();
                     }
                 });
             }
         });
-        } else {
-            // No network - just show database messages (already loaded above)
-            if (messages.isEmpty()) {
-            }
         }
     }
     
@@ -2345,23 +2376,26 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             // IMPORTANT: Set hasMore based on whether there are more messages in DB or server
             // This ensures loadMoreMessages can be called when scrolling up
             boolean shouldHaveMore = hasMoreInDb || totalCount > dbMessages.size();
-            
-            if (!dbMessages.isEmpty()) {
-                runOnUiThread(() -> {
+
+            runOnUiThread(() -> {
+                if (!dbMessages.isEmpty()) {
                     List<Message> previousMessages = new ArrayList<>(messages);
                     messages.clear();
                     messages.addAll(dbMessages);
-                    // Set hasMore flag - if we loaded less than total, there are more messages
                     hasMore = shouldHaveMore;
-                    android.util.Log.d("BaseChatActivity", "Loaded " + dbMessages.size() + 
-                        " messages from database (total: " + totalCount + "), hasMore=" + hasMore + ", hasMoreInDb=" + hasMoreInDb);
+                    android.util.Log.d("BaseChatActivity", "Loaded " + dbMessages.size() +
+                            " messages from database (total: " + totalCount + "), hasMore=" + hasMore + ", hasMoreInDb=" + hasMoreInDb);
                     notifyMessageListReplaced(previousMessages);
                     updateSummarizeIndicator();
-                    // On initial load, always enable auto-scroll and scroll to bottom
                     shouldAutoScroll = true;
                     scrollToBottom();
-                });
-            }
+                }
+                if (isInitialLoad || isMessagesLoading) {
+                    finishInitialMessagesLoad();
+                } else {
+                    updateMessagesEmptyState();
+                }
+            });
         }).start();
     }
     
@@ -3147,6 +3181,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         // Optimistic UI first — persist to SQLite on a worker thread
         String tempId = "temp_" + java.util.UUID.randomUUID().toString();
         message.setId(tempId);
+        message.setSyncStatus(Message.SYNC_PENDING);
 
         final Message finalMessage = message;
         final String finalMessageId = tempId;
@@ -3163,8 +3198,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
 
         // Check network availability
         if (!isNetworkAvailable()) {
-            // Offline: Message already saved with pending status
-            messageAdapter.notifyItemChanged(messages.size() - 1); // Update UI to show pending status
+            notifySendStatusChanged(finalMessageId);
             return;
         }
 
@@ -3239,11 +3273,31 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     }
 
     private void markSendFailed(String messageId, int messagePosition, String error) {
-        if (messageRepository != null && messageId != null && !messageId.isEmpty()) {
-            messageRepository.markMessageAsPending(messageId, error);
-        }
-        if (messagePosition >= 0 && messagePosition < messages.size() && messageAdapter != null) {
-            messageAdapter.notifyItemChanged(messagePosition);
+        int idx = messagePosition >= 0 && messagePosition < messages.size()
+                ? messagePosition
+                : indexOfMessageById(messageId);
+        if (idx >= 0) {
+            Message message = messages.get(idx);
+            if (isTimeoutError(error)) {
+                message.setSyncStatus(Message.SYNC_PENDING);
+                if (messageRepository != null && messageId != null && !messageId.isEmpty()) {
+                    messageRepository.markMessageAsPending(messageId, error);
+                }
+            } else {
+                message.setSyncStatus(Message.SYNC_FAILED);
+                if (messageRepository != null && messageId != null && !messageId.isEmpty()) {
+                    messageRepository.markMessageAsFailed(messageId, error);
+                }
+            }
+            if (messageAdapter != null) {
+                messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_SEND_STATUS);
+            }
+        } else if (messageRepository != null && messageId != null && !messageId.isEmpty()) {
+            if (isTimeoutError(error)) {
+                messageRepository.markMessageAsPending(messageId, error);
+            } else {
+                messageRepository.markMessageAsFailed(messageId, error);
+            }
         }
         if (isTimeoutError(error)) {
             if (syncManager != null) {
@@ -3622,6 +3676,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
      */
     private void acknowledgeSentMessage(String tempId, Message serverMessage) {
         if (serverMessage == null || messageAdapter == null) return;
+        serverMessage.setSyncStatus(Message.SYNC_SYNCED);
 
         if (messageRepository != null) {
             if (tempId != null && !tempId.isEmpty()) {
@@ -3709,8 +3764,36 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
 
     private void mergeMessageAt(int index, Message incoming) {
         preserveSenderIfMissing(incoming, messages.get(index));
+        if (!isPlaceholderId(incoming.getId())) {
+            incoming.setSyncStatus(Message.SYNC_SYNCED);
+        }
         messages.set(index, incoming);
         messageAdapter.notifyItemChanged(index);
+    }
+
+    private void notifySendStatusChanged(String messageId) {
+        if (messageAdapter == null || messageId == null) {
+            return;
+        }
+        int idx = indexOfMessageById(messageId);
+        if (idx >= 0) {
+            messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_SEND_STATUS);
+        }
+    }
+
+    protected void retryFailedMessage(Message message) {
+        if (message == null || message.getId() == null || message.getId().isEmpty()) {
+            return;
+        }
+        message.setSyncStatus(Message.SYNC_PENDING);
+        if (messageRepository != null) {
+            messageRepository.markMessageAsPending(message.getId(), null);
+        }
+        notifySendStatusChanged(message.getId());
+        Toast.makeText(this, getString(R.string.message_status_retry_toast), Toast.LENGTH_SHORT).show();
+        if (syncManager != null) {
+            syncManager.syncPendingMessages();
+        }
     }
 
     /** Scan list for temp rows that already have a synced counterpart in the UI. */
@@ -4116,12 +4199,6 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
 
     // MessageAdapter.OnMessageClickListener implementation
     @Override
-    public void onMessageClick(Message message) {
-        // Common message click handling
-        Toast.makeText(this, getString(R.string.debug_message_clicked, message.getContent()), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void onMessageLongClick(Message message) {
         // Common message long click handling
         showMessageOptions(message);
@@ -4133,46 +4210,218 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         showImageZoomDialog(imageUrl, localImageUri);
     }
 
+    @Override
+    public void onFailedMessageRetry(Message message) {
+        retryFailedMessage(message);
+    }
+
+    @Override
+    public void onReactionRemove(Message message) {
+        removeReactionFromMessage(message);
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onReactClick(Message message, String emoji) {
         String token = databaseManager.getToken();
-        if (token == null || token.isEmpty()) return;
-        // Optimistic UI update: update local message to show reaction immediately
-        try {
-            message.incrementReaction(emoji);
-            int idx = indexOfMessageById(message.getId());
-            if (idx >= 0) {
-                messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_REACTION);
-            }
-        } catch (Exception ignored) {}
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (message == null || message.getId() == null || emoji == null || emoji.isEmpty()) {
+            return;
+        }
 
-        apiClient.addReaction(token, message.getId(), emoji, new okhttp3.Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, java.io.IOException e) {
-                // Optionally revert on failure
-            }
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) { /* backend will broadcast reaction_updated */ }
-        });
+        String userId = databaseManager.getUserId();
+        if (userId == null || userId.isEmpty()) {
+            return;
+        }
+
+        final Message reactionSnapshot = snapshotReactions(message);
+        try {
+            message.upsertUserReaction(userId, emoji);
+            notifyReactionChanged(message.getId());
+            persistReactionAsync(message);
+        } catch (Exception e) {
+            android.util.Log.e("BaseChatActivity", "Optimistic reaction failed", e);
+            return;
+        }
+
+        apiClient.addReaction(token, message.getId(), emoji, createReactionCallback(
+                message,
+                reactionSnapshot,
+                R.string.error_add_reaction
+        ));
     }
 
-    private String findUserReactionEmoji(Message message, String userId) {
-        try {
-            String raw = message.getReactionsRaw();
-            if (raw == null || raw.isEmpty() || userId == null || userId.isEmpty()) return null;
-            org.json.JSONArray arr = new org.json.JSONArray(raw);
-            for (int i = 0; i < arr.length(); i++) {
-                org.json.JSONObject r = arr.getJSONObject(i);
-                String emoji = r.optString("emoji", null);
-                org.json.JSONObject u = r.optJSONObject("user");
-                String uid = u != null ? u.optString("_id", u.optString("id", null)) : null;
-                if (uid != null && uid.equals(userId)) {
-                    return emoji;
-                }
+    private void removeReactionFromMessage(Message message) {
+        String token = databaseManager.getToken();
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(this, getString(R.string.error_please_login_again), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (message == null || message.getId() == null) {
+            return;
+        }
+
+        String myUserId = databaseManager.getUserId();
+        if (myUserId == null || myUserId.isEmpty()) {
+            return;
+        }
+
+        String emojiToRemove = message.findReactionEmojiForUser(myUserId);
+        if (emojiToRemove == null || emojiToRemove.isEmpty()) {
+            Toast.makeText(this, getString(R.string.error_no_reaction_to_remove), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        final Message reactionSnapshot = snapshotReactions(message);
+        String removedEmoji = message.removeUserReactionForUser(myUserId);
+        if (removedEmoji == null) {
+            Toast.makeText(this, getString(R.string.error_no_reaction_to_remove), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        notifyReactionChanged(message.getId());
+        persistReactionAsync(message);
+
+        apiClient.removeReaction(token, message.getId(), emojiToRemove, createReactionCallback(
+                message,
+                reactionSnapshot,
+                R.string.error_remove_reaction
+        ));
+    }
+
+    private void persistReactionAsync(Message message) {
+        if (message == null || message.getId() == null || messageRepository == null) {
+            return;
+        }
+        final String messageId = message.getId();
+        final String reactionsRaw = message.getReactionsRaw() != null ? message.getReactionsRaw() : "[]";
+        new Thread(() -> messageRepository.updateMessageReactions(messageId, reactionsRaw)).start();
+    }
+
+    private Message snapshotReactions(Message message) {
+        Message snapshot = new Message();
+        message.ensureReactionSummaryFromRaw();
+        snapshot.copyReactionDataFrom(message);
+        return snapshot;
+    }
+
+    private void revertReactionUi(Message message, Message snapshot) {
+        if (message == null || snapshot == null) {
+            return;
+        }
+        message.copyReactionDataFrom(snapshot);
+        notifyReactionChanged(message.getId());
+    }
+
+    private void notifyReactionChanged(String messageId) {
+        if (messageAdapter == null || messageId == null || messageId.isEmpty()) {
+            return;
+        }
+        int idx = indexOfMessageById(messageId);
+        if (idx >= 0) {
+            messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_REACTION);
+        }
+    }
+
+    private okhttp3.Callback createReactionCallback(
+            Message message,
+            Message reactionSnapshot,
+            int errorMessageResId
+    ) {
+        return new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, java.io.IOException e) {
+                runOnUiThread(() -> {
+                    revertReactionUi(message, reactionSnapshot);
+                    Toast.makeText(
+                            BaseChatActivity.this,
+                            getString(R.string.error_network_detail, e.getMessage()),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                });
             }
-        } catch (Exception ignored) {}
-        return null;
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) {
+                boolean success = false;
+                String errorDetail = null;
+                String successBody = null;
+                try {
+                    success = response.isSuccessful();
+                    if (success) {
+                        if (response.body() != null) {
+                            successBody = response.body().string();
+                        }
+                    } else {
+                        errorDetail = "HTTP " + response.code();
+                        if (response.body() != null) {
+                            String body = response.body().string();
+                            if (body != null && !body.isEmpty()) {
+                                try {
+                                    org.json.JSONObject json = new org.json.JSONObject(body);
+                                    String serverMessage = json.optString("message", "");
+                                    if (!serverMessage.isEmpty()) {
+                                        errorDetail = serverMessage;
+                                    }
+                                } catch (org.json.JSONException ignored) {
+                                    // keep HTTP code fallback
+                                }
+                            }
+                        }
+                    }
+                } catch (java.io.IOException e) {
+                    errorDetail = e.getMessage();
+                } finally {
+                    response.close();
+                }
+
+                if (success) {
+                    final String body = successBody;
+                    runOnUiThread(() -> {
+                        applyReactionsFromApiResponse(message, body);
+                        notifyReactionChanged(message.getId());
+                    });
+                    return;
+                }
+
+                final String detail = errorDetail;
+                runOnUiThread(() -> {
+                    revertReactionUi(message, reactionSnapshot);
+                    if (detail != null && !detail.isEmpty()) {
+                        Toast.makeText(
+                                BaseChatActivity.this,
+                                getString(errorMessageResId) + ": " + detail,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    } else {
+                        Toast.makeText(
+                                BaseChatActivity.this,
+                                getString(errorMessageResId),
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+                });
+            }
+        };
+    }
+
+    private void applyReactionsFromApiResponse(Message message, String responseBody) {
+        if (message == null || responseBody == null || responseBody.isEmpty()) {
+            return;
+        }
+        try {
+            org.json.JSONObject json = new org.json.JSONObject(responseBody);
+            org.json.JSONObject data = json.optJSONObject("data");
+            if (data == null || !data.has("reactions")) {
+                return;
+            }
+            message.applyReactions(data.optJSONArray("reactions"));
+            persistReactionAsync(message);
+        } catch (org.json.JSONException e) {
+            android.util.Log.w("BaseChatActivity", "Could not parse reaction API response", e);
+        }
     }
 
     @Override
@@ -4618,33 +4867,19 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                 });
             }
         }
-        if (btnRemove != null) btnRemove.setOnClickListener(v -> {
-            try {
-                String token = databaseManager.getToken();
-                if (token != null && !token.isEmpty()) {
-                    // Determine current user's emoji to remove from message.reactionsRaw
-                    String myUserId = databaseManager.getUserId();
-                    String emojiToRemove = findUserReactionEmoji(message, myUserId);
-                    if (emojiToRemove == null || emojiToRemove.isEmpty()) {
-                        dlg.dismiss();
-                        return;
-                    }
-
-                    // Optimistic UI update
-                    message.decrementReaction(emojiToRemove);
-                    int idx = indexOfMessageById(message.getId());
-                    if (idx >= 0) {
-                        messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_REACTION);
-                    }
-
-                    apiClient.removeReaction(token, message.getId(), emojiToRemove, new okhttp3.Callback() {
-                        @Override public void onFailure(okhttp3.Call call, java.io.IOException e) { }
-                        @Override public void onResponse(okhttp3.Call call, okhttp3.Response response) { }
-                    });
-                }
-            } catch (Exception ignored) { }
-            dlg.dismiss();
-        });
+        if (btnRemove != null) {
+            String myUserId = databaseManager.getUserId();
+            String myReaction = message.findReactionEmojiForUser(myUserId);
+            btnRemove.setVisibility(
+                    myReaction != null && !myReaction.isEmpty()
+                            ? View.VISIBLE
+                            : View.GONE
+            );
+            btnRemove.setOnClickListener(v -> {
+                removeReactionFromMessage(message);
+                dlg.dismiss();
+            });
+        }
         if (dlg.getWindow() != null) {
             Window w = dlg.getWindow();
             w.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

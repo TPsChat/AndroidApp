@@ -61,6 +61,59 @@
 
         </LinearLayout>
 
+        <!-- Add Members Option -->
+        <LinearLayout
+            android:id="@+id/option_add_members"
+            style="@style/AppOptionRow"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:src="@drawable/ic_add"
+                android:layout_marginEnd="12dp"
+                app:tint="@color/neu_copper_accent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/AppBodyLarge"
+                android:text="@string/dialog_option_add_members"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Remove Members Option -->
+        <LinearLayout
+            android:id="@+id/option_remove_members"
+            style="@style/AppOptionRow"
+            android:layout_width="match_parent"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="@dimen/icon_md"
+                android:layout_height="@dimen/icon_md"
+                android:src="@drawable/ic_group"
+                android:layout_marginEnd="12dp"
+                app:tint="@color/md3_primary" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/AppBodyLarge"
+                android:text="@string/dialog_option_remove_members"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
         <!-- Join Requests Option -->
         <LinearLayout
             android:id="@+id/option_join_requests"

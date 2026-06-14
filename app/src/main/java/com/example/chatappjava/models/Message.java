@@ -73,6 +73,14 @@ class SenderInfo {
 }
 
 public class Message {
+    public static final String SYNC_SYNCED = "synced";
+    public static final String SYNC_PENDING = "pending";
+    public static final String SYNC_FAILED = "failed";
+
+    public static final int DELIVERY_SENT = 0;
+    public static final int DELIVERY_PENDING = 1;
+    public static final int DELIVERY_FAILED = 2;
+
     private String id;
     private String chatId;
     private String senderId;
@@ -91,6 +99,7 @@ public class Message {
     private java.util.Map<String, Integer> reactionSummary;
     private String reactionsRaw; // store raw JSON if needed to show user list
     private String clientNonce; // unique from client to dedupe echo
+    private String syncStatus = SYNC_SYNCED;
     
     // Reply and edit info
     private String replyToMessageId;
@@ -424,6 +433,108 @@ public class Message {
         reactionSummary.put(emoji, c + 1);
     }
 
+    public String findReactionEmojiForUser(String userId) {
+        if (userId == null || userId.isEmpty()) {
+            return null;
+        }
+        try {
+            if (reactionsRaw != null && !reactionsRaw.isEmpty()) {
+                org.json.JSONArray arr = new org.json.JSONArray(reactionsRaw);
+                for (int i = 0; i < arr.length(); i++) {
+                    org.json.JSONObject reaction = arr.getJSONObject(i);
+                    if (userId.equals(extractReactionUserId(reaction))) {
+                        String emoji = reaction.optString("emoji", "");
+                        return emoji.isEmpty() ? null : emoji;
+                    }
+                }
+            }
+        } catch (org.json.JSONException ignored) {
+        }
+        return null;
+    }
+
+    /** Replace current user's reaction (matches server addReaction behaviour). */
+    public void upsertUserReaction(String userId, String emoji) {
+        if (userId == null || userId.isEmpty() || emoji == null || emoji.isEmpty()) {
+            return;
+        }
+        try {
+            org.json.JSONArray source = (reactionsRaw != null && !reactionsRaw.isEmpty())
+                    ? new org.json.JSONArray(reactionsRaw)
+                    : new org.json.JSONArray();
+            org.json.JSONArray updated = new org.json.JSONArray();
+            for (int i = 0; i < source.length(); i++) {
+                org.json.JSONObject reaction = source.getJSONObject(i);
+                if (!userId.equals(extractReactionUserId(reaction))) {
+                    updated.put(reaction);
+                }
+            }
+            org.json.JSONObject entry = new org.json.JSONObject();
+            entry.put("emoji", emoji);
+            org.json.JSONObject user = new org.json.JSONObject();
+            user.put("_id", userId);
+            entry.put("user", user);
+            updated.put(entry);
+            applyReactions(updated);
+        } catch (org.json.JSONException e) {
+            incrementReaction(emoji);
+        }
+    }
+
+    /** Remove the current user's reaction locally. Returns removed emoji if any. */
+    public String removeUserReactionForUser(String userId) {
+        if (userId == null || userId.isEmpty()) {
+            return null;
+        }
+        String emoji = findReactionEmojiForUser(userId);
+        if (emoji == null) {
+            return null;
+        }
+        try {
+            if (reactionsRaw == null || reactionsRaw.isEmpty()) {
+                decrementReaction(emoji);
+                return emoji;
+            }
+            org.json.JSONArray source = new org.json.JSONArray(reactionsRaw);
+            org.json.JSONArray updated = new org.json.JSONArray();
+            boolean removed = false;
+            for (int i = 0; i < source.length(); i++) {
+                org.json.JSONObject reaction = source.getJSONObject(i);
+                if (!removed && userId.equals(extractReactionUserId(reaction))) {
+                    removed = true;
+                    continue;
+                }
+                updated.put(reaction);
+            }
+            if (removed) {
+                applyReactions(updated);
+                return emoji;
+            }
+        } catch (org.json.JSONException e) {
+            decrementReaction(emoji);
+            return emoji;
+        }
+        return null;
+    }
+
+    private static String extractReactionUserId(org.json.JSONObject reaction) {
+        if (reaction == null) {
+            return null;
+        }
+        Object userValue = reaction.opt("user");
+        if (userValue instanceof org.json.JSONObject) {
+            org.json.JSONObject user = (org.json.JSONObject) userValue;
+            String id = user.optString("_id", user.optString("id", ""));
+            return id.isEmpty() ? null : id;
+        }
+        if (userValue instanceof String) {
+            String id = (String) userValue;
+            return id.isEmpty() ? null : id;
+        }
+        String userId = reaction.optString("userId", "");
+        return userId.isEmpty() ? null : userId;
+    }
+
 
     public void decrementReaction(String emoji) {
         if (emoji == null || reactionSummary == null) return;
@@ -438,6 +549,39 @@ public class Message {
     public String getReactionsRaw() { return reactionsRaw; }
     public String getClientNonce() { return clientNonce; }
     public void setClientNonce(String clientNonce) { this.clientNonce = clientNonce; }
+
+    public String getSyncStatus() { return syncStatus; }
+
+    public void setSyncStatus(String syncStatus) {
+        this.syncStatus = syncStatus != null ? syncStatus : SYNC_SYNCED;
+    }
+
+    /** Resolve pending state from temp ids when status was not loaded from DB. */
+    public void inferSyncStatusIfNeeded() {
+        if (SYNC_FAILED.equals(syncStatus)) {
+            return;
+        }
+        if (isPlaceholderId(id)) {
+            syncStatus = SYNC_PENDING;
+        } else if (syncStatus == null || syncStatus.isEmpty()) {
+            syncStatus = SYNC_SYNCED;
+        }
+    }
+
+    public int getOutgoingDeliveryState() {
+        inferSyncStatusIfNeeded();
+        if (SYNC_FAILED.equals(syncStatus)) {
+            return DELIVERY_FAILED;
+        }
+        if (SYNC_PENDING.equals(syncStatus) || isPlaceholderId(id)) {
+            return DELIVERY_PENDING;
+        }
+        return DELIVERY_SENT;
+    }
+
+    private static boolean isPlaceholderId(String messageId) {
+        return messageId != null && (messageId.startsWith("temp_") || messageId.startsWith("local-"));
+    }
     
     public String getReplyToMessageId() { return replyToMessageId; }
     public void setReplyToMessageId(String replyToMessageId) { this.replyToMessageId = replyToMessageId; }

@@ -93,6 +93,7 @@ public class MessageRepository {
             values.put(DatabaseHelper.COL_MSG_SYNC_STATUS, syncStatus);
             values.put(DatabaseHelper.COL_MSG_SYNC_ATTEMPTS, 0);
             values.putNull(DatabaseHelper.COL_MSG_SYNC_ERROR);
+            message.setSyncStatus(syncStatus);
             
             // Use INSERT OR REPLACE to handle both insert and update
             db.insertWithOnConflict(
@@ -872,6 +873,38 @@ public class MessageRepository {
             Log.d(TAG, "Marked message as pending: " + messageId);
         } catch (Exception e) {
             Log.e(TAG, "Error marking message pending: " + e.getMessage(), e);
+        } finally {
+            db.close();
+        }
+    }
+
+    /**
+     * Mark a message as failed to send (user can tap to retry).
+     */
+    public void markMessageAsFailed(String messageId, String error) {
+        if (messageId == null || messageId.isEmpty()) {
+            return;
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.COL_MSG_SYNC_STATUS, SYNC_STATUS_FAILED);
+            if (error != null) {
+                values.put(DatabaseHelper.COL_MSG_SYNC_ERROR, error);
+            } else {
+                values.putNull(DatabaseHelper.COL_MSG_SYNC_ERROR);
+            }
+            db.update(
+                DatabaseHelper.TABLE_MESSAGES,
+                values,
+                DatabaseHelper.COL_MSG_ID + " = ?",
+                new String[]{messageId}
+            );
+            Log.d(TAG, "Marked message as failed: " + messageId);
+        } catch (Exception e) {
+            Log.e(TAG, "Error marking message failed: " + e.getMessage(), e);
+        } finally {
+            db.close();
         }
     }
 
@@ -992,6 +1025,7 @@ public class MessageRepository {
             int editedAtIndex = cursor.getColumnIndex(DatabaseHelper.COL_MSG_EDITED_AT);
             int reactionsIndex = cursor.getColumnIndex(DatabaseHelper.COL_MSG_REACTIONS);
             int clientNonceIndex = cursor.getColumnIndex(DatabaseHelper.COL_MSG_CLIENT_NONCE);
+            int syncStatusIndex = cursor.getColumnIndex(DatabaseHelper.COL_MSG_SYNC_STATUS);
             
             if (idIndex >= 0) message.setId(cursor.getString(idIndex));
             if (chatIdIndex >= 0) message.setChatId(cursor.getString(chatIdIndex));
@@ -1041,6 +1075,13 @@ public class MessageRepository {
                 message.setReactionsRaw(reactions);
             }
             if (clientNonceIndex >= 0) message.setClientNonce(cursor.getString(clientNonceIndex));
+            if (syncStatusIndex >= 0) {
+                String status = cursor.getString(syncStatusIndex);
+                if (status != null && !status.isEmpty()) {
+                    message.setSyncStatus(status);
+                }
+            }
+            message.inferSyncStatusIfNeeded();
             
             return message;
             

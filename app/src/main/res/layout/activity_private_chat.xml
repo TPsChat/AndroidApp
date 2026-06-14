@@ -276,6 +276,13 @@
                 android:paddingBottom="10dp"
                 android:scrollbars="none" />
 
+            <include
+                android:id="@+id/messages_loading_skeleton"
+                layout="@layout/component_chat_messages_skeleton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:id="@+id/tv_messages_empty"
                 android:layout_width="wrap_content"

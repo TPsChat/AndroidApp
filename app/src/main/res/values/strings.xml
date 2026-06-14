@@ -581,6 +581,8 @@
     <string name="error_delete_comment">Could not delete comment</string>
     <string name="comment_updated_success">Comment updated</string>
     <string name="error_add_reaction">Could not add reaction</string>
+    <string name="error_remove_reaction">Could not remove reaction</string>
+    <string name="error_no_reaction_to_remove">You have not reacted to this message</string>
     <string name="reaction_added">Reacted with %1$s</string>
     <string name="no_reactions_yet">No reactions yet</string>
     <string name="error_no_group_selected">No group selected</string>
@@ -838,6 +840,11 @@
     <string name="success_unfriended">Unfriended</string>
     <string name="error_create_chat_generic">Could not create chat</string>
     <string name="status_pending">Pending</string>
+    <string name="message_status_sent_cd">Message sent</string>
+    <string name="message_status_pending_cd">Sending message</string>
+    <string name="message_status_failed_cd">Failed to send. Tap to retry.</string>
+    <string name="chat_messages_loading_cd">Loading messages</string>
+    <string name="message_status_retry_toast">Retrying send…</string>
     <string name="username_format">@%1$s</string>
     <string name="friends_count_title">Friends (%1$d)</string>
     <string name="comment_view_replies_one">View %1$d reply</string>
@@ -889,7 +896,6 @@
     <string name="info_author">Author: %1$s</string>
     <string name="info_profile_detail">%1$s
 Email: %2$s</string>
-    <string name="debug_message_clicked">Message: %1$s</string>
     <string name="error_failed_code">Failed: %1$d</string>
     <string name="error_load_profile">Could not load profile: %1$s</string>
     <string name="error_remove_avatar">Could not remove avatar: %1$s</string>

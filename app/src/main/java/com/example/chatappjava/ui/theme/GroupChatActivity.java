@@ -744,6 +744,7 @@ public class GroupChatActivity extends BaseChatActivity {
     private void removeMembers() {
         // Navigate to GroupMembersActivity for removing members
         Intent intent = new Intent(this, GroupMembersActivity.class);
+        intent.putExtra("mode", "remove_members");
         try {
             intent.putExtra("chat", currentChat.toJson().toString());
             startActivity(intent);

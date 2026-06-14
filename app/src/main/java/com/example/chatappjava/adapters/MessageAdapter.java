@@ -31,14 +31,17 @@ import java.util.regex.Pattern;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
 
     public static final String PAYLOAD_REACTION = "payload_reaction";
+    public static final String PAYLOAD_SEND_STATUS = "payload_send_status";
     
     public interface OnMessageClickListener {
-        void onMessageClick(Message message);
+        default void onMessageClick(Message message) {}
         void onMessageLongClick(Message message);
         void onImageClick(String imageUrl, String localImageUri);
         void onFileClick(String fileUrl, String fileName, String originalName, String mimeType, long fileSize);
         default void onReactClick(Message message, String emoji) {}
         default void onReplyClick(String replyToMessageId) {}
+        default void onFailedMessageRetry(Message message) {}
+        default void onReactionRemove(Message message) {}
     }
     
     public interface OnVoiceMessageClickListener extends OnMessageClickListener {
@@ -154,6 +157,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             holder.bindReactionsOnly(message, isFromCurrentUser, holder.itemView.getContext());
             return;
         }
+        if (payloads.contains(PAYLOAD_SEND_STATUS)) {
+            Message message = messages.get(position);
+            boolean isFromCurrentUser = message.getSenderId() != null
+                    && message.getSenderId().equals(currentUserId);
+            if (isFromCurrentUser) {
+                holder.bindSendStatusOnly(message, holder.itemView.getContext());
+            }
+            return;
+        }
         super.onBindViewHolder(holder, position, payloads);
     }
     
@@ -209,6 +221,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         && java.util.Objects.equals(oldMessage.getContent(), newMessage.getContent())
                         && oldMessage.getTimestamp() == newMessage.getTimestamp()
                         && java.util.Objects.equals(oldMessage.getReactionsRaw(), newMessage.getReactionsRaw())
+                        && java.util.Objects.equals(oldMessage.getSyncStatus(), newMessage.getSyncStatus())
                         && oldMessage.isEdited() == newMessage.isEdited();
             }
         });
@@ -240,6 +253,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         private final TextView tvSentMessage;
         private final TextView tvSentTime;
         private final TextView tvSentEdited;
+        private final ImageView ivSentStatus;
         private final ImageView ivSentReactionImage;
         private final TextView tvReceivedMessage;
         private final TextView tvReceivedTime;
@@ -276,6 +290,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             tvSentMessage = itemView.findViewById(R.id.tv_sent_message);
             tvSentTime = itemView.findViewById(R.id.tv_sent_time);
             tvSentEdited = itemView.findViewById(R.id.tv_sent_edited);
+            ivSentStatus = itemView.findViewById(R.id.iv_sent_status);
             ivSentReactionImage = itemView.findViewById(R.id.iv_sent_reaction_image);
             tvReceivedMessage = itemView.findViewById(R.id.tv_received_message);
             tvReceivedTime = itemView.findViewById(R.id.tv_received_time);
@@ -540,6 +555,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 }
                 
                 if (tvSentTime != null) tvSentTime.setText(timeString);
+                bindSendStatus(message, context);
                 if (tvSentEdited != null) tvSentEdited.setVisibility(message.shouldShowEditedLabel() ? View.VISIBLE : View.GONE);
                 if (message.isImageMessage()) {
                     if (ivSentReactionImage != null) ivSentReactionImage.setVisibility(View.GONE);
@@ -824,16 +840,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                 }
             }
 
-            // Forward click/long-click to listener
-            itemView.setOnClickListener(v -> {
-                if (listener != null) listener.onMessageClick(message);
-            });
             itemView.setOnLongClickListener(v -> {
                 if (listener != null) {
                     listener.onMessageLongClick(message);
                     // Show custom reaction dialog; fall back to quick popup if any error
                     try {
-                        showReactPicker(itemView.getContext(), message);
+                        showReactPicker(itemView.getContext(), message, currentUserId);
                     } catch (Exception ignored) {
                         showQuickReactions(itemView.getContext(), itemView, message);
                     }
@@ -885,7 +897,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }
 
         @SuppressLint("SetTextI18n")
-        private void showReactPicker(Context context, Message message) {
+        private void showReactPicker(Context context, Message message, String userId) {
             android.view.LayoutInflater inflater = android.view.LayoutInflater.from(context);
             android.view.View dialogView = inflater.inflate(com.example.chatappjava.R.layout.dialog_react_picker, null);
 
@@ -925,12 +937,66 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     });
                 }
             }
-            if (btnRemove != null) btnRemove.setOnClickListener(v -> dlg.dismiss());
+            if (btnRemove != null) {
+                String myReaction = message.findReactionEmojiForUser(userId);
+                btnRemove.setVisibility(
+                        myReaction != null && !myReaction.isEmpty()
+                                ? android.view.View.VISIBLE
+                                : android.view.View.GONE
+                );
+                btnRemove.setOnClickListener(v -> {
+                    if (listener != null) {
+                        listener.onReactionRemove(message);
+                    }
+                    dlg.dismiss();
+                });
+            }
             if (dlg.getWindow() != null) {
                 android.view.Window w = dlg.getWindow();
                 w.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.TRANSPARENT));
             }
             dlg.show();
+        }
+
+        void bindSendStatusOnly(Message message, Context context) {
+            bindSendStatus(message, context);
+        }
+
+        private void bindSendStatus(Message message, Context context) {
+            if (ivSentStatus == null || message == null || context == null) {
+                return;
+            }
+            switch (message.getOutgoingDeliveryState()) {
+                case Message.DELIVERY_PENDING:
+                    ivSentStatus.setVisibility(View.VISIBLE);
+                    ivSentStatus.setImageResource(R.drawable.ic_message_pending);
+                    ivSentStatus.clearColorFilter();
+                    ivSentStatus.setClickable(false);
+                    ivSentStatus.setOnClickListener(null);
+                    ivSentStatus.setContentDescription(context.getString(R.string.message_status_pending_cd));
+                    break;
+                case Message.DELIVERY_FAILED:
+                    ivSentStatus.setVisibility(View.VISIBLE);
+                    ivSentStatus.setImageResource(R.drawable.ic_message_failed);
+                    ivSentStatus.clearColorFilter();
+                    ivSentStatus.setClickable(true);
+                    ivSentStatus.setContentDescription(context.getString(R.string.message_status_failed_cd));
+                    ivSentStatus.setOnClickListener(v -> {
+                        if (listener != null) {
+                            listener.onFailedMessageRetry(message);
+                        }
+                    });
+                    break;
+                case Message.DELIVERY_SENT:
+                default:
+                    ivSentStatus.setVisibility(View.VISIBLE);
+                    ivSentStatus.setImageResource(R.drawable.ic_message_sent);
+                    ivSentStatus.clearColorFilter();
+                    ivSentStatus.setClickable(false);
+                    ivSentStatus.setOnClickListener(null);
+                    ivSentStatus.setContentDescription(context.getString(R.string.message_status_sent_cd));
+                    break;
+            }
         }
 
         void bindReactionsOnly(Message message, boolean isFromCurrentUser, Context context) {

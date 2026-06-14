@@ -2856,21 +2856,42 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                            "Members: " + chat.getParticipantCount() + "\n" +
                            "Created: " + (chat.getCreatedAt() != 0 ? new java.util.Date(chat.getCreatedAt()).toString() : "Unknown"))
                 .setPositiveButton("OK", null)
-                .setNeutralButton("View Members", (dialog, which) -> {
-                    Intent intent = new Intent(this, GroupMembersActivity.class);
-                    intent.putExtra("chatId", chat.getId());
-                    intent.putExtra("mode", "view");
-                    startActivity(intent);
-                })
+                .setNeutralButton("View Members", (dialog, which) -> removeMembers(chat))
                 .show();
     }
     
     private void addMembers(Chat chat) {
-        Toast.makeText(this, getString(R.string.feature_add_members_feature_coming_soon), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, SearchActivity.class);
+        intent.putExtra("mode", "add_members");
+        try {
+            intent.putExtra("chat", chat.toJson().toString());
+            startActivity(intent);
+        } catch (org.json.JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, getString(R.string.error_error_opening_contact_selection), Toast.LENGTH_SHORT).show();
+        }
     }
-    
+
     private void removeMembers(Chat chat) {
-        Toast.makeText(this, getString(R.string.feature_remove_members_feature_coming_soon), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, GroupMembersActivity.class);
+        intent.putExtra("mode", "remove_members");
+        try {
+            intent.putExtra("chat", chat.toJson().toString());
+            startActivity(intent);
+        } catch (org.json.JSONException e) {
+            e.printStackTrace();
+            Toast.makeText(this, getString(R.string.error_error_opening_members_list), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean hasGroupManagementPermissions(Chat chat) {
+        String currentUserId = databaseManager != null ? databaseManager.getUserId() : null;
+        if (currentUserId == null || chat == null) {
+            return false;
+        }
+        String creatorId = chat.getCreatorId();
+        boolean isOwner = creatorId != null && !creatorId.isEmpty() && currentUserId.equals(creatorId);
+        return isOwner || chat.hasManagementPermissions(currentUserId);
     }
     
     private void confirmLeaveGroup(Chat chat) {
@@ -3073,15 +3094,14 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 Toast.makeText(this, getString(R.string.error_error_opening_profile), Toast.LENGTH_SHORT).show();
             }
         } else if (chat.isGroupChat()) {
-            // For group chat, show group info
-            String chatName = chat.getDisplayName();
-            String chatType = "Group Chat";
-            
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Chat Information")
-                    .setMessage("Name: " + chatName + "\nType: " + chatType)
-                    .setPositiveButton("OK", null)
-                    .show();
+            Intent intent = new Intent(this, GroupSettingsActivity.class);
+            try {
+                intent.putExtra("chat", chat.toJson().toString());
+                startActivity(intent);
+            } catch (org.json.JSONException e) {
+                e.printStackTrace();
+                Toast.makeText(this, getString(R.string.error_error_opening_group_settings), Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, getString(R.string.msg_no_chat_information_available), Toast.LENGTH_SHORT).show();
         }
@@ -3106,14 +3126,21 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         String currentUserId = databaseManager != null ? databaseManager.getUserId() : null;
         String creatorId = chat.getCreatorId();
         boolean isOwner = creatorId != null && !creatorId.isEmpty() && currentUserId != null && currentUserId.equals(creatorId);
-        
+        boolean canManageGroup = hasGroupManagementPermissions(chat);
+
         // Get option views
         LinearLayout optionViewInfo = dialogView.findViewById(R.id.option_view_group_info);
+        LinearLayout optionAddMembers = dialogView.findViewById(R.id.option_add_members);
+        LinearLayout optionRemoveMembers = dialogView.findViewById(R.id.option_remove_members);
         LinearLayout optionDeleteChat = dialogView.findViewById(R.id.option_delete_chat);
         LinearLayout optionDeleteGroup = dialogView.findViewById(R.id.option_delete_group);
         LinearLayout optionLeaveGroup = dialogView.findViewById(R.id.option_leave_group);
         LinearLayout optionJoinRequests = dialogView.findViewById(R.id.option_join_requests);
-        
+
+        if (optionAddMembers != null) {
+            optionAddMembers.setVisibility(canManageGroup ? View.VISIBLE : View.GONE);
+        }
+
         // Show/hide options based on user role
         // Owner: show delete options, hide leave group, show join requests
         // Moderator/Member: show leave group, hide delete options, hide join requests
@@ -3130,9 +3157,9 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
         }
         
         if (optionJoinRequests != null) {
-            optionJoinRequests.setVisibility(isOwner ? View.VISIBLE : View.GONE);
+            optionJoinRequests.setVisibility(canManageGroup ? View.VISIBLE : View.GONE);
         }
-        
+
         AlertDialog dialog = builder.setView(dialogView).create();
         if (dialog.getWindow() != null) {
             android.view.Window w = dialog.getWindow();
@@ -3146,7 +3173,21 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                 dialog.dismiss();
             });
         }
-        
+
+        if (optionAddMembers != null && canManageGroup) {
+            optionAddMembers.setOnClickListener(v -> {
+                dialog.dismiss();
+                addMembers(chat);
+            });
+        }
+
+        if (optionRemoveMembers != null) {
+            optionRemoveMembers.setOnClickListener(v -> {
+                dialog.dismiss();
+                removeMembers(chat);
+            });
+        }
+
         if (optionDeleteChat != null && isOwner) {
             optionDeleteChat.setOnClickListener(v -> {
                 dialog.dismiss();
@@ -3168,7 +3209,7 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
             });
         }
         
-        if (optionJoinRequests != null && isOwner) {
+        if (optionJoinRequests != null && canManageGroup) {
             optionJoinRequests.setOnClickListener(v -> {
                 dialog.dismiss();
                 Intent intent = new Intent(this, GroupJoinRequestsActivity.class);
