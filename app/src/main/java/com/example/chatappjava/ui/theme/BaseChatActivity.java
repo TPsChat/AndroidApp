@@ -1813,7 +1813,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
 
                     @Override
                     public void onReactionUpdated(org.json.JSONObject reactionJson) {
-                        runOnUiThread(() -> mergeRecentMessageUpdatesFromDB());
+                        dispatchReactionUpdated(reactionJson);
                     }
                 };
             }
@@ -1886,6 +1886,15 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             handleIncomingMessage(messageJson);
         } else {
             appendHandler.postAtFrontOfQueue(() -> handleIncomingMessage(messageJson));
+        }
+    }
+
+    /** Socket reaction event → apply payload directly (same pattern as messages). */
+    private void dispatchReactionUpdated(org.json.JSONObject reactionJson) {
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            handleReactionUpdated(reactionJson);
+        } else {
+            appendHandler.postAtFrontOfQueue(() -> handleReactionUpdated(reactionJson));
         }
     }
 
@@ -4395,6 +4404,43 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             }
         } catch (Exception e) {
             android.util.Log.e("BaseChatActivity", "Failed to handle deleted message: " + e.getMessage());
+        }
+    }
+
+    protected void handleReactionUpdated(org.json.JSONObject reactionJson) {
+        if (reactionJson == null) {
+            return;
+        }
+        try {
+            String chatId = reactionJson.optString("chatId", "");
+            String messageId = reactionJson.optString("messageId", reactionJson.optString("_id", ""));
+            if (messageId == null || messageId.isEmpty()) {
+                return;
+            }
+
+            org.json.JSONArray reactions = reactionJson.optJSONArray("reactions");
+            final String reactionsRaw = reactions != null ? reactions.toString() : "[]";
+
+            new Thread(() -> {
+                if (messageRepository != null) {
+                    messageRepository.updateMessageReactions(messageId, reactionsRaw);
+                }
+            }).start();
+
+            if (currentChat == null || chatId.isEmpty() || !chatIdsMatch(chatId, currentChat.getId())) {
+                return;
+            }
+
+            int idx = indexOfMessageById(messageId);
+            if (idx < 0 || messageAdapter == null) {
+                return;
+            }
+
+            Message message = messages.get(idx);
+            message.applyReactions(reactions);
+            messageAdapter.notifyItemChanged(idx, com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_REACTION);
+        } catch (Exception e) {
+            android.util.Log.e("BaseChatActivity", "Failed to handle reaction update: " + e.getMessage());
         }
     }
 

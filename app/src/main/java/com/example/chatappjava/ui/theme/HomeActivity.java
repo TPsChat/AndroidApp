@@ -2349,7 +2349,22 @@ public class HomeActivity extends AppCompatActivity implements ChatListAdapter.O
                     }
                     @Override
                     public void onReactionUpdated(org.json.JSONObject reactionJson) {
-                        // no-op for home list
+                        if (reactionJson == null || messageRepository == null) {
+                            return;
+                        }
+                        new Thread(() -> {
+                            try {
+                                String messageId = reactionJson.optString("messageId", "");
+                                org.json.JSONArray reactions = reactionJson.optJSONArray("reactions");
+                                if (!messageId.isEmpty()) {
+                                    messageRepository.updateMessageReactions(
+                                            messageId,
+                                            reactions != null ? reactions.toString() : "[]");
+                                }
+                            } catch (Exception e) {
+                                Log.e(TAG, "onReactionUpdated cache failed", e);
+                            }
+                        }).start();
                     }
                 };
             }

@@ -394,6 +394,17 @@ public class Message {
         }
     }
 
+    /** Apply authoritative reactions list from a socket/API payload. */
+    public void applyReactions(org.json.JSONArray reactions) {
+        if (reactions == null) {
+            reactionsRaw = "[]";
+        } else {
+            reactionsRaw = reactions.toString();
+        }
+        reactionSummary = null;
+        ensureReactionSummaryFromRaw();
+    }
+
     public static boolean reactionsVisuallyEqual(Message a, Message b) {
         if (a == null && b == null) {
             return true;

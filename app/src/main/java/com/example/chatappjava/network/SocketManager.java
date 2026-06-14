@@ -517,6 +517,7 @@ public class SocketManager {
         socket.on("reaction_updated", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                recordSocketActivity();
                 try {
                     JSONObject data = (JSONObject) args[0];
                     for (MessageListener l : messageListeners) {

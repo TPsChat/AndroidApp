@@ -910,7 +910,31 @@ public class MessageRepository {
         
         db.close();
     }
-    
+
+    /**
+     * Update only the reactions column for a message (realtime socket sync).
+     */
+    public void updateMessageReactions(String messageId, String reactionsRaw) {
+        if (messageId == null || messageId.isEmpty()) {
+            return;
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.COL_MSG_REACTIONS, reactionsRaw != null ? reactionsRaw : "[]");
+            db.update(
+                DatabaseHelper.TABLE_MESSAGES,
+                values,
+                DatabaseHelper.COL_MSG_ID + " = ?",
+                new String[]{messageId}
+            );
+        } catch (Exception e) {
+            Log.e(TAG, "Error updating reactions for message: " + messageId, e);
+        } finally {
+            db.close();
+        }
+    }
+
     /**
      * Replace all cached messages for a chat with the server's current page (e.g. after leftAt filter).
      */
