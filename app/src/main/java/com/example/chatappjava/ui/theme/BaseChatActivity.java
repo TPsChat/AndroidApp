@@ -126,6 +126,8 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected MessageRepository messageRepository;
     protected ConversationRepository conversationRepository;
     protected OfflineMessageSyncManager syncManager; // For offline message sync
+    private ConnectivityManager networkConnectivityManager;
+    private ConnectivityManager.NetworkCallback networkCallback;
     protected com.example.chatappjava.utils.SyncManager backgroundSyncManager; // For background delta sync
     protected ApiClient apiClient;
     protected AvatarManager avatarManager;
@@ -1732,11 +1734,12 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
 
     protected void showMessagesLoading(boolean show) {
         isMessagesLoading = show;
+        boolean showSkeleton = show && (messages == null || messages.isEmpty());
         if (messagesLoadingSkeleton != null) {
-            messagesLoadingSkeleton.setVisibility(show ? View.VISIBLE : View.GONE);
+            messagesLoadingSkeleton.setVisibility(showSkeleton ? View.VISIBLE : View.GONE);
         }
         if (rvMessages != null) {
-            rvMessages.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+            rvMessages.setVisibility(showSkeleton ? View.INVISIBLE : View.VISIBLE);
         }
         updateMessagesEmptyState();
     }
@@ -1753,11 +1756,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         conversationRepository = new ConversationRepository(this);
         messageRepository.setOnTempMessageRemovedListener((tempId, realId) ->
                 runOnUiThread(() -> onTempMessageRemovedFromDb(tempId, realId)));
-        syncManager = new OfflineMessageSyncManager(this); // For offline message sync
-        syncManager.setPendingSyncListener((tempId, serverMessage) -> runOnUiThread(() -> {
-            if (serverMessage == null) return;
-            acknowledgeSentMessage(tempId, serverMessage);
-        }));
+        syncManager = OfflineMessageSyncManager.getInstance(this); // App-wide offline outbox sync
         backgroundSyncManager = com.example.chatappjava.utils.SyncManager.getInstance(this); // For background delta sync
         apiClient = new ApiClient();
         avatarManager = AvatarManager.getInstance(this);
@@ -1899,6 +1898,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                     public void onSyncError(String resourceType, String error) {
                         if ("messages".equals(resourceType)) {
                             backgroundSyncManager.removeSyncListener(this);
+                            runOnUiThread(() -> scheduleAppendNewMessagesFromDb(false));
                         }
                     }
                 };
@@ -2010,6 +2010,9 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
     protected void onPause() {
         emitLocalStopTyping();
         unregisterAvatarSyncListener();
+        if (syncManager != null) {
+            syncManager.setPendingSyncListener(null);
+        }
         super.onPause();
     }
 
@@ -2275,18 +2278,16 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             return;
         }
 
-        // Initial load only — offline: show cache; online: wait for server to avoid stale leftAt messages
+        // Initial load — offline-first: show SQLite cache immediately, then refresh from server when online
         messages.clear();
         boolean networkAvailable = isNetworkAvailable();
-        if (!networkAvailable) {
-            loadMessagesFromDatabase();
-        }
+        loadMessagesFromDatabase(!networkAvailable);
 
         if (networkAvailable) {
             showMessagesLoading(true);
             String token = databaseManager.getToken();
             if (token == null || token.isEmpty()) {
-                loadMessagesFromDatabase();
+                loadMessagesFromDatabase(true);
                 return;
             }
 
@@ -2366,7 +2367,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                             e.printStackTrace();
                             Toast.makeText(BaseChatActivity.this, getString(R.string.error_error_parsing_messages), Toast.LENGTH_SHORT).show();
                             if (messages.isEmpty()) {
-                                loadMessagesFromDatabase();
+                                loadMessagesFromDatabase(true);
                             } else {
                                 finishInitialMessagesLoad();
                             }
@@ -2374,7 +2375,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                     } else {
                         Toast.makeText(BaseChatActivity.this, getString(R.string.error_load_messages_code, response.code()), Toast.LENGTH_SHORT).show();
                         if (messages.isEmpty()) {
-                            loadMessagesFromDatabase();
+                            loadMessagesFromDatabase(true);
                         } else {
                             finishInitialMessagesLoad();
                         }
@@ -2386,7 +2387,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(() -> {
                     if (messages.isEmpty()) {
-                        loadMessagesFromDatabase();
+                        loadMessagesFromDatabase(true);
                     } else {
                         finishInitialMessagesLoad();
                     }
@@ -2396,10 +2397,15 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         }
     }
     
+    private void loadMessagesFromDatabase() {
+        loadMessagesFromDatabase(true);
+    }
+
     /**
      * Load messages from local database (optimized - only last N messages for fast initial load)
+     * @param finalizeLoad when true, ends initial loading state (offline or API fallback)
      */
-    private void loadMessagesFromDatabase() {
+    private void loadMessagesFromDatabase(boolean finalizeLoad) {
         if (currentChat == null || messageRepository == null) return;
         
         // Load asynchronously to avoid blocking UI thread
@@ -2428,10 +2434,15 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
                     updateSummarizeIndicator();
                     shouldAutoScroll = true;
                     scrollToBottom();
+                    if (!finalizeLoad) {
+                        showMessagesLoading(false);
+                    }
                 }
-                if (isInitialLoad || isMessagesLoading) {
+                if (finalizeLoad && (isInitialLoad || isMessagesLoading)) {
                     finishInitialMessagesLoad();
-                } else {
+                } else if (!finalizeLoad && !dbMessages.isEmpty()) {
+                    updateMessagesEmptyState();
+                } else if (finalizeLoad) {
                     updateMessagesEmptyState();
                 }
             });
@@ -2703,13 +2714,13 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
      * Setup network listener to auto-sync pending messages when WiFi comes back
      */
     private void setupNetworkListener() {
-        ConnectivityManager connectivityManager = 
+        networkConnectivityManager =
             (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         
-        if (connectivityManager == null) return;
+        if (networkConnectivityManager == null) return;
         
         NetworkRequest request = new NetworkRequest.Builder().build();
-        NetworkCallback callback = new NetworkCallback() {
+        networkCallback = new NetworkCallback() {
             @Override
             public void onAvailable(Network network) {
                 android.util.Log.d("BaseChatActivity", "Network available, reconciling messages");
@@ -2726,7 +2737,7 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
             }
         };
         
-        connectivityManager.registerNetworkCallback(request, callback);
+        networkConnectivityManager.registerNetworkCallback(request, networkCallback);
     }
     
     /**
@@ -3032,10 +3043,42 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         return spannable;
     }
     
+    private void registerPendingSyncListener() {
+        if (syncManager == null) {
+            return;
+        }
+        syncManager.setPendingSyncListener(new OfflineMessageSyncManager.PendingSyncListener() {
+            @Override
+            public void onMessageSynced(String tempId, Message serverMessage) {
+                runOnUiThread(() -> {
+                    if (serverMessage != null) {
+                        acknowledgeSentMessage(tempId, serverMessage);
+                    }
+                });
+            }
+
+            @Override
+            public void onMessageSyncFailed(String tempId, String error) {
+                runOnUiThread(() -> {
+                    int idx = indexOfMessageById(tempId);
+                    if (idx >= 0) {
+                        Message message = messages.get(idx);
+                        message.setSyncStatus(Message.SYNC_FAILED);
+                        if (messageAdapter != null) {
+                            messageAdapter.notifyItemChanged(idx,
+                                    com.example.chatappjava.adapters.MessageAdapter.PAYLOAD_SEND_STATUS);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         registerAvatarSyncListener();
+        registerPendingSyncListener();
         // Restart auto-hide timer if summarize indicator is visible
         if (summarizeIndicator != null && summarizeIndicator.getVisibility() == View.VISIBLE) {
             startAutoHideSummarizeTimer();
@@ -4221,8 +4264,14 @@ public abstract class BaseChatActivity extends AppCompatActivity implements Mess
         if (messageRepository != null) {
             messageRepository.setOnTempMessageRemovedListener(null);
         }
-        if (syncManager != null) {
-            syncManager.setPendingSyncListener(null);
+        if (networkConnectivityManager != null && networkCallback != null) {
+            try {
+                networkConnectivityManager.unregisterNetworkCallback(networkCallback);
+            } catch (Exception e) {
+                Log.e("BaseChatActivity", "Error unregistering network callback", e);
+            }
+            networkCallback = null;
+            networkConnectivityManager = null;
         }
         super.onDestroy();
         clearTypingState();

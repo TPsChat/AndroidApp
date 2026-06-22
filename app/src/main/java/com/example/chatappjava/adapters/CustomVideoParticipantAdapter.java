@@ -24,7 +24,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Custom adapter to display video participants without WebRTC
+ * Custom adapter to display video participants in group calls.
  * Uses ImageView to display decoded frames
  */
 public class CustomVideoParticipantAdapter extends RecyclerView.Adapter<CustomVideoParticipantAdapter.ViewHolder> {

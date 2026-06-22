@@ -849,6 +849,48 @@ public class MessageRepository {
     }
     
     /**
+     * Increment sync attempt counter; returns new attempt count.
+     */
+    public int incrementSyncAttempts(String messageId) {
+        if (messageId == null || messageId.isEmpty()) {
+            return 0;
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        try {
+            int attempts = 0;
+            Cursor cursor = db.query(
+                    DatabaseHelper.TABLE_MESSAGES,
+                    new String[]{DatabaseHelper.COL_MSG_SYNC_ATTEMPTS},
+                    DatabaseHelper.COL_MSG_ID + " = ?",
+                    new String[]{messageId},
+                    null, null, null
+            );
+            if (cursor != null && cursor.moveToFirst()) {
+                int idx = cursor.getColumnIndex(DatabaseHelper.COL_MSG_SYNC_ATTEMPTS);
+                if (idx >= 0) {
+                    attempts = cursor.getInt(idx);
+                }
+                cursor.close();
+            }
+            attempts += 1;
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.COL_MSG_SYNC_ATTEMPTS, attempts);
+            db.update(
+                    DatabaseHelper.TABLE_MESSAGES,
+                    values,
+                    DatabaseHelper.COL_MSG_ID + " = ?",
+                    new String[]{messageId}
+            );
+            return attempts;
+        } catch (Exception e) {
+            Log.e(TAG, "Error incrementing sync attempts: " + e.getMessage(), e);
+            return 0;
+        } finally {
+            db.close();
+        }
+    }
+
+    /**
      * Mark an existing message as pending (e.g. after a failed send). Does not create a new row.
      */
     public void markMessageAsPending(String messageId, String error) {

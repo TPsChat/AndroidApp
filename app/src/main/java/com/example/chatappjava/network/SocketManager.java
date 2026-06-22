@@ -42,7 +42,7 @@ public class SocketManager {
     
 
     public interface CallRoomListener {
-        void onCallRoomJoined(String callId, org.json.JSONArray iceServers);
+        void onCallRoomJoined(String callId, String roomId);
     }
     
     public interface MemberRemovedListener {
@@ -287,10 +287,10 @@ public class SocketManager {
                 try {
                     JSONObject data = (JSONObject) args[0];
                     String callId = data.getString("callId");
-                    org.json.JSONArray iceServers = data.optJSONArray("iceServers");
-                    Log.d(TAG, "Joined call room: " + callId + ", iceServers: " + (iceServers != null ? iceServers.length() : 0));
+                    String roomId = data.optString("roomId", "");
+                    Log.d(TAG, "Joined call room: " + callId + ", roomId: " + roomId);
                     if (callRoomListener != null) {
-                        callRoomListener.onCallRoomJoined(callId, iceServers);
+                        callRoomListener.onCallRoomJoined(callId, roomId);
                     }
                 } catch (JSONException e) {
                     Log.e(TAG, "Error parsing call_room_joined data", e);

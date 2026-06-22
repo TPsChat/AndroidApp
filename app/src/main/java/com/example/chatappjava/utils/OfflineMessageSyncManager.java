@@ -27,6 +27,9 @@ public class OfflineMessageSyncManager {
     private static final long SYNC_DEBOUNCE_MS = 2000; // Prevent duplicate syncs within 2 seconds
     /** Defer POST retry after HTTP timeout so delta sync can reconcile first. */
     private static final long SEND_TIMEOUT_GRACE_MS = 12000;
+
+    private static volatile OfflineMessageSyncManager instance;
+    private static final Object INSTANCE_LOCK = new Object();
     
     private final Context context;
     private final MessageRepository messageRepository;
@@ -36,11 +39,28 @@ public class OfflineMessageSyncManager {
     private long lastSyncTime = 0;
     private final Object syncLock = new Object();
     private final ConcurrentHashMap<String, Long> sendTimeoutGraceUntil = new ConcurrentHashMap<>();
+    /** Prevent parallel POST for the same client nonce across activity instances. */
+    private final ConcurrentHashMap<String, Boolean> inFlightNonces = new ConcurrentHashMap<>();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private PendingSyncListener pendingSyncListener;
 
     public interface PendingSyncListener {
         void onMessageSynced(String tempMessageId, Message serverMessage);
+
+        default void onMessageSyncFailed(String tempMessageId, String error) {
+            // optional
+        }
+    }
+
+    public static OfflineMessageSyncManager getInstance(Context context) {
+        if (instance == null) {
+            synchronized (INSTANCE_LOCK) {
+                if (instance == null) {
+                    instance = new OfflineMessageSyncManager(context.getApplicationContext());
+                }
+            }
+        }
+        return instance;
     }
 
     public void setPendingSyncListener(PendingSyncListener listener) {
@@ -87,10 +107,10 @@ public class OfflineMessageSyncManager {
     }
     
     public OfflineMessageSyncManager(Context context) {
-        this.context = context;
-        this.messageRepository = new MessageRepository(context);
+        this.context = context.getApplicationContext();
+        this.messageRepository = new MessageRepository(this.context);
         this.apiClient = new ApiClient();
-        this.databaseManager = new DatabaseManager(context);
+        this.databaseManager = new DatabaseManager(this.context);
     }
     
     /**
@@ -213,6 +233,13 @@ public class OfflineMessageSyncManager {
             return;
         }
 
+        final String nonce = message.getClientNonce();
+        if (nonce != null && !nonce.isEmpty() && inFlightNonces.putIfAbsent(nonce, Boolean.TRUE) != null) {
+            Log.d(TAG, "POST already in flight for nonce=" + nonce + ", skipping duplicate");
+            syncMessagesSequentially(messages, index + 1);
+            return;
+        }
+
         Message existingServer = messageRepository.findMatchingServerMessage(message);
         if (existingServer != null) {
             Log.d(TAG, "SKIP_POST already synced temp=" + tempMessageId
@@ -229,6 +256,7 @@ public class OfflineMessageSyncManager {
         syncSingleMessage(message, new SyncCallback() {
             @Override
             public void onSuccess(String newMessageId, Message serverMessage) {
+                releaseInFlightNonce(nonce);
                 synchronized (syncLock) {
                     messageRepository.updateSyncStatus(
                         tempMessageId,
@@ -251,17 +279,33 @@ public class OfflineMessageSyncManager {
 
             @Override
             public void onFailure(String error) {
+                releaseInFlightNonce(nonce);
+                int attempts = messageRepository.incrementSyncAttempts(tempMessageId);
                 synchronized (syncLock) {
-                    messageRepository.markMessageAsPending(tempMessageId, error);
+                    if (attempts >= MAX_SYNC_ATTEMPTS) {
+                        messageRepository.markMessageAsFailed(tempMessageId, error);
+                        if (pendingSyncListener != null) {
+                            pendingSyncListener.onMessageSyncFailed(tempMessageId, error);
+                        }
+                    } else {
+                        messageRepository.markMessageAsPending(tempMessageId, error);
+                    }
                 }
 
-                Log.e(TAG, "Failed to sync message: " + tempMessageId + " - " + error);
-                if (isTimeoutError(error)) {
+                Log.e(TAG, "Failed to sync message: " + tempMessageId + " - " + error
+                        + " (attempt " + attempts + "/" + MAX_SYNC_ATTEMPTS + ")");
+                if (isTimeoutError(error) && attempts < MAX_SYNC_ATTEMPTS) {
                     markSendTimeout(tempMessageId);
                 }
                 syncMessagesSequentially(messages, index + 1);
             }
         });
+    }
+
+    private void releaseInFlightNonce(String nonce) {
+        if (nonce != null && !nonce.isEmpty()) {
+            inFlightNonces.remove(nonce);
+        }
     }
     
     /**
@@ -318,7 +362,14 @@ public class OfflineMessageSyncManager {
                                     String newMessageId = msgJson.optString("_id", "");
                                     if (!newMessageId.isEmpty()) {
                                         Message serverMessage = Message.fromJson(msgJson);
-                                        Log.d(TAG, "Message synced successfully: " + message.getId() + " -> " + newMessageId);
+                                        if ((serverMessage.getClientNonce() == null
+                                                || serverMessage.getClientNonce().isEmpty())
+                                                && message.getClientNonce() != null) {
+                                            serverMessage.setClientNonce(message.getClientNonce());
+                                        }
+                                        boolean deduped = data != null && data.optBoolean("deduplicated", false);
+                                        Log.d(TAG, "Message synced successfully: " + message.getId()
+                                                + " -> " + newMessageId + (deduped ? " (deduped)" : ""));
                                         callback.onSuccess(newMessageId, serverMessage);
                                         return;
                                     }

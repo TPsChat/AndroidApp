@@ -127,7 +127,7 @@ Reverse-engineered from `Client/app/src/main/java/com/example/chatappjava/` and 
 | Active call UI | Mute, camera toggle, switch camera, end call |
 | Group video call | Start/join from group chat; passive alert banner |
 | Call history | Home Calls tab; cached in SQLite |
-| Call room | Socket `join_call_room` → ICE servers in `call_room_joined` |
+| Call room | Socket `join_call_room` → `roomId` in `call_room_joined` |
 | Media transport | Base64 `video_frame` / `audio_frame` over Socket.IO |
 
 ## Media Sharing (Chat)
@@ -1085,7 +1085,7 @@ No dedicated `BottomSheetDialogFragment` classes; options use `AlertDialog` with
 | `user_typing` / `user_stop_typing` | Typing indicators |
 | `incoming_call` | 1:1 incoming call |
 | `call_accepted` / `call_declined` / `call_ended` | Call state |
-| `call_room_joined` | ICE servers for call |
+| `call_room_joined` | Call room joined with `roomId` |
 | `video_frame` / `audio_frame` | Remote media |
 | `member_removed` / `member_removed_from_group` | Group membership |
 | `new_post` | Feed update |
@@ -1227,7 +1227,7 @@ Runtime permission requests: camera, storage/media, record audio (in chat and ca
 3. Unify `SettingsActivity` and `SettingsAdapter` (single source)
 4. Ensure logout always disconnects socket and removes FCM token
 5. Complete `share_post` action handling in `HomeActivity`
-6. Add true WebRTC peer connection (current socket frame streaming is bandwidth-heavy)
+6. Optimize socket frame streaming bandwidth (e.g. lower resolution / adaptive bitrate)
 7. Implement `FilePreviewActivity` for in-app document viewing
 8. Display `lastSeen` / online status in chat headers
 9. Harden offline post creation queue (currently chat-focused)

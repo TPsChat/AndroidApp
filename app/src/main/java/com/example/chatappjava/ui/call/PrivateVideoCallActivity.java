@@ -41,7 +41,7 @@ import okhttp3.Response;
 import java.io.IOException;
 
 /**
- * Activity for private video calls (1-1 call, without WebRTC)
+ * Activity for private video calls (1-1) via Socket.IO media relay.
  * Continuously captures frames from the camera, encodes them and sends them to the server
  * Layout: Remote user full screen, local user small overlay at top right
  */

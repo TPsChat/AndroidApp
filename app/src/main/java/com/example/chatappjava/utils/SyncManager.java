@@ -15,6 +15,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * SyncManager handles background synchronization of messages, posts, and user data
@@ -42,7 +43,7 @@ public class SyncManager {
         void onSyncError(String resourceType, String error);
     }
     
-    private final List<SyncListener> syncListeners = new ArrayList<>();
+    private final List<SyncListener> syncListeners = new CopyOnWriteArrayList<>();
     
     private SyncManager(Context context) {
         this.context = context;
@@ -506,23 +507,27 @@ public class SyncManager {
      * Notify sync listeners
      */
     private void notifySyncComplete(String resourceType, boolean success, int itemsUpdated) {
-        for (SyncListener listener : syncListeners) {
-            try {
-                listener.onSyncComplete(resourceType, success, itemsUpdated);
-            } catch (Exception e) {
-                Log.e(TAG, "Error notifying sync listener: " + e.getMessage());
+        mainHandler.post(() -> {
+            for (SyncListener listener : syncListeners) {
+                try {
+                    listener.onSyncComplete(resourceType, success, itemsUpdated);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error notifying sync listener: " + e.getMessage());
+                }
             }
-        }
+        });
     }
-    
+
     private void notifySyncError(String resourceType, String error) {
-        for (SyncListener listener : syncListeners) {
-            try {
-                listener.onSyncError(resourceType, error);
-            } catch (Exception e) {
-                Log.e(TAG, "Error notifying sync listener: " + e.getMessage());
+        mainHandler.post(() -> {
+            for (SyncListener listener : syncListeners) {
+                try {
+                    listener.onSyncError(resourceType, error);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error notifying sync listener: " + e.getMessage());
+                }
             }
-        }
+        });
     }
 }
 

@@ -48,7 +48,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 /**
- * Activity for custom group video calls (without WebRTC)
+ * Activity for custom group video calls via Socket.IO media relay.
  * Continuously captures frames from the camera, encodes them and sends them to the server
  */
 public class GroupVideoCallActivity extends AppCompatActivity {
